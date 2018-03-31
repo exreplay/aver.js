@@ -103,7 +103,7 @@
     "vuebar": "^0.0.18",
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.0",
-    "vuex-decorators": "https://git.wurdackweber.de/wurdackweber/node-packages/vuex-decorators.git#73a389e0073ec42ba5771d3cc4da521be5f161a4",
+    "vuex-decorators": "https://git.wurdackweber.de/wurdackweber/node-packages/vuex-decorators.git",
     "vuex-persistedstate": "^2.0.0",
     "vuex-router-sync": "^5.0.0",
     "webpack": "^4.1.1",
