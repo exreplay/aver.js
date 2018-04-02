@@ -3,6 +3,9 @@
   "main": "lib/index.js",
   "version": "0.0.0",
   "private": true,
+  "bin": {
+    "vue-ssr-build": "./bin/vue-ssr-build"
+  },
   "dependencies": {
     "body-parser": "~1.18.2",
     "chalk": "^2.3.2",
