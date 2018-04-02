@@ -3,10 +3,6 @@
   "main": "lib/index.js",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "build": "rimraf dist &&  cross-env NODE_ENV=production node webpack/builder",
-    "start": "node ./bin/www"
-  },
   "dependencies": {
     "body-parser": "~1.18.2",
     "chalk": "^2.3.2",
