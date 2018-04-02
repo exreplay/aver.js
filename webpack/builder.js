@@ -2,7 +2,7 @@ import webpack from "webpack";
 import clientConfig from "./client.config";
 import serverConfig from "./server.config";
 
-export default class Builder{
+export default class Builder {
     constructor() {
         this.compilers = [];
         this.compilers.push(clientConfig);
