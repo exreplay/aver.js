@@ -37,15 +37,15 @@ module.exports = merge(baseConfig, {
     optimization: {
         runtimeChunk: true,
         splitChunks: {
-            chunks: 'all'
-            // cacheGroups: {
-            //     commons: {
-            //         test: /node_modules\/(vue|vue-loader|vue-router|vuex|vue-meta|core-js|babel-runtime|es6-promise|axios|webpack|setimediate|timers-browserify|process|regenerator-runtime|cookie|js-cookie|is-buffer|dotprop|nuxt\.js)\//,
-            //         chunks: 'all',
-            //         priority: 10,
-            //         name: 'commons'
-            //     }
-            // }
+            cacheGroups: {
+                vendors: {
+                    test: /node_modules/,
+                    name: "vendor",
+                    enforce: true,
+                    chunks: 'all',
+                    minSize: 1
+                }
+            }
         }
     },
     plugins: isProd ? plugins.concat([
