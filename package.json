@@ -51,7 +51,7 @@
     "vue-server-renderer": "^2.5.2",
     "xss-filters": "^1.2.7"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",
     "animejs": "^2.2.0",
     "babel-core": "^6.26.0",
