@@ -28,6 +28,7 @@
     "vuex-router-sync": "^5.0.0",
     "vue-lazyload": "^1.2.1",
     "vue-progressbar": "^0.7.3",
+    "lodash": "^4.17.4",
     "body-parser": "~1.18.2",
     "clamav.js": "^0.12.0",
     "compression": "^1.7.1",
@@ -50,7 +51,7 @@
     "vue-server-renderer": "^2.5.2",
     "xss-filters": "^1.2.7"
   },
-  "optionalDependencies": {
+  "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",
     "animejs": "^2.2.0",
     "babel-core": "^6.26.0",
@@ -88,7 +89,6 @@
     "jquery.easing": "^1.4.1",
     "json-loader": "^0.5.7",
     "kill-port": "^1.1.0",
-    "lodash": "^4.17.4",
     "memory-fs": "^0.4.1",
     "modernizr": "^3.6.0",
     "modernizr-loader": "^1.0.1",
