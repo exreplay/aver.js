@@ -50,7 +50,7 @@
     "vuebar": "^0.0.18",
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.0",
-    "vuex-decorators": "https://git.wurdackweber.de/wurdackweber/node-packages/vuex-decorators.git",
+    "vuex-decorators": "https://git.wurdackweber.de/wurdackweber/node-packages/vuex-decorators.git#adab787959aafbe04ee6fcb26ddd7b552fa20752",
     "vuex-persistedstate": "^2.5.1",
     "vuex-router-sync": "^5.0.0",
     "xss-filters": "^1.2.7"
