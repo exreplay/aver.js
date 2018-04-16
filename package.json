@@ -40,7 +40,6 @@
     "vue": "^2.5.16",
     "vue-class-component": "^6.2.0",
     "vue-i18n": "^7.6.0",
-    "vue-lazyload": "^1.2.1",
     "vue-meta": "^1.5.0",
     "vue-no-ssr": "^0.2.2",
     "vue-progressbar": "^0.7.3",
