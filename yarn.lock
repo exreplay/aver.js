@@ -1714,6 +1714,10 @@ rndm@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/rndm/-/rndm-1.2.0.tgz#f33fe9cfb52bbfd520aa18323bc65db110a1b76c"
 
+rotating-file-stream@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/rotating-file-stream/-/rotating-file-stream-1.3.6.tgz#8b0601669e58ba749dfd343c4905acc41a996c8d"
+
 route-cache@^0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/route-cache/-/route-cache-0.4.4.tgz#c7141fac4e44d1480dae1c1ba44458d91ad1a98a"
@@ -1986,7 +1990,7 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
-uuid@^3.1.0:
+uuid@^3.1.0, uuid@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
 
@@ -2021,10 +2025,6 @@ vue-class-component@^6.0.0, vue-class-component@^6.2.0:
 vue-i18n@^7.6.0:
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-7.6.0.tgz#8745807756f6ca5090fd85629e9cab99b1c6e442"
-
-vue-lazyload@^1.2.1:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/vue-lazyload/-/vue-lazyload-1.2.2.tgz#73335ed32db25264f5957df1a21d277823423743"
 
 vue-meta@^1.5.0:
   version "1.5.0"
@@ -2078,9 +2078,9 @@ vuex-class@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/vuex-class/-/vuex-class-0.3.0.tgz#25047ab042580fd4ff3e64cc76603ac217c9190d"
 
-"vuex-decorators@https://git.wurdackweber.de/wurdackweber/node-packages/vuex-decorators.git":
-  version "1.0.0"
-  resolved "https://git.wurdackweber.de/wurdackweber/node-packages/vuex-decorators.git#adab787959aafbe04ee6fcb26ddd7b552fa20752"
+"vuex-decorators@https://git.wurdackweber.de/wurdackweber/node-packages/vuex-decorators.git#187dbca3bfe0f1f070d3185c7f57dd6851fe4ba8":
+  version "2.0.0"
+  resolved "https://git.wurdackweber.de/wurdackweber/node-packages/vuex-decorators.git#187dbca3bfe0f1f070d3185c7f57dd6851fe4ba8"
 
 vuex-persistedstate@^2.5.1:
   version "2.5.2"
