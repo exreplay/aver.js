@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "experimentalDecorators": true,
+        "paths": {
+            "@/*": ["src/*"],
+            "~*": ["node_modules/*"]
+        }
+    }
+  }

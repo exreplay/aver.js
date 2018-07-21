@@ -1,0 +1,11 @@
+node_modules
+public
+dist
+
+docker-compose.yml
+docker-compose.example.yml
+docker-sync.yml
+Dockerfile
+mix-manifest.json
+.gitignore
+.dockerignore

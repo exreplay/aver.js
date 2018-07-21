@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+
+const Core = require('../lib/index');
+const core = new Core();
+core.init();
