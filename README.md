@@ -22,7 +22,7 @@ Jump into your working directory and execute the following command.
 node_modules/.bin/vue-ssr-init
 ```
 
-When the executable is done setting up the new Project, you can either start a container with the provided `docker-compose.yml` file or you can just execute `node ./index.js`. 
+When the executable is done setting up the new Project, you can either start a container with the provided `docker-compose.yml` file or you can just execute `yarn run dev`. 
 Keep in mind that when you use the `docker-compose.yml` you will probably have to rebase sass inside the container.
 
 ## Docker
