@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  node:
+    image: registry.ppm-vi.de/docker/nodejs:latest
+    environment:
+      - NODE_ENV=development
+      - GIT_USERNAME=
+      - GIT_PASSWORD=
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 80:3000
+      - 9229:9229

@@ -1,0 +1,11 @@
+{
+    "name": "site",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "build": "rimraf dist && cross-env NODE_ENV=production vue-ssr-build",
+        "inspect": "kill-port --port 9229 && node --inspect=0.0.0.0:9229 ./index.js",
+        "dev": "nodemon --ignore public --ignore dist --ignore src --ignore storage --delay 80ms --exec 'yarn run inspect'"
+    }
+}
