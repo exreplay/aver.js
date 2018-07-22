@@ -27,6 +27,8 @@ Keep in mind that when you use the `docker-compose.yml` you will probably have t
 
 ## Docker
 
+Getting you started with Docker is really easy. Create a `docker-compose.yml` file inside your new and empty project folder. Copy the code from the following [docker-compose](https://gitlab.ppm-vi.de/nodejs/vue-ssr/blob/master/lib/app/docker-compose.example.yml) file and start it with `docker-compose up -d`. Dont forget to change the `GIT_USERNAME` and `GIT_PASSWORD` variables, so you are able to download the packages from Gitlab.  
+The installation of the two packages and the setup are all executed automatically for you.
 
 ## TODO
 - Explain vue-ssr-config.js
