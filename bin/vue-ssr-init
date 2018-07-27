@@ -1,5 +1,33 @@
 #!/usr/bin/env node
 
+const parseArgs = require('minimist');
+const argv = parseArgs(process.argv.slice(2), {
+    alias: {
+        h: 'help'
+    },
+    boolean: [ 'h' ]
+});
+
+if (argv.help) {
+    process.stderr.write(`
+Description
+    Initializes a new Server Side Rendering project.
+Usage
+    $ vue-ssr-init
+Options
+    --auth      Sets up everything necessary for authentication (TODO)
+    --help, h   Displays this message
+
+`);
+    process.exit(0);
+}
+
 const Core = require('../lib/index');
 const core = new Core();
+
+if (argv.auth) {
+    core.setupAuth();
+    process.exit(0);
+}
+
 core.init();
