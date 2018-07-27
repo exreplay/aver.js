@@ -11,6 +11,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "body-parser": "~1.18.3",
+    "chokidar": "^2.0.4",
     "compression": "^1.7.2",
     "cookie-parser": "~1.4.3",
     "cross-env": "^5.2.0",
