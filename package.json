@@ -8,9 +8,9 @@
     "vue-ssr-init": "./bin/vue-ssr-init"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "@babel/runtime": "^7.0.0",
     "axios": "^0.18.0",
-    "babel-polyfill": "^6.26.0",
     "body-parser": "~1.18.3",
     "chokidar": "^2.0.4",
     "compression": "^1.7.3",
