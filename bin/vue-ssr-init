@@ -22,6 +22,7 @@ Options
     process.exit(0);
 }
 
+process.env.VUE_SSR_NO_INIT = true;
 const Core = require('../lib/index');
 const core = new Core();
 
