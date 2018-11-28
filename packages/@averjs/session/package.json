@@ -1,0 +1,12 @@
+{
+    "name": "@averjs/session",
+    "main": "index.js",
+    "version": "1.0.0",
+    "dependencies": {
+        "express-session": "^1.15.6",
+        "connect-redis": "^3.4.0",
+        "ioredis": "^4.2.0",
+        "uuid": "^3.3.2"
+    }
+  }
+  

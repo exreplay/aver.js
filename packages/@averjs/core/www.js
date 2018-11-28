@@ -1,7 +1,4 @@
-const debug = require('debug')('node-test:server');
-const http = require('http');
-const redisAdapter = require('socket.io-redis');
-const redis = require('redis');
+import http from 'http';
 
 export default class WWW {
     constructor(app, config) {
@@ -19,20 +16,6 @@ export default class WWW {
         this.server.on('listening', this.onListening.bind(this));
 
         if (typeof this.config.websocket !== 'undefined' && this.config.websocket) this.configureWebsocket();
-    }
-
-    configureWebsocket() {
-        this.io = require('socket.io')(this.server);
-        const pub = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST, { auth_pass: process.env.REDIS_PASSWORD });
-        const sub = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST, { auth_pass: process.env.REDIS_PASSWORD });
-
-        this.io.adapter(redisAdapter({ pubClient: pub, subClient: sub }));
-        this.io.on('connection', socket => {
-            console.log('client connect');
-            socket.on('echo', function (data) {
-                io.sockets.emit('message', data);
-            });
-        });
     }
     
     normalizePort(val) {
@@ -70,6 +53,5 @@ export default class WWW {
         var bind = typeof addr === 'string'
             ? 'pipe ' + addr
             : 'port ' + addr.port;
-        debug('Listening on ' + bind);
     }
 }

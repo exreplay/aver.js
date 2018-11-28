@@ -1,0 +1,10 @@
+{
+    "name": "@averjs/mongodb",
+    "main": "index.js",
+    "version": "1.0.0",
+    "dependencies": {
+        "mongoose": "^5.3.13",
+        "mongoose-data-seed": "^1.0.7"
+    }
+  }
+  

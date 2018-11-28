@@ -1,0 +1,10 @@
+{
+    "name": "@averjs/mailer",
+    "main": "index.js",
+    "version": "1.0.0",
+    "dependencies": {
+        "nodemailer": "^4.7.0",
+        "email-templates": "^5.0.2"
+    }
+  }
+  

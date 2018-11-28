@@ -1,5 +1,4 @@
 import express                  from 'express';
-import WWW                      from './www';
 import LRU                      from 'lru-cache';
 import compression              from 'compression';
 import path                     from 'path';
@@ -14,9 +13,10 @@ import bodyParser               from 'body-parser';
 import rfs                      from 'rotating-file-stream';
 import uuid                     from 'uuid/v4';
 import chokidar                 from 'chokidar';
+import indexOf                  from 'lodash/indexOf';
 import Mongodb                  from './mongodb';
 import Session                  from './session';
-import indexOf                  from 'lodash/indexOf';
+import WWW                      from './www';
 
 export default class Server {
     constructor(hooks, config) {
