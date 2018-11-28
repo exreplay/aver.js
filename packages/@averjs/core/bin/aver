@@ -11,11 +11,12 @@ const argv = parseArgs(process.argv.slice(2), {
 if (argv.help) {
     process.stderr.write(`
 Description
-    Initializes a new Server Side Rendering project.
+    averjs command line tool.
 Usage
-    $ vue-ssr-init
+    $ aver
 Options
-    --auth      Sets up everything necessary for authentication (TODO)
+    --init      Initialize a new SSR project.
+    --build     Build the SSR appliction for production
     --help, h   Displays this message
 
 `);
@@ -23,12 +24,15 @@ Options
 }
 
 process.env.VUE_SSR_NO_INIT = true;
-const Core = require('../lib/index');
+const Core = require('@averjs/core');
 const core = new Core();
 
-if (argv.auth) {
-    core.setupAuth();
+if(argv.init) {
+    core.init();
     process.exit(0);
 }
 
-core.init();
+if(argv.build) {
+    core.build();
+    process.exit(0);
+}

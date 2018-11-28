@@ -1,4 +1,4 @@
-import Mailer from './index';
+import Mailer from './mailer';
 
 export default class Mailable {
     async render(templatePart) {

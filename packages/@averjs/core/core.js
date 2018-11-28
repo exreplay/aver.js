@@ -1,4 +1,5 @@
 import Server from './server';
+import Hooks from './hooks';
 import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
@@ -19,9 +20,22 @@ if(!process.env.VUE_SSR_NO_INIT) {
 
 export default class Core {
     run(hooks = {}) {
+        this.hooks = new Hooks();
         this.loadGlobalConfig();
-        new Server(hooks, this.globalConfig);
+        this.registerPlugins();
+        new Server(this.hooks, this.globalConfig);
         this.initModuleAliases();
+    }
+
+    registerPlugins() {
+        if(typeof this.globalConfig.plugins !== 'undefined') {
+            for (const plugin of this.globalConfig.plugins) {
+                require(plugin)({
+                    config: this.globalConfig,
+                    hooks: this.hooks
+                });
+            }
+        }
     }
 
     initModuleAliases() {
@@ -42,7 +56,7 @@ export default class Core {
     }
     
     build() {
-        const Builder = require('vue-ssr-renderer').default;
+        const Builder = require('@averjs/renderer').default;
         const builder = new Builder();
         return builder.compile();
     }
@@ -56,7 +70,7 @@ export default class Core {
             try {
                 console.log('Root directory does not exist. Setting it up...');
 
-                const appDir = path.resolve(require.resolve('vue-ssr'), '../app');
+                const appDir = path.resolve(require.resolve('@averjs/core'), '../app');
                 const ncp = require('ncp').ncp;
 
                 await ncp(path.resolve(appDir, './src'), process.env.PROJECT_PATH);
@@ -67,7 +81,7 @@ export default class Core {
                 fs.copyFileSync(path.resolve(appDir, './.eslintignore'), path.resolve(process.env.PROJECT_PATH, '../.eslintignore'));
                 fs.copyFileSync(path.resolve(appDir, './.eslintrc.js'), path.resolve(process.env.PROJECT_PATH, '../.eslintrc.js'));
                 fs.copyFileSync(path.resolve(appDir, './index.js'), path.resolve(process.env.PROJECT_PATH, '../index.js'));
-                fs.copyFileSync(path.resolve(appDir, './vue-ssr-config.js'), path.resolve(process.env.PROJECT_PATH, '../vue-ssr-config.js'));
+                fs.copyFileSync(path.resolve(appDir, './aver-config.js'), path.resolve(process.env.PROJECT_PATH, '../aver-config.js'));
                 fs.copyFileSync(path.resolve(appDir, './.gitignore'), path.resolve(process.env.PROJECT_PATH, '../.gitignore'));
                 fs.copyFileSync(path.resolve(appDir, './Dockerfile'), path.resolve(process.env.PROJECT_PATH, '../Dockerfile'));
                 fs.copyFileSync(path.resolve(appDir, './jsconfig.json'), path.resolve(process.env.PROJECT_PATH, '../jsconfig.json'));
@@ -117,13 +131,8 @@ module.exports = router;`)
         }
     }
 
-    setupAuth() {
-        console.log('Setting up authentication routes...');
-        console.log('Authentication setup successfull!');
-    }
-
     loadGlobalConfig() {
-        const globalConfPath = path.resolve(process.env.PROJECT_PATH, '../vue-ssr-config.js');
+        const globalConfPath = path.resolve(process.env.PROJECT_PATH, '../aver-config.js');
         if (fs.existsSync(globalConfPath)) {
             this.globalConfig = require(globalConfPath).default;
         } else {

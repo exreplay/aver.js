@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-
-process.env.VUE_SSR_NO_INIT = true;
-const Core = require('../lib/index');
-const core = new Core();
-core.build();

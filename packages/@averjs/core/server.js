@@ -14,9 +14,9 @@ import rfs                      from 'rotating-file-stream';
 import uuid                     from 'uuid/v4';
 import chokidar                 from 'chokidar';
 import indexOf                  from 'lodash/indexOf';
-import Mongodb                  from './mongodb';
-import Session                  from './session';
 import WWW                      from './www';
+// import Mongodb                  from './mongodb';
+// import Session                  from './session';
 
 export default class Server {
     constructor(hooks, config) {
@@ -46,7 +46,7 @@ export default class Server {
             });
         }
         
-        this.setupMongodb();
+        // this.setupMongodb();
 
         this.initRenderer();
         this.registerMiddlewares();
@@ -79,7 +79,7 @@ export default class Server {
                 clientManifest: clientManifest
             });
         } else {
-            const WebpackDevServer = require(path.resolve(require.resolve('vue-ssr-renderer'), '../webpack/setup-dev-server')).default;
+            const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../webpack/setup-dev-server')).default;
             this.readyPromise = new WebpackDevServer(this.app, (bundle, options) => {
                 self.renderer = self.createRenderer(bundle, Object.assign(bundle, options));
             });
@@ -108,42 +108,53 @@ export default class Server {
         const serve = (path, cache) => express.static(path, {
             maxAge: cache && this.isProd ? 1000 * 60 * 60 * 24 * 30 : 0
         });
+
+        this.middlewares = [];
         
-        this.app.use(helmet());
+        this.middlewares.push(helmet());
         this.logging();
-        this.app.use(cookieParser());
-        this.app.use(compression({ threshold: 0 }));
+        this.middlewares.push(cookieParser());
+        this.middlewares.push(compression({ threshold: 0 }));
         
-        this.app.use('/dist', serve('./dist', true));
-        this.app.use('/public', serve('./public', true));
-        this.app.use('/static', serve('./static', true));
-        this.app.use('/storage', express.static('./storage'));
+        this.middlewares.push('/dist', serve('./dist', true));
+        this.middlewares.push('/public', serve('./public', true));
+        this.middlewares.push('/static', serve('./static', true));
+        this.middlewares.push('/storage', express.static('./storage'));
         
         this.app.get('/favicon.ico', function(req, res) {
             res.sendStatus(204);
         });
         
-        this.app.use((req, res, next) => {
+        this.middlewares.push((req, res, next) => {
             req.io = this.www.io;
             next();
         });
 
-        this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({ extended: false }));
-        this.app.use((req, res, next) => {
+        this.middlewares.push(bodyParser.json());
+        this.middlewares.push(bodyParser.urlencoded({ extended: false }));
+        this.middlewares.push((req, res, next) => {
             if(indexOf(this.config.csrfExclude, req.path) !== -1) return next();
             csrf({ cookie: true })(req, res, next);
         });
 
-        this.setupSession();
+        // this.setupSession();
         
-        if (typeof this.hooks.registerMiddlewares === 'function') this.hooks.registerMiddlewares(this.app);
+        for(const middleware of this.hooks.middlewares) {
+            middleware({
+                app: this.app,
+                middlewares: this.middlewares
+            });
+        }
 
         const middlewaresPath = path.resolve(process.env.API_PATH, './middlewares');
         if (fs.existsSync(middlewaresPath)) {
-            this.app.use((req, res, next) => {
+            this.middlewares.push((req, res, next) => {
                 require(middlewaresPath)(req, res, next);
             });
+        }
+
+        for(const middleware of this.middlewares) {
+            this.app.use(middleware);
         }
 
         // this.app.use(microcache.cacheSeconds(1, req => {
@@ -152,9 +163,9 @@ export default class Server {
         // }));
     }
 
-    setupSession() {
-        if (typeof this.config.session !== 'undefined') this.app.use(new Session(this.app, this.config.session));
-    }
+    // setupSession() {
+    //     if (typeof this.config.session !== 'undefined') this.app.use(new Session(this.app, this.config.session));
+    // }
 
     logging() {
         const logDirectory = path.join(process.env.PROJECT_PATH, '../storage/log');
@@ -173,19 +184,19 @@ export default class Server {
         logger.token('id', req => req.id);
         logger.token('error', req => req.error);
 
-        this.app.use((req, res, next) => {
+        this.middlewares.push((req, res, next) => {
             req.id = (new Date().getTime()) + '-' + uuid();
             next();
         });
 
-        this.app.use(logger(':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"\\n:error', {
+        this.middlewares.push(logger(':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"\\n:error', {
             skip: function (req, res) {
                 return res.statusCode < 400
             },
             stream: errorLogStream
         }));
 
-        this.app.use(logger(':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
+        this.middlewares.push(logger(':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
             skip: function (req, res) {
                 return res.statusCode > 400
             },

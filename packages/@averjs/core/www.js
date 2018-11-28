@@ -14,8 +14,6 @@ export default class WWW {
         this.server.listen(this.port);
         this.server.on('error', this.onError.bind(this));
         this.server.on('listening', this.onListening.bind(this));
-
-        if (typeof this.config.websocket !== 'undefined' && this.config.websocket) this.configureWebsocket();
     }
     
     normalizePort(val) {

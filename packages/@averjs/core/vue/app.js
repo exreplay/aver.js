@@ -8,7 +8,7 @@ import { createRouter } from './router/';
 import { createStore }  from './store/';
 import { sync }         from 'vuex-router-sync';
 import forEach          from 'lodash/forEach';
-import config           from '@/../vue-ssr-config.js';
+import config           from '@/../aver-config.js';
 import * as Cookies     from 'js-cookie'
 
 if (typeof config.progressbar !== 'undefined' && config.progressbar) {
