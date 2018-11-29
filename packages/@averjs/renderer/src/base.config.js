@@ -17,7 +17,7 @@ export default class WebpackBaseConfiguration {
     constructor(isServer) {
         this.chainConfig = new WebpackChain();
         this.isServer = isServer;
-        this.libRoot = path.resolve(require.resolve('@averjs/core'), '../..');
+        this.libRoot = path.resolve(require.resolve('@averjs/core'), '../');
     
         this.isProd = process.env.NODE_ENV === 'production';
         this.nodeEnv = process.env.NODE_ENV || "development";

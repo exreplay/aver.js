@@ -6,7 +6,7 @@ import uuid from 'uuid';
 export default class SessionAdapter {
     constructor(app, config) {
         const sessionConf = {
-            secret: process.env.REDIS_SECRET,
+            secret: process.env.REDIS_SECRET || uuid.v4(),
             genid: () => uuid.v4(),
             resave: false,
             saveUninitialized: false,

@@ -31,7 +31,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         this.chainConfig
             .target('node')
             // .entry('app')
-            //     .add(path.join(this.libRoot, 'lib/vue/entry-server.js'))
+            //     .add(path.join(this.libRoot, 'vue/entry-server.js'))
             //     .end()
             .output
                 .libraryTarget('commonjs2')
@@ -53,7 +53,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
 
         const config = Object.assign(this.chainConfig.toConfig(), {
             entry: {
-                app: path.join(this.libRoot, 'lib/vue/entry-server.js')
+                app: path.join(this.libRoot, 'vue/entry-server.js')
             }
         });
 

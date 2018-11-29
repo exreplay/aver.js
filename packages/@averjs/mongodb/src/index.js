@@ -4,7 +4,10 @@ import fs from 'fs';
 
 export default class Mongodb {
     constructor() {
-        if (!process.env.MONGODB_HOST) return;
+        if (!process.env.MONGODB_HOST && !process.env.MONGODB_USERNAME && !process.env.MONGODB_PASSWORT && !process.env.MONGODB_HOST && !process.env.MONGODB_DATENBANK) {
+            console.error('\nThe following .env variables have to be defined in order for Mongodb to work:\nMONGODB_HOST, MONGODB_USERNAME, MONGODB_PASSWORT, MONGODB_HOST, MONGODB_DATENBANK\n');
+            return;
+        }
         
         this.registerModels();
 

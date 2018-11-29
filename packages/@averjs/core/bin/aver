@@ -23,7 +23,7 @@ Options
     process.exit(0);
 }
 
-process.env.VUE_SSR_NO_INIT = true;
+process.env.AVER_NO_INIT = true;
 const Core = require('@averjs/core');
 const core = new Core();
 

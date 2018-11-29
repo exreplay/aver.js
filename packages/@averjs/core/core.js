@@ -1,13 +1,13 @@
 import Server from './server';
 import Hooks from './hooks';
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs-extra';
 import dotenv from 'dotenv';
 
 process.env.PROJECT_PATH = path.resolve(process.cwd(), 'src');
 process.env.API_PATH = path.resolve(process.cwd(), 'api');
 
-if(!process.env.VUE_SSR_NO_INIT) {
+if(!process.env.AVER_NO_INIT) {
     if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
         dotenv.config();
         if (dotenv.error) {
@@ -71,9 +71,8 @@ export default class Core {
                 console.log('Root directory does not exist. Setting it up...');
 
                 const appDir = path.resolve(require.resolve('@averjs/core'), '../app');
-                const ncp = require('ncp').ncp;
-
-                await ncp(path.resolve(appDir, './src'), process.env.PROJECT_PATH);
+                
+                fs.copySync(path.resolve(appDir, './src'), process.env.PROJECT_PATH, { recursive: true });
     
                 console.log('Root directory successfully copied!');
                 console.log('Copying necessary files...');

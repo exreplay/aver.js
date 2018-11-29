@@ -15,8 +15,6 @@ import uuid                     from 'uuid/v4';
 import chokidar                 from 'chokidar';
 import indexOf                  from 'lodash/indexOf';
 import WWW                      from './www';
-// import Mongodb                  from './mongodb';
-// import Session                  from './session';
 
 export default class Server {
     constructor(hooks, config) {
@@ -45,8 +43,6 @@ export default class Server {
                 });
             });
         }
-        
-        // this.setupMongodb();
 
         this.initRenderer();
         this.registerMiddlewares();
@@ -64,10 +60,6 @@ export default class Server {
 
         this.www = new WWW(this.app, config);
     }
-
-    setupMongodb() {
-        if (process.env.MONGODB_HOST) new Mongodb();
-    }
     
     initRenderer() {
         const self = this;
@@ -79,7 +71,7 @@ export default class Server {
                 clientManifest: clientManifest
             });
         } else {
-            const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../webpack/setup-dev-server')).default;
+            const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../src/setup-dev-server')).default;
             this.readyPromise = new WebpackDevServer(this.app, (bundle, options) => {
                 self.renderer = self.createRenderer(bundle, Object.assign(bundle, options));
             });
@@ -88,7 +80,7 @@ export default class Server {
     
     createRenderer(bundle, options) {
         const bundleOptions = {
-            cache: LRU({
+            cache: new LRU({
                 max: 1000,
                 maxAge: 1000 * 60 * 15
             }),
@@ -116,14 +108,10 @@ export default class Server {
         this.middlewares.push(cookieParser());
         this.middlewares.push(compression({ threshold: 0 }));
         
-        this.middlewares.push('/dist', serve('./dist', true));
-        this.middlewares.push('/public', serve('./public', true));
-        this.middlewares.push('/static', serve('./static', true));
-        this.middlewares.push('/storage', express.static('./storage'));
-        
-        this.app.get('/favicon.ico', function(req, res) {
-            res.sendStatus(204);
-        });
+        this.middlewares.push(['/dist', serve('./dist', true)]);
+        this.middlewares.push(['/public', serve('./public', true)]);
+        this.middlewares.push(['/static', serve('./static', true)]);
+        this.middlewares.push(['/storage', express.static('./storage')]);
         
         this.middlewares.push((req, res, next) => {
             req.io = this.www.io;
@@ -136,8 +124,6 @@ export default class Server {
             if(indexOf(this.config.csrfExclude, req.path) !== -1) return next();
             csrf({ cookie: true })(req, res, next);
         });
-
-        // this.setupSession();
         
         for(const middleware of this.hooks.middlewares) {
             middleware({
@@ -154,7 +140,8 @@ export default class Server {
         }
 
         for(const middleware of this.middlewares) {
-            this.app.use(middleware);
+            if(typeof middleware === 'function') this.app.use(middleware);
+            else if(typeof middleware === 'array') this.app.use(...middleware);
         }
 
         // this.app.use(microcache.cacheSeconds(1, req => {
@@ -162,10 +149,6 @@ export default class Server {
         //     return req.originalUrl
         // }));
     }
-
-    // setupSession() {
-    //     if (typeof this.config.session !== 'undefined') this.app.use(new Session(this.app, this.config.session));
-    // }
 
     logging() {
         const logDirectory = path.join(process.env.PROJECT_PATH, '../storage/log');
@@ -213,6 +196,10 @@ export default class Server {
                 require(routesPath)(req, res, next);
             });
         }
+
+        this.app.get('/favicon.ico', function(req, res) {
+            res.sendStatus(204);
+        });
 
         this.app.get('/service-worker.js', (req, res, next) => {
             try {
