@@ -1,6 +1,6 @@
-import webpack from "webpack";
-import WebpackClientConfiguration from "./client.config";
-import WebpackServerConfiguration from "./server.config";
+import webpack from 'webpack';
+import WebpackClientConfiguration from './client.config';
+import WebpackServerConfiguration from './server.config';
 
 export default class Builder {
     constructor() {
@@ -13,20 +13,26 @@ export default class Builder {
     }
     
     compile() {
-        this.compilers.map(compiler => {
-            return new Promise((resolve, reject) => {
+        const promises = [];
+        
+        for (const compiler of this.compilers) {
+            promises.push(new Promise((resolve, reject) => {
                 const compile = webpack(compiler);
                 
-                compile.run((err, stats) => {
-                    if (err) {
-                        console.error(err);
-                        return reject(err);
+                compile.run();
+                compile.hooks.done.tap('load-resource', stats => {
+                    const info = stats.toJson();
+    
+                    if (stats.hasErrors()) {
+                        console.error(info.errors);
+                        return reject(info.errors);
                     }
-                    resolve(stats);
-                })
-            });
-        });
+    
+                    resolve(info);
+                });
+            }));
+        }
         
-        return Promise.all(this.compilers);
+        return Promise.all(promises);
     }
 }

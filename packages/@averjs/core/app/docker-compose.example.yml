@@ -1,14 +1,24 @@
 version: '2'
 
 services:
-  node:
-    image: registry.ppm-vi.de/docker/nodejs:latest
+  mongodb:
+    image: mongo:latest
     environment:
-      - NODE_ENV=development
-      - GIT_USERNAME=
-      - GIT_PASSWORD=
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+      - MONGO_INITDB_ROOT_USERNAME=
+      - MONGO_INITDB_ROOT_PASSWORD=
     volumes:
-      - ./:/usr/src/app
+      - /data/db
     ports:
-      - 80:3000
-      - 9229:9229
+      - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null --auth
+
+  redis:
+    image: registry.ppm-vi.de/docker/redis:latest
+    volumes:
+      - /data
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASSWORD=

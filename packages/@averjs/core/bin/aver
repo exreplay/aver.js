@@ -33,6 +33,7 @@ if(argv.init) {
 }
 
 if(argv.build) {
-    core.build();
-    process.exit(0);
+    core.build().then(() => {
+        process.exit(0);
+    });
 }

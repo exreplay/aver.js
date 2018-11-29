@@ -30,7 +30,7 @@ export default class Core {
     registerPlugins() {
         if(typeof this.globalConfig.plugins !== 'undefined') {
             for (const plugin of this.globalConfig.plugins) {
-                require(plugin)({
+                require(plugin).default({
                     config: this.globalConfig,
                     hooks: this.hooks
                 });
@@ -85,6 +85,7 @@ export default class Core {
                 fs.copyFileSync(path.resolve(appDir, './Dockerfile'), path.resolve(process.env.PROJECT_PATH, '../Dockerfile'));
                 fs.copyFileSync(path.resolve(appDir, './jsconfig.json'), path.resolve(process.env.PROJECT_PATH, '../jsconfig.json'));
                 fs.copyFileSync(path.resolve(appDir, './.gitlab-ci.yml'), path.resolve(process.env.PROJECT_PATH, '../.gitlab-ci.yml'));
+                fs.copyFileSync(path.resolve(appDir, './.env.example'), path.resolve(process.env.PROJECT_PATH, '../.env.example'));
     
                 const dockerComposePath = path.resolve(process.env.PROJECT_PATH, '../docker-compose.yml');
                 if(fs.existsSync(dockerComposePath)) console.log('docker-compose.yml already exists, skipping...')

@@ -1,7 +1,8 @@
 import http from 'http';
 
 export default class WWW {
-    constructor(app, config) {
+    constructor(app, config, hooks) {
+        this.hooks = hooks;
         this.config = config;
         this.port = this.normalizePort(process.env.PORT || '3000');
         this.app = app;
@@ -14,6 +15,10 @@ export default class WWW {
         this.server.listen(this.port);
         this.server.on('error', this.onError.bind(this));
         this.server.on('listening', this.onListening.bind(this));
+
+        for(const serverMiddleware of this.hooks) {
+            serverMiddleware(this.server);
+        }
     }
     
     normalizePort(val) {

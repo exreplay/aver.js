@@ -58,7 +58,7 @@ export default class Server {
             }, (err.data) ? { data: err.data } : {}));
         });
 
-        this.www = new WWW(this.app, config);
+        this.www = new WWW(this.app, config, this.hooks.serverMiddleware);
     }
     
     initRenderer() {
@@ -141,7 +141,7 @@ export default class Server {
 
         for(const middleware of this.middlewares) {
             if(typeof middleware === 'function') this.app.use(middleware);
-            else if(typeof middleware === 'array') this.app.use(...middleware);
+            else if(middleware instanceof Array) this.app.use(...middleware);
         }
 
         // this.app.use(microcache.cacheSeconds(1, req => {
