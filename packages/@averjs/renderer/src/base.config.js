@@ -193,7 +193,7 @@ export default class WebpackBaseConfiguration {
                 .include
                     .add(process.env.PROJECT_PATH)
                     .add(path.resolve(require.resolve("@averjs/core"), "../"))
-                    .add(path.resolve(require.resolve("vuex-decorators"), "../"))
+                    .add(path.resolve(require.resolve("@averjs/vuex-decorators"), "../"))
                     .end()
                 .use('cache-loader')
                     .loader('cache-loader')

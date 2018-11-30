@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import forEach from 'lodash/forEach';
-import { ExportVuexStore } from 'vuex-decorators';
+import { ExportVuexStore } from '@averjs/vuex-decorators';
 import createPersistedState from 'vuex-persistedstate';
 import * as Cookies from 'js-cookie'
 
