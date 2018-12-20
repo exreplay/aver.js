@@ -28,17 +28,45 @@ export function VuexClass(options) {
 
 export function Getter(target, key, descriptor) {
     initStore(target);
-    stores[getClassName(target)].getters[key] = target[key];
+    stores[getClassName(target)].getters[key] = (state, getters, rootState, rootGetters) => {
+        const thisObject = { $store: { state, getters, rootState, rootGetters }};
+        for(const key of Object.keys(state)) {
+            Object.assign(thisObject, { [key]: state[key] });
+        }
+        const output = target[key].call(thisObject);
+        return output;
+    };
+}
+
+export function HasGetter(target, key, descriptor) {
+    initStore(target);
+    stores[getClassName(target)].getters[key] = state => state[key];
 }
 
 export function Mutation(target, key, descriptor) {
     initStore(target);
-    stores[getClassName(target)].mutations[key] = target[key];
+    stores[getClassName(target)].mutations[key] = (state, payload) => {
+        target[key].call(state, payload);
+    };
+}
+
+export function HasGetterAndMutation(target, key, descriptor) {
+    initStore(target);
+    stores[getClassName(target)].getters[key] = state => state[key];
+    stores[getClassName(target)].mutations[key] = (state, val) => {
+        state[key] = val;
+    };
 }
 
 export function Action(target, key, descriptor) {
     initStore(target);
-    stores[getClassName(target)].actions[key] = target[key];
+    stores[getClassName(target)].actions[key] = ({ state, rootState, commit, dispatch, getters, rootGetters }, payload) => {
+        const thisObject = { $store: { state, rootState, commit, dispatch, getters, rootGetters } };
+        for(const key of Object.keys(state)) {
+            Object.assign(thisObject, { [key]: state[key] });
+        }
+        return target[key].call(thisObject, payload);
+    };
 }
 
 export function ExportVuexStore(target) {
@@ -58,6 +86,25 @@ function assignStates(Obj) {
     
     const stateFactory = () => getStates(target, props);
     stores[getClassName(target)].state = stateFactory;
+
+    const proto = Object.getPrototypeOf(target);
+    const functions = Object.getOwnPropertyNames(proto);
+
+    for(const func of functions) {
+        const descriptor = Object.getOwnPropertyDescriptor(proto, func);
+        if(descriptor && descriptor.get) {
+            stores[getClassName(target)].getters[func] = (state, getters, rootState, rootGetters) => {
+                const thisObject = { $store: { state, getters, rootState, rootGetters }};
+                for(const key of Object.keys(state)) {
+                    Object.assign(thisObject, { [key]: state[key] });
+                }
+                const output = descriptor.get.call(thisObject);
+                return output;
+            };
+        } else if(descriptor) {
+            // console.log(func, descriptor);
+        }
+    }
 }
 
 function getStates(target, props) {
