@@ -1,9 +1,0 @@
-{
-  "name": "@averjs/vuex-decorators",
-  "author": {
-    "name": "Florian Weber",
-    "email": "f.weber@ppm-vi.de"
-  },
-  "main": "index.js",
-  "version": "2.0.2"
-}
