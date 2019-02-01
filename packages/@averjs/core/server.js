@@ -71,7 +71,7 @@ export default class Server {
                 clientManifest: clientManifest
             });
         } else {
-            const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../src/setup-dev-server')).default;
+            const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../src/setup-dev-server'));
             this.readyPromise = new WebpackDevServer(this.app, (bundle, options) => {
                 self.renderer = self.createRenderer(bundle, Object.assign(bundle, options));
             });

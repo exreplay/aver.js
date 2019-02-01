@@ -7,25 +7,15 @@ module.exports = {
         }
     },
     env: {
-        "browser": true,
-        "jquery": true
+        "browser": true
     },
     extends: [
         'plugin:vue/essential',
         'standard'
     ],
     plugins: [
-        "vue",
-        "dollar-sign",
-        "jquery"
+        "vue"
     ],
-	settings: {
-		'import/resolver': {
-			webpack: {
-				config: 'build/webpack.base.conf.js'
-			}
-		}
-	},
     rules: {
         'generator-star-spacing': 'off',
     
@@ -54,11 +44,6 @@ module.exports = {
         "no-trailing-spaces": ["error", {
             "skipBlankLines": true
         }],
-
-        "dollar-sign/dollar-sign": [
-            2,
-            "ignoreProperties"
-        ],
 
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
     },
