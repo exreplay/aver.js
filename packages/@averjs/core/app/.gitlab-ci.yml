@@ -27,9 +27,17 @@ build:
 #     - eval $(ssh-agent -s)
 #     - mkdir -p ~/.ssh
 #     - echo "$SSH_PRIVATE_KEY" | ssh-add -
-#     - ssh-keyscan 88.198.120.178 >> ~/.ssh/known_hosts
+#     - ssh-keyscan  >> ~/.ssh/known_hosts
 #     - chmod 644 ~/.ssh/known_hosts
 #   script:
-#     - ssh -T ppmvi@88.198.120.178 'cd docker/flachglas/digitaldruck && image=`docker-compose images -q dev` && docker-compose pull dev && docker-compose stop dev && docker-compose rm -f dev && docker-compose up -d dev && docker rmi $image'
+#     - |
+#       ssh -T user@ip '
+#         cd path &&
+#         dev=`docker-compose images -q dev` &&
+#         docker-compose pull dev &&
+#         docker-compose stop dev &&
+#         docker-compose rm -f dev &&
+#         docker-compose up -d dev &&
+#         docker rmi $dev'
 #   only:
 #     - development

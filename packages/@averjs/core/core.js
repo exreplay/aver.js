@@ -81,7 +81,7 @@ export default class Core {
                 fs.copyFileSync(path.resolve(appDir, './.eslintrc.js'), path.resolve(process.env.PROJECT_PATH, '../.eslintrc.js'));
                 fs.copyFileSync(path.resolve(appDir, './index.js'), path.resolve(process.env.PROJECT_PATH, '../index.js'));
                 fs.copyFileSync(path.resolve(appDir, './aver-config.js'), path.resolve(process.env.PROJECT_PATH, '../aver-config.js'));
-                fs.copyFileSync(path.resolve(appDir, './.gitignore'), path.resolve(process.env.PROJECT_PATH, '../.gitignore'));
+                fs.copyFileSync(path.resolve(appDir, './_.gitignore'), path.resolve(process.env.PROJECT_PATH, '../.gitignore'));
                 fs.copyFileSync(path.resolve(appDir, './Dockerfile'), path.resolve(process.env.PROJECT_PATH, '../Dockerfile'));
                 fs.copyFileSync(path.resolve(appDir, './jsconfig.json'), path.resolve(process.env.PROJECT_PATH, '../jsconfig.json'));
                 fs.copyFileSync(path.resolve(appDir, './.gitlab-ci.yml'), path.resolve(process.env.PROJECT_PATH, '../.gitlab-ci.yml'));
