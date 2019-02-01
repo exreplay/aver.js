@@ -70,11 +70,10 @@ export default class StyleLoader {
     css(rule) {
         rule
             .use('css-loader')
-                .loader(this.isServer ? 'css-loader/locals' : 'css-loader')
+                .loader('css-loader')
                 .options({
                     importLoaders: this.postcssConfigExists ? 2 : 1,
-                    sourceMap: !this.isProd,
-                    minimize: this.isProd
+                    sourceMap: !this.isProd
                 });
     }
 
@@ -87,8 +86,7 @@ export default class StyleLoader {
                     importLoaders: this.postcssConfigExists ? 2 : 1,
                     localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
                     camelCase: true,
-                    sourceMap: !this.isProd,
-                    minimize: this.isProd
+                    sourceMap: !this.isProd
                 });
     }
 

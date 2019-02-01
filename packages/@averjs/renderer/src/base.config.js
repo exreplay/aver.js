@@ -24,7 +24,7 @@ export default class WebpackBaseConfiguration {
 
         this.commonRules = [];
 
-        if (!this.isProd) warmup({}, ['babel-loader', 'css-loader', 'css-loader/locals'])
+        if (!this.isProd) warmup({}, ['babel-loader', 'css-loader'])
 
         this.loadGlobalConfig();
         this.modernizr();
@@ -316,73 +316,6 @@ export default class WebpackBaseConfiguration {
                     .options({
                         name: 'resources/[name].[hash:7].[ext]'
                     });
-    }
-
-    styleLoader(loader, test, options) {
-        const baseRule = this.chainConfig.module.rule(loader).test(test);
-        
-        const moduleRule = baseRule
-                .oneOf(`${loader}-module`)
-                    .resourceQuery(/module/);
-        this.applyStyle(loader, moduleRule, true);
-        if (loader !== 'css-loader') moduleRule.use(loader).loader(loader).options(options);
-        
-        const rule = baseRule.oneOf(loader);
-        this.applyStyle(loader, rule);
-        if (loader !== 'css-loader') rule.use(loader).loader(loader).options(options);
-    }
-
-    applyStyle(loaderName, loader, module = false) {
-        const postcssConfigExists = fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../postcss.config.js'));
-
-        if(loaderName === 'css-loader') {
-            loader
-                .use('cache-loader')
-                    .loader('cache-loader')
-                    .options({
-                        cacheDirectory: path.resolve(process.env.PROJECT_PATH, '../node_modules/.cache/cache-loader'),
-                        cacheIdentifier: 'css'
-                    })
-                    .end()
-                .use('thread-loader')
-                    .loader('thread-loader')
-                    .options({
-                        name: 'css',
-                        poolTimeout: !this.isProd ? Infinity : 2000
-                    })
-                    .end()
-        }
-
-        if (this.isServer || !this.isProd) {
-            loader
-                .use('vue-style-loader')
-                    .loader('vue-style-loader')
-                    .options({ sourceMap: true });
-        } else {
-            loader
-                .use('mini-css')
-                    .loader(MiniCssExtractPlugin.loader)
-        }
-
-        loader
-            .use('css-loader')
-                .loader(module ? 'css-loader' : this.isServer ? 'css-loader/locals' : 'css-loader')
-                .options((module) ? {
-                    modules: true,
-                    importLoaders: postcssConfigExists && loaderName !== 'css-loader' ? 2 : 1,
-                    localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
-                    camelCase: true,
-                    sourceMap: !this.isProd,
-                    minimize: this.isProd
-                } : {
-                    importLoaders: postcssConfigExists && loaderName !== 'css-loader' ? 2 : 1,
-                    sourceMap: !this.isProd,
-                    minimize: this.isProd
-                });
-        
-        
-
-        if (postcssConfigExists) loader.use('postcss-loader').loader('postcss-loader').options({ sourceMap: !this.isProd });
     }
 
     optimization() {
