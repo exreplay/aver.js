@@ -1,6 +1,11 @@
 import Websocket from './src';
 export default ({ config, hooks }) => {
-    hooks.registerServerMiddleware((server) => {
-        new Websocket(server);
+    hooks.registerMiddleware(({ middlewares, server }) => {
+        const ws = new Websocket(server);
+
+        middlewares.push((req, res, next) => {
+            req.io = ws.io;
+            next();
+        });
     });
 }

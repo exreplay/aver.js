@@ -9,18 +9,15 @@ import logger                   from 'morgan';
 import cookieParser             from 'cookie-parser';
 import csrf                     from 'csurf';
 import bodyParser               from 'body-parser';
-// import microcache               from 'route-cache';
 import rfs                      from 'rotating-file-stream';
 import uuid                     from 'uuid/v4';
 import chokidar                 from 'chokidar';
 import indexOf                  from 'lodash/indexOf';
 import WWW                      from './www';
 
-export default class Server {
+export default class Server extends WWW {
     constructor(hooks, config) {
-        this.config = config;
-        this.hooks = hooks;
-        this.app = express();
+        super(hooks, config);
         this.csrfProtection = csrf({ cookie: true });
         this.renderer = null;
         this.readyPromise = null;
@@ -58,7 +55,7 @@ export default class Server {
             }, (err.data) ? { data: err.data } : {}));
         });
 
-        this.www = new WWW(this.app, config, this.hooks.serverMiddleware);
+        this.startServer();
     }
     
     initRenderer() {
@@ -112,11 +109,6 @@ export default class Server {
         this.middlewares.push(['/public', serve('./public', true)]);
         this.middlewares.push(['/static', serve('./static', true)]);
         this.middlewares.push(['/storage', express.static('./storage')]);
-        
-        this.middlewares.push((req, res, next) => {
-            req.io = this.www.io;
-            next();
-        });
 
         this.middlewares.push(bodyParser.json());
         this.middlewares.push(bodyParser.urlencoded({ extended: false }));
@@ -143,11 +135,6 @@ export default class Server {
             if(typeof middleware === 'function') this.app.use(middleware);
             else if(middleware instanceof Array) this.app.use(...middleware);
         }
-
-        // this.app.use(microcache.cacheSeconds(1, req => {
-        //     if (req.isAuthenticated()) return false;
-        //     return req.originalUrl
-        // }));
     }
 
     logging() {

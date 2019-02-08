@@ -1,24 +1,20 @@
+import express from 'express';
 import http from 'http';
 
 export default class WWW {
-    constructor(app, config, hooks) {
-        this.hooks = hooks;
+    constructor(hooks, config) {
         this.config = config;
+        this.hooks = hooks;
+        this.app = express();
         this.port = this.normalizePort(process.env.PORT || '3000');
-        this.app = app;
         this.app.set('port', this.port);
-        this.startServer();
-    }
-    
-    startServer() {
         this.server = http.createServer(this.app);
+    }
+
+    startServer() {
         this.server.listen(this.port);
         this.server.on('error', this.onError.bind(this));
         this.server.on('listening', this.onListening.bind(this));
-
-        for(const serverMiddleware of this.hooks) {
-            serverMiddleware(this.server);
-        }
     }
     
     normalizePort(val) {

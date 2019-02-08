@@ -22,9 +22,9 @@ export default class Core {
     run(hooks = {}) {
         this.hooks = new Hooks();
         this.loadGlobalConfig();
+        this.initModuleAliases();
         this.registerPlugins();
         new Server(this.hooks, this.globalConfig);
-        this.initModuleAliases();
     }
 
     registerPlugins() {
