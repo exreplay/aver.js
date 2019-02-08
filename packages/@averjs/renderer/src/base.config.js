@@ -33,7 +33,7 @@ export default class WebpackBaseConfiguration {
     loadGlobalConfig() {
         const globalConfPath = path.resolve(process.env.PROJECT_PATH, '../aver-config.js');
         if (fs.existsSync(globalConfPath)) {
-            this.globalConfig = require(globalConfPath);
+            this.globalConfig = require(globalConfPath).default;
             this.globalConfig = (typeof this.globalConfig.webpack !== 'undefined') ? this.globalConfig.webpack : {};
         } else {
             this.globalConfig = {};

@@ -68,7 +68,7 @@ export default class Server extends WWW {
                 clientManifest: clientManifest
             });
         } else {
-            const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../src/setup-dev-server'));
+            const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../src/setup-dev-server')).default;
             this.readyPromise = new WebpackDevServer(this.app, (bundle, options) => {
                 self.renderer = self.createRenderer(bundle, Object.assign(bundle, options));
             });
@@ -120,6 +120,7 @@ export default class Server extends WWW {
         for(const middleware of this.hooks.middlewares) {
             middleware({
                 app: this.app,
+                server: this.server,
                 middlewares: this.middlewares
             });
         }

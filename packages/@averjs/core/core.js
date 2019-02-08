@@ -30,7 +30,7 @@ export default class Core {
     registerPlugins() {
         if(typeof this.globalConfig.plugins !== 'undefined') {
             for (const plugin of this.globalConfig.plugins) {
-                require(plugin)({
+                require(plugin).default({
                     config: this.globalConfig,
                     hooks: this.hooks
                 });
@@ -56,7 +56,7 @@ export default class Core {
     }
     
     build() {
-        const Builder = require('@averjs/renderer');
+        const Builder = require('@averjs/renderer').default;
         const builder = new Builder();
         return builder.compile();
     }
@@ -134,7 +134,7 @@ module.exports = router;`)
     loadGlobalConfig() {
         const globalConfPath = path.resolve(process.env.PROJECT_PATH, '../aver-config.js');
         if (fs.existsSync(globalConfPath)) {
-            this.globalConfig = require(globalConfPath);
+            this.globalConfig = require(globalConfPath).default;
         } else {
             this.globalConfig = {};
         }
