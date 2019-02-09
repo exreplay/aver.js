@@ -1,4 +1,3 @@
-import '@babel/polyfill';
 import Vue              from 'vue';
 import Component        from 'vue-class-component';
 import VueI18n          from 'vue-i18n';

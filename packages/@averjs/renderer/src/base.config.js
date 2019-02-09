@@ -213,33 +213,12 @@ export default class WebpackBaseConfiguration {
                     .loader('babel-loader')
                     .options({
                         "presets": [
-                            ["@babel/preset-env", {
-                                "modules": false,
-                                "targets": {
-                                    "browsers": [
-                                        "> 1%",
-                                        "last 2 versions",
-                                        "not ie <= 8"
-                                    ]
-                                }
-                            }]
-                        ],
-                        "plugins": [
-                            "@babel/syntax-dynamic-import",
                             [
-                                "@babel/plugin-proposal-decorators",
-                                { 
-                                    "legacy": true
-                                }
-                            ],
-                            [
-                                "@babel/proposal-class-properties",
+                                require.resolve('@averjs/babel-preset-app'),
                                 {
-                                    "loose" : true
+                                    buildTarget: this.isServer ? 'server' : 'client'
                                 }
-                            ],
-                            "@babel/proposal-object-rest-spread",
-                            "@babel/transform-runtime"
+                            ]
                         ]
                     });
         
