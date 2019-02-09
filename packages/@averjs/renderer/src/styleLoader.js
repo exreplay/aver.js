@@ -73,7 +73,8 @@ export default class StyleLoader {
                 .loader('css-loader')
                 .options({
                     importLoaders: this.postcssConfigExists ? 2 : 1,
-                    sourceMap: !this.isProd
+                    sourceMap: !this.isProd,
+                    exportOnlyLocals: this.isServer
                 });
     }
 
@@ -86,7 +87,8 @@ export default class StyleLoader {
                     importLoaders: this.postcssConfigExists ? 2 : 1,
                     localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
                     camelCase: true,
-                    sourceMap: !this.isProd
+                    sourceMap: !this.isProd,
+                    exportOnlyLocals: this.isServer
                 });
     }
 

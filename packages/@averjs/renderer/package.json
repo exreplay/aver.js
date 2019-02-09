@@ -5,7 +5,7 @@
       "email": "f.weber@ppm-vi.de"
     },
     "main": "index.js",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "dependencies": {
       "@averjs/babel-preset-app": "1.0.2",
       "@kazupon/vue-i18n-loader": "0.3.0",
