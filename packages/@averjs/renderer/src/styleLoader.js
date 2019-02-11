@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 
 export default class StyleLoader {
     constructor(isServer) {
@@ -62,8 +62,8 @@ export default class StyleLoader {
                     .options({ sourceMap: true });
         } else {
             rule
-                .use('mini-css')
-                    .loader(MiniCssExtractPlugin.loader);
+                .use('extract-css')
+                    .loader(ExtractCssPlugin.loader);
         }
     }
 
@@ -74,7 +74,7 @@ export default class StyleLoader {
                 .options({
                     importLoaders: this.postcssConfigExists ? 2 : 1,
                     sourceMap: !this.isProd,
-                    exportOnlyLocals: this.isServer
+                    exportOnlyLocals: this.isServer && !this.isProd
                 });
     }
 
@@ -88,7 +88,7 @@ export default class StyleLoader {
                     localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
                     camelCase: true,
                     sourceMap: !this.isProd,
-                    exportOnlyLocals: this.isServer
+                    exportOnlyLocals: this.isServer && !this.isProd
                 });
     }
 

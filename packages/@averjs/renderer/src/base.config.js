@@ -6,7 +6,7 @@ import WebpackChain from 'webpack-chain';
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin';
 import { VueLoaderPlugin } from 'vue-loader';
 import { warmup } from 'thread-loader';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import SafeParser from 'postcss-safe-parser';
 import PurgeCssPlugin from 'purgecss-webpack-plugin';
@@ -55,8 +55,8 @@ export default class WebpackBaseConfiguration {
         if (this.isProd) {
             if (!this.isServer)  {
                 this.chainConfig
-                    .plugin('mini-css')
-                        .use(MiniCssExtractPlugin, [{
+                    .plugin('extract-css')
+                        .use(ExtractCssPlugin, [{
                             filename: !this.isProd ? 'css/[name].css' : 'css/[name].[contenthash].css',
                             chunkFilename: !this.isProd ? 'css/[id].css' : 'css/[id].[contenthash].css',
                         }]);
