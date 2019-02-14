@@ -192,6 +192,7 @@ export default class WebpackBaseConfiguration {
                 .test(/\.js$/)
                 .include
                     .add(process.env.PROJECT_PATH)
+                    .add(path.resolve(process.env.PROJECT_PATH, '../aver-config.js'))
                     .add(path.resolve(require.resolve("@averjs/core"), "../"))
                     .add(path.resolve(require.resolve("@averjs/vuex-decorators"), "../"))
                     .end()

@@ -50,12 +50,7 @@ module.exports = (context, options = {}) => {
   } = options
   const targets = buildTarget === 'server' ? { node: 'current' } : {
     browsers: [
-      'Chrome >= 49',
-      'Firefox >= 45',
-      'Safari >= 10',
-      'Edge >= 13',
-      'iOS >= 10',
-      'Electron >= 0.36'
+      'IE >= 9'
     ]
   }
 
@@ -87,12 +82,14 @@ module.exports = (context, options = {}) => {
   }])
 
   plugins.push(
+    require('@babel/plugin-transform-arrow-functions'),
     require('@babel/plugin-syntax-dynamic-import'),
     [require('@babel/plugin-proposal-decorators'), {
       decoratorsBeforeExport,
       legacy: decoratorsLegacy !== false
     }],
     [require('@babel/plugin-proposal-class-properties'), { loose }],
+    [require('@babel/plugin-transform-classes'), { loose }]
   )
 
   plugins.push([require('@babel/plugin-transform-runtime'), {
