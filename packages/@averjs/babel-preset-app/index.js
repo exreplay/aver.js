@@ -89,7 +89,8 @@ module.exports = (context, options = {}) => {
       legacy: decoratorsLegacy !== false
     }],
     [require('@babel/plugin-proposal-class-properties'), { loose }],
-    [require('@babel/plugin-transform-classes'), { loose }]
+    [require('@babel/plugin-transform-classes'), { loose }],
+    require('@babel/plugin-transform-parameters')
   )
 
   plugins.push([require('@babel/plugin-transform-runtime'), {
