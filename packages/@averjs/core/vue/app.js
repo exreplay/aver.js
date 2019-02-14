@@ -60,11 +60,11 @@ export function createApp(ssrContext) {
     else i18n.locale = ssrContext.context.cookies['language'] || 'de';
 
     Vue.prototype.$locale = {
-        change(lang) {
+        change: (lang) => {
             i18n.locale = lang;
             Cookies.set('language', i18n.locale, { secure: process.env.NODE_ENV === 'production' })
         },
-        current() {
+        current: () => {
             return i18n.locale;
         }
     };
