@@ -1,4 +1,4 @@
-# Aver.js
+# aver.js
 ## Vue Server Side Rendering
 
 This plugin has everything you need to start a new Vue project which is capable of server side rendering.  
