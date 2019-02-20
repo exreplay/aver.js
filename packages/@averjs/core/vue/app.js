@@ -40,7 +40,8 @@ axios.interceptors.response.use((response) => {
 
 Component.registerHooks([
     'asyncData',
-    'metaInfo'
+    'metaInfo',
+    'serverPrefetch'
 ]);
 
 export function createApp(ssrContext) {

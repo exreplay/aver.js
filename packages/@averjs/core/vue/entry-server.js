@@ -58,7 +58,10 @@ export default async context => {
             });
         }
 
-        context.state = store.state;
+        context.rendered = () => {
+            context.state = store.state;
+        };
+        
         return app;
     } catch (err) {
         throw err;
