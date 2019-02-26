@@ -36,7 +36,8 @@ export default async context => {
             }
         }
         
-        for(const { options: { methods: { asyncData }, props } } of matchedComponents) {
+        for(const { options: { methods, props } } of matchedComponents) {
+            const { asyncData } = methods || {};
             if (typeof asyncData === 'function' && asyncData) {
                 await asyncData({
                     store,
@@ -47,8 +48,8 @@ export default async context => {
             }
         }
 
-        const { options: { methods: { asyncData }, props } } = App;
-
+        const { options: { methods, props } } = App;
+        const { asyncData } = methods || {};
         if (typeof asyncData === 'function' && asyncData) {
             await asyncData({
                 store,
