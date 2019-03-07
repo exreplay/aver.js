@@ -20,7 +20,7 @@ class ClientEntry {
                 const activated = matched.filter((c, i) => {
                     return diffed || (diffed = (prevMatched[i] !== c));
                 });
-                const asyncDataHooks = activated.map(c => c.options.methods ? c.options.methods.asyncData : false).filter(_ => _);
+                const asyncDataHooks = activated.map(c => c.options ? c.options.asyncData : false).filter(_ => _);
                 if (!asyncDataHooks.length) {
                     return next();
                 }
@@ -73,8 +73,7 @@ class ClientEntry {
     setRouterMixins() {
         Vue.mixin({
             beforeRouteUpdate (to, from, next) {
-                const { methods } = this.$options;
-                const { asyncData } = methods || {};
+                const { asyncData } = this.$options;
                 if (asyncData) {
                     asyncData({
                         store: this.$store,
