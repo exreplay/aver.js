@@ -18,13 +18,6 @@ npm install -D @averjs/renderer
 
 ### Setup
 
-Before you can start with the setup of a new project, be sure you create a `.npmrc` file with your authentication token.
-```bash
-@averjs:registry=https://npm.ppm-vi.de/
-//npm.ppm-vi.de/:_authToken=
-```
-This has to be done so `npm` or `yarn` knows where to download the Aver.js packages and how to authenticate.
-
 To get you started as fast as possible with a new project, there is a executable, which lets you set this up with ease.  
 
 Jump into your working directory and execute tohe follwing command.
