@@ -27,11 +27,6 @@ node_modules/.bin/aver --init
 
 When the executable is done setting up the new Project, you can start the app by executing `yarn run dev` or `npm run dev`.
 
-### Docker
-
-Getting you started with Docker is really easy. Create a `docker-compose.yml` file inside your new and empty project folder. Copy the code from the following [docker-compose](https://gitlab.ppm-vi.de/nodejs/vue-ssr/blob/master/lib/app/docker-compose.example.yml) file and start it with `docker-compose up -d`. Dont forget to change the `GIT_USERNAME` and `GIT_PASSWORD` variables, so you are able to download the packages from Gitlab.  
-The installation of the two packages and the setup are all executed automatically for you.
-
 ### Folder structure
 
 There are 2 main root folders, `api` and `src`. All your Vue.js code belongs inside the `src` and all the server side code belongs in the `api` folder. When you setup the project by running the `aver --init` command, you will see how the `api` and `src` folders should be strucuted. If you stick to the same structure, you are able to use the provided modules aliases which are listed in the folder structure below.
