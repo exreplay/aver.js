@@ -6,6 +6,9 @@
     },
     "main": "index.js",
     "version": "1.0.0",
+    "publishConfig": {
+      "access": "public"
+    },
     "dependencies": {
         "express-session": "^1.15.6",
         "connect-redis": "^3.4.0",

@@ -9,6 +9,9 @@
   "bin": {
     "aver": "./bin/aver"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@averjs/vuex-decorators": "2.1.4",
     "@babel/runtime-corejs2": "7.3.4",
