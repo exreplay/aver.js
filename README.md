@@ -86,10 +86,10 @@ This is a list of all the plugins currently available:
 
 |Plugin|Link|Description|
 |---|---|---|
-|@averjs/renderer|[https://npm.ppm-vi.de/#/detail/@averjs/renderer](https://npm.ppm-vi.de/#/detail/@averjs/renderer)|This package holds everything you need to render your server and client code.|
-|@averjs/mailer|[https://npm.ppm-vi.de/#/detail/@averjs/mailer](https://npm.ppm-vi.de/#/detail/@averjs/mailer)|This package holds nodemailer and email-templates for your mailing purposes.|
-|@averjs/mongodb|[https://npm.ppm-vi.de/#/detail/@averjs/mongodb](https://npm.ppm-vi.de/#/detail/@averjs/mongodb)|TODO|
-|@averjs/queue|[https://npm.ppm-vi.de/#/detail/@averjs/queue](https://npm.ppm-vi.de/#/detail/@averjs/queue)|TODO|
-|@averjs/session|[https://npm.ppm-vi.de/#/detail/@averjs/session](https://npm.ppm-vi.de/#/detail/@averjs/session)|TODO|
-|@averjs/vuex-decorators|[https://npm.ppm-vi.de/#/detail/@averjs/vuex-decorators](https://npm.ppm-vi.de/#/detail/@averjs/vuex-decorators)|TODO|
-|@averjs/websocket|[https://npm.ppm-vi.de/#/detail/@averjs/websocket](https://npm.ppm-vi.de/#/detail/@averjs/websocket)|TODO|
+|@averjs/renderer|[https://www.npmjs.com/package/@averjs/renderer](https://www.npmjs.com/package/@averjs/renderer)|This package holds everything you need to render your server and client code.|
+|@averjs/mailer|[https://www.npmjs.com/package/@averjs/mailer](https://www.npmjs.com/package/@averjs/mailer)|This package holds nodemailer and email-templates for your mailing purposes.|
+|@averjs/mongodb|[https://www.npmjs.com/package/@averjs/mongodb](https://www.npmjs.com/package/@averjs/mongodb)|TODO|
+|@averjs/queue|[https://www.npmjs.com/package/@averjs/queue](https://www.npmjs.com/package/@averjs/queue)|TODO|
+|@averjs/session|[https://www.npmjs.com/package/@averjs/session](https://www.npmjs.com/package/@averjs/session)|TODO|
+|@averjs/vuex-decorators|[https://www.npmjs.com/package/@averjs/vuex-decorators](https://www.npmjs.com/package/@averjs/vuex-decorators)|TODO|
+|@averjs/websocket|[https://www.npmjs.com/package/@averjs/websocket](https://www.npmjs.com/package/@averjs/websocket)|TODO|
