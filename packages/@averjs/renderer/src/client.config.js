@@ -53,6 +53,9 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     serviceWorker() {
         const WorkboxWebpackModule = require('workbox-webpack-plugin');
+        const swConfig = this.globalConfig.sw;
+        const mode = swConfig.mode || 'GenerateSW';
+        delete swConfig.mode;
 
         let conf = {
             exclude: [
@@ -61,12 +64,18 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
                 /favicon\.ico$/,
                 /manifest\.json$/
             ],
-            cacheId: 'averjs'
+            ...swConfig
         };
+
+        if (mode === 'GenerateSW') { 
+            Object.assign(conf, { cacheId: 'averjs' });
+        } else if (mode === 'InjectManifest') {
+            Object.assign(conf, { swSrc: path.resolve(process.env.PROJECT_PATH, conf.swSrc) });
+        }
 
         this.chainConfig
             .plugin('workbox')
-                .use(WorkboxWebpackModule['GenerateSW'], [ Object.assign(conf, this.globalConfig.sw) ]);
+                .use(WorkboxWebpackModule[mode], [ conf ]);
     }
 
     optimization() {
