@@ -12,6 +12,7 @@ import SafeParser from 'postcss-safe-parser';
 import PurgeCssPlugin from 'purgecss-webpack-plugin';
 import StyleLoader from './styleLoader';
 import Webpackbar from 'webpackbar';
+import getAverjsConfig from '@averjs/config';
 
 export default class WebpackBaseConfiguration {
     constructor(isServer) {
@@ -26,18 +27,8 @@ export default class WebpackBaseConfiguration {
 
         if (!this.isProd) warmup({}, ['babel-loader', 'css-loader'])
 
-        this.loadGlobalConfig();
+        this.globalConfig = getAverjsConfig().webpack;
         this.modernizr();
-    }
-
-    loadGlobalConfig() {
-        const globalConfPath = path.resolve(process.env.PROJECT_PATH, '../aver-config.js');
-        if (fs.existsSync(globalConfPath)) {
-            this.globalConfig = require(globalConfPath).default;
-            this.globalConfig = (typeof this.globalConfig.webpack !== 'undefined') ? this.globalConfig.webpack : {};
-        } else {
-            this.globalConfig = {};
-        }
     }
 
     plugins() {
@@ -60,16 +51,6 @@ export default class WebpackBaseConfiguration {
                             filename: !this.isProd ? 'css/[name].css' : 'css/[name].[contenthash].css',
                             chunkFilename: !this.isProd ? 'css/[id].css' : 'css/[id].[contenthash].css',
                         }]);
-            }
-
-            if (typeof this.globalConfig.obfuscator !== 'undefined') {
-                const JavaScriptObfuscator = require('webpack-obfuscator');
-
-                this.chainConfig
-                    .plugin('obfuscator')
-                        .use(JavaScriptObfuscator, [Object.assign({
-                            rotateUnicodeArray: true
-                        }, this.globalConfig.obfuscator)]);
             }
             
             this.chainConfig

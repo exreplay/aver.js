@@ -3,9 +3,7 @@ import Hooks from './hooks';
 import path from 'path';
 import fs from 'fs-extra';
 import dotenv from 'dotenv';
-
-process.env.PROJECT_PATH = path.resolve(process.cwd(), 'src');
-process.env.API_PATH = path.resolve(process.cwd(), 'api');
+import getAverjsConfig from '@averjs/config';
 
 if(!process.env.AVER_NO_INIT) {
     if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
@@ -21,7 +19,7 @@ if(!process.env.AVER_NO_INIT) {
 export default class Core {
     run(hooks = {}) {
         this.hooks = new Hooks();
-        this.loadGlobalConfig();
+        this.globalConfig = getAverjsConfig();
         this.initModuleAliases();
         this.registerPlugins();
         new Server(this.hooks, this.globalConfig);
@@ -128,15 +126,6 @@ module.exports = router;`)
             } catch (err) {
                 console.log(err);
             }
-        }
-    }
-
-    loadGlobalConfig() {
-        const globalConfPath = path.resolve(process.env.PROJECT_PATH, '../aver-config.js');
-        if (fs.existsSync(globalConfPath)) {
-            this.globalConfig = require(globalConfPath).default;
-        } else {
-            this.globalConfig = {};
         }
     }
 }

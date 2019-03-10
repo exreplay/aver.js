@@ -7,10 +7,12 @@ import { createRouter } from './router/';
 import { createStore }  from './store/';
 import { sync }         from 'vuex-router-sync';
 import forEach          from 'lodash/forEach';
-import config           from '@/../aver-config.js';
-import * as Cookies     from 'js-cookie'
+import averjsConfig     from '@averjs/config';
+import * as Cookies     from 'js-cookie';
 
-if (typeof config.progressbar !== 'undefined' && config.progressbar) {
+const config = averjsConfig(false);
+
+if (config.progressbar) {
     const VueProgressBar = require('vue-progressbar');
 
     const options = {

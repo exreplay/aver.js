@@ -2,8 +2,22 @@
     "compilerOptions": {
         "target": "es6",
         "experimentalDecorators": true,
+        "baseUrl": "./",
         "paths": {
             "@/*": ["src/*"],
+            "@@/*": ["."],
+            "@components/*": ["src/components/*"],
+            "@resources/*": ["src/resources/*"],
+            "@mixins/*": ["src/mixins/*"],
+            "@pages/*": ["src/pages/*"],
+            "@vuex/*": ["src/vuex/*"],
+            "@models/*": ["api/models/*"],
+            "@errors/*": ["api/errors/*"],
+            "@middlewares/*": ["api/middlewares/*"],
+            "@mail/*": ["api/mail/*"],
+            "@database/*": ["api/database/*"],
+            "@queues/*": ["api/queues/*"],
+            "@routes/*": ["api/routes/*"],
             "~*": ["node_modules/*"]
         }
     }
