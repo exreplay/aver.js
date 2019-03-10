@@ -1,18 +1,17 @@
 {
-    "name": "@averjs/mailer",
-    "author": {
-      "name": "Florian Weber",
-      "email": "f.weber@ppm-vi.de"
-    },
-    "main": "index.js",
-    "version": "1.0.0",
-    "publishConfig": {
-      "access": "public"
-    },
-    "dependencies": {
-        "nodemailer": "^4.7.0",
-        "email-templates": "^5.0.2",
-        "pug": "^2.0.3"
-    }
+  "name": "@averjs/mailer",
+  "author": {
+    "name": "Florian Weber",
+    "email": "f.weber@ppm-vi.de"
+  },
+  "main": "index.js",
+  "version": "1.0.23",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "email-templates": "^5.0.2",
+    "nodemailer": "^4.7.0",
+    "pug": "^2.0.3"
   }
-  
+}

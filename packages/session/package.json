@@ -1,19 +1,18 @@
 {
-    "name": "@averjs/session",
-    "author": {
-      "name": "Florian Weber",
-      "email": "f.weber@ppm-vi.de"
-    },
-    "main": "index.js",
-    "version": "1.0.0",
-    "publishConfig": {
-      "access": "public"
-    },
-    "dependencies": {
-        "express-session": "^1.15.6",
-        "connect-redis": "^3.4.0",
-        "ioredis": "^4.2.0",
-        "uuid": "^3.3.2"
-    }
+  "name": "@averjs/session",
+  "author": {
+    "name": "Florian Weber",
+    "email": "f.weber@ppm-vi.de"
+  },
+  "main": "index.js",
+  "version": "1.0.23",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "connect-redis": "^3.4.0",
+    "express-session": "^1.15.6",
+    "ioredis": "^4.2.0",
+    "uuid": "^3.3.2"
   }
-  
+}

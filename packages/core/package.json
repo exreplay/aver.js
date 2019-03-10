@@ -5,7 +5,7 @@
     "email": "f.weber@ppm-vi.de"
   },
   "main": "index.js",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "bin": {
     "aver": "./bin/aver"
   },
