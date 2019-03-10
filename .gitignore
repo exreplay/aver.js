@@ -1,12 +1,6 @@
 .DS_Store
-.env
-docker-compose.yml
-mix-manifest.json
-
-.idea
-.docker-sync
 node_modules
-public
 dist
-storage/*
-!storage/.gitkeep
+*/**/yarn.lock
+.vscode
+.idea
