@@ -1,7 +1,7 @@
 {
-  "name": "@averjs/mailer",
+  "name": "@averjs/config",
   "version": "1.0.23",
-  "description": "mailing support for averjs",
+  "description": "managing the configuration",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
@@ -12,14 +12,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/exreplay/aver.js.git",
-    "directory": "packages/mailer"
+    "directory": "packages/config"
   },
   "bugs": {
     "url": "https://github.com/exreplay/aver.js/issues"
-  },
-  "dependencies": {
-    "email-templates": "^5.0.2",
-    "nodemailer": "^4.7.0",
-    "pug": "^2.0.3"
   }
 }

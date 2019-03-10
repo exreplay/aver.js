@@ -1,13 +1,21 @@
 {
   "name": "@averjs/queue",
-  "author": {
-    "name": "Florian Weber",
-    "email": "f.weber@ppm-vi.de"
-  },
-  "main": "index.js",
   "version": "1.0.23",
+  "description": "queue support for averjs",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "index.js",
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/queue"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
     "ioredis": "^4.2.0",

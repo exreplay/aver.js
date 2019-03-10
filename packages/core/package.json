@@ -1,16 +1,23 @@
 {
   "name": "@averjs/core",
-  "author": {
-    "name": "Florian Weber",
-    "email": "f.weber@ppm-vi.de"
-  },
-  "main": "index.js",
   "version": "1.0.23",
+  "description": "the averjs core",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "main": "index.js",
   "bin": {
     "aver": "./bin/aver"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
     "@averjs/vuex-decorators": "2.1.4",

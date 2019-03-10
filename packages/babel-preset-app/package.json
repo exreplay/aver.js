@@ -1,13 +1,21 @@
 {
   "name": "@averjs/babel-preset-app",
-  "author": {
-    "name": "Florian Weber",
-    "email": "f.weber@ppm-vi.de"
-  },
-  "main": "index.js",
   "version": "1.0.23",
+  "description": "babel-preset-app for averjs",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "index.js",
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/babel-preset-app"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
     "@babel/core": "7.3.4",
