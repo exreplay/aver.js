@@ -1,16 +1,17 @@
-import Vue              from 'vue';
-import Component        from 'vue-class-component';
-import VueI18n          from 'vue-i18n';
-import axios            from 'axios';
-import App              from '@/App.vue';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import VueI18n from 'vue-i18n';
+import axios from 'axios';
+import App from '@/App.vue';
 import { createRouter } from './router/';
-import { createStore }  from './store/';
-import { sync }         from 'vuex-router-sync';
-import forEach          from 'lodash/forEach';
-import averjsConfig     from '@averjs/config';
-import * as Cookies     from 'js-cookie';
+import { createStore } from './store/';
+import { sync } from 'vuex-router-sync';
+import forEach from 'lodash/forEach';
+import * as Cookies from 'js-cookie';
+import userConfig from '@/../aver-config.js';
+import { getAverjsConfig } from '@averjs/config';
 
-const config = averjsConfig(false);
+const config = getAverjsConfig(userConfig);
 
 if (config.progressbar) {
     const VueProgressBar = require('vue-progressbar');

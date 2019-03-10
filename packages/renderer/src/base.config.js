@@ -12,7 +12,7 @@ import SafeParser from 'postcss-safe-parser';
 import PurgeCssPlugin from 'purgecss-webpack-plugin';
 import StyleLoader from './styleLoader';
 import Webpackbar from 'webpackbar';
-import getAverjsConfig from '@averjs/config';
+import { getAverjsConfig, defaultFileName } from '@averjs/config';
 
 export default class WebpackBaseConfiguration {
     constructor(isServer) {
@@ -27,8 +27,16 @@ export default class WebpackBaseConfiguration {
 
         if (!this.isProd) warmup({}, ['babel-loader', 'css-loader'])
 
-        this.globalConfig = getAverjsConfig().webpack;
+        this.globalConfig = getAverjsConfig(this.getConfig()).webpack;
         this.modernizr();
+    }
+
+    getConfig() {
+        const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);
+        let userConf = {};
+        if (fs.existsSync(globalConfPath)) userConf = require(globalConfPath).default;
+
+        return userConf;
     }
 
     plugins() {
