@@ -3,9 +3,10 @@ import path from 'path';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 
 export default class StyleLoader {
-    constructor(isServer) {
+    constructor(isServer, config) {
         this.isProd = process.env.NODE_ENV === 'production';
         this.isServer = isServer;
+        this.config = config;
         this.postcssConfigExists = fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../postcss.config.js'));
     }
 
@@ -44,26 +45,31 @@ export default class StyleLoader {
                         cacheDirectory: path.resolve(process.env.PROJECT_PATH, '../node_modules/.cache/cache-loader'),
                         cacheIdentifier: 'css'
                     })
-                    .end()
-                .use('thread-loader')
-                    .loader('thread-loader')
-                    .options({
-                        name: 'css',
-                        poolTimeout: 2000
-                    });
+                    .end();
+            
+            if(!this.config.css.extract) {
+                rule
+                    .use('thread-loader')
+                        .loader('thread-loader')
+                        .options({
+                            name: 'css',
+                            poolTimeout: 2000
+                        });
+            }
         }
     }
 
     extract(rule) {
-        if (this.isServer || !this.isProd) {
+        if (this.config.css.extract && !this.isServer) {
+            rule
+                .use('extract-css')
+                    .loader(ExtractCssPlugin.loader)
+                    .options({ reloadAll: true });
+        } else if (!this.config.css.extract) {
             rule
                 .use('vue-style-loader')
                     .loader('vue-style-loader')
-                    .options({ sourceMap: true });
-        } else {
-            rule
-                .use('extract-css')
-                    .loader(ExtractCssPlugin.loader);
+                    .options({ sourceMap: !this.isProd });
         }
     }
 
@@ -74,7 +80,7 @@ export default class StyleLoader {
                 .options({
                     importLoaders: this.postcssConfigExists ? 2 : 1,
                     sourceMap: !this.isProd,
-                    exportOnlyLocals: this.isServer && !this.isProd
+                    exportOnlyLocals: this.isServer && this.config.css.extract
                 });
     }
 
@@ -88,7 +94,7 @@ export default class StyleLoader {
                     localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
                     camelCase: true,
                     sourceMap: !this.isProd,
-                    exportOnlyLocals: this.isServer && !this.isProd
+                    exportOnlyLocals: this.isServer && this.config.css.extract
                 });
     }
 

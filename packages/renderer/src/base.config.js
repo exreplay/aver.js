@@ -40,6 +40,15 @@ export default class WebpackBaseConfiguration {
     }
 
     plugins() {
+        if (!this.isServer && this.globalConfig.css.extract)  {
+            this.chainConfig
+                .plugin('extract-css')
+                    .use(ExtractCssPlugin, [{
+                        filename: !this.isProd ? 'css/[name].css' : 'css/[name].[contenthash].css',
+                        chunkFilename: !this.isProd ? 'css/[id].css' : 'css/[id].[contenthash].css'
+                    }]);
+        }
+
         this.chainConfig
             .plugin('vue-loader')
                 .use(VueLoaderPlugin);
@@ -52,15 +61,6 @@ export default class WebpackBaseConfiguration {
                 }]);
 
         if (this.isProd) {
-            if (!this.isServer)  {
-                this.chainConfig
-                    .plugin('extract-css')
-                        .use(ExtractCssPlugin, [{
-                            filename: !this.isProd ? 'css/[name].css' : 'css/[name].[contenthash].css',
-                            chunkFilename: !this.isProd ? 'css/[id].css' : 'css/[id].[contenthash].css',
-                        }]);
-            }
-            
             this.chainConfig
                 .plugin('optimize-css')
                     .use(OptimizeCssAssetsPlugin, [{
@@ -237,7 +237,7 @@ export default class WebpackBaseConfiguration {
                 .use('yaml')
                     .loader('json-loader!yaml-loader');
                 
-        const styleLoader = new StyleLoader(this.isServer);
+        const styleLoader = new StyleLoader(this.isServer, this.globalConfig);
 
         const cssRule = this.chainConfig.module.rule('css-loader').test(/\.css$/);
         styleLoader.apply('css', cssRule);
