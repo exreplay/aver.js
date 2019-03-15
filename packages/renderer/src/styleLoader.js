@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
+import SafeParser from 'postcss-safe-parser';
 
 export default class StyleLoader {
     constructor(isServer, config) {
@@ -8,6 +9,10 @@ export default class StyleLoader {
         this.isServer = isServer;
         this.config = config;
         this.postcssConfigExists = fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../postcss.config.js'));
+    }
+
+    get usePostCss() {
+        return this.postcssConfigExists || !this.config.css.extract;
     }
 
     apply(name, rule, loaders = []) {
@@ -78,7 +83,7 @@ export default class StyleLoader {
             .use('css-loader')
                 .loader('css-loader')
                 .options({
-                    importLoaders: this.postcssConfigExists ? 2 : 1,
+                    importLoaders: this.usePostCss ? 2 : 1,
                     sourceMap: !this.isProd,
                     exportOnlyLocals: this.isServer && this.config.css.extract
                 });
@@ -90,7 +95,7 @@ export default class StyleLoader {
                 .loader('css-loader')
                 .options({
                     modules: true,
-                    importLoaders: this.postcssConfigExists ? 2 : 1,
+                    importLoaders: this.usePostCss ? 2 : 1,
                     localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
                     camelCase: true,
                     sourceMap: !this.isProd,
@@ -99,11 +104,19 @@ export default class StyleLoader {
     }
 
     postcss(rule) {
-        if (this.postcssConfigExists) {
+        if (this.usePostCss) {
             rule
                 .use('postcss-loader')
                     .loader('postcss-loader')
-                    .options({ sourceMap: !this.isProd });
+                    .options({
+                        sourceMap: !this.isProd,
+                        plugins: [
+                            require('cssnano')({
+                                parser: SafeParser,
+                                discardComments: { removeAll: true }
+                            })
+                        ]
+                    });
         }
     }
 }

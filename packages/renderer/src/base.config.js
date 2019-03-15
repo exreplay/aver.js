@@ -7,8 +7,6 @@ import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin';
 import { VueLoaderPlugin } from 'vue-loader';
 import { warmup } from 'thread-loader';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
-import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import SafeParser from 'postcss-safe-parser';
 import PurgeCssPlugin from 'purgecss-webpack-plugin';
 import StyleLoader from './styleLoader';
 import Webpackbar from 'webpackbar';
@@ -62,16 +60,6 @@ export default class WebpackBaseConfiguration {
 
         if (this.isProd) {
             this.chainConfig
-                .plugin('optimize-css')
-                    .use(OptimizeCssAssetsPlugin, [{
-                        cssProcessorOptions: {
-                            parser: SafeParser,
-                            discardComments: {
-                                removeAll: true
-                            }
-                        }
-                    }])
-                    .end()
                 .plugin('hashed-module-ids')
                     .use(webpack.HashedModuleIdsPlugin)
                     .end()
@@ -245,7 +233,7 @@ export default class WebpackBaseConfiguration {
         const scssRule = this.chainConfig.module.rule('scss-loader').test(/\.scss$/);
         styleLoader.apply('scss', scssRule, [{
             name: 'sass-loader',
-            options: { sourceMap: !this.isProd }
+            options: { sourceMap: !this.isProd, minimize: true }
         }]);
                     
         this.chainConfig.module

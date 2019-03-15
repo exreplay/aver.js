@@ -5,6 +5,8 @@ import path from 'path';
 import VueSSRClientPlugin from 'vue-server-renderer/client-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HTMLPlugin from 'html-webpack-plugin';
+import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import SafeParser from 'postcss-safe-parser';
 import cloneDeep from 'lodash/cloneDeep';
 
 export default class WebpackClientConfiguration extends WebpackBaseConfiguration {
@@ -18,8 +20,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         let htmlPluginOptions = {
             filename: 'index.ssr.html',
             template: path.join(this.libRoot, 'vue/index.template.html'),
-            inject: false,
-            chunksSortMode: 'dependency'
+            inject: false
         };
 
         if(this.isProd && typeof this.globalConfig.sw !== 'undefined') this.serviceWorker();
@@ -141,6 +142,22 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
                         output: {
                             comments: /^\**!|@preserve|@license|@cc_on/
                         }
+                    }
+                }]);
+        
+        this.chainConfig.optimization
+            .minimizer('optimize-css')
+                .use(OptimizeCssAssetsPlugin, [{
+                    cssProcessorPluginOptions: {
+                        preset: [
+                            'default',
+                            {
+                                parser: SafeParser,
+                                discardComments: {
+                                    removeAll: true
+                                }
+                            }
+                        ]
                     }
                 }]);
     }
