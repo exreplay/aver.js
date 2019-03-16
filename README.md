@@ -1,4 +1,5 @@
 # aver.js
+[![npm](https://img.shields.io/npm/v/@averjs/core.svg)](https://www.npmjs.com/package/@averjs/core)
 
 ## Vue Server Side Rendering
 
