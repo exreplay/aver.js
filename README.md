@@ -1,5 +1,7 @@
 # aver.js
-[![npm](https://img.shields.io/npm/v/@averjs/core.svg)](https://www.npmjs.com/package/@averjs/core)
+<p align="center">
+    <a href="https://www.npmjs.com/package/@averjs/core"><img src="https://badgen.net/npm/v/@averjs/core" alt="Version"></a>
+</p>
 
 ## Vue Server Side Rendering
 
