@@ -1,6 +1,6 @@
 {
   "name": "@averjs/mailer",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "mailing support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
