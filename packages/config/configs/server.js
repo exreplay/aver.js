@@ -1,3 +1,4 @@
 export default () => ({
-    csrfExclude: []
+    csrfExclude: [],
+    createRenderer: {}
 });

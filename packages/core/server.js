@@ -64,13 +64,13 @@ export default class Server extends WWW {
         if (this.isProd) {
             const serverBundle = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-server-bundle.json'));
             const clientManifest = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-client-manifest.json'));
-            this.renderer = this.createRenderer(serverBundle, {
+            this.renderer = this.createRenderer(serverBundle, Object.assign({
                 clientManifest: clientManifest
-            });
+            }, this.config.createRenderer));
         } else {
             const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../src/setup-dev-server')).default;
             this.readyPromise = new WebpackDevServer(this.app, (bundle, options) => {
-                self.renderer = self.createRenderer(bundle, Object.assign(bundle, options));
+                self.renderer = self.createRenderer(bundle, Object.assign(bundle, options, this.config.createRenderer));
             });
         }
     }
