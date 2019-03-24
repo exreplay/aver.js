@@ -33,6 +33,7 @@ export default class Server extends WWW {
         watcher.on('all', () => {
           console.log(`Clearing server cache`);
           Object.keys(require.cache).forEach((id) => {
+            // eslint-disable-next-line no-useless-escape
             if (/[\/\\]api[\/\\]/.test(id)) {
               delete require.cache[id];
             }
@@ -54,8 +55,6 @@ export default class Server extends WWW {
         msg: err.message
       }, (err.data) ? { data: err.data } : {}));
     });
-
-    this.startServer();
   }
     
   initRenderer() {

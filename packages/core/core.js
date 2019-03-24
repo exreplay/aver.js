@@ -22,7 +22,8 @@ export default class Core {
     this.globalConfig = getAverjsConfig(this.getConfig());
     this.initModuleAliases();
     this.registerPlugins();
-    new Server(this.hooks, this.globalConfig);
+    const server = new Server(this.hooks, this.globalConfig);
+    server.startServer();
   }
 
   getConfig() {
