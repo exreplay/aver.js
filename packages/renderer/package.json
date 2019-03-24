@@ -18,8 +18,8 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "@averjs/babel-preset-app": "^1.0.30",
-    "@averjs/config": "^1.0.29",
+    "@averjs/babel-preset-app": "1.0.30",
+    "@averjs/config": "1.0.29",
     "@kazupon/vue-i18n-loader": "0.3.0",
     "babel-eslint": "10.0.1",
     "babel-loader": "8.0.5",
