@@ -101,5 +101,8 @@ This is a list of all the plugins currently available:
 
 ### TODO
 
-- [ ] Add tests with jest #1
-- [ ] Add eslint #2
+- [ ] Add jest
+- [ ] Add tests
+- [x] Add eslint
+- [ ] Add modern mode
+- [ ] Use `joi` in config package (https://github.com/hapijs/joi)
