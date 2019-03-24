@@ -14,7 +14,6 @@ export default class WWW {
   startServer() {
     this.server.listen(this.port);
     this.server.on('error', this.onError.bind(this));
-    this.server.on('listening', this.onListening.bind(this));
   }
     
   normalizePort(val) {
@@ -29,28 +28,18 @@ export default class WWW {
   onError(error) {
     if (error.syscall !== 'listen') throw error;
         
-    var bind = typeof port === 'string'
+    const bind = typeof port === 'string'
       ? 'Pipe ' + this.port
       : 'Port ' + this.port;
-        
-    switch (error.code) {
-    case 'EACCES':
+    
+    if (error.code === 'EACCES') {
       console.error(bind + ' requires elevated privileges');
       process.exit(1);
-      break;
-    case 'EADDRINUSE':
+    } else if (error.code === 'EADDRINUSE') {
       console.error(bind + ' is already in use');
       process.exit(1);
-      break;
-    default:
+    } else {
       throw error;
     }
-  }
-    
-  onListening() {
-    var addr = this.server.address();
-    var bind = typeof addr === 'string'
-      ? 'pipe ' + addr
-      : 'port ' + addr.port;
   }
 }
