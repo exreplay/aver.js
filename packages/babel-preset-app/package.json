@@ -1,6 +1,6 @@
 {
   "name": "@averjs/babel-preset-app",
-  "version": "1.0.30",
+  "version": "1.0.33",
   "description": "babel-preset-app for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
