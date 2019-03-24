@@ -1,4 +1,4 @@
-import Mongodb from './src'
+import Mongodb from './src';
 export default () => {
     new Mongodb();
-}
+};

@@ -13,9 +13,11 @@ module.exports = {
     'vue'
   ],
   'rules': {
-    'generator-star-spacing': 'off',
+    'import/no-unresolved': 0,
     
-    "indent": ["error", 4],
+    "indent": ["error", 2, { "MemberExpression": "off" }],
+    
+    'generator-star-spacing': 'off',
     
     "no-tabs": "off",
 

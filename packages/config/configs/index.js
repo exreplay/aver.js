@@ -6,10 +6,10 @@ import renderer from './renderer';
 export const defaultFileName = 'aver-config.js';
 
 export function defaultAverjsConfig() {
-    return {
-        ...app(),
-        ...core(),
-        ...server(),
-        webpack: renderer()
-    };
+  return {
+    ...app(),
+    ...core(),
+    ...server(),
+    webpack: renderer()
+  };
 };

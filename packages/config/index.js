@@ -4,4 +4,4 @@ export function getAverjsConfig(userConfig) {
   return Object.assign(defaultAverjsConfig(), userConfig);
 }
 
-export { defaultFileName } from './configs'; 
+export { defaultFileName } from './configs';

@@ -2,14 +2,14 @@
 
 const parseArgs = require('minimist');
 const argv = parseArgs(process.argv.slice(2), {
-    alias: {
-        h: 'help'
-    },
-    boolean: [ 'h' ]
+  alias: {
+    h: 'help'
+  },
+  boolean: [ 'h' ]
 });
 
 if (argv.help) {
-    process.stderr.write(`
+  process.stderr.write(`
 Description
     averjs command line tool.
 Usage
@@ -20,20 +20,20 @@ Options
     --help, h   Displays this message
 
 `);
-    process.exit(0);
+  process.exit(0);
 }
 
 process.env.AVER_NO_INIT = true;
 const Core = require('@averjs/core');
 const core = new Core();
 
-if(argv.init) {
-    core.init();
-    process.exit(0);
+if (argv.init) {
+  core.init();
+  process.exit(0);
 }
 
-if(argv.build) {
-    core.build().then(() => {
-        process.exit(0);
-    });
+if (argv.build) {
+  core.build().then(() => {
+    process.exit(0);
+  });
 }

@@ -4,119 +4,119 @@ import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import SafeParser from 'postcss-safe-parser';
 
 export default class StyleLoader {
-    constructor(isServer, config) {
-        this.isProd = process.env.NODE_ENV === 'production';
-        this.isServer = isServer;
-        this.config = config;
-        this.postcssConfigExists = fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../postcss.config.js'));
+  constructor(isServer, config) {
+    this.isProd = process.env.NODE_ENV === 'production';
+    this.isServer = isServer;
+    this.config = config;
+    this.postcssConfigExists = fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../postcss.config.js'));
+  }
+
+  get usePostCss() {
+    return this.postcssConfigExists || !this.config.css.extract;
+  }
+
+  apply(name, rule, loaders = []) {
+    this.name = name;
+
+    const moduleRule = rule.oneOf(`${name}-module`).resourceQuery(/module/);
+    this.applyStyle(moduleRule, true);
+
+    const plainRule = rule.oneOf(name);
+    this.applyStyle(plainRule);
+
+    for (const loader of loaders) {
+      moduleRule.use(loader.name).loader(loader.name).options(loader.options);
+      plainRule.use(loader.name).loader(loader.name).options(loader.options);
     }
+  }
 
-    get usePostCss() {
-        return this.postcssConfigExists || !this.config.css.extract;
-    }
+  applyStyle(rule, module = false) {
+    this.performanceLoader(rule);
 
-    apply(name, rule, loaders = []) {
-        this.name = name;
-
-        const moduleRule = rule.oneOf(`${name}-module`).resourceQuery(/module/);
-        this.applyStyle(moduleRule, true);
-
-        const plainRule = rule.oneOf(name);
-        this.applyStyle(plainRule);
-
-        for(const loader of loaders){
-            moduleRule.use(loader.name).loader(loader.name).options(loader.options);
-            plainRule.use(loader.name).loader(loader.name).options(loader.options);
-        }
-    }
-
-    applyStyle(rule, module = false) {
-        this.performanceLoader(rule);
-
-        this.extract(rule);
+    this.extract(rule);
         
-        if(module) this.cssModules(rule)
-        else this.css(rule);
+    if (module) this.cssModules(rule);
+    else this.css(rule);
 
-        this.postcss(rule);
-    }
+    this.postcss(rule);
+  }
 
-    performanceLoader(rule) {
-        if(this.name === 'css' && !this.isProd) {
-            rule
-                .use('cache-loader')
-                    .loader('cache-loader')
-                    .options({
-                        cacheDirectory: path.resolve(process.env.PROJECT_PATH, '../node_modules/.cache/cache-loader'),
-                        cacheIdentifier: 'css'
-                    })
-                    .end();
+  performanceLoader(rule) {
+    if (this.name === 'css' && !this.isProd) {
+      rule
+        .use('cache-loader')
+          .loader('cache-loader')
+          .options({
+            cacheDirectory: path.resolve(process.env.PROJECT_PATH, '../node_modules/.cache/cache-loader'),
+            cacheIdentifier: 'css'
+          })
+          .end();
             
-            if(!this.config.css.extract) {
-                rule
-                    .use('thread-loader')
-                        .loader('thread-loader')
-                        .options({
-                            name: 'css',
-                            poolTimeout: 2000
-                        });
-            }
-        }
-    }
-
-    extract(rule) {
-        if (this.config.css.extract && !this.isServer) {
-            rule
-                .use('extract-css')
-                    .loader(ExtractCssPlugin.loader)
-                    .options({ reloadAll: true });
-        } else if (!this.config.css.extract) {
-            rule
-                .use('vue-style-loader')
-                    .loader('vue-style-loader')
-                    .options({ sourceMap: !this.isProd });
-        }
-    }
-
-    css(rule) {
+      if (!this.config.css.extract) {
         rule
-            .use('css-loader')
-                .loader('css-loader')
-                .options({
-                    importLoaders: this.usePostCss ? 2 : 1,
-                    sourceMap: !this.isProd,
-                    exportOnlyLocals: this.isServer && this.config.css.extract
-                });
+          .use('thread-loader')
+            .loader('thread-loader')
+            .options({
+              name: 'css',
+              poolTimeout: 2000
+            });
+      }
     }
+  }
 
-    cssModules(rule) {
-        rule
-            .use('css-loader')
-                .loader('css-loader')
-                .options({
-                    modules: true,
-                    importLoaders: this.usePostCss ? 2 : 1,
-                    localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
-                    camelCase: true,
-                    sourceMap: !this.isProd,
-                    exportOnlyLocals: this.isServer && this.config.css.extract
-                });
+  extract(rule) {
+    if (this.config.css.extract && !this.isServer) {
+      rule
+        .use('extract-css')
+          .loader(ExtractCssPlugin.loader)
+          .options({ reloadAll: true });
+    } else if (!this.config.css.extract) {
+      rule
+        .use('vue-style-loader')
+          .loader('vue-style-loader')
+          .options({ sourceMap: !this.isProd });
     }
+  }
 
-    postcss(rule) {
-        if (this.usePostCss) {
-            rule
-                .use('postcss-loader')
-                    .loader('postcss-loader')
-                    .options({
-                        sourceMap: !this.isProd,
-                        plugins: [
-                            require('cssnano')({
-                                parser: SafeParser,
-                                discardComments: { removeAll: true }
-                            })
-                        ]
-                    });
-        }
+  css(rule) {
+    rule
+    .use('css-loader')
+      .loader('css-loader')
+      .options({
+        importLoaders: this.usePostCss ? 2 : 1,
+        sourceMap: !this.isProd,
+        exportOnlyLocals: this.isServer && this.config.css.extract
+      });
+  }
+
+  cssModules(rule) {
+    rule
+      .use('css-loader')
+        .loader('css-loader')
+        .options({
+          modules: true,
+          importLoaders: this.usePostCss ? 2 : 1,
+          localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
+          camelCase: true,
+          sourceMap: !this.isProd,
+          exportOnlyLocals: this.isServer && this.config.css.extract
+        });
+  }
+
+  postcss(rule) {
+    if (this.usePostCss) {
+      rule
+        .use('postcss-loader')
+          .loader('postcss-loader')
+          .options({
+            sourceMap: !this.isProd,
+            plugins: [
+              require('cssnano')({
+                parser: SafeParser,
+                discardComments: { removeAll: true }
+              })
+            ]
+          });
     }
+  }
 }

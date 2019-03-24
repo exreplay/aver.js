@@ -6,11 +6,11 @@ Vue.use(VueRouter);
 Vue.use(Meta);
 
 export function createRouter() {
-    const routes = require('@/pages').default;
+  const routes = require('@/pages').default;
 
-    return new VueRouter({
-        mode: 'history',
-        fallback: false,
-        routes: routes
-    });
+  return new VueRouter({
+    mode: 'history',
+    fallback: false,
+    routes: routes
+  });
 }

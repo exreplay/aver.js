@@ -1,14 +1,14 @@
 export default class Hooks {
-    constructor() {
-        this.routes = [];
-        this.middlewares = [];
-    }
+  constructor() {
+    this.routes = [];
+    this.middlewares = [];
+  }
 
-    registerRoutes(hook) {
-        this.routes.push(hook);
-    }
+  registerRoutes(hook) {
+    this.routes.push(hook);
+  }
 
-    registerMiddleware(hook) {
-        this.middlewares.push(hook);
-    }
+  registerMiddleware(hook) {
+    this.middlewares.push(hook);
+  }
 }

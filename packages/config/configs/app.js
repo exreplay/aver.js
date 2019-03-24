@@ -1,6 +1,6 @@
 export default () => ({
-    i18n: {
-        silentTranslationWarn: true
-    },
-    progressbar: true
+  i18n: {
+    silentTranslationWarn: true
+  },
+  progressbar: true
 });

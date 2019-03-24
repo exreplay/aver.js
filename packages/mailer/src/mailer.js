@@ -3,47 +3,47 @@ import nodemailer from 'nodemailer';
 import Email from 'email-templates';
 
 class Mailer {
-    constructor() {
-        if (!process.env.SMTP_HOST) return;
+  constructor() {
+    if (!process.env.SMTP_HOST) return;
 
-        const transporter = this.establishConnection();
+    const transporter = this.establishConnection();
 
-        this.email = new Email({
-            views: {
-                root: path.resolve(process.env.API_PATH, './mail/templates')
-            },
-            send: true,
-            transport: transporter,
-            juice: true,
-            juiceResources: {
-                preserveImportant: true,
-                webResources: {
-                    relativeTo: path.resolve(process.env.API_PATH, '../public/')
-                }
-            }
-        });
-    }
+    this.email = new Email({
+      views: {
+        root: path.resolve(process.env.API_PATH, './mail/templates')
+      },
+      send: true,
+      transport: transporter,
+      juice: true,
+      juiceResources: {
+        preserveImportant: true,
+        webResources: {
+          relativeTo: path.resolve(process.env.API_PATH, '../public/')
+        }
+      }
+    });
+  }
 
-    establishConnection() {
-        const transporter = nodemailer.createTransport({
-            pool: true,
-            host: process.env.SMTP_HOST,
-            port: process.env.SMTP_PORT,
-            secure: false,
-            requireTLS: true,
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASSWORD
-            }
-        });
+  establishConnection() {
+    const transporter = nodemailer.createTransport({
+      pool: true,
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD
+      }
+    });
 
-        transporter.verify(err => {
-            if (err) console.log(error);
-            else console.log('Successfully connected to SMTP!');
-        });
+    transporter.verify(err => {
+      if (err) console.log(error);
+      else console.log('Successfully connected to SMTP!');
+    });
 
-        return transporter;
-    }
+    return transporter;
+  }
 }
 
 const mailer = new Mailer();

@@ -1,7 +1,7 @@
 // Props to vue-cli
 // TODO: Add modern mode
 
-const path = require('path')
+const path = require('path');
 
 const defaultPolyfills = [
   // promise polyfill alone doesn't work in IE,
@@ -14,18 +14,18 @@ const defaultPolyfills = [
   'es6.object.assign',
   // #2012 es6.promise replaces native Promise in FF and causes missing finally
   'es7.promise.finally'
-]
+];
 
 function getPolyfills(targets, includes, { ignoreBrowserslistConfig, configPath }) {
-  const { isPluginRequired } = require('@babel/preset-env')
-  const builtInsList = require('@babel/preset-env/data/built-ins.json')
-  const getTargets = require('@babel/preset-env/lib/targets-parser').default
+  const { isPluginRequired } = require('@babel/preset-env');
+  const builtInsList = require('@babel/preset-env/data/built-ins.json');
+  const getTargets = require('@babel/preset-env/lib/targets-parser').default;
   const builtInTargets = getTargets(targets, {
     ignoreBrowserslistConfig,
     configPath
-  })
+  });
 
-  return includes.filter(item => isPluginRequired(builtInTargets, builtInsList[item]))
+  return includes.filter(item => isPluginRequired(builtInTargets, builtInsList[item]));
 }
 
 module.exports = (context, options = {}) => {
@@ -46,13 +46,13 @@ module.exports = (context, options = {}) => {
     shippedProposals,
     forceAllTransforms,
     decoratorsBeforeExport,
-    decoratorsLegacy = true,
-  } = options
+    decoratorsLegacy = true
+  } = options;
   const targets = buildTarget === 'server' ? { node: 'current' } : {
     browsers: [
       'IE >= 9'
     ]
-  }
+  };
 
   let polyfills;
 
@@ -60,10 +60,10 @@ module.exports = (context, options = {}) => {
     polyfills = getPolyfills(targets, userPolyfills || defaultPolyfills, {
       ignoreBrowserslistConfig,
       configPath
-    })
-    plugins.push([require('./polyfillsPlugin'), { polyfills }])
+    });
+    plugins.push([require('./polyfillsPlugin'), { polyfills }]);
   } else {
-    polyfills = []
+    polyfills = [];
   }
 
   presets.push([ require('@babel/preset-env'), {
@@ -79,7 +79,7 @@ module.exports = (context, options = {}) => {
     exclude: polyfills.concat(exclude || []),
     shippedProposals,
     forceAllTransforms
-  }])
+  }]);
 
   plugins.push(
     require('@babel/plugin-transform-arrow-functions'),
@@ -91,7 +91,7 @@ module.exports = (context, options = {}) => {
     [require('@babel/plugin-proposal-class-properties'), { loose }],
     [require('@babel/plugin-transform-classes'), { loose }],
     require('@babel/plugin-transform-parameters')
-  )
+  );
 
   plugins.push([require('@babel/plugin-transform-runtime'), {
     regenerator: useBuiltIns !== 'usage',
@@ -99,10 +99,10 @@ module.exports = (context, options = {}) => {
     helpers: useBuiltIns === 'usage',
     useESModules: true,
     absoluteRuntime: path.dirname(require.resolve('@babel/runtime/package.json'))
-  }])
+  }]);
 
   return {
     presets,
     plugins
-  }
+  };
 };
