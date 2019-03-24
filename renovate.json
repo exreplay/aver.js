@@ -1,5 +1,9 @@
 {
   "extends": [
     "config:base"
+  ],
+  "rangeStrategy": "pin",
+  "ignorePaths": [
+    "packages/core/app/"
   ]
 }
