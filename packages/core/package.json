@@ -42,7 +42,7 @@
     "lru-cache": "5.1.1",
     "minimist": "1.2.0",
     "module-alias": "2.2.0",
-    "morgan": "~1.9.1",
+    "morgan": "1.9.1",
     "multer": "1.4.1",
     "rotating-file-stream": "1.4.0",
     "route-cache": "0.4.4",
