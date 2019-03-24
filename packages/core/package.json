@@ -20,7 +20,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "@averjs/config": "^1.0.29",
+    "@averjs/config": "1.0.29",
     "@averjs/vuex-decorators": "2.1.4",
     "@babel/runtime-corejs2": "7.4.2",
     "axios": "0.18.0",

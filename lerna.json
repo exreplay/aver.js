@@ -2,7 +2,16 @@
   "version": "1.0.31",
   "npmClient": "yarn",
   "useWorkspaces": true,
+  "conventionalCommits": true,
+  "exact": true,
   "packages": [
     "packages/*"
-  ]
+  ],
+  "changelog": {
+    "labels": {
+      "feat": "New Feature",
+      "fix": "Bug Fix",
+      "refactor": "Code Refactoring"
+    }
+  }
 }
