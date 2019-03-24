@@ -97,3 +97,9 @@ This is a list of all the plugins currently available:
 |@averjs/session|[https://www.npmjs.com/package/@averjs/session](https://www.npmjs.com/package/@averjs/session)|TODO|
 |@averjs/vuex-decorators|[https://www.npmjs.com/package/@averjs/vuex-decorators](https://www.npmjs.com/package/@averjs/vuex-decorators)|TODO|
 |@averjs/websocket|[https://www.npmjs.com/package/@averjs/websocket](https://www.npmjs.com/package/@averjs/websocket)|TODO|
+
+
+### TODO
+
+- [ ] Add tests with jest #1
+- [ ] Add eslint #2
