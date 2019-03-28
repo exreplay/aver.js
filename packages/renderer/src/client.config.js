@@ -64,8 +64,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         /img\/icons\//,
         /favicon\.ico$/,
         /manifest\.json$/
-      ],
-      ...swConfig
+      ]
     };
 
     if (mode === 'GenerateSW') {
@@ -73,6 +72,8 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     } else if (mode === 'InjectManifest') {
       Object.assign(conf, { swSrc: path.resolve(process.env.PROJECT_PATH, conf.swSrc) });
     }
+
+    Object.assign(conf, { ...swConfig });
 
     this.chainConfig
       .plugin('workbox')
