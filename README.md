@@ -106,3 +106,4 @@ This is a list of all the plugins currently available:
 - [x] Add eslint
 - [ ] Add modern mode
 - [ ] Use `joi` in config package (https://github.com/hapijs/joi)
+- [ ] Use `lodash/template` to pass configuration to vue app
