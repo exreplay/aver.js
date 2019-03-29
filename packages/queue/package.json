@@ -18,7 +18,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "ioredis": "4.6.2",
+    "ioredis": "4.9.0",
     "kue": "0.11.6"
   }
 }

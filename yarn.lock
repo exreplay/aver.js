@@ -4876,14 +4876,14 @@ extglob@^2.0.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-extract-css-chunks-webpack-plugin@4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/extract-css-chunks-webpack-plugin/-/extract-css-chunks-webpack-plugin-4.0.2.tgz#67c1de090079247b9eb4f9d179cd2717ca43c361"
-  integrity sha512-svwrtf8iENEm5DRhzJp2qpfvapEsVEkrElqUqz8/ZtyfvKA8uT6y4GneOgKBCKK6oh+iVPSHZ+FrI89sxG6EOQ==
+extract-css-chunks-webpack-plugin@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/extract-css-chunks-webpack-plugin/-/extract-css-chunks-webpack-plugin-4.2.0.tgz#e23bdb40cbfecfabf1affe5798b27be9625a25bc"
+  integrity sha512-ws8uIGdkKSa2TyDcdX70eo3uuBSHvp3hbeiqKaBHGIFEVBRWLk9gpLL09QoJN45FfgrXGl6D48NkOnhi2vuuXg==
   dependencies:
     loader-utils "^1.1.0"
     lodash "^4.17.11"
-    normalize-url "^3.0.0"
+    normalize-url "^2.0.1"
     schema-utils "^1.0.0"
     webpack-sources "^1.1.0"
 
@@ -6108,10 +6108,10 @@ invert-kv@^2.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
-ioredis@4.6.2:
-  version "4.6.2"
-  resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-4.6.2.tgz#840847117fe0190a9309085847311a07183fc385"
-  integrity sha512-zlc/LeoeriHTXm5z3rakPcfRcUV9x+xr0E+7/L7KH0D5z7sI5ngEQWR2RUxnwFcxUcCkvrXMztRIdBP3DhqMAQ==
+ioredis@4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-4.9.0.tgz#0c52de498363309ebd48b5f6695d9d432b0f6669"
+  integrity sha512-YzfCLsN++Ct43QqGK9CWxaEK6OUvJ7rnENieAPNw3DVp/oF2uBrP2NJChbhO74Ng3LWA+i5zdIEUsZYr6dKDIQ==
   dependencies:
     cluster-key-slot "^1.0.6"
     debug "^3.1.0"
@@ -6122,7 +6122,7 @@ ioredis@4.6.2:
     redis-commands "1.4.0"
     redis-errors "^1.2.0"
     redis-parser "^3.0.0"
-    standard-as-callback "^1.0.0"
+    standard-as-callback "^2.0.1"
 
 ip@^1.1.5:
   version "1.1.5"
@@ -7933,6 +7933,15 @@ normalize-path@^3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
+normalize-url@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-2.0.1.tgz#835a9da1551fa26f70e92329069a23aa6574d7e6"
+  integrity sha512-D6MUW4K/VzoJ4rJ01JFKxDrtY1v9wrgzCX5f2qj/lzH1m/lW6MhUZFKerVsnyjOhOsYzI9Kqqak+10l4LvLpMw==
+  dependencies:
+    prepend-http "^2.0.0"
+    query-string "^5.0.1"
+    sort-keys "^2.0.0"
+
 normalize-url@^3.0.0, normalize-url@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
@@ -8953,6 +8962,11 @@ prepend-http@^1.0.1:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
   integrity sha1-1PRWKwzjaW5BrFLQ4ALlemNdxtw=
 
+prepend-http@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
+  integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
+
 prettier@1.16.3:
   version "1.16.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.3.tgz#8c62168453badef702f34b45b6ee899574a6a65d"
@@ -9290,6 +9304,15 @@ qs@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.6.0.tgz#a99c0f69a8d26bf7ef012f871cdabb0aee4424c2"
   integrity sha512-KIJqT9jQJDQx5h5uAVPimw6yVg2SekOKu959OCtktD3FjzbpvaPr8i4zzg07DOMz+igA4W/aNM7OV8H37pFYfA==
+
+query-string@^5.0.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-5.1.1.tgz#a78c012b71c17e05f2e3fa2319dd330682efb3cb"
+  integrity sha512-gjWOsm2SoGlgLEdAGt7a6slVOk9mGiXmPFMqrEhLQ68rhQuBnpfs3+EmlvqKyxnCo9/PPlF+9MtY02S1aFg+Jw==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    object-assign "^4.1.0"
+    strict-uri-encode "^1.0.0"
 
 querystring-es3@^0.2.0:
   version "0.2.1"
@@ -10469,10 +10492,10 @@ stackframe@^1.0.4:
   resolved "https://registry.yarnpkg.com/stackframe/-/stackframe-1.0.4.tgz#357b24a992f9427cba6b545d96a14ed2cbca187b"
   integrity sha512-to7oADIniaYwS3MhtCa/sQhrxidCCQiF/qp4/m5iN3ipf0Y7Xlri0f6eG29r08aL7JYl8n32AF3Q5GYBZ7K8vw==
 
-standard-as-callback@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/standard-as-callback/-/standard-as-callback-1.0.2.tgz#d0813289db00f8bd5e0f29e74744cb63706707c8"
-  integrity sha512-1Qrah+2Vmj8DiftcXR9gfUe/gFmOukdnxF5v7G/apCZbLtjh3rjss8Eu6Qlprm6zerrl+qDmvm7KXpJedqpoAQ==
+standard-as-callback@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/standard-as-callback/-/standard-as-callback-2.0.1.tgz#ed8bb25648e15831759b6023bdb87e6b60b38126"
+  integrity sha512-NQOxSeB8gOI5WjSaxjBgog2QFw55FV8TkS6Y07BiB3VJ8xNTvUYm0wl0s8ObgQ5NhdpnNfigMIKjgPESzgr4tg==
 
 static-extend@^0.1.1:
   version "0.1.2"
@@ -10542,6 +10565,11 @@ streamsearch@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/streamsearch/-/streamsearch-0.1.2.tgz#808b9d0e56fc273d809ba57338e929919a1a9f1a"
   integrity sha1-gIudDlb8Jz2Am6VzOOkpkZoanxo=
+
+strict-uri-encode@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
+  integrity sha1-J5siXfHVgrH1TmWt3UNS4Y+qBxM=
 
 string-width@^1.0.1, string-width@^1.0.2:
   version "1.0.2"
@@ -11523,10 +11551,10 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.3.tgz#2756f46cb3258054c5f4723de8ae7e87302a1ccf"
   integrity sha512-KmvZVtmM26BQOMK1rwUZsrqxEGeKiYSZGA7SNWE6uExx8UX/cj9hq2MRV/wWC3Cq6AoeDGk57rL9YMFRel/q+g==
 
-vue-i18n@8.9.0:
-  version "8.9.0"
-  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.9.0.tgz#5f084001fe5b4c7ad8c00ee5f11396a88ff2e55b"
-  integrity sha512-8wr/D9yU8CLC8ne9stdQn/N58E7GRSUSO75bCucj2AIFTDyjGfoze5RxFvh2w3e7yxgnz5x+ooOIcoX59PHguQ==
+vue-i18n@8.10.0:
+  version "8.10.0"
+  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.10.0.tgz#e95f215b5548bedf5610c14506acb3438717b6bd"
+  integrity sha512-n2A9Q5dbwk3q4r6cOdT5jJaMb/mV4JtkNmgSiUNtoDp+N00bQHzpALM2XRyNzu7WZSHyi10/wBrNKl0unNKpVg==
 
 vue-loader@15.7.0:
   version "15.7.0"
