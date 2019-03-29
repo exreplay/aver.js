@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.35](https://github.com/exreplay/aver.js/compare/v1.0.34...v1.0.35) (2019-03-29)
+
+
+### Bug Fixes
+
+* **babel-preset-app:** added core-js as dependency to prevent warning ([98a1fc1](https://github.com/exreplay/aver.js/commit/98a1fc1))
+* **deps:** update dependency extract-css-chunks-webpack-plugin to v4.2.0 ([050e363](https://github.com/exreplay/aver.js/commit/050e363))
+* **deps:** update dependency ioredis to v4.9.0 ([6bbb067](https://github.com/exreplay/aver.js/commit/6bbb067))
+* **deps:** update dependency vue-i18n to v8.10.0 ([3828217](https://github.com/exreplay/aver.js/commit/3828217))
+* **renderer:** moved InjectManifest config after global config ([425efd6](https://github.com/exreplay/aver.js/commit/425efd6))
+
+
+
+
+
 ## [1.0.34](https://github.com/exreplay/aver.js/compare/v1.0.33...v1.0.34) (2019-03-28)
 
 
