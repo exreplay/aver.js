@@ -69,11 +69,13 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     if (mode === 'GenerateSW') {
       Object.assign(conf, { cacheId: 'averjs' });
-    } else if (mode === 'InjectManifest') {
-      Object.assign(conf, { swSrc: path.resolve(process.env.PROJECT_PATH, conf.swSrc) });
     }
 
     Object.assign(conf, { ...swConfig });
+
+    if (mode === 'InjectManifest') {
+      Object.assign(conf, { swSrc: path.resolve(process.env.PROJECT_PATH, conf.swSrc) });
+    }
 
     this.chainConfig
       .plugin('workbox')
