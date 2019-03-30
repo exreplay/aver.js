@@ -17,6 +17,7 @@ export default class WebpackBaseConfiguration {
     this.chainConfig = new WebpackChain();
     this.isServer = isServer;
     this.libRoot = path.resolve(require.resolve('@averjs/core'), '../');
+    this.cacheDir = path.resolve('node_modules/.cache/averjs');
     
     this.isProd = process.env.NODE_ENV === 'production';
     this.nodeEnv = process.env.NODE_ENV || 'development';

@@ -53,7 +53,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
 
     const config = Object.assign(this.chainConfig.toConfig(), {
       entry: {
-        app: path.join(this.libRoot, 'vue/entry-server.js')
+        app: path.join(this.cacheDir, 'entry-server.js')
       }
     });
 

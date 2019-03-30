@@ -8,30 +8,28 @@ import { createStore } from './store/';
 import { sync } from 'vuex-router-sync';
 import forEach from 'lodash/forEach';
 import * as Cookies from 'js-cookie';
-import userConfig from '@/../aver-config.js';
-import { getAverjsConfig } from '@averjs/config';
+<% if (config.progressbar) { %> 
+import VueProgressBar from 'vue-progressbar';
+<% } %>
 
-const config = getAverjsConfig(userConfig);
+<% if (config.progressbar) { %>
+const options = {
+  color: '#003B8E',
+  failedColor: '#E0001A',
+  thickness: '2px',
+  transition: {
+    speed: '0.2s',
+    opacity: '0.6s',
+    termination: 300
+  },
+  autoRevert: true,
+  location: 'top',
+  inverse: false
+};
 
-if (config.progressbar) {
-  const VueProgressBar = require('vue-progressbar');
+Vue.use(VueProgressBar, <% typeof config.progressbar === 'object' ? print('Object.assign(options, JSON.parse(\''+JSON.stringify(config.progressbar)+'\'))') : print('options') %>);
+<% } %>
 
-  const options = {
-    color: '#003B8E',
-    failedColor: '#E0001A',
-    thickness: '2px',
-    transition: {
-      speed: '0.2s',
-      opacity: '0.6s',
-      termination: 300
-    },
-    autoRevert: true,
-    location: 'top',
-    inverse: false
-  };
-
-  Vue.use(VueProgressBar, Object.assign(options, (typeof config.progressbar === 'object') ? config.progressbar : {}));
-}
 
 Vue.use(VueI18n);
 
@@ -57,7 +55,7 @@ export function createApp(ssrContext) {
     fallbackLocale: 'de'
   };
 
-  const i18n = new VueI18n(Object.assign(i18nConfig, (typeof config.i18n !== 'undefined') ? config.i18n : {}));
+  const i18n = new VueI18n(<% if(typeof config.i18n !== 'undefined') print('Object.assign(i18nConfig, JSON.parse(\''+JSON.stringify(config.i18n)+'\'))') %>);
 
   if (!ssrContext.isServer) i18n.locale = Cookies.get('language') || 'de';
   else i18n.locale = ssrContext.context.cookies['language'] || 'de';

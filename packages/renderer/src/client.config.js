@@ -19,7 +19,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     super.plugins();
     let htmlPluginOptions = {
       filename: 'index.ssr.html',
-      template: path.join(this.libRoot, 'vue/index.template.html'),
+      template: path.join(this.cacheDir, 'index.template.html'),
       inject: false
     };
 
@@ -180,7 +180,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     const config = Object.assign(this.chainConfig.toConfig(), {
       entry: {
-        app: path.join(this.libRoot, 'vue/entry-client.js')
+        app: path.join(this.cacheDir, 'entry-client.js')
       }
     });
 

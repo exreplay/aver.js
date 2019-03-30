@@ -1,15 +1,15 @@
 import webpack from 'webpack';
 import path from 'path';
 import MFS from 'memory-fs';
-import WebpackClientConfiguration from './client.config';
-import WebpackServerConfiguration from './server.config';
+import Builder from './builder';
 
 export default class WebpackDevServer {
   constructor(app, cb) {
     this.app = app;
+    const builder = new Builder();
 
-    this.clientConfig = new WebpackClientConfiguration().config();
-    this.serverConfig = new WebpackServerConfiguration().config();
+    this.clientConfig = builder.clientConfig;
+    this.serverConfig = builder.serverConfig;
 
     this.bundle = null;
     this.clientManifest = null;
