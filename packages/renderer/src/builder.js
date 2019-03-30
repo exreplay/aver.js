@@ -13,7 +13,7 @@ export default class Builder {
     this.corePkgPath = path.resolve(require.resolve('@averjs/core'), '../');
     this.globalConfig = getAverjsConfig(this.getConfig());
 
-    if (!fs.existsSync(this.cacheDir)) fs.mkdirSync(this.cacheDir);
+    if (!fs.existsSync(this.cacheDir)) fs.mkdirpSync(this.cacheDir);
 
     this.prepareTemplates();
 
