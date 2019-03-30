@@ -66,6 +66,8 @@ module.exports = (context, options = {}) => {
     polyfills = [];
   }
 
+  const corejs = 2;
+
   presets.push([ require('@babel/preset-env'), {
     spec,
     loose,
@@ -73,6 +75,7 @@ module.exports = (context, options = {}) => {
     modules,
     targets,
     useBuiltIns,
+    corejs,
     ignoreBrowserslistConfig,
     configPath,
     include,
@@ -95,7 +98,7 @@ module.exports = (context, options = {}) => {
 
   plugins.push([require('@babel/plugin-transform-runtime'), {
     regenerator: useBuiltIns !== 'usage',
-    corejs: useBuiltIns === 'usage' ? 2 : false,
+    corejs: useBuiltIns === 'usage' ? corejs : false,
     helpers: useBuiltIns === 'usage',
     useESModules: true,
     absoluteRuntime: path.dirname(require.resolve('@babel/runtime/package.json'))
