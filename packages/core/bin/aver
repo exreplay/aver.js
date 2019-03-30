@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+
+const parseArgs = require('minimist');
+const argv = parseArgs(process.argv.slice(2), {
+  alias: {
+    h: 'help'
+  },
+  boolean: [ 'h' ]
+});
+
+if (argv.help) {
+  process.stderr.write(`
+Description
+    averjs command line tool.
+Usage
+    $ aver
+Options
+    --init      Initialize a new SSR project.
+    --build     Build the SSR appliction for production
+    --help, h   Displays this message
+
+`);
+  process.exit(0);
+}
+
+process.env.AVER_NO_INIT = true;
+const Core = require('@averjs/core');
+const core = new Core();
+
+if (argv.init) {
+  core.init();
+  process.exit(0);
+}
+
+if (argv.build) {
+  core.build().then(() => {
+    process.exit(0);
+  });
+}

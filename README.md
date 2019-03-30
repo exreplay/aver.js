@@ -1,4 +1,8 @@
 # aver.js
+<p align="center">
+    <a href="https://www.npmjs.com/package/@averjs/core"><img src="https://badgen.net/npm/v/@averjs/core" alt="Version"></a>
+</p>
+
 ## Vue Server Side Rendering
 
 This plugin has everything you need to start a new Vue project which is capable of server side rendering.  
@@ -93,3 +97,13 @@ This is a list of all the plugins currently available:
 |@averjs/session|[https://www.npmjs.com/package/@averjs/session](https://www.npmjs.com/package/@averjs/session)|TODO|
 |@averjs/vuex-decorators|[https://www.npmjs.com/package/@averjs/vuex-decorators](https://www.npmjs.com/package/@averjs/vuex-decorators)|TODO|
 |@averjs/websocket|[https://www.npmjs.com/package/@averjs/websocket](https://www.npmjs.com/package/@averjs/websocket)|TODO|
+
+
+### TODO
+
+- [ ] Add jest
+- [ ] Add tests
+- [x] Add eslint
+- [ ] Add modern mode
+- [ ] Use `joi` in config package (https://github.com/hapijs/joi)
+- [x] Use `lodash/template` to pass configuration to vue app

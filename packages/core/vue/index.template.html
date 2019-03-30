@@ -1,0 +1,10 @@
+<!DOCTYPE html>{{ meta.inject() }}
+<html data-vue-meta-server-rendered {{{ meta.htmlAttrs.text() }}}>
+<head>
+    <meta name="csrf-token" content="{{ csrfToken }}">
+    {{{ meta.meta.text() + meta.title.text() + meta.link.text() + meta.style.text() + meta.script.text() + meta.noscript.text() }}}
+</head>
+<body {{{ meta.bodyAttrs.text() }}}>
+    <!--vue-ssr-outlet-->
+</body>
+</html>

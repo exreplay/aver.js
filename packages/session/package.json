@@ -1,0 +1,26 @@
+{
+  "name": "@averjs/session",
+  "version": "1.1.0",
+  "description": "session support for averjs",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/session"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "dependencies": {
+    "connect-redis": "3.4.1",
+    "express-session": "1.15.6",
+    "ioredis": "4.9.0",
+    "uuid": "3.3.2"
+  }
+}
