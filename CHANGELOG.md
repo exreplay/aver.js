@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/exreplay/aver.js/compare/v1.1.0...v1.1.1) (2019-03-30)
+
+
+### Bug Fixes
+
+* **deps:** pin dependency klaw-sync to 6.0.0 ([b1c2ece](https://github.com/exreplay/aver.js/commit/b1c2ece))
+* **renderer:** changed mkdirSync to mkdirpSync ([3c8692e](https://github.com/exreplay/aver.js/commit/3c8692e))
+
+
+
+
+
 # [1.1.0](https://github.com/exreplay/aver.js/compare/v1.0.35...v1.1.0) (2019-03-30)
 
 
