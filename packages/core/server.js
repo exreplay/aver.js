@@ -143,11 +143,13 @@ export default class Server extends WWW {
 
     const accessLogStream = rfs('access.log', {
       interval: '1d',
+      max_logs: '10d',
       path: logDirectory
     });
 
     const errorLogStream = rfs('error.log', {
       interval: '1d',
+      max_logs: '10d',
       path: logDirectory
     });
 
