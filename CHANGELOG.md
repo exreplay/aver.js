@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/exreplay/aver.js/compare/v1.1.1...v1.2.0) (2019-03-31)
+
+
+### Bug Fixes
+
+* **config:** use lodash/merge instead of Object.assign for deep merge ([ba0b6ac](https://github.com/exreplay/aver.js/commit/ba0b6ac))
+* **deps:** update dependency eslint to v5.16.0 ([d27d012](https://github.com/exreplay/aver.js/commit/d27d012))
+* **deps:** update dependency esm to v3.2.22 ([8523c6d](https://github.com/exreplay/aver.js/commit/8523c6d))
+* **deps:** update dependency nodemailer to v6 ([72ed28e](https://github.com/exreplay/aver.js/commit/72ed28e))
+* **deps:** update dependency vue-meta to v1.6.0 ([fefbf9b](https://github.com/exreplay/aver.js/commit/fefbf9b))
+* **renderer:** compilers was still pointing to class property instead of the local property ([b07d7b2](https://github.com/exreplay/aver.js/commit/b07d7b2))
+
+
+### Features
+
+* **renderer:** added style-resources-loader ([f58d003](https://github.com/exreplay/aver.js/commit/f58d003))
+
+
+
+
+
 ## [1.1.1](https://github.com/exreplay/aver.js/compare/v1.1.0...v1.1.1) (2019-03-30)
 
 

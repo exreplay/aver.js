@@ -1,6 +1,6 @@
 {
   "name": "@averjs/queue",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "queue support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
