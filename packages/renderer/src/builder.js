@@ -5,13 +5,13 @@ import template from 'lodash/template';
 import klawSync from 'klaw-sync';
 import WebpackClientConfiguration from './client.config';
 import WebpackServerConfiguration from './server.config';
-import { getAverjsConfig, defaultFileName } from '@averjs/config';
+import { getAverjsConfig } from '@averjs/config';
 
 export default class Builder {
   constructor() {
     this.cacheDir = path.resolve('node_modules/.cache/averjs');
     this.corePkgPath = path.resolve(require.resolve('@averjs/core'), '../');
-    this.globalConfig = getAverjsConfig(this.getConfig());
+    this.globalConfig = getAverjsConfig();
 
     if (!fs.existsSync(this.cacheDir)) fs.mkdirpSync(this.cacheDir);
 
@@ -19,14 +19,6 @@ export default class Builder {
 
     this.clientConfig = new WebpackClientConfiguration().config();
     this.serverConfig = new WebpackServerConfiguration().config();
-  }
-
-  getConfig() {
-    const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);
-    let userConf = {};
-    if (fs.existsSync(globalConfPath)) userConf = require(globalConfPath).default;
-
-    return userConf;
   }
 
   prepareTemplates() {

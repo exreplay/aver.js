@@ -3,7 +3,7 @@ import Hooks from './hooks';
 import path from 'path';
 import fs from 'fs-extra';
 import dotenv from 'dotenv';
-import { getAverjsConfig, defaultFileName } from '@averjs/config';
+import { getAverjsConfig } from '@averjs/config';
 
 if (!process.env.AVER_NO_INIT) {
   if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
@@ -19,19 +19,11 @@ if (!process.env.AVER_NO_INIT) {
 export default class Core {
   run(hooks = {}) {
     this.hooks = new Hooks();
-    this.globalConfig = getAverjsConfig(this.getConfig());
+    this.globalConfig = getAverjsConfig();
     this.initModuleAliases();
     this.registerPlugins();
     const server = new Server(this.hooks, this.globalConfig);
     server.startServer();
-  }
-
-  getConfig() {
-    const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);
-    let userConf = {};
-    if (fs.existsSync(globalConfPath)) userConf = require(globalConfPath).default;
-
-    return userConf;
   }
 
   registerPlugins() {
