@@ -19,13 +19,18 @@ export default async context => {
     await new Promise((resolve, reject) => router.onReady(resolve, reject));
     const matchedComponents = router.getMatchedComponents();
 
-    if (!matchedComponents.length) throw { code: 404 };
+    if (!matchedComponents.length) {
+      const error = new Error('Page not found!');
+      error.code = 404;
+      throw error;
+    }
 
     context.meta = { inject: function() { Object.assign(this, meta.inject()); } };
         
     for (const r of mixinContext.keys()) {
       const EntryServerMixin = mixinContext(r).default;
       if (typeof EntryServerMixin !== 'undefined') {
+        // eslint-disable-next-line no-new
         new EntryServerMixin(context);
       }
     }
