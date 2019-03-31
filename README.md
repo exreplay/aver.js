@@ -101,6 +101,7 @@ This is a list of all the plugins currently available:
 
 ### TODO
 
+- [ ] Add documentation
 - [ ] Add jest
 - [ ] Add tests
 - [ ] Add modern mode
