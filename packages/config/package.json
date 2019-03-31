@@ -1,6 +1,6 @@
 {
   "name": "@averjs/config",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "managing the configuration",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
