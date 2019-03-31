@@ -60,7 +60,7 @@ export default class Builder {
     compilers.push(this.clientConfig);
     compilers.push(this.serverConfig);
         
-    for (const compiler of this.compilers) {
+    for (const compiler of compilers) {
       promises.push(new Promise((resolve, reject) => {
         const compile = webpack(compiler);
                 
