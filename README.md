@@ -103,7 +103,8 @@ This is a list of all the plugins currently available:
 
 - [ ] Add jest
 - [ ] Add tests
-- [x] Add eslint
 - [ ] Add modern mode
+- [ ] Add more css preprocessors
 - [ ] Use `joi` in config package (https://github.com/hapijs/joi)
+- [x] Add eslint
 - [x] Use `lodash/template` to pass configuration to vue app
