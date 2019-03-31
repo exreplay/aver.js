@@ -1,6 +1,10 @@
 export default () => ({
   css: {
-    extract: false
+    extract: false,
+    styleResources: {
+      resources: [],
+      options: {}
+    }
   },
   purgeCss: false,
   base: false,

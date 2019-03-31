@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import SafeParser from 'postcss-safe-parser';
+import map from 'lodash/map';
 
 export default class StyleLoader {
   constructor(isServer, config) {
@@ -13,6 +14,10 @@ export default class StyleLoader {
 
   get usePostCss() {
     return this.postcssConfigExists || !this.config.css.extract;
+  }
+
+  get exportOnlyLocals() {
+    return this.isServer && this.config.css.extract;
   }
 
   apply(name, rule, loaders = []) {
@@ -28,6 +33,9 @@ export default class StyleLoader {
       moduleRule.use(loader.name).loader(loader.name).options(loader.options);
       plainRule.use(loader.name).loader(loader.name).options(loader.options);
     }
+    
+    this.styleResources(moduleRule);
+    this.styleResources(plainRule);
   }
 
   applyStyle(rule, module = false) {
@@ -78,15 +86,30 @@ export default class StyleLoader {
     }
   }
 
+  styleResources(rule) {
+    const { resources, options } = this.config.css.styleResources;
+    if (resources.length === 0 || this.name === 'css') return;
+    
+    const patterns = map(resources, resource => path.resolve(process.cwd(), resource));
+
+    rule
+      .use('style-resources-loader')
+        .loader('style-resources-loader')
+        .options({
+          patterns,
+          ...options
+        });
+  }
+
   css(rule) {
     rule
-    .use('css-loader')
-      .loader('css-loader')
-      .options({
-        importLoaders: this.usePostCss ? 2 : 1,
-        sourceMap: !this.isProd,
-        exportOnlyLocals: this.isServer && this.config.css.extract
-      });
+      .use('css-loader')
+        .loader('css-loader')
+        .options({
+          importLoaders: this.usePostCss ? 2 : 1,
+          sourceMap: !this.isProd,
+          exportOnlyLocals: this.exportOnlyLocals
+        });
   }
 
   cssModules(rule) {
@@ -99,7 +122,7 @@ export default class StyleLoader {
           localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
           camelCase: true,
           sourceMap: !this.isProd,
-          exportOnlyLocals: this.isServer && this.config.css.extract
+          exportOnlyLocals: this.exportOnlyLocals
         });
   }
 
