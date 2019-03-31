@@ -38,7 +38,7 @@ class Mailer {
     });
 
     transporter.verify(err => {
-      if (err) console.log(error);
+      if (err) console.log(err);
       else console.log('Successfully connected to SMTP!');
     });
 
