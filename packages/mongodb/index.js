@@ -1,4 +1,5 @@
 import Mongodb from './src';
 export default () => {
-    new Mongodb();
+  // eslint-disable-next-line no-new
+  new Mongodb();
 };

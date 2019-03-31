@@ -41,6 +41,7 @@ class ClientEntry {
     forEach(mixinContext.keys(), r => {
       const EntryClientMixin = mixinContext(r).default;
       if (typeof EntryClientMixin !== 'undefined') {
+        // eslint-disable-next-line no-unused-vars
         const mixin = new EntryClientMixin();
       }
     });
