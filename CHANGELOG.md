@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/exreplay/aver.js/compare/v1.2.1...v1.3.0) (2019-04-02)
+
+
+### Bug Fixes
+
+* **core:** entry-server now throws a proper error on 404 ([b19e282](https://github.com/exreplay/aver.js/commit/b19e282))
+* **deps:** update dependency eslint-plugin-promise to v4.1.1 ([5bb066f](https://github.com/exreplay/aver.js/commit/5bb066f))
+* **deps:** update dependency ora to v3.3.0 ([80a7900](https://github.com/exreplay/aver.js/commit/80a7900))
+* **mailer:** transporter was not logging right error object if verify fails ([efd3046](https://github.com/exreplay/aver.js/commit/efd3046))
+
+
+### Features
+
+* passing i18n object to router ([7a170c0](https://github.com/exreplay/aver.js/commit/7a170c0))
+
+
+
+
+
 ## [1.2.1](https://github.com/exreplay/aver.js/compare/v1.2.0...v1.2.1) (2019-03-31)
 
 
