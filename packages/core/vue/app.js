@@ -45,11 +45,6 @@ Component.registerHooks([
 ]);
 
 export function createApp(ssrContext) {
-  const router = createRouter();
-  const store = createStore(ssrContext);
-
-  sync(store, router);
-
   const i18nConfig = {
     locale: 'de',
     fallbackLocale: 'de'
@@ -69,6 +64,11 @@ export function createApp(ssrContext) {
       return i18n.locale;
     }
   };
+
+  const router = createRouter({ i18n });
+  const store = createStore(ssrContext);
+
+  sync(store, router);
 
   Vue.router = router;
 

@@ -5,12 +5,12 @@ import Meta         from 'vue-meta';
 Vue.use(VueRouter);
 Vue.use(Meta);
 
-export function createRouter() {
+export function createRouter({ i18n }) {
   const routes = require('@/pages').default;
 
   return new VueRouter({
     mode: 'history',
     fallback: false,
-    routes: routes
+    routes: typeof routes === 'function' ? routes({ i18n }) : routes
   });
 }
