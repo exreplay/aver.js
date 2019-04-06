@@ -22,7 +22,7 @@ export default class Builder {
   }
 
   prepareTemplates() {
-    const appDir = require.resolve('@averjs/vue-app');
+    const appDir = path.resolve(require.resolve('@averjs/vue-app'), '../');
     const files = klawSync(appDir);
     for (const file of files) {
       if (file.stats.isDirectory()) {
