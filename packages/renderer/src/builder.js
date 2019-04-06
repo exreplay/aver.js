@@ -22,7 +22,7 @@ export default class Builder {
   }
 
   prepareTemplates() {
-    const appDir = path.resolve(this.corePkgPath, './vue');
+    const appDir = require.resolve('@averjs/vue-app');
     const files = klawSync(appDir);
     for (const file of files) {
       if (file.stats.isDirectory()) {
@@ -40,7 +40,7 @@ export default class Builder {
           }
         });
 
-        fs.writeFileSync(path.resolve(this.cacheDir, pathName !== 'vue' ? `${pathName}/${fileName}` : fileName), compiledApp);
+        fs.writeFileSync(path.resolve(this.cacheDir, pathName !== 'lib' ? `${pathName}/${fileName}` : fileName), compiledApp);
       }
     }
   }
