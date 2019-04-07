@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/exreplay/aver.js/compare/v1.3.0...v1.4.0) (2019-04-07)
+
+
+### Bug Fixes
+
+* **deps:** update babel monorepo to v7.4.3 ([04e031d](https://github.com/exreplay/aver.js/commit/04e031d))
+* **deps:** update dependency extract-css-chunks-webpack-plugin to v4.3.0 ([94dc1df](https://github.com/exreplay/aver.js/commit/94dc1df))
+* **deps:** update dependency mongoose to v5.4.21 ([6a50c2c](https://github.com/exreplay/aver.js/commit/6a50c2c))
+* **deps:** update dependency mongoose to v5.4.22 ([44d2a5f](https://github.com/exreplay/aver.js/commit/44d2a5f))
+* **deps:** update dependency nodemailer to v6.1.0 ([7272c1b](https://github.com/exreplay/aver.js/commit/7272c1b))
+* **deps:** update dependency ora to v3.4.0 ([06d3432](https://github.com/exreplay/aver.js/commit/06d3432))
+* **deps:** update dependency webpack-dev-middleware to v3.6.2 ([dec64ba](https://github.com/exreplay/aver.js/commit/dec64ba))
+* **deps:** update dependency workbox-webpack-plugin to v4.2.0 ([4c27c8c](https://github.com/exreplay/aver.js/commit/4c27c8c))
+* **vue-app:** added main attribute to package.json ([991951f](https://github.com/exreplay/aver.js/commit/991951f))
+
+
+### Features
+
+* **vue-app:** added new package vue-app ([f2d36f2](https://github.com/exreplay/aver.js/commit/f2d36f2))
+* added new package shared-utils ([9e8ca05](https://github.com/exreplay/aver.js/commit/9e8ca05))
+* added open browser script ([6bcd6f6](https://github.com/exreplay/aver.js/commit/6bcd6f6))
+
+
+
+
+
 # [1.3.0](https://github.com/exreplay/aver.js/compare/v1.2.1...v1.3.0) (2019-04-02)
 
 
