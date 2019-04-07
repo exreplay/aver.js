@@ -2,6 +2,7 @@ import webpack from 'webpack';
 import path from 'path';
 import MFS from 'memory-fs';
 import Builder from './builder';
+import { openBrowser } from '@averjs/shared-utils';
 
 export default class WebpackDevServer {
   constructor(app, cb) {
@@ -11,6 +12,7 @@ export default class WebpackDevServer {
     this.clientConfig = builder.clientConfig;
     this.serverConfig = builder.serverConfig;
 
+    this.isBrowserOpen = false;
     this.bundle = null;
     this.clientManifest = null;
     this.template = null;
@@ -56,6 +58,15 @@ export default class WebpackDevServer {
       this.clientManifest = JSON.parse(this.readFile(devMiddleware.fileSystem, 'vue-ssr-client-manifest.json'));
       this.template = this.readFile(devMiddleware.fileSystem, 'index.ssr.html');
       this.update();
+
+      if (!this.isBrowserOpen) {
+        this.isBrowserOpen = true;
+        
+        let port = process.env.PORT || 3000;
+        port = port !== 80 ? `:${port}` : '';
+        
+        openBrowser(`http://localhost${port}`);
+      }
     });
     
     this.app.use(require('webpack-hot-middleware')(clientCompiler, {
