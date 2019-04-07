@@ -3,24 +3,17 @@
 import lernaJson from '../lerna.json';
 import conventionalRecommendedBump from 'conventional-recommended-bump';
 import pify from 'pify';
-import Listr from 'listr';
 import spawn from 'cross-spawn';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import semver from 'semver';
+import ora from 'ora';
 
 export default class Release {
   constructor() {
     this.currentVersion = lernaJson.version;
     this.newVersion = null;
-
-    this.tasks = new Listr([
-      {
-        title: `Bump version with lerna`,
-        task: this.lernaVersion.bind(this)
-      }
-    ]);
   }
 
   async run() {
@@ -43,28 +36,12 @@ export default class Release {
           )
         );
       } else {
-        await this.tasks.run();
-  
-        console.log(
-          logSymbols.success,
-          chalk.bold(
-            `Finished preparing for new release. If you are happy with everything, merge the 'release/${this.newVersion}' branch into master.`
-          )
-        );
-      
-        const { revert } = await inquirer.prompt([
-          {
-            type: 'confirm',
-            message: `Or do you want to revert this release?`,
-            name: 'revert',
-            default: false
-          }
-        ]);
-  
-        if (revert) {
-          this.exec('git', 'checkout', 'master');
-          this.exec('git', 'branch', '-D', `release/${this.newVersion}`);
-          this.exec('git', 'tag', '-d', `v${this.newVersion}`);
+        const releaseSpinner = ora(`Releasing version '${this.newVersion}'.`).start();
+        try {
+          this.release();
+          releaseSpinner.succeed(`Finished releasing new version '${this.newVersion}'`);
+        } catch (e) {
+          releaseSpinner.fail(e.message);
         }
       }
     }
@@ -82,7 +59,7 @@ export default class Release {
     }
   }
 
-  lernaVersion() {
+  release() {
     const { stdout, stderr } = this.exec('yarn', 'lerna', 'publish', '--force-publish');
     if (stderr) throw new Error(stderr);
   }
