@@ -60,7 +60,7 @@ export default class Release {
   }
 
   release() {
-    const { stdout, stderr } = this.exec('yarn', 'lerna', 'publish', '--force-publish');
+    const { stdout, stderr } = this.exec('yarn', 'lerna', 'publish', '--force-publish', '-y');
     if (stderr) throw new Error(stderr);
   }
 
