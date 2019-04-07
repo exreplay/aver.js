@@ -1,9 +1,14 @@
 {
   "extends": [
-    "config:base"
+    "config:base",
+    "group:allNonMajor",
+    ":semanticCommitTypeAll(chore)"
   ],
   "rangeStrategy": "pin",
   "ignorePaths": [
-    "packages/core/app/"
+    "packages/vue-app/lib"
+  ],
+  "ignoreDeps": [
+    "core-js"
   ]
 }
