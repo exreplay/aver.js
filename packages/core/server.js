@@ -18,7 +18,6 @@ import WWW                      from './www';
 export default class Server extends WWW {
   constructor(hooks, config) {
     super(hooks, config);
-    this.csrfProtection = csrf({ cookie: true });
     this.renderer = null;
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
@@ -111,10 +110,13 @@ export default class Server extends WWW {
 
     this.middlewares.push(bodyParser.json());
     this.middlewares.push(bodyParser.urlencoded({ extended: false }));
-    this.middlewares.push((req, res, next) => {
-      if (indexOf(this.config.csrfExclude, req.path) !== -1) return next();
-      csrf({ cookie: true })(req, res, next);
-    });
+
+    if (this.config.csrf) {
+      this.middlewares.push((req, res, next) => {
+        if (indexOf(this.config.csrfExclude, req.path) !== -1) return next();
+        csrf({ cookie: true })(req, res, next);
+      });
+    }
         
     for (const middleware of this.hooks.middlewares) {
       middleware({
@@ -210,7 +212,7 @@ export default class Server extends WWW {
       }
     });
 
-    this.app.get('*', this.csrfProtection, this.isProd ? this.render.bind(this) : (req, res) => {
+    this.app.get('*', this.isProd ? this.render.bind(this) : (req, res) => {
       self.readyPromise.then(() => self.render(req, res));
     });
   }
@@ -221,9 +223,10 @@ export default class Server extends WWW {
     const context = {
       title: process.env.APP_NAME,
       url: req.url,
-      csrfToken: req.csrfToken(),
       cookies: req.cookies
     };
+
+    if (this.config.csrf) Object.assign(context, { csrfToken: req.csrfToken() });
 
     if (typeof req.flash === 'function') Object.assign(context, { flash: req.flash() });
     if (typeof req.isAuthenticated === 'function') Object.assign(context, { isAuthenticated: req.isAuthenticated(), user: req.user });

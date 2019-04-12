@@ -36,7 +36,8 @@ export default class Builder {
         const compiledApp = compiled({
           config: {
             progressbar: this.globalConfig.progressbar,
-            i18n: this.globalConfig.i18n
+            i18n: this.globalConfig.i18n,
+            csrf: this.globalConfig.csrf
           }
         });
 
