@@ -2,7 +2,7 @@ import path from 'path';
 import { getAverjsConfig } from '../index';
 
 beforeEach(() => {
-  process.env.PROJECT_PATH = path.resolve(__dirname, '../__fixtures__/aver-config.js');
+  process.env.PROJECT_PATH = path.resolve(__dirname, '../__fixtures__/src');
 });
 
 test('should change progressbar option to false', () => {
