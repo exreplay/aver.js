@@ -1,19 +1,19 @@
-import express                  from 'express';
-import LRU                      from 'lru-cache';
-import compression              from 'compression';
-import path                     from 'path';
-import fs                       from 'fs';
+import express from 'express';
+import LRU from 'lru-cache';
+import compression from 'compression';
+import path from 'path';
+import fs from 'fs';
 import { createBundleRenderer } from 'vue-server-renderer';
-import helmet                   from 'helmet';
-import logger                   from 'morgan';
-import cookieParser             from 'cookie-parser';
-import csrf                     from 'csurf';
-import bodyParser               from 'body-parser';
-import rfs                      from 'rotating-file-stream';
-import uuid                     from 'uuid/v4';
-import chokidar                 from 'chokidar';
-import indexOf                  from 'lodash/indexOf';
-import WWW                      from './www';
+import helmet from 'helmet';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import csrf from 'csurf';
+import bodyParser from 'body-parser';
+import rfs from 'rotating-file-stream';
+import uuid from 'uuid/v4';
+import chokidar from 'chokidar';
+import indexOf from 'lodash/indexOf';
+import WWW from './www';
 import Builder from '@averjs/renderer';
 
 export default class Server extends WWW {
