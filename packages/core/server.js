@@ -14,6 +14,7 @@ import uuid                     from 'uuid/v4';
 import chokidar                 from 'chokidar';
 import indexOf                  from 'lodash/indexOf';
 import WWW                      from './www';
+import Builder from '@averjs/renderer';
 
 export default class Server extends WWW {
   constructor(hooks, config) {
@@ -21,6 +22,7 @@ export default class Server extends WWW {
     this.renderer = null;
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
+    this.middlewares = [];
 
     fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) || fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
 
@@ -66,8 +68,8 @@ export default class Server extends WWW {
         clientManifest: clientManifest
       }, this.config.createRenderer));
     } else {
-      const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../src/setup-dev-server')).default;
-      this.readyPromise = new WebpackDevServer(this.app, (bundle, options) => {
+      const builder = new Builder(this.middlewares);
+      this.readyPromise = builder.compile((bundle, options) => {
         self.renderer = self.createRenderer(bundle, Object.assign(bundle, options, this.config.createRenderer));
       });
     }
@@ -95,8 +97,6 @@ export default class Server extends WWW {
     const serve = (path, cache) => express.static(path, {
       maxAge: cache && this.isProd ? 1000 * 60 * 60 * 24 * 30 : 0
     });
-
-    this.middlewares = [];
         
     this.middlewares.push(helmet());
     this.logging();
