@@ -2,7 +2,6 @@ import path from 'path';
 import glob from 'glob-all';
 import webpack from 'webpack';
 import WebpackChain from 'webpack-chain';
-import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin';
 import { VueLoaderPlugin } from 'vue-loader';
 import { warmup } from 'thread-loader';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
@@ -69,10 +68,6 @@ export default class WebpackBaseConfiguration {
               whitelistPatterns: [/^_/]
             }]);
       }
-    } else {
-      this.chainConfig
-        .plugin('friendly-errors')
-          .use(FriendlyErrorsPlugin);
     }
   }
 

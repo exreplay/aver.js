@@ -2,6 +2,15 @@
 # yarn lockfile v1
 
 
+"@averjs/friendly-errors-webpack-plugin@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@averjs/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-2.0.0.tgz#e3b9cdd04785bc9f002e18cc4577bce3eb6c8e63"
+  integrity sha512-Gg04kTWxWZtL3tF5f68n6oWgKH5dH2MeRWxW3gOlV2dpWsXJWFKlDaEw6C868+yUR5MlWPOd/Rhe/dnoDkCMdA==
+  dependencies:
+    chalk "^1.1.3"
+    error-stack-parser "^2.0.0"
+    string-width "^2.0.0"
+
 "@averjs/vuex-decorators@2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@averjs/vuex-decorators/-/vuex-decorators-2.1.4.tgz#4efde3f5db7638b29470f538db0f1cd33ac0d1e7"
@@ -5509,15 +5518,6 @@ fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
-
-friendly-errors-webpack-plugin@1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-1.7.0.tgz#efc86cbb816224565861a1be7a9d84d0aafea136"
-  integrity sha512-K27M3VK30wVoOarP651zDmb93R9zF28usW4ocaK3mfQeIEI5BPht/EzZs5E8QLLwbLRJQMwscAjDxYPb1FuNiw==
-  dependencies:
-    chalk "^1.1.3"
-    error-stack-parser "^2.0.0"
-    string-width "^2.0.0"
 
 from2@^2.1.0:
   version "2.3.0"
