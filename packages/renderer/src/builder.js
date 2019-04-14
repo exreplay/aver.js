@@ -68,7 +68,7 @@ export default class Builder {
       const serverCompiler = this.setupServerCompiler();
 
       // Compile Client
-      clientCompiler.plugin('done', stats => {
+      clientCompiler.hooks.done.tap('averjs', stats => {
         stats = stats.toJson();
         stats.errors.forEach(err => console.error(err));
         stats.warnings.forEach(err => console.warn(err));
