@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/exreplay/aver.js/compare/v1.4.0...v1.5.0) (2019-04-17)
+
+
+### Features
+
+* **csrf:** csrf can now be disabled ([a805cc5](https://github.com/exreplay/aver.js/commit/a805cc5))
+
+
+
+
+
 # [1.4.0](https://github.com/exreplay/aver.js/compare/v1.3.0...v1.4.0) (2019-04-07)
 
 
