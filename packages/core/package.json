@@ -1,6 +1,6 @@
 {
   "name": "@averjs/core",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "the averjs core",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -20,7 +20,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "@averjs/config": "1.4.0",
+    "@averjs/config": "1.5.0",
     "@averjs/vuex-decorators": "2.1.4",
     "@babel/runtime-corejs2": "7.4.3",
     "axios": "0.18.0",
@@ -54,7 +54,7 @@
     "vue-no-ssr": "1.1.1",
     "vue-progressbar": "0.7.5",
     "vue-property-decorator": "8.1.0",
-    "vue-router": "3.0.2",
+    "vue-router": "3.0.4",
     "vue-server-renderer": "2.6.10",
     "vuex": "3.1.0",
     "vuex-class": "0.3.2",

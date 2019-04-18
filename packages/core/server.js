@@ -1,27 +1,28 @@
-import express                  from 'express';
-import LRU                      from 'lru-cache';
-import compression              from 'compression';
-import path                     from 'path';
-import fs                       from 'fs';
+import express from 'express';
+import LRU from 'lru-cache';
+import compression from 'compression';
+import path from 'path';
+import fs from 'fs';
 import { createBundleRenderer } from 'vue-server-renderer';
-import helmet                   from 'helmet';
-import logger                   from 'morgan';
-import cookieParser             from 'cookie-parser';
-import csrf                     from 'csurf';
-import bodyParser               from 'body-parser';
-import rfs                      from 'rotating-file-stream';
-import uuid                     from 'uuid/v4';
-import chokidar                 from 'chokidar';
-import indexOf                  from 'lodash/indexOf';
-import WWW                      from './www';
+import helmet from 'helmet';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import csrf from 'csurf';
+import bodyParser from 'body-parser';
+import rfs from 'rotating-file-stream';
+import uuid from 'uuid/v4';
+import chokidar from 'chokidar';
+import indexOf from 'lodash/indexOf';
+import WWW from './www';
+import Builder from '@averjs/renderer';
 
 export default class Server extends WWW {
   constructor(hooks, config) {
     super(hooks, config);
-    this.csrfProtection = csrf({ cookie: true });
     this.renderer = null;
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
+    this.middlewares = [];
 
     fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) || fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
 
@@ -67,8 +68,8 @@ export default class Server extends WWW {
         clientManifest: clientManifest
       }, this.config.createRenderer));
     } else {
-      const WebpackDevServer = require(path.resolve(require.resolve('@averjs/renderer'), '../src/setup-dev-server')).default;
-      this.readyPromise = new WebpackDevServer(this.app, (bundle, options) => {
+      const builder = new Builder(this.middlewares);
+      this.readyPromise = builder.compile((bundle, options) => {
         self.renderer = self.createRenderer(bundle, Object.assign(bundle, options, this.config.createRenderer));
       });
     }
@@ -96,8 +97,6 @@ export default class Server extends WWW {
     const serve = (path, cache) => express.static(path, {
       maxAge: cache && this.isProd ? 1000 * 60 * 60 * 24 * 30 : 0
     });
-
-    this.middlewares = [];
         
     this.middlewares.push(helmet());
     this.logging();
@@ -111,10 +110,13 @@ export default class Server extends WWW {
 
     this.middlewares.push(bodyParser.json());
     this.middlewares.push(bodyParser.urlencoded({ extended: false }));
-    this.middlewares.push((req, res, next) => {
-      if (indexOf(this.config.csrfExclude, req.path) !== -1) return next();
-      csrf({ cookie: true })(req, res, next);
-    });
+
+    if (this.config.csrf) {
+      this.middlewares.push((req, res, next) => {
+        if (indexOf(this.config.csrfExclude, req.path) !== -1) return next();
+        csrf({ cookie: true })(req, res, next);
+      });
+    }
         
     for (const middleware of this.hooks.middlewares) {
       middleware({
@@ -210,7 +212,7 @@ export default class Server extends WWW {
       }
     });
 
-    this.app.get('*', this.csrfProtection, this.isProd ? this.render.bind(this) : (req, res) => {
+    this.app.get('*', this.isProd ? this.render.bind(this) : (req, res) => {
       self.readyPromise.then(() => self.render(req, res));
     });
   }
@@ -221,9 +223,11 @@ export default class Server extends WWW {
     const context = {
       title: process.env.APP_NAME,
       url: req.url,
-      csrfToken: req.csrfToken(),
-      cookies: req.cookies
+      cookies: req.cookies,
+      host: req.headers.host
     };
+
+    if (this.config.csrf) Object.assign(context, { csrfToken: req.csrfToken() });
 
     if (typeof req.flash === 'function') Object.assign(context, { flash: req.flash() });
     if (typeof req.isAuthenticated === 'function') Object.assign(context, { isAuthenticated: req.isAuthenticated(), user: req.user });

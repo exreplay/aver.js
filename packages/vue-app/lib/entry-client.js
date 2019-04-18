@@ -1,14 +1,14 @@
-import { createApp }        from './app';
-import Vue                  from 'vue';
-import axios                from 'axios';
-import forEach              from 'lodash/forEach';
+import { createApp } from './app';
+import Vue from 'vue';
+import axios from 'axios';
+import forEach from 'lodash/forEach';
 const { app, router, store } = createApp({ isServer: false });
 
 // eslint-disable-next-line no-unused-vars
 class ClientEntry {
   constructor() {
     this.addMobileCheck();
-    this.configureCSRF();
+    <% if (config.csrf) { %> this.configureCSRF(); <% } %>
     this.setRouterMixins();
     this.initMixin();
 
@@ -60,6 +60,7 @@ class ClientEntry {
     };
   }
 
+  <% if (config.csrf) { %>
   configureCSRF() {
     let token = document.querySelector('meta[name="csrf-token"]');
 
@@ -70,6 +71,7 @@ class ClientEntry {
       console.error('CSRF token not found');
     }
   }
+  <% } %>
 
   setRouterMixins() {
     Vue.mixin({

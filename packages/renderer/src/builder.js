@@ -5,12 +5,15 @@ import template from 'lodash/template';
 import klawSync from 'klaw-sync';
 import WebpackClientConfiguration from './client.config';
 import WebpackServerConfiguration from './server.config';
+import MFS from 'memory-fs';
+import { openBrowser } from '@averjs/shared-utils';
 import { getAverjsConfig } from '@averjs/config';
 
 export default class Builder {
-  constructor() {
+  constructor(middlewares) {
+    this.isProd = process.env.NODE_ENV === 'production';
+    this.middlewares = middlewares;
     this.cacheDir = path.resolve('node_modules/.cache/averjs');
-    this.corePkgPath = path.resolve(require.resolve('@averjs/core'), '../');
     this.globalConfig = getAverjsConfig();
 
     if (!fs.existsSync(this.cacheDir)) fs.mkdirpSync(this.cacheDir);
@@ -19,6 +22,14 @@ export default class Builder {
 
     this.clientConfig = new WebpackClientConfiguration().config();
     this.serverConfig = new WebpackServerConfiguration().config();
+
+    this.mfs = new MFS();
+    this.isBrowserOpen = false;
+    this.bundle = null;
+    this.clientManifest = null;
+    this.template = null;
+    this.resolve = null;
+    this.readyPromise = new Promise(resolve => { this.resolve = resolve; });
   }
 
   prepareTemplates() {
@@ -36,7 +47,8 @@ export default class Builder {
         const compiledApp = compiled({
           config: {
             progressbar: this.globalConfig.progressbar,
-            i18n: this.globalConfig.i18n
+            i18n: this.globalConfig.i18n,
+            csrf: this.globalConfig.csrf
           }
         });
 
@@ -45,9 +57,41 @@ export default class Builder {
     }
   }
     
-  compile() {
+  compile(cb) {
     const promises = [];
     const compilers = [];
+
+    if (!this.isProd) {
+      this.cb = cb;
+
+      const clientCompiler = this.setupClientCompiler();
+      const serverCompiler = this.setupServerCompiler();
+
+      // Compile Client
+      clientCompiler.hooks.done.tap('averjs', stats => {
+        stats = stats.toJson();
+        stats.errors.forEach(err => console.error(err));
+        stats.warnings.forEach(err => console.warn(err));
+        if (stats.errors.length) return;
+      
+        this.clientManifest = JSON.parse(this.readFile('vue-ssr-client-manifest.json'));
+        this.template = this.readFile('index.ssr.html');
+        this.update();
+      });
+
+      // Compile server
+
+      serverCompiler.watch({}, (err, stats) => {
+        if (err) throw err;
+        stats = stats.toJson();
+        if (stats.errors.length) return;
+              
+        this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
+        this.update();
+      });
+
+      return this.readyPromise;
+    }
 
     compilers.push(this.clientConfig);
     compilers.push(this.serverConfig);
@@ -71,5 +115,64 @@ export default class Builder {
     }
         
     return Promise.all(promises);
+  }
+
+  update() {
+    if (this.bundle && this.clientManifest && this.template) {
+      if (!this.isBrowserOpen) {
+        this.isBrowserOpen = true;
+        
+        let port = process.env.PORT || 3000;
+        port = port !== 80 ? `:${port}` : '';
+        
+        openBrowser(`http://localhost${port}`);
+      }
+      
+      this.resolve();
+      this.cb(this.bundle, {
+        clientManifest: this.clientManifest,
+        template: this.template
+      });
+    }
+  }
+
+  setupClientCompiler() {
+    this.clientConfig.entry.app = ['webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app];
+    this.clientConfig.output.filename = '[name].js';
+    this.clientConfig.plugins.push(
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.NoEmitOnErrorsPlugin()
+    );
+    
+    const clientCompiler = webpack(this.clientConfig);
+    clientCompiler.outputFileSystem = this.mfs;
+    const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
+      publicPath: this.clientConfig.output.publicPath,
+      noInfo: true,
+      stats: 'none',
+      logLevel: 'error',
+      index: false
+    });
+
+    this.middlewares.push(devMiddleware);
+    
+    this.middlewares.push(require('webpack-hot-middleware')(clientCompiler, {
+      log: false,
+      heartbeat: 10000
+    }));
+
+    return clientCompiler;
+  }
+
+  setupServerCompiler() {
+    const serverCompiler = webpack(this.serverConfig);
+    serverCompiler.outputFileSystem = this.mfs;
+    return serverCompiler;
+  }
+
+  readFile(file) {
+    try {
+      return this.mfs.readFileSync(path.join(this.clientConfig.output.path, file), 'utf-8');
+    } catch (e) { console.log(e); }
   }
 }

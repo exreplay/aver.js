@@ -31,20 +31,50 @@ export default class Release {
       if (this.gitBranch() !== 'development') {
         console.log(
           logSymbols.warning,
-          chalk.bold().red(
+          chalk.bold.red(
             `You are not in the 'development' branch! Please switch.`
           )
         );
       } else {
-        const releaseSpinner = ora(`Releasing version '${this.newVersion}'.`).start();
         try {
-          this.release();
-          releaseSpinner.succeed(`Finished releasing new version '${this.newVersion}'`);
-        } catch (e) {
-          releaseSpinner.fail(e.message);
+          this.createReleaseBranch();
+          this.preReleaseSync();
+          this.createNewRelease();
+          console.log(
+            logSymbols.success,
+            chalk.bold.green(
+              `Successfully created new release in branch 'release/${this.newVersion}'.`
+            )
+          );
+        } catch (err) {
+          console.error(err);
         }
       }
     }
+  }
+
+  createReleaseBranch() {
+    const branch = this.gitBranch();
+    const spinner = ora(`Creating new release branch 'release/${this.newVersion}'.`).start();
+    this.exec('git', 'checkout', '-b', `release/${this.newVersion}`, branch);
+    spinner.succeed();
+  }
+
+  preReleaseSync() {
+    const spinner = ora(`Pre release sync`).start();
+    this.exec('git', 'add', '-A');
+    this.exec('git', 'commit', '-m', `chore: pre release sync`);
+    spinner.succeed();
+  }
+
+  createNewRelease() {
+    const spinner = ora(`Creating new release '${this.newVersion}' without pushing.`).start();
+    const { error } = this.exec('yarn', 'lerna', 'version', '--no-push', '-y');
+    if (error) {
+      spinner.fail();
+      throw new Error(error);
+    }
+    spinner.succeed();
   }
   
   async getNextVersion() {
@@ -59,16 +89,12 @@ export default class Release {
     }
   }
 
-  release() {
-    const { stdout, stderr } = this.exec('yarn', 'lerna', 'publish', '--force-publish', '-y');
-    if (stderr) throw new Error(stderr);
-  }
-
   exec(command, ...args) {
     const r = spawn.sync(command, args);
     const composedCommand = command + ' ' + [ ...args ].join(' ');
 
     return {
+      error: r.error,
       stdout: String(r.stdout).trim(),
       stderr: String(r.stderr).trim(),
       composedCommand

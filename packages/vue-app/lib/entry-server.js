@@ -4,7 +4,7 @@ import { createApp } from './app';
 
 Vue.prototype.$auth = null;
 Vue.prototype.$modernizr = {};
-Vue.prototype.$csrf = '';
+<% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
 
 const mixinContext = require.context('@/', false, /^\.\/entry-server\.js$/i);
 

@@ -8,6 +8,7 @@ import HTMLPlugin from 'html-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import SafeParser from 'postcss-safe-parser';
 import cloneDeep from 'lodash/cloneDeep';
+import FriendlyErrorsPlugin from '@averjs/friendly-errors-webpack-plugin';
 
 export default class WebpackClientConfiguration extends WebpackBaseConfiguration {
   constructor() {
@@ -50,6 +51,15 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         .end()
       .plugin('vue-ssr-client')
         .use(VueSSRClientPlugin);
+      
+    this.chainConfig
+      .plugin('friendly-errors')
+        .use(FriendlyErrorsPlugin, [{
+          showSuccessInfo: false,
+          showCompilingInfo: false,
+          clearConsole: false,
+          logLevel: 'WARNING'
+        }]);
   }
 
   serviceWorker() {

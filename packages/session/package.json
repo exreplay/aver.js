@@ -1,6 +1,6 @@
 {
   "name": "@averjs/session",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "session support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "connect-redis": "3.4.1",
-    "express-session": "1.15.6",
+    "express-session": "1.16.1",
     "ioredis": "4.9.0",
     "uuid": "3.3.2"
   }
