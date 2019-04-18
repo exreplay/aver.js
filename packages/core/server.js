@@ -14,7 +14,6 @@ import uuid from 'uuid/v4';
 import chokidar from 'chokidar';
 import indexOf from 'lodash/indexOf';
 import WWW from './www';
-import Builder from '@averjs/renderer';
 
 export default class Server extends WWW {
   constructor(hooks, config) {
@@ -68,6 +67,7 @@ export default class Server extends WWW {
         clientManifest: clientManifest
       }, this.config.createRenderer));
     } else {
+      const Builder = require('@averjs/renderer').default;
       const builder = new Builder(this.middlewares);
       this.readyPromise = builder.compile((bundle, options) => {
         self.renderer = self.createRenderer(bundle, Object.assign(bundle, options, this.config.createRenderer));
