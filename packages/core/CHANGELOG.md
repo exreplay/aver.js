@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2](https://github.com/exreplay/aver.js/compare/v1.5.1...v1.5.2) (2019-04-18)
+
+
+### Bug Fixes
+
+* added default to require statement ([50e8b1a](https://github.com/exreplay/aver.js/commit/50e8b1a))
+* require renderer only in dev ([f513b7b](https://github.com/exreplay/aver.js/commit/f513b7b))
+
+
+
+
+
 ## [1.5.1](https://github.com/exreplay/aver.js/compare/v1.5.0...v1.5.1) (2019-04-18)
 
 **Note:** Version bump only for package @averjs/core
