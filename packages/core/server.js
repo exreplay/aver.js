@@ -223,7 +223,8 @@ export default class Server extends WWW {
     const context = {
       title: process.env.APP_NAME,
       url: req.url,
-      cookies: req.cookies
+      cookies: req.cookies,
+      host: req.headers.host
     };
 
     if (this.config.csrf) Object.assign(context, { csrfToken: req.csrfToken() });
