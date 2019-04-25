@@ -8,6 +8,7 @@ import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import PurgeCssPlugin from 'purgecss-webpack-plugin';
 import StyleLoader from './styleLoader';
 import Webpackbar from 'webpackbar';
+import FilesChanged from '../plugins/FilesChanged';
 import { getAverjsConfig } from '@averjs/config';
 
 export default class WebpackBaseConfiguration {
@@ -41,6 +42,12 @@ export default class WebpackBaseConfiguration {
     this.chainConfig
       .plugin('vue-loader')
         .use(VueLoaderPlugin);
+    
+    if (!this.isServer && !this.isProd) {
+      this.chainConfig
+        .plugin('files-changed')
+          .use(FilesChanged);
+    }
 
     this.chainConfig
       .plugin('webpackbar')
