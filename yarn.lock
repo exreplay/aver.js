@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@averjs/friendly-errors-webpack-plugin@^2.0.0":
+"@averjs/friendly-errors-webpack-plugin@2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@averjs/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-2.0.0.tgz#e3b9cdd04785bc9f002e18cc4577bce3eb6c8e63"
   integrity sha512-Gg04kTWxWZtL3tF5f68n6oWgKH5dH2MeRWxW3gOlV2dpWsXJWFKlDaEw6C868+yUR5MlWPOd/Rhe/dnoDkCMdA==
