@@ -1,0 +1,26 @@
+{
+  "name": "@averjs/cli",
+  "version": "1.5.2",
+  "description": "cli package vor averjs",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "bin": {
+    "aver": "./bin/aver.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "dependencies": {
+    "command-line-usage": "5.0.5"
+  }
+}

@@ -5,9 +5,6 @@
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "main": "index.js",
-  "bin": {
-    "aver": "./bin/aver"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -20,6 +17,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
+    "@averjs/cli": "1.5.2",
     "@averjs/config": "1.5.2",
     "@averjs/vuex-decorators": "2.1.4",
     "@babel/runtime-corejs2": "7.4.3",
