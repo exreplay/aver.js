@@ -7,7 +7,10 @@ import { getAverjsConfig } from '@averjs/config';
 
 if (!process.env.AVER_NO_INIT) {
   if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
-    dotenv.config();
+    const envConfig = dotenv.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../.env')));
+    for (let k in envConfig) {
+      process.env[k] = envConfig[k];
+    }
     if (dotenv.error) {
       throw dotenv.error;
     }
