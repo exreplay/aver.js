@@ -2,6 +2,7 @@ import HelpCommand from './commands/help';
 import DevCommand from './commands/dev';
 import InitCommand from './commands/init';
 import BuildCommand from './commands/build';
+import ProductionCommand from './commands/prod';
 import parseArgs from 'minimist';
 
 export default class Usage {
@@ -11,6 +12,7 @@ export default class Usage {
 
     this.addCommand(new HelpCommand(this.availableCommands));
     this.addCommand(new DevCommand());
+    this.addCommand(new ProductionCommand());
     this.addCommand(new InitCommand());
     this.addCommand(new BuildCommand());
 
