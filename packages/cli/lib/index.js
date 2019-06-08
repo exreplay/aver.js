@@ -28,8 +28,9 @@ export default class Usage {
   }
   
   async run() {
+    const executedCommand = this.argv._[0] || 'help';
     for (const command of this.availableCommands) {
-      if (this.argv._.indexOf(command.name) !== -1) {
+      if (executedCommand === command.name) {
         try {
           await command.run();
         } catch (err) {
