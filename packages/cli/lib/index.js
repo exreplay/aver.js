@@ -30,7 +30,7 @@ export default class Usage {
   }
   
   async run() {
-    const executedCommand = this.argv._[0] || 'help';
+    const executedCommand = this.argv._[0] || 'dev';
     for (const command of this.availableCommands) {
       if (executedCommand === command.name) {
         try {
