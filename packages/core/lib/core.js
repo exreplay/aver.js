@@ -63,7 +63,7 @@ export default class Core {
     return builder.compile();
   }
 
-  async init() {
+  init() {
     console.log('Check if required folder and files exist...');
 
     if (fs.existsSync(process.env.PROJECT_PATH)) {
@@ -72,7 +72,7 @@ export default class Core {
       try {
         console.log('Root directory does not exist. Setting it up...');
 
-        const appDir = path.resolve(require.resolve('@averjs/core'), '../app');
+        const appDir = path.resolve('./app/');
                 
         fs.copySync(path.resolve(appDir, './src'), process.env.PROJECT_PATH, { recursive: true });
     
@@ -81,18 +81,11 @@ export default class Core {
 
         fs.copyFileSync(path.resolve(appDir, './.eslintignore'), path.resolve(process.env.PROJECT_PATH, '../.eslintignore'));
         fs.copyFileSync(path.resolve(appDir, './.eslintrc.js'), path.resolve(process.env.PROJECT_PATH, '../.eslintrc.js'));
-        fs.copyFileSync(path.resolve(appDir, './index.js'), path.resolve(process.env.PROJECT_PATH, '../index.js'));
         fs.copyFileSync(path.resolve(appDir, './aver-config.js'), path.resolve(process.env.PROJECT_PATH, '../aver-config.js'));
         fs.copyFileSync(path.resolve(appDir, './_.gitignore'), path.resolve(process.env.PROJECT_PATH, '../.gitignore'));
-        fs.copyFileSync(path.resolve(appDir, './Dockerfile'), path.resolve(process.env.PROJECT_PATH, '../Dockerfile'));
         fs.copyFileSync(path.resolve(appDir, './jsconfig.json'), path.resolve(process.env.PROJECT_PATH, '../jsconfig.json'));
-        fs.copyFileSync(path.resolve(appDir, './.gitlab-ci.yml'), path.resolve(process.env.PROJECT_PATH, '../.gitlab-ci.yml'));
         fs.copyFileSync(path.resolve(appDir, './.env.example'), path.resolve(process.env.PROJECT_PATH, '../.env.example'));
     
-        const dockerComposePath = path.resolve(process.env.PROJECT_PATH, '../docker-compose.yml');
-        if (fs.existsSync(dockerComposePath)) console.log('docker-compose.yml already exists, skipping...');
-        else fs.copyFileSync(path.resolve(appDir, './docker-compose.example.yml'), path.resolve(process.env.PROJECT_PATH, '../docker-compose.yml'));
-                
         console.log('Creating api directories...');
 
         fs.mkdirSync(process.env.API_PATH);

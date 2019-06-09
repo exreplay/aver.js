@@ -1,0 +1,11 @@
+{
+    "name": "site",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+      "live": "aver prod",
+      "build": "rimraf dist && aver build",
+      "dev": "nodemon --ignore wordpress --ignore api --ignore public --ignore dist --ignore src --ignore storage --delay 80ms --exec 'aver'"
+    }
+}
