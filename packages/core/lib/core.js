@@ -72,7 +72,7 @@ export default class Core {
       try {
         console.log('Root directory does not exist. Setting it up...');
 
-        const appDir = path.resolve('./app/');
+        const appDir = path.resolve(require.resolve('@averjs/core'), '../app');
                 
         fs.copySync(path.resolve(appDir, './src'), process.env.PROJECT_PATH, { recursive: true });
     
