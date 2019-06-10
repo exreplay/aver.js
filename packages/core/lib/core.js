@@ -97,7 +97,7 @@ export default class Core {
     this.createApiDir('queues');
     this.createApiDir('routes');
 
-    this.writeFile('routes/index.js', this.trimLines(`
+    this.writeFile('./api/routes/index.js', this.trimLines(`
         import app from 'express';
 
         const router = app.Router();
@@ -105,7 +105,7 @@ export default class Core {
         module.exports = router;
     `));
 
-    this.writeFile('./middlewares/index.js', this.trimLines(`
+    this.writeFile('./api/middlewares/index.js', this.trimLines(`
         import app from 'express';
 
         const router = app.Router();
@@ -126,10 +126,10 @@ export default class Core {
 
   writeFile(file, data) {
     const spinner = ora(`Writing file "${file}"`).start();
-    const destination = path.resolve(process.env.API_PATH, `./${file}`);
+    const destination = path.resolve(process.cwd(), file);
 
     if (!fs.existsSync(destination)) {
-      fs.writeFileSync(path.resolve(process.env.API_PATH, './routes/index.js'), data);
+      fs.writeFileSync(path.resolve(process.cwd(), file), data);
       spinner.succeed(`File "${file}" successfully written!`);
     } else {
       spinner.info(`File "${file}" already exists`);
