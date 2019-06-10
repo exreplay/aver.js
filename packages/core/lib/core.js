@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import dotenv from 'dotenv';
 import { getAverjsConfig } from '@averjs/config';
+import ora from 'ora';
 
 if (!process.env.AVER_NO_INIT) {
   if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
@@ -64,65 +65,113 @@ export default class Core {
   }
 
   init() {
-    console.log('Check if required folder and files exist...');
+    this.appDir = path.resolve(require.resolve('@averjs/core'), '../app');
+    const srcSpinner = ora('Creating "src" directory').start();
 
     if (fs.existsSync(process.env.PROJECT_PATH)) {
-      console.log('Root directory "src" already exists');
+      srcSpinner.info('Root directory "src" already exists');
     } else {
-      try {
-        console.log('Root directory does not exist. Setting it up...');
-
-        const appDir = path.resolve(require.resolve('@averjs/core'), '../app');
-                
-        fs.copySync(path.resolve(appDir, './src'), process.env.PROJECT_PATH, { recursive: true });
-    
-        console.log('Root directory successfully copied!');
-        console.log('Copying necessary files...');
-
-        fs.copyFileSync(path.resolve(appDir, './.eslintignore'), path.resolve(process.env.PROJECT_PATH, '../.eslintignore'));
-        fs.copyFileSync(path.resolve(appDir, './.eslintrc.js'), path.resolve(process.env.PROJECT_PATH, '../.eslintrc.js'));
-        fs.copyFileSync(path.resolve(appDir, './aver-config.js'), path.resolve(process.env.PROJECT_PATH, '../aver-config.js'));
-        fs.copyFileSync(path.resolve(appDir, './_.gitignore'), path.resolve(process.env.PROJECT_PATH, '../.gitignore'));
-        fs.copyFileSync(path.resolve(appDir, './jsconfig.json'), path.resolve(process.env.PROJECT_PATH, '../jsconfig.json'));
-        fs.copyFileSync(path.resolve(appDir, './.env.example'), path.resolve(process.env.PROJECT_PATH, '../.env.example'));
-    
-        console.log('Creating api directories...');
-
-        fs.mkdirSync(process.env.API_PATH);
-        fs.mkdirSync(path.resolve(process.env.API_PATH, './database'));
-        fs.mkdirSync(path.resolve(process.env.API_PATH, './database/seeds'));
-        fs.mkdirSync(path.resolve(process.env.API_PATH, './errors'));
-        fs.mkdirSync(path.resolve(process.env.API_PATH, './mail'));
-        fs.mkdirSync(path.resolve(process.env.API_PATH, './mail/templates'));
-        fs.mkdirSync(path.resolve(process.env.API_PATH, './middlewares'));
-        fs.mkdirSync(path.resolve(process.env.API_PATH, './models'));
-        fs.mkdirSync(path.resolve(process.env.API_PATH, './queues'));
-        fs.mkdirSync(path.resolve(process.env.API_PATH, './routes'));
-
-        fs.writeFileSync(path.resolve(process.env.API_PATH, './routes/index.js'), `import app from 'express';
-
-const router = app.Router();
-
-module.exports = router;`);
-
-        fs.writeFileSync(path.resolve(process.env.API_PATH, './middlewares/index.js'), `import app from 'express';
-
-const router = app.Router();
-
-module.exports = router;`);
-
-        console.log('Modifying package.json');
-
-        const corePackageJSON = require(path.resolve(appDir, './package.json'));
-        const packageJSONPath = path.resolve(process.env.PROJECT_PATH, '../package.json');
-        const packageJSON = require(packageJSONPath);
-    
-        fs.writeFileSync(packageJSONPath, JSON.stringify(Object.assign(corePackageJSON, packageJSON), null, 2));
-    
-        console.log('Project setup successfull!');
-      } catch (err) {
-        console.log(err);
-      }
+      fs.copySync(path.resolve(this.appDir, './src'), process.env.PROJECT_PATH, { recursive: true });
+      srcSpinner.succeed('Root directory successfully copied!');
     }
+
+    console.log('Copying necessary files...');
+    
+    this.copyFile('.eslintignore');
+    this.copyFile('.eslintrc.js');
+    this.copyFile('aver-config.js');
+    this.copyFile('_.gitignore', true);
+    this.copyFile('jsconfig.json');
+    this.copyFile('.env.example');
+    
+    console.log('Creating api directories...');
+
+    this.createApiDir();
+    this.createApiDir('database');
+    this.createApiDir('database/seeds');
+    this.createApiDir('errors');
+    this.createApiDir('mail');
+    this.createApiDir('mail/templates');
+    this.createApiDir('middlewares');
+    this.createApiDir('models');
+    this.createApiDir('queues');
+    this.createApiDir('routes');
+
+    this.writeFile('routes/index.js', this.trimLines(`
+        import app from 'express';
+
+        const router = app.Router();
+
+        module.exports = router;
+    `));
+
+    this.writeFile('./middlewares/index.js', this.trimLines(`
+        import app from 'express';
+
+        const router = app.Router();
+
+        module.exports = router;
+    `));
+
+    console.log('Modifying package.json');
+
+    const corePackageJSON = require(path.resolve(this.appDir, './package.json'));
+    const packageJSONPath = path.resolve(process.env.PROJECT_PATH, '../package.json');
+    const packageJSON = require(packageJSONPath);
+    
+    fs.writeFileSync(packageJSONPath, JSON.stringify(Object.assign(corePackageJSON, packageJSON), null, 2));
+    
+    console.log('Project setup successfull!');
+  }
+
+  writeFile(file, data) {
+    const spinner = ora(`Writing file "${file}"`).start();
+    const destination = path.resolve(process.env.API_PATH, `./${file}`);
+
+    if (!fs.existsSync(destination)) {
+      fs.writeFileSync(path.resolve(process.env.API_PATH, './routes/index.js'), data);
+      spinner.succeed(`File "${file}" successfully written!`);
+    } else {
+      spinner.info(`File "${file}" already exists`);
+    }
+  }
+
+  copyFile(file, removeUnderscore = false) {
+    const spinner = ora(`Copying "${file}"`).start();
+    const destinationFile = removeUnderscore ? file.replace('_', '') : file;
+    const destination = path.resolve(process.env.PROJECT_PATH, `../${destinationFile}`);
+
+    if (!fs.existsSync(destination)) {
+      fs.copyFileSync(path.resolve(this.appDir, `./${file}`), destination);
+      spinner.succeed(`File "${file}" successfully copied!`);
+    } else {
+      spinner.info(`File "${file}" already exists`);
+    }
+  }
+
+  createApiDir(dir) {
+    const spinner = ora(`Creating "${dir}" directory`).start();
+    const dirPath = path.resolve(process.env.API_PATH, dir ? `./${dir}` : '');
+
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath);
+      spinner.succeed(`Directory "${dir || 'api'}" successfully created!`);
+    } else {
+      spinner.info(`Directory "${dir || 'api'}" already exists`);
+    }
+  }
+
+  trimLines(s) {
+    const lines = s.split('\n');
+    let trimmedLines = [];
+
+    for (const key in lines) {
+      const line = lines[key];
+      const newLine = line.trim();
+
+      trimmedLines.push(newLine);
+    }
+
+    return trimmedLines.join('\n').trimLeft();
   }
 }
