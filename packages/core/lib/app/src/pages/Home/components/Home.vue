@@ -22,4 +22,8 @@
     }
 </script>
 
-<style src="../styles/main.scss" lang="scss" module></style>
+<style lang="scss" module>
+    .test {
+        color: yellowgreen
+    }
+</style>
