@@ -1,6 +1,6 @@
 {
   "name": "@averjs/vue-app",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "The vue app for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
