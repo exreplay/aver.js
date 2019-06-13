@@ -57,7 +57,7 @@ export default class WebpackBaseConfiguration {
         .plugin('module-concatenation')
           .use(webpack.optimize.ModuleConcatenationPlugin);
             
-      if (typeof this.globalConfig.purgeCss !== 'undefined') {
+      if (this.globalConfig.purgeCss) {
         this.chainConfig
           .plugin('purge-css')
             .use(PurgeCssPlugin, [{
