@@ -20,7 +20,7 @@
     "@averjs/config": "1.5.3",
     "@averjs/vuex-decorators": "2.2.2",
     "@babel/runtime-corejs2": "7.4.5",
-    "axios": "0.18.1",
+    "axios": "0.19.0",
     "body-parser": "1.19.0",
     "chokidar": "2.1.6",
     "compression": "1.7.4",
