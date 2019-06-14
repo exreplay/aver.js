@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should return a default config when no config file is present 1`] = `
+exports[`should match default snapshot config when no config file is present 1`] = `
 Object {
   "aliases": Object {},
   "createRenderer": Object {},
@@ -20,6 +20,9 @@ Object {
         "options": Object {},
         "resources": Array [],
       },
+    },
+    "process": Object {
+      "env": Object {},
     },
     "purgeCss": false,
     "server": false,
