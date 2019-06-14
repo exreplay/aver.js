@@ -1,5 +1,5 @@
+import './register-component-hooks';
 import Vue from 'vue';
-import Component from 'vue-class-component';
 import VueI18n from 'vue-i18n';
 import axios from 'axios';
 import App from '@/App.vue';
@@ -38,11 +38,6 @@ axios.interceptors.response.use((response) => {
 }, (error) => {
   return Promise.reject(error);
 });
-
-Component.registerHooks([
-  'asyncData',
-  'metaInfo'
-]);
 
 export function createApp(ssrContext) {
   const i18nConfig = {
