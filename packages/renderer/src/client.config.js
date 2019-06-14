@@ -46,7 +46,8 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         .use(webpack.DefinePlugin, [{
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
           'process.env.VUE_ENV': JSON.stringify('client'),
-          'PRODUCTION': this.isProd
+          'PRODUCTION': this.isProd,
+          ...this.globalConfig.process.env
         }])
         .end()
       .plugin('vue-ssr-client')

@@ -10,5 +10,8 @@ export default () => ({
   base: false,
   client: false,
   server: false,
-  sw: false
+  sw: false,
+  process: {
+    env: {}
+  }
 });
