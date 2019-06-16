@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="assets/logo.svg" width="80%" alt="averjs logo">
+    <img src="assets/logo.svg" width="50%" alt="averjs logo">
     <br><br>
     <a href="https://www.npmjs.com/package/@averjs/core"><img src="https://badgen.net/npm/v/@averjs/core" alt="Version"></a>
 </p>
