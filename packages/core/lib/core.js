@@ -6,21 +6,21 @@ import dotenv from 'dotenv';
 import { getAverjsConfig } from '@averjs/config';
 import ora from 'ora';
 
-if (!process.env.AVER_NO_INIT) {
-  if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
-    const envConfig = dotenv.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../.env')));
-    for (let k in envConfig) {
-      process.env[k] = envConfig[k];
-    }
-    if (dotenv.error) {
-      throw dotenv.error;
-    }
-  } else {
-    console.warn("In order to use dotenv, please create a '.env' file in your project root.");
-  }
-}
-
 export default class Core {
+  constructor() {
+    if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
+      const envConfig = dotenv.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../.env')));
+      for (let k in envConfig) {
+        process.env[k] = envConfig[k];
+      }
+      if (dotenv.error) {
+        throw dotenv.error;
+      }
+    } else {
+      console.warn("In order to use dotenv, please create a '.env' file in your project root.");
+    }
+  }
+  
   run(hooks = {}) {
     this.hooks = new Hooks();
     this.globalConfig = getAverjsConfig();
