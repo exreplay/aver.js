@@ -57,12 +57,6 @@ export default class Core {
 
     ModuleAlias.addAliases(aliases);
   }
-    
-  build() {
-    const Builder = require('@averjs/renderer').default;
-    const builder = new Builder();
-    return builder.compile();
-  }
 
   init() {
     this.appDir = path.resolve(require.resolve('@averjs/core'), '../app');

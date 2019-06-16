@@ -1,5 +1,5 @@
 import Command from './command';
-import Core from '@averjs/core';
+import Renderer from '@averjs/renderer';
 
 export default class BuildCommand extends Command {
   constructor() {
@@ -12,7 +12,7 @@ export default class BuildCommand extends Command {
   async run() {
     if (typeof process.env.NODE_ENV === 'undefined') process.env.NODE_ENV = 'production';
 
-    const core = new Core();
-    await core.build();
+    const renderer = new Renderer();
+    await renderer.compile();
   }
 }
