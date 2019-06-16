@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from '@/App.vue';
 import { createApp } from './app';
+import { composeComponentOptions } from './utils';
 
 Vue.prototype.$auth = null;
 Vue.prototype.$modernizr = {};
@@ -40,24 +41,24 @@ export default async context => {
         await store.dispatch(key, context);
       }
     }
-        
-    for (const { options: { asyncData, props } } of matchedComponents) {
+
+    for (const component of matchedComponents) {
+      const { asyncData } = composeComponentOptions(component);
+
       if (typeof asyncData === 'function' && asyncData) {
         await asyncData({
           store,
           route: router.currentRoute,
-          data: props,
           isServer: true
         });
       }
     }
 
-    const { options: { asyncData, props } } = App;
+    const { asyncData } = composeComponentOptions(App);
     if (typeof asyncData === 'function' && asyncData) {
       await asyncData({
         store,
         route: router.currentRoute,
-        data: props,
         isServer: true
       });
     }

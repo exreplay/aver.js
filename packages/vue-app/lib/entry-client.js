@@ -2,6 +2,7 @@ import { createApp } from './app';
 import Vue from 'vue';
 import axios from 'axios';
 import forEach from 'lodash/forEach';
+import { composeComponentOptions } from './utils';
 const { app, router, store } = createApp({ isServer: false });
 
 // eslint-disable-next-line no-unused-vars
@@ -13,22 +14,25 @@ class ClientEntry {
     this.initMixin();
 
     router.onReady(() => {
-      router.beforeResolve((to, from, next) => {
+      router.beforeResolve(async (to, from, next) => {
         const matched = router.getMatchedComponents(to);
         const prevMatched = router.getMatchedComponents(from);
         let diffed = false;
-        const activated = matched.filter((c, i) => {
-          return diffed || (diffed = (prevMatched[i] !== c));
-        });
-        const asyncDataHooks = activated.map(c => c.options ? c.options.asyncData : false).filter(_ => _);
-        if (!asyncDataHooks.length) {
-          return next();
+        const activated = matched.filter((c, i) => diffed || (diffed = (prevMatched[i] !== c)));
+        const asyncDataHooks = activated.map(c => {
+          const { asyncData } = composeComponentOptions(c);
+          if (typeof asyncData === 'function' && asyncData) return asyncData
+          else return false;
+        }).filter(_ => _);
+
+        if (!asyncDataHooks.length) return next();
+
+        try {
+          await Promise.all(asyncDataHooks.map(hook => hook({ store, route: to, isServer: false })))
+          next();
+        } catch(err) {
+          next(err);
         }
-        Promise.all(asyncDataHooks.map(hook => hook({ store, route: to })))
-                    .then(() => {
-                      next();
-                    })
-                    .catch(next);
       });
 
       app.$mount('#app');
@@ -75,13 +79,19 @@ class ClientEntry {
 
   setRouterMixins() {
     Vue.mixin({
-      beforeRouteUpdate(to, from, next) {
+      async beforeRouteUpdate(to, from, next) {
         const { asyncData } = this.$options;
         if (asyncData) {
-          asyncData({
-            store: this.$store,
-            route: this.$route
-          }).then(next).catch(next);
+          try {
+            await asyncData({
+              store: this.$store,
+              route: to,
+              isServer: false
+            });
+            next();
+          } catch(err) {
+            next(err);
+          }
         } else {
           next();
         }
