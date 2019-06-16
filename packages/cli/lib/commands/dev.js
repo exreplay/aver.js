@@ -6,7 +6,7 @@ export default class DevCommand extends Command {
     super();
 
     this.name = 'dev';
-    this.description = 'Start averjs in development mode.';
+    this.description = 'Start aver in development mode.';
   }
 
   run() {

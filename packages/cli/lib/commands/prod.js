@@ -6,7 +6,7 @@ export default class ProductionCommand extends Command {
     super();
 
     this.name = 'prod';
-    this.description = 'Start averjs in production mode.';
+    this.description = 'Start aver in production mode.';
   }
 
   run() {
