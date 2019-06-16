@@ -123,7 +123,7 @@ export default class Builder {
         this.isBrowserOpen = true;
         
         let port = process.env.PORT || 3000;
-        port = port !== 80 ? `:${port}` : '';
+        port = parseInt(port) !== 80 ? `:${port}` : '';
         
         openBrowser(`http://localhost${port}`);
       }
