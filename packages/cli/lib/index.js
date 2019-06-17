@@ -34,7 +34,7 @@ export default class Usage {
     for (const command of this.availableCommands) {
       if (executedCommand === command.name) {
         try {
-          await command.run();
+          await command.run(this.argv);
         } catch (err) {
           console.error(err);
         }
