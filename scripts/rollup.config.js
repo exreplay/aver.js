@@ -4,6 +4,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import license from 'rollup-plugin-license';
+import copy from 'rollup-plugin-copy';
 import builtins from './builtins';
 
 export default class RollupConfig {
@@ -42,6 +43,18 @@ export default class RollupConfig {
 
   plugins() {
     const plugins = [];
+
+    console.log(this.pkg.aver.copy);
+    if (this.pkg.aver.copy) {
+      plugins.push(
+        copy({
+          targets: this.pkg.aver.copy.map(file => ({
+            src: path.join(this.path, file),
+            dest: path.join(this.path, 'dist')
+          }))
+        })
+      );
+    }
 
     plugins.push(
       resolve({

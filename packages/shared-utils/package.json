@@ -21,7 +21,10 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": true
+    "build": true,
+    "copy": [
+      "lib/openChrome.applescript"
+    ]
   },
   "dependencies": {
     "chalk": "2.4.2",
