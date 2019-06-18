@@ -9,6 +9,7 @@ import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
 import { getAverjsConfig } from '@averjs/config';
 import { createBundleRenderer } from 'vue-server-renderer';
+import LRU from 'lru-cache';
 
 export default class Builder {
   constructor(options, middlewares = []) {
@@ -160,6 +161,10 @@ export default class Builder {
     
   createRenderer(bundle, options) {
     const bundleOptions = {
+      cache: new LRU({
+        max: 1000,
+        maxAge: 1000 * 60 * 15
+      }),
       runInNewContext: false,
       template: fs.readFileSync(path.join(this.distPath, 'index.ssr.html'), 'utf-8')
     };
