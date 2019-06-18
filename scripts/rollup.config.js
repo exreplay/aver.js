@@ -44,7 +44,6 @@ export default class RollupConfig {
   plugins() {
     const plugins = [];
 
-    console.log(this.pkg.aver.copy);
     if (this.pkg.aver.copy) {
       plugins.push(
         copy({
