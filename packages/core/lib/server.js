@@ -68,7 +68,7 @@ export default class Server extends WWW {
       }, this.config.createRenderer));
     } else {
       const Builder = require('@averjs/renderer').default;
-      const builder = new Builder(this.middlewares);
+      const builder = new Builder({}, this.middlewares);
       this.readyPromise = builder.compile((bundle, options) => {
         self.renderer = self.createRenderer(bundle, Object.assign(bundle, options, this.config.createRenderer));
       });
