@@ -1,2 +1,2 @@
-import Builder from './src/builder';
+import Builder from './builder';
 export default Builder;

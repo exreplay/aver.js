@@ -3,8 +3,8 @@ import path from 'path';
 import webpack from 'webpack';
 import template from 'lodash/template';
 import klawSync from 'klaw-sync';
-import WebpackClientConfiguration from './client.config';
-import WebpackServerConfiguration from './server.config';
+import WebpackClientConfiguration from './config/client';
+import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
 import { getAverjsConfig } from '@averjs/config';
@@ -16,9 +16,10 @@ export default class Builder {
     this.cacheDir = path.resolve('node_modules/.cache/averjs');
     this.globalConfig = getAverjsConfig();
 
-    if (!fs.existsSync(this.cacheDir)) fs.mkdirpSync(this.cacheDir);
-
-    this.prepareTemplates();
+    if (!fs.existsSync(this.cacheDir)) {
+      fs.mkdirpSync(this.cacheDir);
+      this.prepareTemplates();
+    }
 
     this.clientConfig = new WebpackClientConfiguration().config();
     this.serverConfig = new WebpackServerConfiguration().config();

@@ -6,7 +6,7 @@ import { VueLoaderPlugin } from 'vue-loader';
 import { warmup } from 'thread-loader';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import PurgeCssPlugin from 'purgecss-webpack-plugin';
-import StyleLoader from './styleLoader';
+import StyleLoader from '../utils/style-loader';
 import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
 import { getAverjsConfig } from '@averjs/config';

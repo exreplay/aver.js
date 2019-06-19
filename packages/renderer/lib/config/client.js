@@ -1,5 +1,5 @@
 import webpack from 'webpack';
-import WebpackBaseConfiguration from './base.config';
+import WebpackBaseConfiguration from './base';
 import fs from 'fs';
 import path from 'path';
 import VueSSRClientPlugin from 'vue-server-renderer/client-plugin';
