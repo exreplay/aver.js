@@ -1,4 +1,4 @@
-import Component from 'vue-class-component';
+import { Component } from 'vue-property-component';
 
 Component.registerHooks([
   'asyncData',
