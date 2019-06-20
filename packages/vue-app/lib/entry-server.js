@@ -1,6 +1,6 @@
+import { createApp } from './app';
 import Vue from 'vue';
 import App from '@/App.vue';
-import { createApp } from './app';
 import { composeComponentOptions } from './utils';
 
 Vue.prototype.$auth = null;
