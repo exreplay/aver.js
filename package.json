@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "rollup --config",
+    "dev": "node -r esm ./scripts/dev",
     "release": "node -r esm ./scripts/release",
     "test": "jest"
   },

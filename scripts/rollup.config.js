@@ -100,7 +100,14 @@ export default class RollupConfig {
       input: this.options.input,
       output: this.output(),
       external: this.external(),
-      plugins: this.plugins()
+      plugins: this.plugins(),
+      watch: {
+        clearScreen: false
+      },
+      onwarn: (message) => {
+        if (/external dependency/.test(message)) return;
+        console.error(message);
+      }
     };
   }
 }

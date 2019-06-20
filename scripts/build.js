@@ -1,11 +1,14 @@
 import fs from 'fs';
 import path from 'path';
-import { rollup } from 'rollup';
+import { rollup, watch } from 'rollup';
 import RollupConfig from './rollup.config';
 import execa from 'execa';
+import ora from 'ora';
+import logSymbols from 'log-symbols';
 
-class Build {
-  constructor() {
+export default class Build {
+  constructor(watch = false) {
+    this.watch = watch;
     this.packagesToBuild = [];
   }
 
@@ -16,17 +19,58 @@ class Build {
       const pkgJSON = JSON.parse(fs.readFileSync(path.join(pkg.location, 'package.json'), 'utf-8'));
       if (pkgJSON.aver && pkgJSON.aver.build) {
         this.packagesToBuild.push(
-          new RollupConfig(pkgJSON, pkg.location).config()
+          new RollupConfig(pkgJSON, pkg.location)
         );
       }
     }
   }
 
   async run() {
+    const spinner = ora('Collection informations for all packages in mono repo.').start();
     await this.determinePackages();
-    for (const config of this.packagesToBuild) {
-      const bundle = await rollup(config);
-      await bundle.write(config.output);
+    spinner.succeed();
+
+    console.log(logSymbols.info, 'Building packages with aver.build set to true in package.json');
+    for (const pkg of this.packagesToBuild) {
+      const config = pkg.config();
+
+      if (this.watch) {
+        const watchSpinner = ora();
+        const bundle = watch(config);
+        bundle.on('event', event => {
+          switch (event.code) {
+          case 'START':
+            watchSpinner.start();
+            watchSpinner.text = `${pkg.pkg.name}: watching for changes`;
+            break;
+
+          case 'BUNDLE_START':
+            watchSpinner.text = `${pkg.pkg.name}: building`;
+            break;
+
+          case 'BUNDLE_END':
+            watchSpinner.succeed(`${pkg.pkg.name}: built`);
+            break;
+
+          case 'END':
+            break;
+
+          case 'ERROR':
+            return console.log(event.error);
+
+          case 'FATAL':
+            return console.log(event.error);
+
+          default:
+            return console.log(JSON.stringify(event));
+          }
+        });
+      } else {
+        const buildSpinner = ora(`Building package ${pkg.pkg.name}`).start();
+        const bundle = await rollup(config);
+        bundle.write(config.output);
+        buildSpinner.succeed();
+      }
     }
   }
 
@@ -48,5 +92,3 @@ class Build {
     }
   }
 }
-
-new Build().run();
