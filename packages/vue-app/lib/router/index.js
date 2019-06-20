@@ -14,5 +14,8 @@ export function createRouter({ i18n }) {
     routes: typeof routes === 'function' ? routes({ i18n }) : routes
   };
 
+
+  if (userConfig.routes) delete userConfig.routes;
+
   return new VueRouter(Object.assign(config, userConfig));
 }
