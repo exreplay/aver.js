@@ -6,6 +6,7 @@ import { terser } from 'rollup-plugin-terser';
 import license from 'rollup-plugin-license';
 import copy from 'rollup-plugin-copy';
 import builtins from './builtins';
+import { getNextVersion } from './utils';
 
 export default class RollupConfig {
   constructor(pkg, pkgPath) {
@@ -41,7 +42,7 @@ export default class RollupConfig {
     };
   }
 
-  plugins() {
+  async plugins() {
     const plugins = [];
 
     if (this.pkg.aver.copy) {
@@ -84,7 +85,7 @@ export default class RollupConfig {
       license({
         banner: [
           '/*!',
-          ` * ${this.pkg.name} v${this.options.version}`,
+          ` * ${this.pkg.name} v${await getNextVersion()}`,
           ` * Copyright <%= moment().format('YYYY') %> Florian Weber`,
           ` * Released under the MIT License.`,
           '*/'
@@ -95,12 +96,12 @@ export default class RollupConfig {
     return plugins;
   }
 
-  config() {
+  async config() {
     return {
       input: this.options.input,
       output: this.output(),
       external: this.external(),
-      plugins: this.plugins(),
+      plugins: await this.plugins(),
       watch: {
         clearScreen: false
       },

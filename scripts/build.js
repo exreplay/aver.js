@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { rollup, watch } from 'rollup';
 import RollupConfig from './rollup.config';
-import execa from 'execa';
 import ora from 'ora';
 import logSymbols from 'log-symbols';
+import { exec } from './utils';
 
 export default class Build {
   constructor(watch = false) {
@@ -13,7 +13,7 @@ export default class Build {
   }
 
   async determinePackages() {
-    const { stdout } = await this.exec('lerna', 'list', '--json');
+    const { stdout } = await exec('lerna', 'list', '--json');
     const packages = JSON.parse(stdout);
     for (const pkg of packages) {
       const pkgJSON = JSON.parse(fs.readFileSync(path.join(pkg.location, 'package.json'), 'utf-8'));
@@ -32,7 +32,7 @@ export default class Build {
 
     console.log(logSymbols.info, 'Building packages with aver.build set to true in package.json');
     for (const pkg of this.packagesToBuild) {
-      const config = pkg.config();
+      const config = await pkg.config();
 
       if (this.watch) {
         const watchSpinner = ora();
@@ -71,24 +71,6 @@ export default class Build {
         bundle.write(config.output);
         buildSpinner.succeed();
       }
-    }
-  }
-
-  async exec(command, ...args) {
-    try {
-      const {
-        stdout: _stdout,
-        stderr: _stderr,
-        cmd: composedCommand
-      } = await execa(command, args);
-  
-      return {
-        stdout: String(_stdout).trim(),
-        stderr: String(_stderr).trim(),
-        composedCommand
-      };
-    } catch (err) {
-      console.error(err);
     }
   }
 }
