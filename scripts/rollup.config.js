@@ -9,9 +9,10 @@ import builtins from './builtins';
 import { getNextVersion } from './utils';
 
 export default class RollupConfig {
-  constructor(pkg, pkgPath) {
+  constructor(pkg, releaseType) {
     this.pkg = pkg;
-    this.path = pkgPath;
+    this.path = pkg.location;
+    this.releaseType = releaseType;
 
     this.options = {
       input: path.join(this.path, 'lib/index.js'),
@@ -85,7 +86,7 @@ export default class RollupConfig {
       license({
         banner: [
           '/*!',
-          ` * ${this.pkg.name} v${await getNextVersion()}`,
+          ` * ${this.pkg.name} v${await getNextVersion(this.releaseType)}`,
           ` * Copyright <%= moment().format('YYYY') %> Florian Weber`,
           ` * Released under the MIT License.`,
           '*/'

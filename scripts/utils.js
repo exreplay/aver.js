@@ -4,11 +4,16 @@ import semver from 'semver';
 import execa from 'execa';
 import lernaJson from '../lerna.json';
 
-export const getNextVersion = async() => {
+export const getNextVersion = async(type = null) => {
   try {
-    const { releaseType } = await pify(conventionalRecommendedBump)({
-      preset: 'angular'
-    });
+    let releaseType = type;
+    
+    if (releaseType === null || releaseType === 'auto') {
+      const { releaseType: _releaseType } = await pify(conventionalRecommendedBump)({
+        preset: 'angular'
+      });
+      releaseType = _releaseType;
+    }
 
     return semver.valid(releaseType) || semver.inc(lernaJson.version, releaseType);
   } catch (err) {

@@ -1,34 +1,44 @@
 #!/usr/bin/env node
 
-import lernaJson from '../lerna.json';
-import conventionalRecommendedBump from 'conventional-recommended-bump';
-import pify from 'pify';
-import spawn from 'cross-spawn';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
-import semver from 'semver';
 import ora from 'ora';
+import Build from './build';
+import { getNextVersion, exec } from './utils';
 
 export default class Release {
   constructor() {
-    this.currentVersion = lernaJson.version;
     this.newVersion = null;
+    this.releaseTypes = [ {
+      name: 'Let lerna automatically determine a new release version',
+      value: 'auto',
+      short: 'Automatic release type'
+    }, 'major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease' ];
   }
 
   async run() {
-    this.newVersion = await this.getNextVersion();
+    const { type } = await inquirer.prompt([
+      {
+        name: 'type',
+        message: 'Select release Type',
+        type: 'list',
+        choices: this.releaseTypes
+      }
+    ]);
+
+    this.newVersion = await getNextVersion(type);
 
     const { release } = await inquirer.prompt([
       {
-        type: 'confirm',
+        name: 'release',
         message: `You are about to release the new version '${this.newVersion}'.`,
-        name: 'release'
+        type: 'confirm'
       }
     ]);
 
     if (release) {
-      if (this.gitBranch() !== 'development') {
+      if (await this.gitBranch() !== 'feat/rollup') {
         console.log(
           logSymbols.warning,
           chalk.bold.red(
@@ -37,9 +47,11 @@ export default class Release {
         );
       } else {
         try {
-          this.createReleaseBranch();
-          this.preReleaseSync();
-          this.createNewRelease();
+          const build = new Build(false, type);
+          await build.run();
+          // this.createReleaseBranch();
+          // this.preReleaseSync();
+          // this.createNewRelease();
           console.log(
             logSymbols.success,
             chalk.bold.green(
@@ -53,56 +65,45 @@ export default class Release {
     }
   }
 
-  createReleaseBranch() {
-    const branch = this.gitBranch();
+  async createReleaseBranch() {
+    const branch = await this.gitBranch();
     const spinner = ora(`Creating new release branch 'release/${this.newVersion}'.`).start();
-    this.exec('git', 'checkout', '-b', `release/${this.newVersion}`, branch);
-    spinner.succeed();
-  }
 
-  preReleaseSync() {
-    const spinner = ora(`Pre release sync`).start();
-    this.exec('git', 'add', '-A');
-    this.exec('git', 'commit', '-m', `chore: pre release sync`);
-    spinner.succeed();
-  }
-
-  createNewRelease() {
-    const spinner = ora(`Creating new release '${this.newVersion}' without pushing.`).start();
-    const { error } = this.exec('yarn', 'lerna', 'version', '--no-push', '-y');
-    if (error) {
-      spinner.fail();
-      throw new Error(error);
-    }
-    spinner.succeed();
-  }
-  
-  async getNextVersion() {
     try {
-      const { releaseType } = await pify(conventionalRecommendedBump)({
-        preset: 'angular'
-      });
-  
-      return semver.valid(releaseType) || semver.inc(this.currentVersion, releaseType);
+      await exec('git', 'checkout', '-b', `release/${this.newVersion}`, branch);
     } catch (err) {
-      throw err;
+      return spinner.fail(err.stderr);
     }
+
+    spinner.succeed();
   }
 
-  exec(command, ...args) {
-    const r = spawn.sync(command, args);
-    const composedCommand = command + ' ' + [ ...args ].join(' ');
+  async preReleaseSync() {
+    const spinner = ora(`Pre release sync`).start();
+    
+    try {
+      await exec('git', 'add', '-A');
+      await exec('git', 'commit', '-m', `chore: pre release sync`);
+    } catch (err) {
+      return spinner.fail(err.stderr);
+    }
 
-    return {
-      error: r.error,
-      stdout: String(r.stdout).trim(),
-      stderr: String(r.stderr).trim(),
-      composedCommand
-    };
+    spinner.succeed();
   }
 
-  gitBranch() {
-    const { stdout } = this.exec('git', 'rev-parse', '--abbrev-ref', 'HEAD');
+  async createNewRelease() {
+    const spinner = ora(`Creating new release '${this.newVersion}' without pushing.`).start();
+
+    try {
+      await exec('yarn', 'lerna', 'version', '--no-push', '-y');
+    } catch (err) {
+      return spinner.fail(err.stderr);
+    }
+    spinner.succeed();
+  }
+
+  async gitBranch() {
+    const { stdout } = await exec('git', 'rev-parse', '--abbrev-ref', 'HEAD');
     return stdout;
   }
 }

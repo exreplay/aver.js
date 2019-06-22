@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import Release from './release.js';
-
+const Release = require('./release.js').default;
 const release = new Release();
 release.run();
