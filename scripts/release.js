@@ -8,7 +8,8 @@ import Build from './build';
 import { getNextVersion, exec } from './utils';
 
 export default class Release {
-  constructor() {
+  constructor(test = false) {
+    this.test = test;
     this.newVersion = null;
     this.releaseTypes = [ {
       name: 'Let lerna automatically determine a new release version',
@@ -45,13 +46,16 @@ export default class Release {
             `You are not in the 'development' branch! Please switch.`
           )
         );
+        process.exit(0);
       } else {
         try {
           const build = new Build(false, type);
           await build.run();
-          // this.createReleaseBranch();
-          // this.preReleaseSync();
-          // this.createNewRelease();
+          if (!this.test) {
+            this.createReleaseBranch();
+            this.preReleaseSync();
+          }
+          await this.createNewRelease();
           console.log(
             logSymbols.success,
             chalk.bold.green(
@@ -70,7 +74,7 @@ export default class Release {
     const spinner = ora(`Creating new release branch 'release/${this.newVersion}'.`).start();
 
     try {
-      await exec('git', 'checkout', '-b', `release/${this.newVersion}`, branch);
+      await exec('git', ['checkout', '-b', `release/${this.newVersion}`, branch]);
     } catch (err) {
       return spinner.fail(err.stderr);
     }
@@ -82,8 +86,8 @@ export default class Release {
     const spinner = ora(`Pre release sync`).start();
     
     try {
-      await exec('git', 'add', '-A');
-      await exec('git', 'commit', '-m', `chore: pre release sync`);
+      await exec('git', ['add', '-A']);
+      await exec('git', ['commit', '-m', `chore: pre release sync`]);
     } catch (err) {
       return spinner.fail(err.stderr);
     }
@@ -93,9 +97,24 @@ export default class Release {
 
   async createNewRelease() {
     const spinner = ora(`Creating new release '${this.newVersion}' without pushing.`).start();
+    let lernaArgs = [
+      'publish',
+      this.newVersion,
+      '--yes',
+      '--force-publish'
+    ];
+
+    if (this.test) {
+      lernaArgs = lernaArgs.concat([
+        '--registry',
+        'http://localhost:4873',
+        '--no-git-tag-version',
+        '--no-push'
+      ]);
+    }
 
     try {
-      await exec('yarn', 'lerna', 'version', '--no-push', '-y');
+      await exec('yarn', ['lerna', ...lernaArgs]);
     } catch (err) {
       return spinner.fail(err.stderr);
     }
@@ -103,7 +122,7 @@ export default class Release {
   }
 
   async gitBranch() {
-    const { stdout } = await exec('git', 'rev-parse', '--abbrev-ref', 'HEAD');
+    const { stdout } = await exec('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
     return stdout;
   }
 }

@@ -21,13 +21,13 @@ export const getNextVersion = async(type = null) => {
   }
 };
 
-export const exec = async(command, ...args) => {
+export const exec = async(command, args, options) => {
   try {
     const {
       stdout: _stdout,
       stderr: _stderr,
       cmd: composedCommand
-    } = await execa(command, args);
+    } = await execa(command, args, options);
 
     return {
       stdout: String(_stdout).trim(),
