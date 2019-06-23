@@ -75,11 +75,11 @@ export default class Release {
 
     try {
       await exec('git', ['checkout', '-b', `release/${this.newVersion}`, branch]);
+      spinner.succeed();
     } catch (err) {
-      return spinner.fail(err.stderr);
+      spinner.fail(err.stderr);
+      throw new Error('Script failed');
     }
-
-    spinner.succeed();
   }
 
   async preReleaseSync() {
@@ -88,11 +88,11 @@ export default class Release {
     try {
       await exec('git', ['add', '-A']);
       await exec('git', ['commit', '-m', `chore: pre release sync`]);
+      spinner.succeed();
     } catch (err) {
-      return spinner.fail(err.stderr);
+      spinner.fail(err.stderr);
+      throw new Error('Script failed');
     }
-
-    spinner.succeed();
   }
 
   async createNewRelease() {
@@ -115,10 +115,11 @@ export default class Release {
 
     try {
       await exec('yarn', ['lerna', ...lernaArgs]);
+      spinner.succeed();
     } catch (err) {
-      return spinner.fail(err.stderr);
+      spinner.fail(err.stderr);
+      throw new Error('Script failed');
     }
-    spinner.succeed();
   }
 
   async gitBranch() {
