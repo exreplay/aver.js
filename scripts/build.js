@@ -27,7 +27,7 @@ export default class Build {
   }
 
   async run() {
-    const spinner = ora('Collection informations for all packages in mono repo.').start();
+    const spinner = ora('Collection informations for all packages in monorepo.').start();
     await this.determinePackages();
     spinner.succeed();
 
