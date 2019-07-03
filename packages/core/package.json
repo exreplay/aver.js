@@ -58,6 +58,12 @@
     "vuex-class": "0.3.2",
     "vuex-persistedstate": "2.5.4",
     "vuex-router-sync": "5.0.0",
-    "xss-filters": "1.2.7"
-  }
+    "xss-filters": "1.2.7",
+    "snyk": "^1.189.0"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
