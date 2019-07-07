@@ -782,7 +782,7 @@
     core-js "^2.6.5"
     regenerator-runtime "^0.13.2"
 
-"@babel/runtime@7.5.1":
+"@babel/runtime@7.5.1", "@babel/runtime@^7.4.5":
   version "7.5.1"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.5.1.tgz#51b56e216e87103ab3f7d6040b464c538e242888"
   integrity sha512-g+hmPKs16iewFSmW57NkH9xpPkuYD1RV3UE2BCkXx9j+nhhRb9hsiSxPmEa67j35IecTQdn4iyMtHMbt5VoREg==
@@ -1892,6 +1892,11 @@
     once "^1.4.0"
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
+
+"@sindresorhus/is@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.17.1.tgz#453b27750f358689c4aa3c9f32d9ace1f0929a79"
+  integrity sha512-kg/maAZD2Z2AHDFp7cY/ACokjUL0e7MaupTtGXkSW2SV4DJQEHdslFUioP0SMccotjwqTdI0b4XH/qZh6CN+kQ==
 
 "@snyk/composer-lockfile-parser@1.0.2":
   version "1.0.2"
@@ -3023,11 +3028,6 @@ bluebird@^3.1.1, bluebird@^3.5.1, bluebird@^3.5.3:
   version "3.5.4"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.4.tgz#d6cc661595de30d5b3af5fcedd3c0b3ef6ec5714"
   integrity sha512-FG+nFEZChJrbQ9tIccIfZJBz3J7mLrAhxakAbnrJWn8d7aKOC+LWifa0G+p4ZqKp4y13T7juYvdhq9NzKdsrjw==
-
-bluebird@^3.5.5:
-  version "3.5.5"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
-  integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
@@ -5126,14 +5126,14 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-email-templates@5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/email-templates/-/email-templates-5.1.0.tgz#762bc09f96ee04c82c0dc2deacf6b18cc10f87f4"
-  integrity sha512-wtAK/cfiPPxDAkJN/XMed8t3nG2lOsfhsOXd55oicDDfSS3A8zY2aJhVpA1BzZMFcwUDuobZf98GLxUfrVBF+g==
+email-templates@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/email-templates/-/email-templates-6.0.0.tgz#cc235d49c967f16a15488906dd796f748f2a7531"
+  integrity sha512-NzneEyM+J/DpMY7hK4Ii1HBmiX/BTQyAf8OEZh1yU+O9uYMgnJr+JvpAxLkqRxeWeA0dT2IV5K+6UcF/jMJk7Q==
   dependencies:
     "@ladjs/i18n" "^1.1.0"
+    "@sindresorhus/is" "^0.17.1"
     auto-bind "^2.1.0"
-    bluebird "^3.5.5"
     consolidate "^0.15.1"
     debug "^4.1.1"
     get-paths "^0.0.4"
@@ -5141,8 +5141,8 @@ email-templates@5.1.0:
     juice "^5.2.0"
     lodash "^4.17.11"
     nodemailer "^6.2.1"
-    preview-email "^0.0.10"
-    underscore.string "^3.3.5"
+    pify "^4.0.1"
+    preview-email "^1.0.1"
 
 email-validator@^2.0.4:
   version "2.0.4"
@@ -9172,7 +9172,7 @@ module-alias@2.2.0:
   resolved "https://registry.yarnpkg.com/module-alias/-/module-alias-2.2.0.tgz#a2e32275381642252bf0c51405f7a09a367479b5"
   integrity sha512-O4bbvlZkHj2LUQhieQWWCr486ddc8X+WwRqi3QGnFKfknaxdHTOB7+xRgeyWHc6arpjgtT5SLLMMTFwUM3/x5w==
 
-moment@^2.23.0:
+moment@^2.23.0, moment@^2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
@@ -9635,11 +9635,6 @@ nodemailer@6.2.1, nodemailer@^6.2.1:
   resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.2.1.tgz#20d773925eb8f7a06166a0b62c751dc8290429f3"
   integrity sha512-TagB7iuIi9uyNgHExo8lUDq3VK5/B0BpbkcjIgNvxbtVrjNqq0DwAOTuzALPVkK76kMhTSzIgHqg8X1uklVs6g==
 
-nodemailer@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-5.1.1.tgz#0c48d1ecab02e86d9ff6c620ee75ed944b763505"
-  integrity sha512-hKGCoeNdFL2W7S76J/Oucbw0/qRlfG815tENdhzcqTpSjKgAN91mFOqU2lQUflRRxFM7iZvCyaFcAR9noc/CqQ==
-
 nodemon@1.19.1:
   version "1.19.1"
   resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.19.1.tgz#576f0aad0f863aabf8c48517f6192ff987cd5071"
@@ -9907,6 +9902,13 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
+open@^6.3.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/open/-/open-6.4.0.tgz#5c13e96d0dc894686164f18965ecfe889ecfc8a9"
+  integrity sha512-IFenVPgF70fSm1keSd2iDBIDIBZkroLeuffXq+wKTzTJlBpesFWojV9lb8mzOfaAzM1sr7HQHuO0vtV0zYekGg==
+  dependencies:
+    is-wsl "^1.1.0"
+
 opn@6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/opn/-/opn-6.0.0.tgz#3c5b0db676d5f97da1233d1ed42d182bc5a27d2d"
@@ -9914,7 +9916,7 @@ opn@6.0.0:
   dependencies:
     is-wsl "^1.1.0"
 
-opn@^5.4.0, opn@^5.5.0:
+opn@^5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/opn/-/opn-5.5.0.tgz#fc7164fab56d235904c51c3b27da6758ca3b9bfc"
   integrity sha512-PqHpggC9bLV0VeWcdKhkpxY+3JTzetLSqTCWL/z/tFIbI6G8JCjondXklT1JinczLz2Xib62sSp0T/gKT4KksA==
@@ -10818,16 +10820,18 @@ pretty-time@^1.1.0:
   resolved "https://registry.yarnpkg.com/pretty-time/-/pretty-time-1.1.0.tgz#ffb7429afabb8535c346a34e41873adf3d74dd0e"
   integrity sha512-28iF6xPQrP8Oa6uxE6a1biz+lWeTOAPKggvjB8HAs6nVMKZwf5bG++632Dx614hIWgUPkgivRfG+a8uAXGTIbA==
 
-preview-email@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/preview-email/-/preview-email-0.0.10.tgz#a190d9eaf341e52c3c4f4d40a2dfcc993a9c47dd"
-  integrity sha512-qv0+3/VjlqsewDi2gQSoVcpxTrYNezoFKbkVin2fqe8qGF/Bl5aa76LhVOzYQowXgchBhDibotnMqT8UtwDVfw==
+preview-email@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/preview-email/-/preview-email-1.0.1.tgz#810ecdd1c4e8a550f7a9cd18d7eaf3b2e4b12296"
+  integrity sha512-GmkAoyraQg8Ypq6mFVePdFL1upN6X2PQn3tD7UJP/aUs8HamtRekFsMunu3TaextEKycixE+Aol4hsHtqoG1pg==
   dependencies:
-    bluebird "^3.5.3"
-    moment "^2.23.0"
-    nodemailer "^5.1.1"
-    opn "^5.4.0"
-    pug "^2.0.3"
+    "@babel/runtime" "^7.4.5"
+    debug "^4.1.1"
+    moment "^2.24.0"
+    nodemailer "^6.2.1"
+    open "^6.3.0"
+    pify "^4.0.1"
+    pug "^2.0.4"
     uuid "^3.3.2"
 
 private@^0.1.6, private@^0.1.8:
@@ -11172,7 +11176,7 @@ pug-walk@^1.1.8:
   resolved "https://registry.yarnpkg.com/pug-walk/-/pug-walk-1.1.8.tgz#b408f67f27912f8c21da2f45b7230c4bd2a5ea7a"
   integrity sha512-GMu3M5nUL3fju4/egXwZO0XLi6fW/K3T3VTgFQ14GxNi8btlxgT5qZL//JwZFm/2Fa64J/PNS8AZeys3wiMkVA==
 
-pug@2.0.4:
+pug@2.0.4, pug@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pug/-/pug-2.0.4.tgz#ee7682ec0a60494b38d48a88f05f3b0ac931377d"
   integrity sha512-XhoaDlvi6NIzL49nu094R2NA6P37ijtgMDuWE+ofekDChvfKnzFal60bhSdiy8y2PBO6fmz3oMEIcfpBVRUdvw==
@@ -11186,7 +11190,7 @@ pug@2.0.4:
     pug-runtime "^2.0.5"
     pug-strip-comments "^1.0.4"
 
-pug@^2.0.0-beta3, pug@^2.0.3:
+pug@^2.0.0-beta3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/pug/-/pug-2.0.3.tgz#71cba82537c95a5eab7ed04696e4221f53aa878e"
   integrity sha1-ccuoJTfJWl6rftBGluQiH1Oqh44=
