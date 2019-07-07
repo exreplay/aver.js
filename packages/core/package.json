@@ -48,7 +48,7 @@
     "vue": "2.6.10",
     "vue-class-component": "7.1.0",
     "vue-i18n": "8.11.2",
-    "vue-meta": "1.6.0",
+    "vue-meta": "2.0.4",
     "vue-no-ssr": "1.1.1",
     "vue-progressbar": "0.7.5",
     "vue-property-decorator": "8.2.1",
