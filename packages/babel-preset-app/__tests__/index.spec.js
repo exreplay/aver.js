@@ -34,14 +34,6 @@ test('dynamic import', () => {
   }).not.toThrow();
 });
 
-test('object rest spread', () => {
-  let { code } = babel.transformSync(`
-    const a = { ...b };
-  `.trim(), defaultOptions);
-
-  console.log(code);
-});
-
 test('regenerator runtime should be included on client', () => {
   let { code } = babel.transformSync(`
     async function test() {
