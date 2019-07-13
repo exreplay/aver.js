@@ -4,21 +4,15 @@
 const path = require('path');
 
 const defaultPolyfills = [
-  // promise polyfill alone doesn't work in IE,
-  // needs this as well. see: #1642
-  'es6.array.iterator',
-  // this is required for webpack code splitting, vuex etc.
-  'es6.promise',
-  // this is needed for object rest spread support in templates
-  // as vue-template-es2015-compiler 1.8+ compiles it to Object.assign() calls.
-  'es6.object.assign',
-  // #2012 es6.promise replaces native Promise in FF and causes missing finally
-  'es7.promise.finally'
+  'es.array.iterator',
+  'es.promise',
+  'es.object.assign',
+  'es.promise.finally'
 ];
 
 function getPolyfills(targets, includes, { ignoreBrowserslistConfig, configPath }) {
   const { isPluginRequired } = require('@babel/preset-env');
-  const builtInsList = require('@babel/preset-env/data/built-ins.json');
+  const builtInsList = require('core-js-compat/data');
   const getTargets = require('@babel/preset-env/lib/targets-parser').default;
   const builtInTargets = getTargets(targets, {
     ignoreBrowserslistConfig,
@@ -66,8 +60,6 @@ module.exports = (context, options = {}) => {
     polyfills = [];
   }
 
-  const corejs = 2;
-
   presets.push([ require('@babel/preset-env'), {
     spec,
     loose,
@@ -75,7 +67,7 @@ module.exports = (context, options = {}) => {
     modules,
     targets,
     useBuiltIns,
-    corejs,
+    corejs: 3,
     ignoreBrowserslistConfig,
     configPath,
     include,
@@ -85,20 +77,18 @@ module.exports = (context, options = {}) => {
   }]);
 
   plugins.push(
-    require('@babel/plugin-transform-arrow-functions'),
     require('@babel/plugin-syntax-dynamic-import'),
     [require('@babel/plugin-proposal-decorators'), {
       decoratorsBeforeExport,
       legacy: decoratorsLegacy !== false
     }],
     [require('@babel/plugin-proposal-class-properties'), { loose }],
-    [require('@babel/plugin-transform-classes'), { loose }],
-    require('@babel/plugin-transform-parameters')
+    [require('@babel/plugin-transform-classes'), { loose }]
   );
 
   plugins.push([require('@babel/plugin-transform-runtime'), {
     regenerator: useBuiltIns !== 'usage',
-    corejs: useBuiltIns === 'usage' ? corejs : false,
+    corejs: false,
     helpers: useBuiltIns === 'usage',
     useESModules: true,
     absoluteRuntime: path.dirname(require.resolve('@babel/runtime/package.json'))
