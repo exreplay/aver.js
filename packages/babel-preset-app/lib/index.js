@@ -25,6 +25,7 @@ function getPolyfills(targets, includes, { ignoreBrowserslistConfig, configPath 
 module.exports = (context, options = {}) => {
   const presets = [];
   const plugins = [];
+  const runtimePath = path.dirname(require.resolve('@babel/runtime/package.json'));
   const {
     polyfills: userPolyfills,
     buildTarget,
@@ -40,8 +41,10 @@ module.exports = (context, options = {}) => {
     shippedProposals,
     forceAllTransforms,
     decoratorsBeforeExport,
-    decoratorsLegacy = true
+    decoratorsLegacy = true,
+    absoluteRuntime = runtimePath
   } = options;
+
   const targets = buildTarget === 'server' ? { node: 'current' } : {
     browsers: [
       'IE >= 9'
@@ -55,7 +58,7 @@ module.exports = (context, options = {}) => {
       ignoreBrowserslistConfig,
       configPath
     });
-    plugins.push([require('./polyfillsPlugin'), { polyfills }]);
+    plugins.push([require('./polyfillsPlugin'), { polyfills, useAbsolutePath: !!absoluteRuntime }]);
   } else {
     polyfills = [];
   }
@@ -90,8 +93,8 @@ module.exports = (context, options = {}) => {
     regenerator: useBuiltIns !== 'usage',
     corejs: false,
     helpers: useBuiltIns === 'usage',
-    useESModules: true,
-    absoluteRuntime: path.dirname(require.resolve('@babel/runtime/package.json'))
+    useESModules: buildTarget !== 'server',
+    absoluteRuntime
   }]);
 
   return {
