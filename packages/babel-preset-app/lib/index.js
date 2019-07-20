@@ -3,16 +3,30 @@
 
 const path = require('path');
 
-const defaultPolyfills = [
-  'es.array.iterator',
-  'es.promise',
-  'es.object.assign',
-  'es.promise.finally'
-];
+const defaultPolyfills = {
+  2: {
+    builtIns: '@babel/preset-env/data/built-ins.json.js',
+    polyfills: [
+      'es6.array.iterator',
+      'es6.promise',
+      'es6.object.assign',
+      'es7.promise.finally'
+    ]
+  },
+  3: {
+    builtIns: 'core-js-compat/data',
+    polyfills: [
+      'es.array.iterator',
+      'es.promise',
+      'es.object.assign',
+      'es.promise.finally'
+    ]
+  }
+};
 
-function getPolyfills(targets, includes, { ignoreBrowserslistConfig, configPath }) {
+function getPolyfills(corejs, targets, includes, { ignoreBrowserslistConfig, configPath }) {
   const { isPluginRequired } = require('@babel/preset-env');
-  const builtInsList = require('core-js-compat/data');
+  const builtInsList = require(defaultPolyfills[corejs].builtIns);
   const getTargets = require('@babel/preset-env/lib/targets-parser').default;
   const builtInTargets = getTargets(targets, {
     ignoreBrowserslistConfig,
@@ -42,7 +56,14 @@ module.exports = (context, options = {}) => {
     forceAllTransforms,
     decoratorsBeforeExport,
     decoratorsLegacy = true,
-    absoluteRuntime = runtimePath
+    absoluteRuntime = runtimePath,
+    corejs = 2,
+    /**
+     * The useAbsolutePath option is for later, when babel-preset-app uses core-js 3 for default.
+     * For now it is recommended to stick with version 2 because many plugins are still using it.
+     * If we would use version 3 for default, users are forced to install core-js 3 in order for the plugin to work and that is not good experience.
+     */
+    useAbsolutePath = false
   } = options;
 
   const targets = buildTarget === 'server' ? { node: 'current' } : {
@@ -54,11 +75,11 @@ module.exports = (context, options = {}) => {
   let polyfills;
 
   if (useBuiltIns === 'usage' && buildTarget === 'client') {
-    polyfills = getPolyfills(targets, userPolyfills || defaultPolyfills, {
+    polyfills = getPolyfills(corejs, targets, userPolyfills || defaultPolyfills[corejs].polyfills, {
       ignoreBrowserslistConfig,
       configPath
     });
-    plugins.push([require('./polyfillsPlugin'), { polyfills, useAbsolutePath: !!absoluteRuntime }]);
+    plugins.push([require('./polyfillsPlugin'), { polyfills, useAbsolutePath }]);
   } else {
     polyfills = [];
   }
@@ -70,7 +91,7 @@ module.exports = (context, options = {}) => {
     modules,
     targets,
     useBuiltIns,
-    corejs: 3,
+    corejs,
     ignoreBrowserslistConfig,
     configPath,
     include,
@@ -91,7 +112,7 @@ module.exports = (context, options = {}) => {
 
   plugins.push([require('@babel/plugin-transform-runtime'), {
     regenerator: useBuiltIns !== 'usage',
-    corejs: false,
+    corejs: corejs >= 3 ? false : corejs,
     helpers: useBuiltIns === 'usage',
     useESModules: buildTarget !== 'server',
     absoluteRuntime
