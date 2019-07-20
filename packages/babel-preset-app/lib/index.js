@@ -2,39 +2,7 @@
 // TODO: Add modern mode
 
 const path = require('path');
-
-const defaultPolyfills = {
-  2: {
-    builtIns: '@babel/preset-env/data/built-ins.json.js',
-    polyfills: [
-      'es6.array.iterator',
-      'es6.promise',
-      'es6.object.assign',
-      'es7.promise.finally'
-    ]
-  },
-  3: {
-    builtIns: 'core-js-compat/data',
-    polyfills: [
-      'es.array.iterator',
-      'es.promise',
-      'es.object.assign',
-      'es.promise.finally'
-    ]
-  }
-};
-
-function getPolyfills(corejs, targets, includes, { ignoreBrowserslistConfig, configPath }) {
-  const { isPluginRequired } = require('@babel/preset-env');
-  const builtInsList = require(defaultPolyfills[corejs].builtIns);
-  const getTargets = require('@babel/preset-env/lib/targets-parser').default;
-  const builtInTargets = getTargets(targets, {
-    ignoreBrowserslistConfig,
-    configPath
-  });
-
-  return includes.filter(item => isPluginRequired(builtInTargets, builtInsList[item]));
-}
+const { getPolyfills, getDefaultPolyfills } = require('./getPolyfills');
 
 module.exports = (context, options = {}) => {
   const presets = [];
@@ -75,7 +43,7 @@ module.exports = (context, options = {}) => {
   let polyfills;
 
   if (useBuiltIns === 'usage' && buildTarget === 'client') {
-    polyfills = getPolyfills(corejs, targets, userPolyfills || defaultPolyfills[corejs].polyfills, {
+    polyfills = getPolyfills(corejs, targets, userPolyfills || getDefaultPolyfills(corejs), {
       ignoreBrowserslistConfig,
       configPath
     });
