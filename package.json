@@ -7,13 +7,14 @@
   "scripts": {
     "build": "rollup --config",
     "release": "node -r esm ./scripts/release",
-    "test": "jest"
+    "test": "jest && codecov"
   },
   "devDependencies": {
-    "cross-spawn": "6.0.5",
     "@babel/core": "7.5.5",
     "@babel/preset-env": "7.5.5",
     "babel-jest": "24.8.0",
+    "codecov": "3.5.0",
+    "cross-spawn": "6.0.5",
     "eslint": "6.0.1",
     "eslint-config-standard": "12.0.0",
     "eslint-plugin-import": "2.18.2",
@@ -24,10 +25,10 @@
     "eslint-plugin-vue": "5.2.3",
     "esm": "3.2.25",
     "inquirer": "6.5.0",
-    "ora": "3.4.0",
-    "pify": "4.0.1",
     "jest": "24.8.0",
     "lerna": "3.16.1",
-    "memfs": "2.15.5"
+    "memfs": "2.15.5",
+    "ora": "3.4.0",
+    "pify": "4.0.1"
   }
 }
