@@ -8,7 +8,7 @@ const pathToDir = path.resolve(__dirname, './tmp');
 function setupTestProjectDirectory() {
   if (!fs.existsSync(pathToDir)) fs.mkdirSync(pathToDir);
 
-  fs.writeFileSync(path.resolve(pathToDir, './package.json'), '{}');
+  fs.writeFileSync(path.resolve(pathToDir, './package.json'), '{ "name": "test", "scripts": { "live": "testcommand" } }');
 
   process.env.PROJECT_PATH = path.resolve(pathToDir, './src');
   process.env.API_PATH = path.resolve(pathToDir, './api');
@@ -17,6 +17,7 @@ function setupTestProjectDirectory() {
 let outputData = '';
 
 beforeEach(() => {
+  fs.removeSync(pathToDir);
   setupTestProjectDirectory();
 
   outputData = '';
@@ -24,7 +25,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  fs.removeSync(pathToDir);
+  // fs.removeSync(pathToDir);
 });
 
 test('run command should finish', () => {
@@ -120,4 +121,13 @@ test('trimLines should remove all whitespaces at the beginning of every line', (
 
     const b = { ...a };
   `)).toEqual(`import a from 'module';\n\nconst b = { ...a };\n`);
+});
+
+test('modifying package.json should not overwrite default values', () => {
+  const init = new Init();
+  init.modifyPackageJson();
+  const pkg = JSON.parse(fs.readFileSync(path.resolve(pathToDir, './package.json').toString()));
+  expect(pkg.name).toBe('test');
+  expect(pkg.scripts.live).toBe('testcommand');
+  expect(succeedMsg).toBe('Successfully modified package.json!');
 });
