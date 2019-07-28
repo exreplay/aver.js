@@ -4,7 +4,7 @@ import ora from 'ora';
 
 export default class Init {
   constructor() {
-    this.appDir = path.resolve(require.resolve('@averjs/init'), '../app');
+    this.appDir = path.resolve(__dirname, './app');
   }
 
   run() {
@@ -68,10 +68,10 @@ export default class Init {
 
   writeFile(file, data) {
     const spinner = ora(`Writing file "${file}"`).start();
-    const destination = path.resolve(process.cwd(), file);
+    const destination = path.resolve(process.env.PROJECT_PATH, '../', file);
 
     if (!fs.existsSync(destination)) {
-      fs.writeFileSync(path.resolve(process.cwd(), file), data);
+      fs.writeFileSync(path.resolve(process.env.PROJECT_PATH, '../', file), data);
       spinner.succeed(`File "${file}" successfully written!`);
     } else {
       spinner.info(`File "${file}" already exists`);
@@ -80,8 +80,9 @@ export default class Init {
 
   copyFile(file, removeUnderscore = false) {
     const spinner = ora(`Copying "${file}"`).start();
-    const destinationFile = removeUnderscore ? file.replace('_', '') : file;
+    const destinationFile = removeUnderscore ? file.replace(/^_/g, '') : file;
     const destination = path.resolve(process.env.PROJECT_PATH, `../${destinationFile}`);
+    console.log(destination);
 
     if (!fs.existsSync(destination)) {
       fs.copyFileSync(path.resolve(this.appDir, `./${file}`), destination);
