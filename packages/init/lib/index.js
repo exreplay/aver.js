@@ -4,7 +4,7 @@ import ora from 'ora';
 
 export default class Init {
   constructor() {
-    this.appDir = path.resolve(require.resolve('@averjs/core'), '../app');
+    this.appDir = path.resolve(require.resolve('@averjs/init'), '../app');
   }
 
   run() {
