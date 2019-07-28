@@ -16,6 +16,8 @@ module.exports = {
   ],
   'rules': {
     'import/no-unresolved': 0,
+
+    'array-bracket-spacing': ["error", "always"],
     
     "indent": ["error", 2, { "MemberExpression": "off" }],
     
