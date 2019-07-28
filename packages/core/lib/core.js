@@ -9,7 +9,7 @@ export default class Core {
   constructor() {
     if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
       const envConfig = dotenv.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../.env')));
-      for (let k in envConfig) {
+      for (const k in envConfig) {
         process.env[k] = envConfig[k];
       }
       if (dotenv.error) {

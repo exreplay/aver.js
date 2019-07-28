@@ -115,7 +115,7 @@ export default class Init {
 
   trimLines(s) {
     const lines = s.split('\n');
-    let trimmedLines = [];
+    const trimmedLines = [];
 
     for (const key in lines) {
       const line = lines[key];

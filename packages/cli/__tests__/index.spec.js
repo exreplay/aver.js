@@ -57,7 +57,7 @@ test('executedCommand should identify the given command, show help or execute de
 test('global command should be executed', () => {
   process.argv.push('--v');
 
-  let cli = new AverCli();
+  const cli = new AverCli();
   expect(cli.globalCommand.name).toBe('version');
 
   expect(() => {
@@ -73,7 +73,7 @@ test('test command should be added correctly and executed', () => {
   const cli = new AverCli();
   cli.addCommand(new TestCommand());
   expect(cli.availableCommands['test']).toBeInstanceOf(TestCommand);
-  expect(cli.aliases).toEqual(expect.objectContaining({ 't': 'test' }));
+  expect(cli.aliases).toEqual(expect.objectContaining({ t: 'test' }));
 
   cli.run();
   expect(outputData).toBe('run executed');

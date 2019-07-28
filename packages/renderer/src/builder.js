@@ -138,7 +138,7 @@ export default class Builder {
   }
 
   setupClientCompiler() {
-    this.clientConfig.entry.app = ['webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app];
+    this.clientConfig.entry.app = [ 'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app ];
     this.clientConfig.output.filename = '[name].js';
     this.clientConfig.plugins.push(
       new webpack.HotModuleReplacementPlugin(),
