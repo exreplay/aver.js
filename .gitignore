@@ -6,3 +6,4 @@ dist
 .idea
 coverage
 yarn-error.log
+tmp
