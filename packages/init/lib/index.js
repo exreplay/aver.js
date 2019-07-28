@@ -8,14 +8,7 @@ export default class Init {
   }
 
   run() {
-    const srcSpinner = ora('Creating "src" directory').start();
-
-    if (fs.existsSync(process.env.PROJECT_PATH)) {
-      srcSpinner.info('Root directory "src" already exists');
-    } else {
-      fs.copySync(path.resolve(this.appDir, './src'), process.env.PROJECT_PATH, { recursive: true });
-      srcSpinner.succeed('Root directory successfully copied!');
-    }
+    this.createSrcDir();
 
     console.log('Copying necessary files...');
     
@@ -89,6 +82,17 @@ export default class Init {
       spinner.succeed(`File "${file}" successfully copied!`);
     } else {
       spinner.info(`File "${file}" already exists`);
+    }
+  }
+
+  createSrcDir() {
+    const srcSpinner = ora('Creating "src" directory').start();
+
+    if (fs.existsSync(process.env.PROJECT_PATH)) {
+      srcSpinner.info('Root directory "src" already exists');
+    } else {
+      fs.copySync(path.resolve(this.appDir, './src'), process.env.PROJECT_PATH, { recursive: true });
+      srcSpinner.succeed('Root directory successfully copied!');
     }
   }
 
