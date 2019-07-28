@@ -1,5 +1,5 @@
 import AverCli from '../lib';
-import Core, { mockInit } from '../__mocks__/@averjs/core';
+import Init, { mockRun } from '../__mocks__/@averjs/init';
 
 const OLD_ARGV = [ ...process.argv ];
 let outputData = '';
@@ -24,9 +24,9 @@ test('run should execute core init', async() => {
   process.argv.push('init');
 
   // eslint-disable-next-line no-unused-vars
-  const core = new Core();
+  const init = new Init();
   const cli = new AverCli();
   await cli.run();
 
-  expect(mockInit).toHaveBeenCalledTimes(1);
+  expect(mockRun).toHaveBeenCalledTimes(1);
 });
