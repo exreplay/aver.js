@@ -1,5 +1,5 @@
 {
-  "name": "@averjs/vue-app",
+  "name": "@averjs/init",
   "version": "1.5.3",
   "description": "The init package for averjs to quickly bootstrap a new projekt.",
   "author": "Florian Weber",
