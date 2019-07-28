@@ -1,5 +1,5 @@
 import AverCli from '../lib';
-import Init, { mockRun } from '../__mocks__/@averjs/init';
+import { mockRun } from '../__mocks__/@averjs/init';
 
 const OLD_ARGV = [ ...process.argv ];
 let outputData = '';
@@ -23,8 +23,6 @@ test('help command should output command description', async() => {
 test('run should execute core init', async() => {
   process.argv.push('init');
 
-  // eslint-disable-next-line no-unused-vars
-  const init = new Init();
   const cli = new AverCli();
   await cli.run();
 
