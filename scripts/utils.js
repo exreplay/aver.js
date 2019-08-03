@@ -7,8 +7,12 @@ import lernaJson from '../lerna.json';
 export const getNextVersion = async(type = null) => {
   try {
     let releaseType = type;
-    
-    if (releaseType === null || releaseType === 'auto') {
+
+    if (releaseType === null) {
+      return lernaJson.version;
+    }
+
+    if (releaseType === 'auto') {
       const { releaseType: _releaseType } = await pify(conventionalRecommendedBump)({
         preset: 'angular'
       });

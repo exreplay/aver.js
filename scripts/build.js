@@ -20,7 +20,7 @@ export default class Build {
       const pkgJSON = JSON.parse(fs.readFileSync(path.join(pkg.location, 'package.json'), 'utf-8'));
       if (pkgJSON.aver && pkgJSON.aver.build) {
         this.packagesToBuild.push(
-          new RollupConfig({ ...pkgJSON, location: pkg.location }, this.releaseType)
+          new RollupConfig({ ...pkgJSON, location: pkg.location }, this.watch ? null : this.releaseType)
         );
       }
     }
