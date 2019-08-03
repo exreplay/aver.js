@@ -15,11 +15,11 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig
       .plugin('define')
-        .use(webpack.DefinePlugin, [{
+        .use(webpack.DefinePlugin, [ {
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
           'process.env.VUE_ENV': JSON.stringify('server'),
-          'PRODUCTION': this.isProd
-        }])
+          PRODUCTION: this.isProd
+        } ])
         .end()
       .plugin('vue-ssr-server')
         .use(VueSSRServerPlugin);

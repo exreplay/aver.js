@@ -49,7 +49,8 @@ export default class Builder {
           config: {
             progressbar: this.globalConfig.progressbar,
             i18n: this.globalConfig.i18n,
-            csrf: this.globalConfig.csrf
+            csrf: this.globalConfig.csrf,
+            router: this.globalConfig.router
           }
         });
 
@@ -138,7 +139,7 @@ export default class Builder {
   }
 
   setupClientCompiler() {
-    this.clientConfig.entry.app = ['webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app];
+    this.clientConfig.entry.app = [ 'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app ];
     this.clientConfig.output.filename = '[name].js';
     this.clientConfig.plugins.push(
       new webpack.HotModuleReplacementPlugin(),
