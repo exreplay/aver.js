@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs-extra');
+const path = require('path');
 const ora = require('ora');
 const logSymbols = require('log-symbols');
 const execa = require('execa');
@@ -70,6 +71,7 @@ class ReleaseScript {
     // Grep all verdaccio processes and kill them. Exclude the grep process
     console.log(logSymbols.info, 'Cleanup verdaccio processes before exit');
     execa.shellSync(`ps -ef | grep -i 'verdaccio' | grep -v grep | awk '{print $2}' | xargs kill -9`);
+    fs.removeSync(path.resolve(__dirname, './verdaccio'));
     process.exit();
   }
 
