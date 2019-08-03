@@ -26,5 +26,8 @@
   },
   "dependencies": {
     "command-line-usage": "6.0.2"
+  },
+  "aver": {
+    "build": true
   }
 }
