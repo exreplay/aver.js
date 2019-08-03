@@ -80,7 +80,6 @@ export default class Init {
     const spinner = ora(`Copying "${file}"`).start();
     const destinationFile = removeUnderscore ? file.replace(/^_/g, '') : file;
     const destination = path.resolve(process.env.PROJECT_PATH, `../${destinationFile}`);
-    console.log(destination);
 
     if (!fs.existsSync(destination)) {
       fs.copyFileSync(path.resolve(this.appDir, `./${file}`), destination);
