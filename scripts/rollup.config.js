@@ -70,11 +70,11 @@ export default class RollupConfig {
     plugins.push(
       babel({
         runtimeHelpers: true,
-        extensions: ['.js'],
+        extensions: [ '.js' ],
         exclude: 'node_modules/**',
         babelrc: false,
         presets: [
-          ['@babel/preset-env', { modules: false }]
+          [ '@babel/preset-env', { modules: false } ]
         ],
         plugins: [ '@babel/plugin-transform-runtime' ]
       })
