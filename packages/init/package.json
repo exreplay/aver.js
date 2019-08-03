@@ -5,10 +5,13 @@
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "dist/init.js",
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "/dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/exreplay/aver.js.git",
@@ -16,5 +19,8 @@
   },
   "bugs": {
     "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "aver": {
+    "build": true
   }
 }
