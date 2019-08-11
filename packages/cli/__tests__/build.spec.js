@@ -1,5 +1,5 @@
 import AverCli from '../lib';
-import Renderer from '@averjs/renderer';
+import Renderer, { mockCompile } from '@averjs/renderer';
 jest.mock('@averjs/renderer');
 
 const OLD_ARGV = [ ...process.argv ];
@@ -8,6 +8,7 @@ let outputData = '';
 
 beforeEach(() => {
   Renderer.mockClear();
+  mockCompile.mockClear();
 
   outputData = '';
   console['log'] = jest.fn(inputs => (outputData = inputs));
@@ -32,7 +33,7 @@ test('run should execute renderer', async() => {
   const cli = new AverCli();
   await cli.run();
 
-  expect(Renderer.mock.instances[0].compile.mock.calls.length).toBe(1);
+  expect(mockCompile.mock.calls.length).toBe(1);
 });
 
 test('run should set NODE_ENV to "production" when not set', async() => {
@@ -44,13 +45,4 @@ test('run should set NODE_ENV to "production" when not set', async() => {
   await cli.run();
 
   expect(process.env.NODE_ENV).toBe('production');
-});
-
-test('static arg should be passed to renderer options', async() => {
-  process.argv.push('build', '--static');
-
-  const cli = new AverCli();
-  await cli.run();
-
-  expect(Renderer.mock.calls[0][0].static).toBeTruthy();
 });
