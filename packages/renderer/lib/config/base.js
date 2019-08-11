@@ -6,7 +6,7 @@ import { VueLoaderPlugin } from 'vue-loader';
 import { warmup } from 'thread-loader';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import PurgeCssPlugin from 'purgecss-webpack-plugin';
-import StyleLoader from './styleLoader';
+import StyleLoader from '../utils/style-loader';
 import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
 import { getAverjsConfig } from '@averjs/config';
@@ -23,7 +23,7 @@ export default class WebpackBaseConfiguration {
 
     this.commonRules = [];
 
-    if (!this.isProd) warmup({}, ['babel-loader', 'css-loader']);
+    if (!this.isProd) warmup({}, [ 'babel-loader', 'css-loader' ]);
 
     const { webpack } = getAverjsConfig();
     this.globalConfig = webpack;
@@ -33,10 +33,10 @@ export default class WebpackBaseConfiguration {
     if (!this.isServer && this.globalConfig.css.extract) {
       this.chainConfig
         .plugin('extract-css')
-          .use(ExtractCssPlugin, [{
+          .use(ExtractCssPlugin, [ {
             filename: !this.isProd ? '_averjs/css/[name].css' : '_averjs/css/[name].[contenthash].css',
             chunkFilename: !this.isProd ? '_averjs/css/[id].css' : '_averjs/css/[id].[contenthash].css'
-          }]);
+          } ]);
     }
 
     this.chainConfig
@@ -51,10 +51,10 @@ export default class WebpackBaseConfiguration {
 
     this.chainConfig
       .plugin('webpackbar')
-        .use(Webpackbar, [{
+        .use(Webpackbar, [ {
           name: this.isServer ? 'Server' : 'Client',
           color: this.isServer ? 'blue' : 'green'
-        }]);
+        } ]);
 
     if (this.isProd) {
       this.chainConfig
@@ -67,13 +67,13 @@ export default class WebpackBaseConfiguration {
       if (this.globalConfig.purgeCss) {
         this.chainConfig
           .plugin('purge-css')
-            .use(PurgeCssPlugin, [{
+            .use(PurgeCssPlugin, [ {
               paths: glob.sync([
                 path.resolve(process.env.PROJECT_PATH, './**/*.js'),
                 path.resolve(process.env.PROJECT_PATH, './**/*.vue')
               ]),
-              whitelistPatterns: [/^_/]
-            }]);
+              whitelistPatterns: [ /^_/ ]
+            } ]);
       }
     }
   }
@@ -161,7 +161,7 @@ export default class WebpackBaseConfiguration {
         .use('babel-loader')
           .loader('babel-loader')
           .options({
-            'presets': [
+            presets: [
               [
                 require.resolve('@averjs/babel-preset-app'),
                 {
@@ -202,10 +202,10 @@ export default class WebpackBaseConfiguration {
     styleLoader.apply('css', cssRule);
 
     const scssRule = this.chainConfig.module.rule('scss-loader').test(/\.scss$/);
-    styleLoader.apply('scss', scssRule, [{
+    styleLoader.apply('scss', scssRule, [ {
       name: 'sass-loader',
       options: { sourceMap: !this.isProd, minimize: true }
-    }]);
+    } ]);
                     
     this.chainConfig.module
       .rule('fonts')
@@ -270,7 +270,7 @@ export default class WebpackBaseConfiguration {
         .end()
       .resolve
         .extensions
-          .merge(['.js', '.json', '.vue', '.yaml'])
+          .merge([ '.js', '.json', '.vue', '.yaml' ])
           .end()
         .modules
           .add('node_modules')

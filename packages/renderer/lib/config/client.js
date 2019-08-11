@@ -1,5 +1,5 @@
 import webpack from 'webpack';
-import WebpackBaseConfiguration from './base.config';
+import WebpackBaseConfiguration from './base';
 import fs from 'fs';
 import path from 'path';
 import VueSSRClientPlugin from 'vue-server-renderer/client-plugin';
@@ -18,7 +18,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
   plugins() {
     super.plugins();
-    let htmlPluginOptions = {
+    const htmlPluginOptions = {
       filename: 'index.ssr.html',
       template: path.join(this.cacheDir, 'index.template.html'),
       inject: false
@@ -30,11 +30,11 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       this.chainConfig
         .plugin('copy')
           .use(CopyWebpackPlugin, [
-            [{
+            [ {
               from: path.join(this.projectRoot, 'resources/images'),
               to: path.join(this.projectRoot, '../public/images'),
               force: true
-            }]
+            } ]
           ]);
     }
 
@@ -43,24 +43,24 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         .use(HTMLPlugin, [ htmlPluginOptions ])
         .end()
       .plugin('define')
-        .use(webpack.DefinePlugin, [{
+        .use(webpack.DefinePlugin, [ {
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
           'process.env.VUE_ENV': JSON.stringify('client'),
-          'PRODUCTION': this.isProd,
+          PRODUCTION: this.isProd,
           ...this.globalConfig.process.env
-        }])
+        } ])
         .end()
       .plugin('vue-ssr-client')
         .use(VueSSRClientPlugin);
       
     this.chainConfig
       .plugin('friendly-errors')
-        .use(FriendlyErrorsPlugin, [{
+        .use(FriendlyErrorsPlugin, [ {
           showSuccessInfo: false,
           showCompilingInfo: false,
           clearConsole: false,
           logLevel: 'WARNING'
-        }]);
+        } ]);
   }
 
   serviceWorker() {
@@ -69,7 +69,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     const mode = swConfig.mode || 'GenerateSW';
     delete swConfig.mode;
 
-    let conf = {
+    const conf = {
       exclude: [
         /\.map$/,
         /img\/icons\//,
@@ -112,7 +112,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig.optimization
       .minimizer('terser')
-        .use(TerserPlugin, [{
+        .use(TerserPlugin, [ {
           sourceMap: true,
           cache: true,
           parallel: false,
@@ -158,11 +158,11 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
               comments: /^\**!|@preserve|@license|@cc_on/
             }
           }
-        }]);
+        } ]);
         
     this.chainConfig.optimization
       .minimizer('optimize-css')
-        .use(OptimizeCssAssetsPlugin, [{
+        .use(OptimizeCssAssetsPlugin, [ {
           cssProcessorPluginOptions: {
             preset: [
               'default',
@@ -174,7 +174,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
               }
             ]
           }
-        }]);
+        } ]);
   }
 
   config() {

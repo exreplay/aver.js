@@ -1,5 +1,5 @@
 import Command from './command';
-import Core from '@averjs/core';
+import Init from '@averjs/init';
 
 export default class InitCommand extends Command {
   constructor() {
@@ -10,7 +10,7 @@ export default class InitCommand extends Command {
   }
 
   run() {
-    const core = new Core();
-    core.init();
+    const init = new Init();
+    init.run();
   }
 }

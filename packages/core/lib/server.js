@@ -15,6 +15,8 @@ import chokidar from 'chokidar';
 import indexOf from 'lodash/indexOf';
 import WWW from './www';
 
+const requireModule = require('esm')(module);
+
 export default class Server extends WWW {
   constructor(hooks, config) {
     super(hooks, config);
@@ -103,10 +105,10 @@ export default class Server extends WWW {
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));
         
-    this.middlewares.push(['/dist', serve('./dist', true)]);
-    this.middlewares.push(['/public', serve('./public', true)]);
-    this.middlewares.push(['/static', serve('./static', true)]);
-    this.middlewares.push(['/storage', express.static('./storage')]);
+    this.middlewares.push([ '/dist', serve('./dist', true) ]);
+    this.middlewares.push([ '/public', serve('./public', true) ]);
+    this.middlewares.push([ '/static', serve('./static', true) ]);
+    this.middlewares.push([ '/storage', express.static('./storage') ]);
 
     this.middlewares.push(bodyParser.json());
     this.middlewares.push(bodyParser.urlencoded({ extended: false }));
@@ -129,7 +131,7 @@ export default class Server extends WWW {
     const middlewaresPath = path.resolve(process.env.API_PATH, './middlewares');
     if (fs.existsSync(middlewaresPath)) {
       this.middlewares.push((req, res, next) => {
-        require(middlewaresPath)(req, res, next);
+        requireModule(middlewaresPath)(req, res, next);
       });
     }
 
@@ -184,7 +186,7 @@ export default class Server extends WWW {
 
     if (fs.existsSync(routesPath)) {
       this.app.use((req, res, next) => {
-        require(routesPath)(req, res, next);
+        requireModule(routesPath)(req, res, next);
       });
     }
 

@@ -3,8 +3,8 @@ import path from 'path';
 import webpack from 'webpack';
 import template from 'lodash/template';
 import klawSync from 'klaw-sync';
-import WebpackClientConfiguration from './client.config';
-import WebpackServerConfiguration from './server.config';
+import WebpackClientConfiguration from './config/client';
+import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
 import { getAverjsConfig } from '@averjs/config';
@@ -20,9 +20,10 @@ export default class Builder {
     this.distPath = path.join(process.env.PROJECT_PATH, '../dist');
     this.globalConfig = getAverjsConfig();
 
-    if (!fs.existsSync(this.cacheDir)) fs.mkdirpSync(this.cacheDir);
-
-    this.prepareTemplates();
+    if (!fs.existsSync(this.cacheDir)) {
+      fs.mkdirpSync(this.cacheDir);
+      this.prepareTemplates();
+    }
 
     this.clientConfig = new WebpackClientConfiguration().config();
     this.serverConfig = new WebpackServerConfiguration().config();
@@ -52,7 +53,8 @@ export default class Builder {
           config: {
             progressbar: this.globalConfig.progressbar,
             i18n: this.globalConfig.i18n,
-            csrf: this.globalConfig.csrf
+            csrf: this.globalConfig.csrf,
+            router: this.globalConfig.router
           }
         });
 
@@ -192,7 +194,7 @@ export default class Builder {
   }
 
   setupClientCompiler() {
-    this.clientConfig.entry.app = ['webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app];
+    this.clientConfig.entry.app = [ 'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app ];
     this.clientConfig.output.filename = '[name].js';
     this.clientConfig.plugins.push(
       new webpack.HotModuleReplacementPlugin(),

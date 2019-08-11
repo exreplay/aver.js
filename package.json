@@ -5,30 +5,40 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "rollup --config",
+    "dev": "node -r esm ./scripts/dev",
     "release": "node -r esm ./scripts/release",
-    "test": "jest"
+    "lint": "eslint --ext .js,.vue .",
+    "test": "jest && codecov"
   },
   "devDependencies": {
-    "cross-spawn": "6.0.5",
-    "@babel/core": "7.4.5",
-    "@babel/preset-env": "7.4.5",
+    "@babel/core": "7.5.5",
+    "@babel/preset-env": "7.5.5",
     "babel-jest": "24.8.0",
-    "eslint": "5.16.0",
-    "eslint-config-standard": "12.0.0",
-    "eslint-plugin-import": "2.17.3",
-    "eslint-plugin-jest": "22.6.4",
+    "codecov": "3.5.0",
+    "cross-spawn": "6.0.5",
+    "eslint": "6.1.0",
+    "eslint-config-standard": "13.0.1",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-jest": "22.14.0",
     "eslint-plugin-node": "9.1.0",
-    "eslint-plugin-promise": "4.1.1",
+    "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.0",
-    "eslint-plugin-vue": "5.2.2",
+    "eslint-plugin-vue": "5.2.3",
     "esm": "3.2.25",
-    "inquirer": "6.3.1",
-    "lerna": "3.13.2",
-    "ora": "3.4.0",
-    "pify": "4.0.1",
+    "inquirer": "6.4.1",
     "jest": "24.8.0",
     "lerna": "3.15.0",
-    "memfs": "2.15.4"
-  }
+    "memfs": "2.15.4",
+    "ora": "3.4.0",
+    "pify": "4.0.1",
+    "rollup": "1.16.2",
+    "rollup-plugin-babel": "4.3.3",
+    "rollup-plugin-commonjs": "10.0.0",
+    "rollup-plugin-copy": "3.0.0",
+    "rollup-plugin-license": "0.9.0",
+    "rollup-plugin-node-resolve": "5.0.4",
+    "rollup-plugin-terser": "5.0.0",
+    "verdaccio": "4.0.4"
+  },
+  "dependencies": {}
 }
