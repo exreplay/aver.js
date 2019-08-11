@@ -1,2 +1,3 @@
 import Build from './build';
-new Build(true).run();
+
+new Build(process.argv.find(arg => arg === '--watch')).run();
