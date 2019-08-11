@@ -1,11 +1,14 @@
 import AverCli from '../lib';
-import Core, { mockRun } from '../__mocks__/@averjs/core';
+import Core from '@averjs/core';
+jest.mock('@averjs/core');
 
 const OLD_ARGV = [ ...process.argv ];
 const OLD_ENV = { ...process.env };
 let outputData = '';
 
 beforeEach(function() {
+  Core.mockClear();
+
   outputData = '';
   console['log'] = jest.fn(inputs => (outputData = inputs));
   console['error'] = jest.fn(inputs => (outputData = inputs));
@@ -25,12 +28,10 @@ test('help command should output command description', async() => {
 test('run should execute core run', async() => {
   process.argv.push('prod');
 
-  // eslint-disable-next-line no-unused-vars
-  const core = new Core();
   const cli = new AverCli();
   await cli.run();
 
-  expect(mockRun).toHaveBeenCalledTimes(1);
+  expect(Core.mock.instances[0].run.mock.calls.length).toBe(1);
 });
 
 test('run should set NODE_ENV to "production" when not set', async() => {
@@ -38,8 +39,6 @@ test('run should set NODE_ENV to "production" when not set', async() => {
 
   delete process.env.NODE_ENV;
 
-  // eslint-disable-next-line no-unused-vars
-  const core = new Core();
   const cli = new AverCli();
   await cli.run();
 

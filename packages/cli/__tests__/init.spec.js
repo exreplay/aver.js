@@ -1,10 +1,13 @@
 import AverCli from '../lib';
-import { mockRun } from '../__mocks__/@averjs/init';
+import Init from '@averjs/init';
+jest.mock('@averjs/init');
 
 const OLD_ARGV = [ ...process.argv ];
 let outputData = '';
 
 beforeEach(function() {
+  Init.mockClear();
+
   outputData = '';
   console['log'] = jest.fn(inputs => (outputData = inputs));
   console['error'] = jest.fn(inputs => (outputData = inputs));
@@ -26,5 +29,5 @@ test('run should execute core init', async() => {
   const cli = new AverCli();
   await cli.run();
 
-  expect(mockRun).toHaveBeenCalledTimes(1);
+  expect(Init.mock.instances[0].run.mock.calls.length).toBe(1);
 });
