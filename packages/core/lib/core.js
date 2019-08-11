@@ -32,7 +32,7 @@ export default class Core {
   registerPlugins() {
     if (typeof this.globalConfig.plugins !== 'undefined') {
       for (const plugin of this.globalConfig.plugins) {
-        require(plugin).default({
+        require(plugin)({
           config: this.globalConfig,
           hooks: this.hooks
         });

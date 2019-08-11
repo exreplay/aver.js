@@ -1,5 +1,5 @@
 import path from 'path';
-import { getAverjsConfig } from '../index';
+import { getAverjsConfig } from '../lib/index';
 
 beforeEach(() => {
   process.env.PROJECT_PATH = path.resolve(__dirname, '../__fixtures__/src');

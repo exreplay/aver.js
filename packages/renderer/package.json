@@ -5,10 +5,13 @@
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/renderer.js",
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "/dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/exreplay/aver.js.git",
@@ -16,6 +19,9 @@
   },
   "bugs": {
     "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "aver": {
+    "build": true
   },
   "dependencies": {
     "@averjs/babel-preset-app": "1.5.3",

@@ -1,5 +1,5 @@
 import webpack from 'webpack';
-import WebpackBaseConfiguration from './base.config';
+import WebpackBaseConfiguration from './base';
 import path from 'path';
 import nodeExternals from 'webpack-node-externals';
 import VueSSRServerPlugin from 'vue-server-renderer/server-plugin';

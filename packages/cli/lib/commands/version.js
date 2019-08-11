@@ -1,3 +1,4 @@
+import path from 'path';
 import Command from './command';
 
 export default class VersionCommand extends Command {
@@ -11,7 +12,7 @@ export default class VersionCommand extends Command {
   }
 
   run() {
-    const pkg = require('../../package.json');
+    const pkg = require(path.resolve(require.resolve('@averjs/cli'), '../../package.json'));
     console.log('v' + pkg.version);
   }
 }

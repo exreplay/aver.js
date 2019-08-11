@@ -15,6 +15,8 @@ import chokidar from 'chokidar';
 import indexOf from 'lodash/indexOf';
 import WWW from './www';
 
+const requireModule = require('esm')(module);
+
 export default class Server extends WWW {
   constructor(hooks, config) {
     super(hooks, config);
@@ -67,7 +69,7 @@ export default class Server extends WWW {
         clientManifest: clientManifest
       }, this.config.createRenderer));
     } else {
-      const Builder = require('@averjs/renderer').default;
+      const Builder = require('@averjs/renderer');
       const builder = new Builder(this.middlewares);
       this.readyPromise = builder.compile((bundle, options) => {
         self.renderer = self.createRenderer(bundle, Object.assign(bundle, options, this.config.createRenderer));
@@ -129,7 +131,7 @@ export default class Server extends WWW {
     const middlewaresPath = path.resolve(process.env.API_PATH, './middlewares');
     if (fs.existsSync(middlewaresPath)) {
       this.middlewares.push((req, res, next) => {
-        require(middlewaresPath)(req, res, next);
+        requireModule(middlewaresPath)(req, res, next);
       });
     }
 
@@ -184,7 +186,7 @@ export default class Server extends WWW {
 
     if (fs.existsSync(routesPath)) {
       this.app.use((req, res, next) => {
-        require(routesPath)(req, res, next);
+        requireModule(routesPath)(req, res, next);
       });
     }
 
