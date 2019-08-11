@@ -1,11 +1,14 @@
 import AverCli from '../lib';
-import Renderer, { mockCompile } from '../__mocks__/@averjs/renderer';
+import Renderer from '@averjs/renderer';
+jest.mock('@averjs/renderer');
 
 const OLD_ARGV = [ ...process.argv ];
 const OLD_ENV = { ...process.env };
 let outputData = '';
 
-beforeEach(function() {
+beforeEach(() => {
+  Renderer.mockClear();
+
   outputData = '';
   console['log'] = jest.fn(inputs => (outputData = inputs));
   console['error'] = jest.fn(inputs => (outputData = inputs));
@@ -19,18 +22,17 @@ test('help command should output command description', async() => {
 
   const cli = new AverCli();
   await cli.run();
+
   expect(outputData).toMatch('Build for production usage.');
 });
 
 test('run should execute renderer', async() => {
   process.argv.push('build');
 
-  // eslint-disable-next-line no-unused-vars
-  const renderer = new Renderer();
   const cli = new AverCli();
   await cli.run();
 
-  expect(mockCompile).toHaveBeenCalledTimes(1);
+  expect(Renderer.mock.instances[0].compile.mock.calls.length).toBe(1);
 });
 
 test('run should set NODE_ENV to "production" when not set', async() => {
@@ -38,10 +40,17 @@ test('run should set NODE_ENV to "production" when not set', async() => {
 
   delete process.env.NODE_ENV;
 
-  // eslint-disable-next-line no-unused-vars
-  const renderer = new Renderer();
   const cli = new AverCli();
   await cli.run();
 
   expect(process.env.NODE_ENV).toBe('production');
+});
+
+test('static arg should be passed to renderer options', async() => {
+  process.argv.push('build', '--static');
+
+  const cli = new AverCli();
+  await cli.run();
+
+  expect(Renderer.mock.calls[0][0].static).toBeTruthy();
 });
