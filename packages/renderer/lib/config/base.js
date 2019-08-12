@@ -34,8 +34,8 @@ export default class WebpackBaseConfiguration {
       this.chainConfig
         .plugin('extract-css')
           .use(ExtractCssPlugin, [ {
-            filename: !this.isProd ? '_averjs/css/[name].css' : '_averjs/css/[name].[contenthash].css',
-            chunkFilename: !this.isProd ? '_averjs/css/[id].css' : '_averjs/css/[id].[contenthash].css'
+            filename: !this.isProd ? 'css/[name].css' : 'css/[name].[contenthash].css',
+            chunkFilename: !this.isProd ? 'css/[id].css' : 'css/[id].[contenthash].css'
           } ]);
     }
 
@@ -214,7 +214,7 @@ export default class WebpackBaseConfiguration {
           .loader('url-loader')
           .options({
             limit: 1000,
-            name: '_averjs/fonts/[name].[hash:7].[ext]'
+            name: 'fonts/[name].[hash:7].[ext]'
           });
         
     this.chainConfig.module
@@ -224,7 +224,7 @@ export default class WebpackBaseConfiguration {
           .loader('url-loader')
           .options({
             limit: 1000,
-            name: '_averjs/img/[name].[hash:7].[ext]'
+            name: 'img/[name].[hash:7].[ext]'
           });
         
     this.chainConfig.module
@@ -233,7 +233,7 @@ export default class WebpackBaseConfiguration {
         .use('file-loader')
           .loader('file-loader')
           .options({
-            name: '_averjs/videos/[name].[hash:7].[ext]'
+            name: 'videos/[name].[hash:7].[ext]'
           });
         
     this.chainConfig.module
@@ -242,7 +242,7 @@ export default class WebpackBaseConfiguration {
         .use('file-loader')
           .loader('file-loader')
           .options({
-            name: '_averjs/resources/[name].[hash:7].[ext]'
+            name: 'resources/[name].[hash:7].[ext]'
           });
   }
 
@@ -253,7 +253,7 @@ export default class WebpackBaseConfiguration {
     this.chainConfig
       .output
         .path(path.resolve(process.env.PROJECT_PATH, '../dist/'))
-        .publicPath('/')
+        .publicPath('/dist/')
         .end()
       .node
         .set('setImmediate', false)

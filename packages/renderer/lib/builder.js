@@ -8,16 +8,12 @@ import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
 import { getAverjsConfig } from '@averjs/config';
-import { createBundleRenderer } from 'vue-server-renderer';
-import LRU from 'lru-cache';
 
 export default class Builder {
-  constructor(options, middlewares = []) {
+  constructor(middlewares) {
     this.isProd = process.env.NODE_ENV === 'production';
-    this.options = options;
     this.middlewares = middlewares;
     this.cacheDir = path.resolve('node_modules/.cache/averjs');
-    this.distPath = path.join(process.env.PROJECT_PATH, '../dist');
     this.globalConfig = getAverjsConfig();
 
     if (!fs.existsSync(this.cacheDir)) {
@@ -63,7 +59,7 @@ export default class Builder {
     }
   }
     
-  async compile(cb) {
+  compile(cb) {
     const promises = [];
     const compilers = [];
 
@@ -86,6 +82,7 @@ export default class Builder {
       });
 
       // Compile server
+
       serverCompiler.watch({}, (err, stats) => {
         if (err) throw err;
         stats = stats.toJson();
@@ -97,8 +94,6 @@ export default class Builder {
 
       return this.readyPromise;
     }
-
-    if (fs.existsSync(this.distPath)) fs.removeSync(this.distPath);
 
     compilers.push(this.clientConfig);
     compilers.push(this.serverConfig);
@@ -120,58 +115,8 @@ export default class Builder {
         });
       }));
     }
-
-    await Promise.all(promises);
-
-    if (this.isProd && this.options.static) {
-      this.initRenderer();
-      
-      const routes = require(path.join(process.env.PROJECT_PATH, './pages')).default;
-      for (const route of routes) {
-        await this.renderPage(route);
-      }
-
-      fs.removeSync(path.join(this.distPath, 'vue-ssr-server-bundle.json'));
-      fs.removeSync(path.join(this.distPath, 'vue-ssr-client-manifest.json'));
-      fs.removeSync(path.join(this.distPath, 'index.ssr.html'));
-    }
-  }
-
-  async renderPage(page) {
-    const context = {
-      title: process.env.APP_NAME,
-      url: page.path,
-      cookies: {},
-      host: '',
-      csrfToken: ''
-    };
-
-    const html = await this.renderer.renderToString(context);
-
-    const indexPath = path.join(this.distPath, page.path);
-    if (!fs.existsSync(indexPath)) fs.mkdirpSync(indexPath);
-    fs.writeFileSync(path.join(indexPath, 'index.html'), html);
-  }
-    
-  initRenderer() {
-    const serverBundle = require(path.join(this.distPath, 'vue-ssr-server-bundle.json'));
-    const clientManifest = require(path.join(this.distPath, 'vue-ssr-client-manifest.json'));
-    this.renderer = this.createRenderer(serverBundle, {
-      clientManifest: clientManifest
-    });
-  }
-    
-  createRenderer(bundle, options) {
-    const bundleOptions = {
-      cache: new LRU({
-        max: 1000,
-        maxAge: 1000 * 60 * 15
-      }),
-      runInNewContext: false,
-      template: fs.readFileSync(path.join(this.distPath, 'index.ssr.html'), 'utf-8')
-    };
-
-    return createBundleRenderer(bundle, Object.assign(options, bundleOptions));
+        
+    return Promise.all(promises);
   }
 
   update() {
