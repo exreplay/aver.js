@@ -46,3 +46,12 @@ test('run should set NODE_ENV to "production" when not set', async() => {
 
   expect(process.env.NODE_ENV).toBe('production');
 });
+
+test('static should be passed to renderer constructor', async() => {
+  process.argv.push('build', '--static');
+
+  const cli = new AverCli();
+  await cli.run();
+
+  expect(Renderer.mock.calls[0][0].static).toBeTruthy();
+});

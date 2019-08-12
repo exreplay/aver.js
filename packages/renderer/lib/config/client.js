@@ -185,7 +185,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       //     .add(path.join(this.libRoot, 'vue/entry-client.js'))
       //     .end()
       .output
-        .filename(`js/${this.isProd ? '[contenthash].' : '[name].'}js`);
+        .filename(`_averjs/js/${this.isProd ? '[contenthash].' : '[name].'}js`);
         
     if (typeof this.globalConfig.client === 'function') this.globalConfig.client(this.chainConfig);
 
