@@ -8,6 +8,7 @@ import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
 import { getAverjsConfig } from '@averjs/config';
+import { StaticBuilder } from '@averjs/builder';
 
 export default class Renderer {
   constructor(options, middlewares = []) {
@@ -119,6 +120,11 @@ export default class Renderer {
     }
 
     await Promise.all(promises);
+    
+    if (this.options.static) {
+      const staticBuilder = new StaticBuilder(this.globalConfig);
+      staticBuilder.build();
+    }
   }
 
   update() {
