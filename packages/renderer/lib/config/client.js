@@ -177,8 +177,8 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         } ]);
   }
 
-  config() {
-    super.config();
+  config(isStatic) {
+    super.config(isStatic);
         
     this.chainConfig
       // .entry('app')

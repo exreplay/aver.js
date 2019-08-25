@@ -249,11 +249,11 @@ export default class WebpackBaseConfiguration {
   optimization() {
   }
 
-  config() {
+  config(isStatic) {
     this.chainConfig
       .output
         .path(path.resolve(process.env.PROJECT_PATH, '../dist/'))
-        .publicPath('/')
+        .publicPath(isStatic ? '/' : '/dist/')
         .end()
       .node
         .set('setImmediate', false)

@@ -24,8 +24,8 @@ export default class Renderer {
       this.prepareTemplates();
     }
 
-    this.clientConfig = new WebpackClientConfiguration().config();
-    this.serverConfig = new WebpackServerConfiguration().config();
+    this.clientConfig = new WebpackClientConfiguration().config(this.options.static);
+    this.serverConfig = new WebpackServerConfiguration().config(this.options.static);
 
     this.mfs = new MFS();
     this.isBrowserOpen = false;
