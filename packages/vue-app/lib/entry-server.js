@@ -16,6 +16,7 @@ export default async context => {
     const meta = app.$meta();
 
     router.push(url);
+    context.meta = meta;
 
     await new Promise((resolve, reject) => router.onReady(resolve, reject));
     const matchedComponents = router.getMatchedComponents();
@@ -25,8 +26,6 @@ export default async context => {
       error.code = 404;
       throw error;
     }
-
-    context.meta = { inject: function() { Object.assign(this, meta.inject()); } };
         
     for (const r of mixinContext.keys()) {
       const EntryServerMixin = mixinContext(r).default;
