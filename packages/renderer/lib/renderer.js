@@ -31,8 +31,8 @@ export default class Renderer {
     this.isBrowserOpen = false;
     this.bundle = null;
     this.clientManifest = null;
-    this.template = null;
     this.resolve = null;
+    this.readyPromise = new Promise(resolve => { this.resolve = resolve; });
   }
 
   prepareTemplates() {
@@ -79,7 +79,6 @@ export default class Renderer {
         if (stats.errors.length) return;
       
         this.clientManifest = JSON.parse(this.readFile('vue-ssr-client-manifest.json'));
-        this.template = this.readFile('index.ssr.html');
         this.update();
       });
 
@@ -128,7 +127,7 @@ export default class Renderer {
   }
 
   update() {
-    if (this.bundle && this.clientManifest && this.template) {
+    if (this.bundle && this.clientManifest) {
       if (!this.isBrowserOpen) {
         this.isBrowserOpen = true;
         
@@ -140,8 +139,7 @@ export default class Renderer {
       
       this.resolve();
       this.cb(this.bundle, {
-        clientManifest: this.clientManifest,
-        template: this.template
+        clientManifest: this.clientManifest
       });
     }
   }
