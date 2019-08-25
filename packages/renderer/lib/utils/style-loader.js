@@ -46,7 +46,7 @@ export default class StyleLoader {
     if (module) this.cssModules(rule);
     else this.css(rule);
 
-    this.postcss(rule);
+    if (this.usePostCss) this.postcss(rule);
   }
 
   performanceLoader(rule) {
@@ -106,7 +106,7 @@ export default class StyleLoader {
       .use('css-loader')
         .loader('css-loader')
         .options({
-          importLoaders: this.usePostCss ? 2 : 1,
+          importLoaders: this.usePostCss ? 3 : 1,
           sourceMap: !this.isProd,
           exportOnlyLocals: this.exportOnlyLocals
         });
@@ -118,7 +118,7 @@ export default class StyleLoader {
         .loader('css-loader')
         .options({
           modules: true,
-          importLoaders: this.usePostCss ? 2 : 1,
+          importLoaders: this.usePostCss ? 3 : 1,
           localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
           camelCase: true,
           sourceMap: !this.isProd,
@@ -127,19 +127,22 @@ export default class StyleLoader {
   }
 
   postcss(rule) {
-    if (this.usePostCss) {
-      rule
-        .use('postcss-loader')
-          .loader('postcss-loader')
-          .options({
-            sourceMap: !this.isProd,
-            plugins: [
-              require('cssnano')({
-                parser: SafeParser,
-                discardComments: { removeAll: true }
-              })
-            ]
-          });
-    }
+    rule
+      .use('cssnano')
+        .loader('postcss-loader')
+        .options({
+          sourceMap: !this.isProd,
+          plugins: [
+            require('cssnano')({
+              parser: SafeParser,
+              discardComments: { removeAll: true }
+            })
+          ]
+        });
+
+    rule
+      .use('postcss')
+        .loader('postcss-loader')
+        .options({ sourceMap: !this.isProd });
   }
 }
