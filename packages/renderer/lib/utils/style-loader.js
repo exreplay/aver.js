@@ -9,10 +9,11 @@ export default class StyleLoader {
     this.isProd = process.env.NODE_ENV === 'production';
     this.isServer = isServer;
     this.config = config;
-    this.postcssConfigExists = fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../postcss.config.js'));
+
+    this.findPostcssConfig();
   }
 
-  get usePostCss() {
+  get stylesAreInline() {
     return this.postcssConfigExists || !this.config.css.extract;
   }
 
@@ -20,7 +21,38 @@ export default class StyleLoader {
     return this.isServer && this.config.css.extract;
   }
 
-  apply(name, rule, loaders = []) {
+  get importLoaders() {
+    let cnt = 1;
+    if (this.postcssConfigExists) cnt++;
+    if (this.stylesAreInline) cnt++;
+    return cnt;
+  }
+
+  findPostcssConfig() {
+    const files = [
+      '.postcssrc',
+      '.postcssrc.js',
+      'postcss.config.js',
+      '.postcssrc.yaml',
+      '.postcssrc.json'
+    ];
+    const pkg = require(path.resolve(process.cwd(), './package.json'));
+    this.postcssConfigExists = false;
+
+    if (pkg.postcss) {
+      this.postcssConfigExists = true;
+      return;
+    }
+
+    for (const file of files) {
+      if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, `../${file}`))) {
+        this.postcssConfigExists = true;
+        break;
+      }
+    }
+  }
+
+  async apply(name, rule, loaders = []) {
     this.name = name;
 
     const moduleRule = rule.oneOf(`${name}-module`).resourceQuery(/module/);
@@ -106,7 +138,7 @@ export default class StyleLoader {
       .use('css-loader')
         .loader('css-loader')
         .options({
-          importLoaders: this.usePostCss ? 2 : 1,
+          importLoaders: this.importLoaders,
           sourceMap: !this.isProd,
           exportOnlyLocals: this.exportOnlyLocals
         });
@@ -118,7 +150,7 @@ export default class StyleLoader {
         .loader('css-loader')
         .options({
           modules: true,
-          importLoaders: this.usePostCss ? 2 : 1,
+          importLoaders: this.importLoaders,
           localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
           camelCase: true,
           sourceMap: !this.isProd,
@@ -127,9 +159,9 @@ export default class StyleLoader {
   }
 
   postcss(rule) {
-    if (this.usePostCss) {
+    if (this.stylesAreInline) {
       rule
-        .use('postcss-loader')
+        .use('cssnano')
           .loader('postcss-loader')
           .options({
             sourceMap: !this.isProd,
@@ -140,6 +172,13 @@ export default class StyleLoader {
               })
             ]
           });
+    }
+
+    if (this.postcssConfigExists) {
+      rule
+        .use('postcss')
+          .loader('postcss-loader')
+          .options({ sourceMap: !this.isProd });
     }
   }
 }
