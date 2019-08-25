@@ -46,26 +46,28 @@ export default class StaticBuilder extends BaseBuilder {
         style, script, noscript, meta
       } = context.meta.inject();
 
-      const HEAD =
-        meta.text() +
-        title.text() +
-        link.text() +
-        context.renderStyles() +
-        style.text() +
-        context.renderResourceHints() +
-        script.text() +
-        noscript.text();
+      const HEAD = [
+        meta.text(),
+        title.text(),
+        link.text(),
+        context.renderStyles(),
+        style.text(),
+        context.renderResourceHints(),
+        script.text(),
+        noscript.text()
+      ];
 
-      const BODY =
-        style.text({ pbody: true }) +
-        script.text({ pbody: true }) +
-        noscript.text({ pbody: true }) +
-        html +
-        `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>` +
-        context.renderScripts() +
-        style.text({ body: true }) +
-        script.text({ body: true }) +
-        noscript.text({ body: true });
+      const BODY = [
+        style.text({ pbody: true }),
+        script.text({ pbody: true }),
+        noscript.text({ pbody: true }),
+        html,
+        `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
+        context.renderScripts(),
+        style.text({ body: true }),
+        script.text({ body: true }),
+        noscript.text({ body: true })
+      ];
       
       const HEAD_ATTRS = headAttrs.text();
       const HTML_ATTRS = htmlAttrs.text(true);
@@ -73,7 +75,13 @@ export default class StaticBuilder extends BaseBuilder {
   
       const fileToCompile = fs.readFileSync(path.resolve(require.resolve('@averjs/vue-app'), '../index.template.html'), 'utf-8');
       const compiled = template(fileToCompile, { interpolate: /{{([\s\S]+?)}}/g });
-      const compiledTemplate = compiled({ HTML_ATTRS, HEAD_ATTRS, HEAD, BODY_ATTRS, BODY });
+      const compiledTemplate = compiled({
+        HTML_ATTRS,
+        HEAD_ATTRS,
+        HEAD: HEAD.join(''),
+        BODY_ATTRS,
+        BODY: BODY.join('')
+      });
   
       const indexPath = path.join(this.distPath, route.path);
       if (!fs.existsSync(indexPath)) fs.mkdirpSync(indexPath);
