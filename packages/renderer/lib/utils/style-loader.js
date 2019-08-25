@@ -36,8 +36,14 @@ export default class StyleLoader {
       '.postcssrc.yaml',
       '.postcssrc.json'
     ];
-
+    const pkg = require(path.resolve(process.cwd(), './package.json'));
     this.postcssConfigExists = false;
+
+    if (pkg.postcss) {
+      this.postcssConfigExists = true;
+      return;
+    }
+
     for (const file of files) {
       if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, `../${file}`))) {
         this.postcssConfigExists = true;
