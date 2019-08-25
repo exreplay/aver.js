@@ -1,11 +1,14 @@
+import BaseBuilder from './base';
 import path from 'path';
 import fs from 'fs';
-import LRU from 'lru-cache';
-import { createBundleRenderer } from 'vue-server-renderer';
+import serialize from 'serialize-javascript';
+import template from 'lodash/template';
+import { minify } from 'html-minifier';
 import HTMLCodeError from '../errors/HTMLCodeError';
 
-export default class SsrBuilder {
+export default class SsrBuilder extends BaseBuilder {
   constructor(config, middlewares) {
+    super();
     this.config = config;
     this.middlewares = middlewares;
     this.renderer = null;
@@ -26,27 +29,9 @@ export default class SsrBuilder {
       const Renderer = require('@averjs/renderer');
       const renderer = new Renderer({}, this.middlewares);
       this.readyPromise = renderer.compile((bundle, options) => {
-        this.renderer = this.createRenderer(bundle, Object.assign(bundle, options, this.config.createRenderer));
+        this.renderer = this.createRenderer(bundle, Object.assign(options, this.config.createRenderer));
       });
     }
-  }
-      
-  createRenderer(bundle, options) {
-    const bundleOptions = {
-      cache: new LRU({
-        max: 1000,
-        maxAge: 1000 * 60 * 15
-      }),
-      runInNewContext: false
-    };
-  
-    if (this.isProd) {
-      Object.assign(bundleOptions, {
-        template: fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../dist/index.ssr.html'), 'utf-8')
-      });
-    }
-  
-    return createBundleRenderer(bundle, Object.assign(options, bundleOptions));
   }
 
   async build(req) {
@@ -63,7 +48,61 @@ export default class SsrBuilder {
     if (typeof req.isAuthenticated === 'function') Object.assign(context, { isAuthenticated: req.isAuthenticated(), user: req.user });
     
     try {
-      return await this.renderer.renderToString(context);
+      const html = await this.renderer.renderToString(context);
+
+      const {
+        title, htmlAttrs, headAttrs, bodyAttrs, link,
+        style, script, noscript, meta
+      } = context.meta.inject();
+
+      let HEAD = '';
+
+      if (this.config.csrf) HEAD += `<meta name="csrf-token" content="${req.csrfToken()}">`;
+
+      HEAD +=
+        meta.text() +
+        title.text() +
+        link.text() +
+        context.renderStyles() +
+        style.text() +
+        context.renderResourceHints() +
+        script.text() +
+        noscript.text();
+
+      const BODY =
+        style.text({ pbody: true }) +
+        script.text({ pbody: true }) +
+        noscript.text({ pbody: true }) +
+        html +
+        `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>` +
+        context.renderScripts() +
+        style.text({ body: true }) +
+        script.text({ body: true }) +
+        noscript.text({ body: true });
+
+      const HEAD_ATTRS = headAttrs.text();
+      const HTML_ATTRS = htmlAttrs.text(true);
+      const BODY_ATTRS = bodyAttrs.text();
+
+      const fileToCompile = fs.readFileSync(path.resolve(require.resolve('@averjs/vue-app'), '../index.template.html'), 'utf-8');
+      const compiled = template(fileToCompile, { interpolate: /{{([\s\S]+?)}}/g });
+      const compiledTemplate = compiled({ HTML_ATTRS, HEAD_ATTRS, HEAD, BODY_ATTRS, BODY });
+
+      if (this.isProd) {
+        return minify(compiledTemplate, {
+          collapseBooleanAttributes: true,
+          decodeEntities: true,
+          minifyCSS: true,
+          minifyJS: true,
+          processConditionalComments: true,
+          removeEmptyAttributes: true,
+          removeRedundantAttributes: true,
+          trimCustomFragments: true,
+          useShortDoctype: true
+        });
+      } else {
+        return compiledTemplate;
+      }
     } catch (err) {
       if (err) {
         if (err.code === 404) {
