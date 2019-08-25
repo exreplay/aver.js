@@ -9,7 +9,8 @@ export default class StyleLoader {
     this.isProd = process.env.NODE_ENV === 'production';
     this.isServer = isServer;
     this.config = config;
-    this.postcssConfigExists = fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../postcss.config.js'));
+
+    this.findPostcssConfig();
   }
 
   get stylesAreInline() {
@@ -25,6 +26,24 @@ export default class StyleLoader {
     if (this.postcssConfigExists) cnt++;
     if (this.stylesAreInline) cnt++;
     return cnt;
+  }
+
+  findPostcssConfig() {
+    const files = [
+      '.postcssrc',
+      '.postcssrc.js',
+      'postcss.config.js',
+      '.postcssrc.yaml',
+      '.postcssrc.json'
+    ];
+
+    this.postcssConfigExists = false;
+    for (const file of files) {
+      if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, `../${file}`))) {
+        this.postcssConfigExists = true;
+        break;
+      }
+    }
   }
 
   async apply(name, rule, loaders = []) {
