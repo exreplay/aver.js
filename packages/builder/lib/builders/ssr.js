@@ -86,7 +86,10 @@ export default class SsrBuilder extends BaseBuilder {
       const HTML_ATTRS = htmlAttrs.text(true);
       const BODY_ATTRS = bodyAttrs.text();
 
-      const fileToCompile = fs.readFileSync(path.resolve(require.resolve('@averjs/vue-app'), '../index.template.html'), 'utf-8');
+      const templatePath = this.isProd
+        ? path.resolve(process.cwd(), './dist/index.ssr.html')
+        : path.resolve(require.resolve('@averjs/vue-app'), '../index.template.html');
+      const fileToCompile = fs.readFileSync(templatePath, 'utf-8');
       const compiled = template(fileToCompile, { interpolate: /{{([\s\S]+?)}}/g });
       const compiledTemplate = compiled({
         HTML_ATTRS,
