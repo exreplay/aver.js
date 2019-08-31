@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@averjs/babel-preset-app": "1.5.3",
+    "@averjs/builder": "1.5.3",
     "@averjs/config": "1.5.3",
     "@averjs/friendly-errors-webpack-plugin": "2.0.0",
     "@averjs/shared-utils": "1.5.3",
@@ -71,6 +72,7 @@
     "thread-loader": "2.1.2",
     "url-loader": "2.1.0",
     "vue-loader": "15.7.1",
+    "vue-server-renderer": "2.6.10",
     "vue-template-compiler": "2.6.10",
     "webpack": "4.38.0",
     "webpack-chain": "6.0.0",

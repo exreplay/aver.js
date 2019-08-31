@@ -1,2 +1,2 @@
-import Builder from './builder';
-export default Builder;
+import renderer from './renderer';
+export default renderer;

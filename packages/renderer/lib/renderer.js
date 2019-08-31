@@ -8,10 +8,9 @@ import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
 import { getAverjsConfig } from '@averjs/config';
-import { createBundleRenderer } from 'vue-server-renderer';
-import LRU from 'lru-cache';
+import { StaticBuilder } from '@averjs/builder';
 
-export default class Builder {
+export default class Renderer {
   constructor(options, middlewares = []) {
     this.isProd = process.env.NODE_ENV === 'production';
     this.options = options;
@@ -25,14 +24,13 @@ export default class Builder {
       this.prepareTemplates();
     }
 
-    this.clientConfig = new WebpackClientConfiguration().config();
-    this.serverConfig = new WebpackServerConfiguration().config();
+    this.clientConfig = new WebpackClientConfiguration().config(this.options.static);
+    this.serverConfig = new WebpackServerConfiguration().config(this.options.static);
 
     this.mfs = new MFS();
     this.isBrowserOpen = false;
     this.bundle = null;
     this.clientManifest = null;
-    this.template = null;
     this.resolve = null;
     this.readyPromise = new Promise(resolve => { this.resolve = resolve; });
   }
@@ -81,7 +79,6 @@ export default class Builder {
         if (stats.errors.length) return;
       
         this.clientManifest = JSON.parse(this.readFile('vue-ssr-client-manifest.json'));
-        this.template = this.readFile('index.ssr.html');
         this.update();
       });
 
@@ -102,7 +99,7 @@ export default class Builder {
 
     compilers.push(this.clientConfig);
     compilers.push(this.serverConfig);
-        
+    
     for (const compiler of compilers) {
       promises.push(new Promise((resolve, reject) => {
         const compile = webpack(compiler);
@@ -122,60 +119,15 @@ export default class Builder {
     }
 
     await Promise.all(promises);
-
-    if (this.isProd && this.options.static) {
-      this.initRenderer();
-      
-      const routes = require(path.join(process.env.PROJECT_PATH, './pages')).default;
-      for (const route of routes) {
-        await this.renderPage(route);
-      }
-
-      fs.removeSync(path.join(this.distPath, 'vue-ssr-server-bundle.json'));
-      fs.removeSync(path.join(this.distPath, 'vue-ssr-client-manifest.json'));
-      fs.removeSync(path.join(this.distPath, 'index.ssr.html'));
+    
+    if (this.options.static) {
+      const staticBuilder = new StaticBuilder(this.globalConfig);
+      staticBuilder.build();
     }
   }
 
-  async renderPage(page) {
-    const context = {
-      title: process.env.APP_NAME,
-      url: page.path,
-      cookies: {},
-      host: '',
-      csrfToken: ''
-    };
-
-    const html = await this.renderer.renderToString(context);
-
-    const indexPath = path.join(this.distPath, page.path);
-    if (!fs.existsSync(indexPath)) fs.mkdirpSync(indexPath);
-    fs.writeFileSync(path.join(indexPath, 'index.html'), html);
-  }
-    
-  initRenderer() {
-    const serverBundle = require(path.join(this.distPath, 'vue-ssr-server-bundle.json'));
-    const clientManifest = require(path.join(this.distPath, 'vue-ssr-client-manifest.json'));
-    this.renderer = this.createRenderer(serverBundle, {
-      clientManifest: clientManifest
-    });
-  }
-    
-  createRenderer(bundle, options) {
-    const bundleOptions = {
-      cache: new LRU({
-        max: 1000,
-        maxAge: 1000 * 60 * 15
-      }),
-      runInNewContext: false,
-      template: fs.readFileSync(path.join(this.distPath, 'index.ssr.html'), 'utf-8')
-    };
-
-    return createBundleRenderer(bundle, Object.assign(options, bundleOptions));
-  }
-
   update() {
-    if (this.bundle && this.clientManifest && this.template) {
+    if (this.bundle && this.clientManifest) {
       if (!this.isBrowserOpen) {
         this.isBrowserOpen = true;
         
@@ -187,8 +139,7 @@ export default class Builder {
       
       this.resolve();
       this.cb(this.bundle, {
-        clientManifest: this.clientManifest,
-        template: this.template
+        clientManifest: this.clientManifest
       });
     }
   }
