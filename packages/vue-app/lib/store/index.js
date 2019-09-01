@@ -4,6 +4,7 @@ import forEach from 'lodash/forEach';
 import { ExportVuexStore } from '@averjs/vuex-decorators';
 import createPersistedState from 'vuex-persistedstate';
 import * as Cookies from 'js-cookie';
+import merge from 'lodash/merge'
 
 Vue.use(Vuex);
 
@@ -44,10 +45,19 @@ export function createStore(ssrContext) {
     );
   }
 
-  const store = new Vuex.Store({
-    modules,
-    plugins
-  });
+  let defaultConfig = { modules, plugins };
+  <% if (typeof config.store === 'object') print('defaultConfig = merge(defaultConfig, JSON.parse(\''+JSON.stringify(config.store)+'\'))'); %>
+
+  const mixinContext = require.context('@/', false, /^\.\/store\.js$/i);
+  for (const r of mixinContext.keys()) {
+    const Mixin = mixinContext(r).default;
+    if (typeof Mixin !== 'undefined') {
+      const mixinConfig = new Mixin(defaultConfig);
+      defaultConfig = merge(defaultConfig, mixinConfig);
+    }
+  }
+
+  const store = new Vuex.Store(defaultConfig);
 
   if (module.hot) {
     files.keys().map(path => files(path));
