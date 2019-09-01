@@ -50,9 +50,9 @@ export function createStore(ssrContext) {
 
   const mixinContext = require.context('@/', false, /^\.\/store\.js$/i);
   for (const r of mixinContext.keys()) {
-    const Mixin = mixinContext(r).default;
-    if (typeof Mixin !== 'undefined') {
-      const mixinConfig = new Mixin(defaultConfig);
+    const mixin = mixinContext(r).default;
+    if (typeof mixin !== 'undefined') {
+      const mixinConfig = mixin(defaultConfig);
       defaultConfig = merge(defaultConfig, mixinConfig);
     }
   }
