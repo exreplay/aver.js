@@ -52,7 +52,8 @@ export default class Renderer {
             progressbar: this.globalConfig.progressbar,
             i18n: this.globalConfig.i18n,
             csrf: this.globalConfig.csrf,
-            router: this.globalConfig.router
+            router: this.globalConfig.router,
+            store: this.globalConfig.store
           }
         });
 
