@@ -52,7 +52,7 @@ export default class Release {
           const build = new Build(false, type);
           await build.run();
           if (!this.test) {
-            await this.createReleaseBranch();
+            // await this.createReleaseBranch();
             await this.preReleaseSync();
           }
           await this.createNewRelease();
