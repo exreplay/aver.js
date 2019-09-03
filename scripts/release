@@ -24,7 +24,7 @@ class ReleaseScript {
 
   async run() {
     try {
-      await this.setupVerdaccio();
+      if (this.test) await this.setupVerdaccio();
       const release = new Release(this.test);
       await release.run();
     } catch (err) {
