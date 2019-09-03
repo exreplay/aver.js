@@ -121,7 +121,7 @@ export default class Release {
   }
 
   async gitBranch() {
-    const { stdout } = await exec('git', [ 'rev-parse', '--abbrev-ref', 'HEAD asdf' ]);
+    const { stdout } = await exec('git', [ 'rev-parse', '--abbrev-ref', 'HEAD' ]);
     return stdout;
   }
 }
