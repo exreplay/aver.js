@@ -39,7 +39,7 @@ export default class Release {
     ]);
 
     if (release) {
-      if (await this.gitBranch() !== 'feat/rollup') {
+      if (await this.gitBranch() !== 'development') {
         console.log(
           logSymbols.warning,
           chalk.bold.red(
