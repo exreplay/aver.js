@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-0](https://github.com/exreplay/aver.js/compare/v1.5.3...v2.0.0-0) (2019-09-03)
+
+
+### Bug Fixes
+
+* **cli:** use dev command when no arg is passed ([db22831](https://github.com/exreplay/aver.js/commit/db22831))
+* **cli:** use help command when none is passed ([aaf428c](https://github.com/exreplay/aver.js/commit/aaf428c))
+* **cli:** use init instead of core package on init command ([ccfba47](https://github.com/exreplay/aver.js/commit/ccfba47))
+* **core:** added back "@babel/runtime-corejs2" dep ([6a90e70](https://github.com/exreplay/aver.js/commit/6a90e70))
+* **core:** init now shows an ora spinner and does not fail when file or dir already exists ([cd5e08e](https://github.com/exreplay/aver.js/commit/cd5e08e))
+* **core:** path to app dir is now correct ([036a837](https://github.com/exreplay/aver.js/commit/036a837))
+* **core:** writeFile now works properly ([c51d2b9](https://github.com/exreplay/aver.js/commit/c51d2b9))
+* **deps:** pinned @averjs/friendly-errors-webpack-plugin ([bb2e83d](https://github.com/exreplay/aver.js/commit/bb2e83d))
+* **init:** fixed wrong package name ([3132a95](https://github.com/exreplay/aver.js/commit/3132a95))
+* **init:** use init package instead of core package for `appDir` ([2ec0d05](https://github.com/exreplay/aver.js/commit/2ec0d05))
+* **renderer:** load postcss config correctly ([#92](https://github.com/exreplay/aver.js/issues/92)) ([f37724d](https://github.com/exreplay/aver.js/commit/f37724d))
+* **renderer:** reuse browser tabs when port 80 is defined ([7631a21](https://github.com/exreplay/aver.js/commit/7631a21))
+* overwrite env variables when changed ([c266358](https://github.com/exreplay/aver.js/commit/c266358)), closes [#42](https://github.com/exreplay/aver.js/issues/42)
+* **vue-app:** better check for asyncData method ([406000f](https://github.com/exreplay/aver.js/commit/406000f))
+* **vue-app:** if user passes routes parameter, delete it ([b52344d](https://github.com/exreplay/aver.js/commit/b52344d))
+* **vue-app:** import app first on server ([9507e57](https://github.com/exreplay/aver.js/commit/9507e57))
+* **vue-app:** import right package ([442818c](https://github.com/exreplay/aver.js/commit/442818c))
+* **vue-app:** moved component register hooks to extra file and imported it before anything else ([b64f6e4](https://github.com/exreplay/aver.js/commit/b64f6e4))
+* **vue-app:** use property instead of class components to register hooks ([5518360](https://github.com/exreplay/aver.js/commit/5518360))
+
+
+### Features
+
+* **cli:** added global version command ([bf0bc33](https://github.com/exreplay/aver.js/commit/bf0bc33))
+* **cli:** added prod command ([94f1f4b](https://github.com/exreplay/aver.js/commit/94f1f4b))
+* **renderer:** added new config param process.env ([27fe2e7](https://github.com/exreplay/aver.js/commit/27fe2e7))
+* **vue-app:** assign user config to default router config ([0dac69d](https://github.com/exreplay/aver.js/commit/0dac69d))
+* add rollup to build packages ([#56](https://github.com/exreplay/aver.js/issues/56)) ([537faa6](https://github.com/exreplay/aver.js/commit/537faa6))
+* added FilesChanged plugin ([8b8dc98](https://github.com/exreplay/aver.js/commit/8b8dc98))
+* added new cli package ([b363f2f](https://github.com/exreplay/aver.js/commit/b363f2f))
+* vuex store config ([#95](https://github.com/exreplay/aver.js/issues/95)) ([b47ae0c](https://github.com/exreplay/aver.js/commit/b47ae0c))
+
+
+
+
+
 ## [1.5.3](https://github.com/exreplay/aver.js/compare/v1.5.2...v1.5.3) (2019-06-13)
 
 

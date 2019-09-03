@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-0](https://github.com/exreplay/aver.js/compare/v1.5.3...v2.0.0-0) (2019-09-03)
+
+
+### Features
+
+* **renderer:** added new config param process.env ([27fe2e7](https://github.com/exreplay/aver.js/commit/27fe2e7))
+* add rollup to build packages ([#56](https://github.com/exreplay/aver.js/issues/56)) ([537faa6](https://github.com/exreplay/aver.js/commit/537faa6))
+* vuex store config ([#95](https://github.com/exreplay/aver.js/issues/95)) ([b47ae0c](https://github.com/exreplay/aver.js/commit/b47ae0c))
+
+
+
+
+
 ## [1.5.3](https://github.com/exreplay/aver.js/compare/v1.5.2...v1.5.3) (2019-06-13)
 
 **Note:** Version bump only for package @averjs/config
