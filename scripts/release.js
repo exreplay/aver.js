@@ -88,10 +88,8 @@ export default class Release {
     try {
       await exec('git', [ 'add', '-A' ]);
       await exec('git', [ 'commit', '-m', `chore: pre release sync` ]);
+    } catch (err) {} finally {
       spinner.succeed();
-    } catch (err) {
-      spinner.fail(err.stderr);
-      throw new Error('Script failed');
     }
   }
 
@@ -123,7 +121,7 @@ export default class Release {
   }
 
   async gitBranch() {
-    const { stdout } = await exec('git', [ 'rev-parse', '--abbrev-ref', 'HEAD' ]);
+    const { stdout } = await exec('git', [ 'rev-parse', '--abbrev-ref', 'HEAD asdf' ]);
     return stdout;
   }
 }
