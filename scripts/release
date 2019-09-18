@@ -10,12 +10,8 @@ const inquirer = require('inquirer');
 const OUT_FILE = './verdaccio';
 
 class ReleaseScript {
-  constructor() {
-    this.test = false;
-
-    for (const arg of process.argv) {
-      if (arg === '--test') this.test = true;
-    }
+  constructor(test) {
+    this.test = test;
 
     if (this.test) {
       this.registerProcessEvents();
@@ -24,7 +20,7 @@ class ReleaseScript {
 
   async run() {
     try {
-      await this.setupVerdaccio();
+      if (this.test) await this.setupVerdaccio();
       const release = new Release(this.test);
       await release.run();
     } catch (err) {
@@ -81,14 +77,22 @@ class ReleaseScript {
 }
 
 (async() => {
-  const script = new ReleaseScript();
+  let test = false;
+
+  for (const arg of process.argv) {
+    if (arg === '--test') test = true;
+  }
+
+  const script = new ReleaseScript(test);
   await script.run();
 
-  await inquirer.prompt([
-    {
-      name: 'exit',
-      message: `We keep this process up and running so you can have a look at verdaccio to see if everything worked out correctly. Hit enter to exit.`,
-      type: 'confirm'
-    }
-  ]);
+  if (test) {
+    await inquirer.prompt([
+      {
+        name: 'exit',
+        message: `We keep this process up and running so you can have a look at verdaccio to see if everything worked out correctly. Hit enter to exit.`,
+        type: 'confirm'
+      }
+    ]);
+  }
 })();

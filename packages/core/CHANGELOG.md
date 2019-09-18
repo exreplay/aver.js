@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-1](https://github.com/exreplay/aver.js/compare/v2.0.0-0...v2.0.0-1) (2019-09-03)
+
+**Note:** Version bump only for package @averjs/core
+
+
+
+
+
+# [2.0.0-0](https://github.com/exreplay/aver.js/compare/v1.5.3...v2.0.0-0) (2019-09-03)
+
+
+### Bug Fixes
+
+* overwrite env variables when changed ([c266358](https://github.com/exreplay/aver.js/commit/c266358)), closes [#42](https://github.com/exreplay/aver.js/issues/42)
+* **core:** added back "@babel/runtime-corejs2" dep ([6a90e70](https://github.com/exreplay/aver.js/commit/6a90e70))
+* **core:** init now shows an ora spinner and does not fail when file or dir already exists ([cd5e08e](https://github.com/exreplay/aver.js/commit/cd5e08e))
+* **core:** path to app dir is now correct ([036a837](https://github.com/exreplay/aver.js/commit/036a837))
+* **core:** writeFile now works properly ([c51d2b9](https://github.com/exreplay/aver.js/commit/c51d2b9))
+
+
+### Features
+
+* add rollup to build packages ([#56](https://github.com/exreplay/aver.js/issues/56)) ([537faa6](https://github.com/exreplay/aver.js/commit/537faa6))
+* added new cli package ([b363f2f](https://github.com/exreplay/aver.js/commit/b363f2f))
+
+
+
+
+
 ## [1.5.3](https://github.com/exreplay/aver.js/compare/v1.5.2...v1.5.3) (2019-06-13)
 
 **Note:** Version bump only for package @averjs/core

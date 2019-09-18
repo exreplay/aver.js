@@ -1,9 +1,7 @@
 import express from 'express';
-import LRU from 'lru-cache';
 import compression from 'compression';
 import path from 'path';
 import fs from 'fs';
-import { createBundleRenderer } from 'vue-server-renderer';
 import helmet from 'helmet';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -14,14 +12,13 @@ import uuid from 'uuid/v4';
 import chokidar from 'chokidar';
 import indexOf from 'lodash/indexOf';
 import WWW from './www';
+import { SsrBuilder } from '@averjs/builder';
 
 const requireModule = require('esm')(module);
 
 export default class Server extends WWW {
   constructor(hooks, config) {
     super(hooks, config);
-    this.renderer = null;
-    this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
     this.middlewares = [];
 
@@ -44,7 +41,7 @@ export default class Server extends WWW {
       });
     }
 
-    this.initRenderer();
+    this.builder = new SsrBuilder(config, this.middlewares);
     this.registerMiddlewares();
     this.registerRoutes();
 
@@ -57,42 +54,6 @@ export default class Server extends WWW {
         msg: err.message
       }, (err.data) ? { data: err.data } : {}));
     });
-  }
-    
-  initRenderer() {
-    const self = this;
-        
-    if (this.isProd) {
-      const serverBundle = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-server-bundle.json'));
-      const clientManifest = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-client-manifest.json'));
-      this.renderer = this.createRenderer(serverBundle, Object.assign({
-        clientManifest: clientManifest
-      }, this.config.createRenderer));
-    } else {
-      const Builder = require('@averjs/renderer').default;
-      const builder = new Builder({}, this.middlewares);
-      this.readyPromise = builder.compile((bundle, options) => {
-        self.renderer = self.createRenderer(bundle, Object.assign(bundle, options, this.config.createRenderer));
-      });
-    }
-  }
-    
-  createRenderer(bundle, options) {
-    const bundleOptions = {
-      cache: new LRU({
-        max: 1000,
-        maxAge: 1000 * 60 * 15
-      }),
-      runInNewContext: false
-    };
-
-    if (this.isProd) {
-      Object.assign(bundleOptions, {
-        template: fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../dist/index.ssr.html'), 'utf-8')
-      });
-    }
-
-    return createBundleRenderer(bundle, Object.assign(options, bundleOptions));
   }
     
   registerMiddlewares() {
@@ -181,7 +142,6 @@ export default class Server extends WWW {
   }
     
   registerRoutes() {
-    const self = this;
     const routesPath = path.resolve(process.env.API_PATH, './routes');
 
     if (fs.existsSync(routesPath)) {
@@ -215,41 +175,24 @@ export default class Server extends WWW {
     });
 
     this.app.get('*', this.isProd ? this.render.bind(this) : (req, res) => {
-      self.readyPromise.then(() => self.render(req, res));
+      this.builder.readyPromise.then(async() => {
+        await this.render(req, res);
+      });
     });
   }
     
-  render(req, res) {
-    const self = this;
+  async render(req, res) {
     const s = Date.now();
-    const context = {
-      title: process.env.APP_NAME,
-      url: req.url,
-      cookies: req.cookies,
-      host: req.headers.host
-    };
 
-    if (this.config.csrf) Object.assign(context, { csrfToken: req.csrfToken() });
-
-    if (typeof req.flash === 'function') Object.assign(context, { flash: req.flash() });
-    if (typeof req.isAuthenticated === 'function') Object.assign(context, { isAuthenticated: req.isAuthenticated(), user: req.user });
-        
-    this.renderer.renderToString(context, (err, html) => {
+    try {
+      const html = await this.builder.build(req);
+            
       res.setHeader('Content-Type', 'text/html');
-            
-      if (err) {
-        if (err.code === 404) {
-          return res.status(404).send('404 | Page Not Found');
-        } else {
-          console.error(`error during render : ${req.url}`);
-          console.error(err.stack);
-          return res.status(500).send('500 | Internal Server Error');
-        }
-      }
-            
-      if (!self.isProd) console.log(`whole request: ${Date.now() - s}ms`);
-            
-      return res.send(html);
-    });
+      res.send(html);
+
+      if (!this.isProd) console.log(`whole request: ${Date.now() - s}ms`);
+    } catch (err) {
+      res.status(err.code || 500).send(err.message);
+    }
   }
 }

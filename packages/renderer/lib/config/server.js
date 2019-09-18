@@ -25,8 +25,8 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         .use(VueSSRServerPlugin);
   }
 
-  config() {
-    super.config();
+  config(isStatic) {
+    super.config(isStatic);
 
     this.chainConfig
       .target('node')

@@ -1,6 +1,6 @@
 {
   "name": "@averjs/init",
-  "version": "1.5.3",
+  "version": "2.0.0-1",
   "description": "The init package for averjs to quickly bootstrap a new projekt.",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -22,6 +22,8 @@
   },
   "aver": {
     "build": true,
-    "copy": [ "lib/app" ]
+    "copy": [
+      "lib/app"
+    ]
   }
 }

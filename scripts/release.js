@@ -39,7 +39,7 @@ export default class Release {
     ]);
 
     if (release) {
-      if (await this.gitBranch() !== 'feat/rollup') {
+      if (await this.gitBranch() !== 'development') {
         console.log(
           logSymbols.warning,
           chalk.bold.red(
@@ -52,8 +52,8 @@ export default class Release {
           const build = new Build(false, type);
           await build.run();
           if (!this.test) {
-            this.createReleaseBranch();
-            this.preReleaseSync();
+            // await this.createReleaseBranch();
+            await this.preReleaseSync();
           }
           await this.createNewRelease();
           console.log(
@@ -88,10 +88,8 @@ export default class Release {
     try {
       await exec('git', [ 'add', '-A' ]);
       await exec('git', [ 'commit', '-m', `chore: pre release sync` ]);
+    } catch (err) {} finally {
       spinner.succeed();
-    } catch (err) {
-      spinner.fail(err.stderr);
-      throw new Error('Script failed');
     }
   }
 
