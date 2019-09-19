@@ -1,6 +1,6 @@
 {
   "name": "@averjs/cli",
-  "version": "2.0.0-2",
+  "version": "2.0.0-3",
   "description": "cli package vor averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -25,7 +25,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "@averjs/init": "2.0.0-2",
+    "@averjs/init": "2.0.0-3",
     "command-line-usage": "6.0.2"
   },
   "aver": {
