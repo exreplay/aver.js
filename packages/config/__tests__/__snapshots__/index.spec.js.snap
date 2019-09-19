@@ -11,7 +11,6 @@ Object {
   },
   "plugins": Array [],
   "progressbar": true,
-  "router": Object {},
   "store": Object {},
   "webpack": Object {
     "base": false,
