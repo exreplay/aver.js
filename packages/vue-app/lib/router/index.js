@@ -6,16 +6,14 @@ Vue.use(VueRouter);
 Vue.use(Meta);
 
 export function createRouter({ i18n }) {
-  const routes = require('@/pages').default;
-  const userConfig = <% if (typeof config.router === 'object') print('Object.assign({}, JSON.parse(\''+JSON.stringify(config.router)+'\'))'); %>
-  const config = {
-    mode: 'history',
-    fallback: false,
-    routes: typeof routes === 'function' ? routes({ i18n }) : routes
-  };
+  const routes = require('@/pages').default;
+  let config = {
+    mode: 'history',
+    fallback: false
+  };
 
+  if (Array.isArray(routes)) config = { ...config, routes };
+  else if (typeof routes === 'function') config = routes({ i18n, config });
 
-  if (userConfig.routes) delete userConfig.routes;
-
-  return new VueRouter(Object.assign(config, userConfig));
+  return new VueRouter(config);
 }
