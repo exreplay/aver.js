@@ -48,11 +48,13 @@ export function createStore(ssrContext) {
   }
 
   if(ignoredGlobalStores.length > 0 && process.env.NODE_ENV === 'development') {
-    console.warn(chalk.red(`
+    const ignoreGlobalStoresList = ignoredGlobalStores.reduce((prev, cur) => prev += `, '${cur}'`, '').substring(1);
+
+    console.warn(`
 We found multiple files which try to set the global store. Be aware that there can only be 1 global store file.
 The file '${globalStoreSet}' was used.
-The following files have been ignored:${ignoredGlobalStores.reduce((prev, cur) => prev += `, '${cur}'`, '').substring(1)}.
-    `));
+The following files have been ignored:${ignoreGlobalStoresList}.
+    `);
   }
 
   if (persistent.length > 0) {
@@ -90,15 +92,30 @@ The following files have been ignored:${ignoredGlobalStores.reduce((prev, cur) =
     module.hot.accept(files.id, () => {
       const newFiles = require.context('@/', true, /vuex\/([^/]+)\.js$/i);
       const newModules = {};
+      let newConfig = {};
 
       for(const r of newFiles.keys()) {
-        const storeFile = ExportVuexStore(newFiles(r).default);
-        newModules[storeFile.moduleName] = storeFile;
+        const store = newFiles(r).default;
+    
+        if(typeof store === 'function') {
+          const storeFile = ExportVuexStore(store);
+          if (typeof storeFile.moduleName !== 'undefined') {
+            newModules[storeFile.moduleName] = storeFile;
+          }
+        } else if(typeof store === 'object' && store.moduleName) {
+          newModules[store.moduleName] = store;
+        } else if(typeof store === 'object') {
+          if(!globalStoreSet || globalStoreSet === r) {
+            // Copy object, otherwise it is not mutable
+            const globalStore = { ...store };
+            if(globalStore.namespaced) delete globalStore.namespaced;
+            newConfig = { ...globalStore };
+            globalStoreSet = r;
+          }
+        }
       }
 
-      store.hotUpdate({
-        modules: newModules
-      });
+      store.hotUpdate({ ...newConfig, modules: newModules });
     });
   }
 
