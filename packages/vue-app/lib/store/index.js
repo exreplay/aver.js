@@ -29,7 +29,7 @@ export function createStore(ssrContext) {
         } else if (storeFile.persistent && typeof storeFile.persistent === 'object') {
           for(const state of storeFile.persistent) {
             persistent.push(storeFile.moduleName + '.' + state);
-          };
+          }
         }
       }
     } else if(typeof store === 'object' && store.moduleName) {
