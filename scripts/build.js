@@ -32,11 +32,11 @@ export default class Build {
     spinner.succeed();
 
     console.log(logSymbols.info, 'Building packages with aver.build set to true in package.json');
+    const watchSpinner = ora();
     for (const pkg of this.packagesToBuild) {
       const config = await pkg.config();
 
       if (this.watch) {
-        const watchSpinner = ora();
         const bundle = watch(config);
         bundle.on('event', event => {
           switch (event.code) {
