@@ -46,7 +46,7 @@ export default class Renderer {
         const fileName = path.basename(file.path);
         const pathName = path.basename(path.dirname(file.path));
         const fileToCompile = fs.readFileSync(file.path, 'utf8');
-        const compiled = template(fileToCompile);
+        const compiled = template(fileToCompile, { interpolate: /<%=([\s\S]+?)%>/g });
         const compiledApp = compiled({
           config: {
             progressbar: this.globalConfig.progressbar,
