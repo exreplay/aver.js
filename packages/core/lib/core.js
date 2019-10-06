@@ -1,12 +1,14 @@
 import Server from './server';
-import Hooks from './hooks';
+import Hookable from './hookable';
 import path from 'path';
 import fs from 'fs-extra';
 import dotenv from 'dotenv';
 import { getAverjsConfig } from '@averjs/config';
 
-export default class Core {
+export default class Core extends Hookable {
   constructor() {
+    super();
+    
     if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
       const envConfig = dotenv.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../.env')));
       for (const k in envConfig) {
