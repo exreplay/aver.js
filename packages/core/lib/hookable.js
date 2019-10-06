@@ -1,6 +1,9 @@
 export default class Hookable {
   constructor() {
     this.hooks = {};
+
+    this.tap = this.tap.bind(this);
+    this.callHook = this.callHook.bind(this);
   }
 
   tap(name, fn) {
