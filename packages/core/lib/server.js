@@ -17,8 +17,10 @@ import { SsrBuilder } from '@averjs/builder';
 const requireModule = require('esm')(module);
 
 export default class Server extends WWW {
-  constructor(hooks, config) {
-    super(hooks, config);
+  constructor(aver) {
+    super();
+    this.aver = aver;
+    this.config = aver.config;
     this.isProd = process.env.NODE_ENV === 'production';
     this.middlewares = [];
 
@@ -30,7 +32,7 @@ export default class Server extends WWW {
       watcher.on('ready', () => {
         console.log('Watching for changes on the server');
         watcher.on('all', () => {
-          console.log(`Clearing server cache`);
+          console.log('Clearing server cache');
           Object.keys(require.cache).forEach((id) => {
             // eslint-disable-next-line no-useless-escape
             if (/[\/\\]api[\/\\]/.test(id)) {
@@ -40,9 +42,12 @@ export default class Server extends WWW {
         });
       });
     }
+  }
 
-    this.builder = new SsrBuilder(config, this.middlewares);
-    this.registerMiddlewares();
+  async setup() {
+    this.builder = new SsrBuilder(this.aver);
+    await this.builder.initRenderer();
+    await this.registerMiddlewares();
     this.registerRoutes();
 
     this.app.use((err, req, res, next) => {
@@ -56,10 +61,12 @@ export default class Server extends WWW {
     });
   }
     
-  registerMiddlewares() {
+  async registerMiddlewares() {
     const serve = (path, cache) => express.static(path, {
       maxAge: cache && this.isProd ? 1000 * 60 * 60 * 24 * 30 : 0
     });
+
+    await this.aver.callHook('server:before-register-middlewares', { app: this.app, middlewares: this.middlewares });
         
     this.middlewares.push(helmet());
     this.logging();
@@ -80,14 +87,6 @@ export default class Server extends WWW {
         csrf({ cookie: true })(req, res, next);
       });
     }
-        
-    for (const middleware of this.hooks.middlewares) {
-      middleware({
-        app: this.app,
-        server: this.server,
-        middlewares: this.middlewares
-      });
-    }
 
     const middlewaresPath = path.resolve(process.env.API_PATH, './middlewares');
     if (fs.existsSync(middlewaresPath)) {
@@ -95,6 +94,8 @@ export default class Server extends WWW {
         requireModule(middlewaresPath)(req, res, next);
       });
     }
+
+    await this.aver.callHook('server:after-register-middlewares', { app: this.app, middlewares: this.middlewares });
 
     for (const middleware of this.middlewares) {
       if (typeof middleware === 'function') this.app.use(middleware);
