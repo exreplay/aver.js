@@ -6,8 +6,9 @@ import VueSSRServerPlugin from 'vue-server-renderer/server-plugin';
 import cloneDeep from 'lodash/cloneDeep';
 
 export default class WebpackServerConfiguration extends WebpackBaseConfiguration {
-  constructor() {
-    super(true);
+  constructor(aver) {
+    super(true, aver);
+    this.aver = aver;
   }
 
   plugins() {
@@ -25,8 +26,8 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         .use(VueSSRServerPlugin);
   }
 
-  config(isStatic) {
-    super.config(isStatic);
+  async config(isStatic) {
+    await super.config(isStatic);
 
     this.chainConfig
       .target('node')
@@ -56,6 +57,8 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         app: path.join(this.cacheDir, 'entry-server.js')
       }
     });
+
+    await this.aver.callHook('renderer:server-config', this.chainConfig);
 
     return cloneDeep(config);
   }
