@@ -8,7 +8,7 @@ import { getAverjsConfig } from '@averjs/config';
 export default class Core extends Hookable {
   constructor() {
     super();
-    
+
     if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
       const envConfig = dotenv.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../.env')));
       for (const k in envConfig) {
@@ -22,23 +22,24 @@ export default class Core extends Hookable {
     }
   }
   
-  run(hooks = {}) {
-    this.hooks = new Hooks();
-    this.globalConfig = getAverjsConfig();
+  async run() {
+    this.config = getAverjsConfig();
     this.initModuleAliases();
     this.registerPlugins();
-    const server = new Server(this.hooks, this.globalConfig);
+    const server = new Server(this);
+    await server.setup();
     server.startServer();
   }
 
   registerPlugins() {
-    if (typeof this.globalConfig.plugins !== 'undefined') {
-      for (const plugin of this.globalConfig.plugins) {
-        require(plugin)({
-          config: this.globalConfig,
-          hooks: this.hooks
-        });
-      }
+    if (!Array.isArray(this.config.plugins)) return;
+
+    const requireModule = require('esm')(module);
+
+    for (const plugin of this.config.plugins) {
+      if (typeof plugin === 'string') requireModule(plugin).default(this, {});
+      else if (Array.isArray(plugin)) requireModule(plugin[0]).default(this, plugin[1] || {});
+      else if (typeof plugin === 'function') plugin(this, {});
     }
   }
 
@@ -54,7 +55,7 @@ export default class Core extends Hookable {
       '@routes': `${process.env.API_PATH}/routes`
     };
 
-    if (typeof this.globalConfig.aliases !== 'undefined') Object.assign(aliases, this.globalConfig.aliases);
+    if (typeof this.config.aliases !== 'undefined') Object.assign(aliases, this.config.aliases);
 
     ModuleAlias.addAliases(aliases);
   }
