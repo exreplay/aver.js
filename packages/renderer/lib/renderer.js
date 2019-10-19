@@ -7,32 +7,32 @@ import WebpackClientConfiguration from './config/client';
 import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
-import { getAverjsConfig } from '@averjs/config';
 import { StaticBuilder } from '@averjs/builder';
 
 export default class Renderer {
-  constructor(options, middlewares = []) {
+  constructor(options, aver) {
+    this.aver = aver;
+    this.config = aver.config;
     this.isProd = process.env.NODE_ENV === 'production';
     this.options = options;
-    this.middlewares = middlewares;
     this.cacheDir = path.resolve('node_modules/.cache/averjs');
     this.distPath = path.join(process.env.PROJECT_PATH, '../dist');
-    this.globalConfig = getAverjsConfig();
-
-    if (!fs.existsSync(this.cacheDir)) {
-      fs.mkdirpSync(this.cacheDir);
-      this.prepareTemplates();
-    }
-
-    this.clientConfig = new WebpackClientConfiguration().config(this.options.static);
-    this.serverConfig = new WebpackServerConfiguration().config(this.options.static);
-
     this.mfs = new MFS();
     this.isBrowserOpen = false;
     this.bundle = null;
     this.clientManifest = null;
     this.resolve = null;
     this.readyPromise = new Promise(resolve => { this.resolve = resolve; });
+  }
+
+  async setup() {
+    if (!fs.existsSync(this.cacheDir)) {
+      fs.mkdirpSync(this.cacheDir);
+      this.prepareTemplates();
+    }
+
+    this.clientConfig = await new WebpackClientConfiguration(this.aver).config(this.options.static);
+    this.serverConfig = await new WebpackServerConfiguration(this.aver).config(this.options.static);
   }
 
   prepareTemplates() {
@@ -49,11 +49,11 @@ export default class Renderer {
         const compiled = template(fileToCompile, { interpolate: /<%=([\s\S]+?)%>/g });
         const compiledApp = compiled({
           config: {
-            progressbar: this.globalConfig.progressbar,
-            i18n: this.globalConfig.i18n,
-            csrf: this.globalConfig.csrf,
-            router: this.globalConfig.router,
-            store: this.globalConfig.store
+            progressbar: this.config.progressbar,
+            i18n: this.config.i18n,
+            csrf: this.config.csrf,
+            router: this.config.router,
+            store: this.config.store
           }
         });
 
@@ -122,7 +122,7 @@ export default class Renderer {
     await Promise.all(promises);
     
     if (this.options.static) {
-      const staticBuilder = new StaticBuilder(this.globalConfig);
+      const staticBuilder = new StaticBuilder(this.config);
       staticBuilder.build();
     }
   }
@@ -163,12 +163,14 @@ export default class Renderer {
       index: false
     });
 
-    this.middlewares.push(devMiddleware);
+    this.aver.tap('server:before-register-middlewares', ({ middlewares }) => {
+      middlewares.push(devMiddleware);
     
-    this.middlewares.push(require('webpack-hot-middleware')(clientCompiler, {
-      log: false,
-      heartbeat: 10000
-    }));
+      middlewares.push(require('webpack-hot-middleware')(clientCompiler, {
+        log: false,
+        heartbeat: 10000
+      }));
+    });
 
     return clientCompiler;
   }
