@@ -86,9 +86,9 @@ export default class RollupConfig {
       license({
         banner: [
           '/*!',
-          ` * ${this.pkg.name} v${await getNextVersion(this.releaseType)}`,
-          ` * Copyright <%= moment().format('YYYY') %> Florian Weber`,
-          ` * Released under the MIT License.`,
+          ` * ${this.pkg.name} v${this.releaseType ? await getNextVersion(this.releaseType) : '-development'}`,
+          ' * Copyright <%= moment().format(\'YYYY\') %> Florian Weber',
+          ' * Released under the MIT License.',
           '*/'
         ].join('\n')
       })
