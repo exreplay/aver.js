@@ -200,7 +200,7 @@ export default class WebpackBaseConfiguration {
     const scssRule = this.chainConfig.module.rule('scss-loader').test(/\.scss$/);
     styleLoader.apply('scss', scssRule, [ {
       name: 'sass-loader',
-      options: { sourceMap: !this.isProd, minimize: true }
+      options: { sourceMap: !this.isProd }
     } ]);
                     
     this.chainConfig.module
