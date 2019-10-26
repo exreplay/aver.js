@@ -80,7 +80,7 @@ export default class RollupConfig {
       })
     );
 
-    plugins.push(terser());
+    if (this.releaseType) plugins.push(terser());
 
     plugins.push(
       license({
