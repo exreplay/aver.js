@@ -140,7 +140,7 @@ export default class StyleLoader {
         .options({
           importLoaders: this.importLoaders,
           sourceMap: !this.isProd,
-          exportOnlyLocals: this.exportOnlyLocals
+          onlyLocals: this.exportOnlyLocals
         });
   }
 
@@ -149,12 +149,13 @@ export default class StyleLoader {
       .use('css-loader')
         .loader('css-loader')
         .options({
-          modules: true,
+          modules: {
+            localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`
+          },
           importLoaders: this.importLoaders,
-          localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
-          camelCase: true,
+          localsConvention: 'camelCase',
           sourceMap: !this.isProd,
-          exportOnlyLocals: this.exportOnlyLocals
+          onlyLocals: this.exportOnlyLocals
         });
   }
 
