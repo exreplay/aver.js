@@ -9,10 +9,9 @@ import PurgeCssPlugin from 'purgecss-webpack-plugin';
 import StyleLoader from '../utils/style-loader';
 import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
-import { getAverjsConfig } from '@averjs/config';
 
 export default class WebpackBaseConfiguration {
-  constructor(isServer) {
+  constructor(isServer, aver) {
     this.chainConfig = new WebpackChain();
     this.isServer = isServer;
     this.libRoot = path.resolve(require.resolve('@averjs/core'), '../');
@@ -25,7 +24,7 @@ export default class WebpackBaseConfiguration {
 
     if (!this.isProd) warmup({}, [ 'babel-loader', 'css-loader' ]);
 
-    const { webpack } = getAverjsConfig();
+    const { webpack } = aver.config;
     this.globalConfig = webpack;
   }
 
@@ -246,7 +245,7 @@ export default class WebpackBaseConfiguration {
   optimization() {
   }
 
-  config(isStatic) {
+  async config(isStatic) {
     this.chainConfig
       .output
         .path(path.resolve(process.env.PROJECT_PATH, '../dist/'))
@@ -289,5 +288,7 @@ export default class WebpackBaseConfiguration {
     this.plugins();
 
     if (typeof this.globalConfig.base === 'function') this.globalConfig.base(this.chainConfig);
+
+    await this.aver.callHook('renderer:base-config', this.chainConfig);
   }
 };

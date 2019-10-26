@@ -11,8 +11,9 @@ import cloneDeep from 'lodash/cloneDeep';
 import FriendlyErrorsPlugin from '@averjs/friendly-errors-webpack-plugin';
 
 export default class WebpackClientConfiguration extends WebpackBaseConfiguration {
-  constructor() {
-    super(false);
+  constructor(aver) {
+    super(false, aver);
+    this.aver = aver;
     this.projectRoot = path.resolve(process.env.PROJECT_PATH, '.');
   }
 
@@ -177,8 +178,8 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         } ]);
   }
 
-  config(isStatic) {
-    super.config(isStatic);
+  async config(isStatic) {
+    await super.config(isStatic);
         
     this.chainConfig
       // .entry('app')
@@ -194,6 +195,8 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         app: path.join(this.cacheDir, 'entry-client.js')
       }
     });
+
+    await this.aver.callHook('renderer:client-config', this.chainConfig);
 
     return cloneDeep(config);
   }

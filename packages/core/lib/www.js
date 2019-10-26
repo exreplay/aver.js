@@ -2,9 +2,7 @@ import express from 'express';
 import http from 'http';
 
 export default class WWW {
-  constructor(hooks, config) {
-    this.config = config;
-    this.hooks = hooks;
+  constructor() {
     this.app = express();
     this.port = this.normalizePort(process.env.PORT || '3000');
     this.app.set('port', this.port);

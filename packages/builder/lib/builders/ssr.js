@@ -7,18 +7,16 @@ import { minify } from 'html-minifier';
 import HTMLCodeError from '../errors/HTMLCodeError';
 
 export default class SsrBuilder extends BaseBuilder {
-  constructor(config, middlewares) {
+  constructor(aver) {
     super();
-    this.config = config;
-    this.middlewares = middlewares;
+    this.aver = aver;
+    this.config = aver.config;
     this.renderer = null;
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
-
-    this.initRenderer();
   }
 
-  initRenderer() {
+  async initRenderer() {
     if (this.isProd) {
       const serverBundle = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-server-bundle.json'));
       const clientManifest = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-client-manifest.json'));
@@ -27,7 +25,8 @@ export default class SsrBuilder extends BaseBuilder {
       }, this.config.createRenderer));
     } else {
       const Renderer = require('@averjs/renderer');
-      const renderer = new Renderer({}, this.middlewares);
+      const renderer = new Renderer({}, this.aver);
+      await renderer.setup();
       this.readyPromise = renderer.compile((bundle, options) => {
         this.renderer = this.createRenderer(bundle, Object.assign(options, this.config.createRenderer));
       });
