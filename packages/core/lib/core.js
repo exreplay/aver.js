@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import dotenv from 'dotenv';
 import { getAverjsConfig } from '@averjs/config';
+import Renderer from '@averjs/renderer';
 import PluginContainer from './plugins';
 
 export default class Core extends Hookable {
@@ -23,16 +24,22 @@ export default class Core extends Hookable {
     }
 
     this.config = getAverjsConfig();
+
+    this.plugins = new PluginContainer(this);
+    this.plugins.register();
   }
 
   async run() {
-    const plugins = new PluginContainer(this);
-    plugins.register();
-    
     this.initModuleAliases();
     const server = new Server(this);
     await server.setup();
     server.startServer();
+  }
+
+  async build(args) {
+    const renderer = new Renderer(args, this);
+    await renderer.setup();
+    await renderer.compile();
   }
 
   initModuleAliases() {

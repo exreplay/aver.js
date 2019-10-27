@@ -10,9 +10,9 @@ export default class PluginContainer {
     const requireModule = require('esm')(module);
 
     for (const plugin of this.config.plugins) {
-      if (typeof plugin === 'string') requireModule(plugin).default(this, {});
-      else if (Array.isArray(plugin)) requireModule(plugin[0]).default(this, plugin[1] || {});
-      else if (typeof plugin === 'function') plugin(this, {});
+      if (typeof plugin === 'string') requireModule(plugin).default(this.aver, {});
+      else if (Array.isArray(plugin)) requireModule(plugin[0]).default(this.aver, plugin[1] || {});
+      else if (typeof plugin === 'function') plugin(this.aver, {});
     }
   }
 }
