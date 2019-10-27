@@ -1,7 +1,7 @@
 import Server from './server';
 import Hookable from './hookable';
 import path from 'path';
-import fs from 'fs-extra';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import { getAverjsConfig } from '@averjs/config';
 import Renderer from '@averjs/renderer';
