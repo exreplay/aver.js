@@ -3,7 +3,7 @@ import commandLineUsage from 'command-line-usage';
 import VersionCommand from './version';
 
 export default class HelpCommand extends Command {
-  constructor(commands = []) {
+  constructor(commands) {
     super();
 
     this.name = 'help';
@@ -79,7 +79,6 @@ export default class HelpCommand extends Command {
     cmd.push({
       header: 'Global Commands',
       optionList: [
-
         {
           name: this.name,
           alias: this.aliases[0],

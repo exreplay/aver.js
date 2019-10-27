@@ -47,7 +47,7 @@ module.exports = (context, options = {}) => {
       ignoreBrowserslistConfig,
       configPath
     });
-    plugins.push([require('./polyfillsPlugin'), { polyfills, useAbsolutePath }]);
+    plugins.push([ require('./polyfillsPlugin'), { polyfills, useAbsolutePath } ]);
   } else {
     polyfills = [];
   }
@@ -66,25 +66,25 @@ module.exports = (context, options = {}) => {
     exclude: polyfills.concat(exclude || []),
     shippedProposals,
     forceAllTransforms
-  }]);
+  } ]);
 
   plugins.push(
     require('@babel/plugin-syntax-dynamic-import'),
-    [require('@babel/plugin-proposal-decorators'), {
+    [ require('@babel/plugin-proposal-decorators'), {
       decoratorsBeforeExport,
       legacy: decoratorsLegacy !== false
-    }],
-    [require('@babel/plugin-proposal-class-properties'), { loose }],
-    [require('@babel/plugin-transform-classes'), { loose }]
+    } ],
+    [ require('@babel/plugin-proposal-class-properties'), { loose } ],
+    [ require('@babel/plugin-transform-classes'), { loose } ]
   );
 
-  plugins.push([require('@babel/plugin-transform-runtime'), {
+  plugins.push([ require('@babel/plugin-transform-runtime'), {
     regenerator: useBuiltIns !== 'usage',
     corejs: corejs >= 3 ? false : corejs,
     helpers: useBuiltIns === 'usage',
     useESModules: buildTarget !== 'server',
     absoluteRuntime
-  }]);
+  } ]);
 
   return {
     presets,

@@ -1,6 +1,98 @@
 #!/usr/bin/env node
+const fs = require('fs-extra');
+const path = require('path');
+const ora = require('ora');
+const logSymbols = require('log-symbols');
+const execa = require('execa');
+const Release = require('./release.js').default;
+const inquirer = require('inquirer');
 
-import Release from './release.js';
+const OUT_FILE = './verdaccio';
 
-const release = new Release();
-release.run();
+class ReleaseScript {
+  constructor(test) {
+    this.test = test;
+
+    if (this.test) {
+      this.registerProcessEvents();
+    }
+  }
+
+  async run() {
+    try {
+      if (this.test) await this.setupVerdaccio();
+      const release = new Release(this.test);
+      await release.run();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      if (this.test) this.removeNoHupOut();
+    }
+  }
+
+  setupVerdaccio() {
+    const waitingSpinner = ora('Waiting for verdaccio to start. ');
+    console.log(logSymbols.info, 'You are running release script in test mode');
+    waitingSpinner.start();
+
+    this.removeNoHupOut();
+    execa.shellSync('nohup yarn verdaccio -c ./scripts/verdaccio.yaml &> verdaccio &');
+
+    return new Promise((resolve, reject) => {
+      let verdaccioRunning = false;
+
+      const interval = setInterval(() => {
+        if (fs.existsSync(OUT_FILE)) {
+          const file = fs.readFileSync(OUT_FILE, 'utf-8');
+          verdaccioRunning = file.includes('http address');
+        }
+
+        if (verdaccioRunning) {
+          clearInterval(interval);
+          waitingSpinner.succeed('Verdaccio is running. Continue with release.');
+          setTimeout(resolve, 1000);
+        }
+      }, 250);
+    });
+  }
+
+  registerProcessEvents() {
+    process.on('SIGINT', this.exitHandler.bind(this));
+    process.on('exit', this.exitHandler.bind(this));
+    process.on('uncaughtException', this.exitHandler.bind(this));
+  }
+
+  exitHandler() {
+    this.removeNoHupOut();
+    // Grep all verdaccio processes and kill them. Exclude the grep process
+    console.log(logSymbols.info, 'Cleanup verdaccio processes before exit');
+    execa.shellSync(`ps -ef | grep -i 'verdaccio' | grep -v grep | awk '{print $2}' | xargs kill -9`);
+    fs.removeSync(path.resolve(__dirname, './verdaccio'));
+    process.exit();
+  }
+
+  removeNoHupOut() {
+    if (fs.existsSync(OUT_FILE)) fs.removeSync(OUT_FILE);
+  }
+}
+
+(async() => {
+  let test = false;
+
+  for (const arg of process.argv) {
+    if (arg === '--test') test = true;
+  }
+
+  const script = new ReleaseScript(test);
+  await script.run();
+
+  if (test) {
+    await inquirer.prompt([
+      {
+        name: 'exit',
+        message: `We keep this process up and running so you can have a look at verdaccio to see if everything worked out correctly. Hit enter to exit.`,
+        type: 'confirm'
+      }
+    ]);
+  }
+})();

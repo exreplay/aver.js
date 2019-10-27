@@ -6,6 +6,18 @@ import ProductionCommand from './commands/prod';
 import parseArgs from 'minimist';
 
 export default class Usage {
+  get help() {
+    return this.argv._[0] === 'help' || this.argv.help;
+  }
+
+  get executedCommand() {
+    return this.argv._[0] || (!this.help && 'dev');
+  }
+
+  get globalCommand() {
+    return this.availableCommands['help'].args.find(option => this.argv[option.name]);
+  }
+  
   constructor() {
     this.aliases = {};
     this.availableCommands = [];
@@ -35,23 +47,17 @@ export default class Usage {
   }
   
   async run() {
-    const help = this.argv._[0] === 'help' || this.argv.help;
-    const executedCommand = this.argv._[0] || (!help && 'dev');
-    const commandToExecute = this.availableCommands[executedCommand];
-
-    const globalCommand = this.availableCommands['help'].args.find(option => {
-      return this.argv[option.name];
-    });
+    const commandToExecute = this.availableCommands[this.executedCommand];
 
     // If a global option is found, execute it and stop afterwards
-    if (globalCommand) {
-      globalCommand.command.run();
+    if (this.globalCommand) {
+      this.globalCommand.command.run();
       return;
     }
 
     try {
       // No matter how help is set, do not run the actual command, instead show default help or for specified command
-      if (help) await this.availableCommands['help'].run(executedCommand !== 'help' && commandToExecute);
+      if (this.help) await this.availableCommands['help'].run(this.executedCommand !== 'help' && commandToExecute);
       else await commandToExecute.run(this.argv);
     } catch (err) {
       console.error(err);

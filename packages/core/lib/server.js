@@ -1,9 +1,7 @@
 import express from 'express';
-import LRU from 'lru-cache';
 import compression from 'compression';
 import path from 'path';
 import fs from 'fs';
-import { createBundleRenderer } from 'vue-server-renderer';
 import helmet from 'helmet';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -14,12 +12,15 @@ import uuid from 'uuid/v4';
 import chokidar from 'chokidar';
 import indexOf from 'lodash/indexOf';
 import WWW from './www';
+import { SsrBuilder } from '@averjs/builder';
+
+const requireModule = require('esm')(module);
 
 export default class Server extends WWW {
-  constructor(hooks, config) {
-    super(hooks, config);
-    this.renderer = null;
-    this.readyPromise = null;
+  constructor(aver) {
+    super();
+    this.aver = aver;
+    this.config = aver.config;
     this.isProd = process.env.NODE_ENV === 'production';
     this.middlewares = [];
 
@@ -31,7 +32,7 @@ export default class Server extends WWW {
       watcher.on('ready', () => {
         console.log('Watching for changes on the server');
         watcher.on('all', () => {
-          console.log(`Clearing server cache`);
+          console.log('Clearing server cache');
           Object.keys(require.cache).forEach((id) => {
             // eslint-disable-next-line no-useless-escape
             if (/[\/\\]api[\/\\]/.test(id)) {
@@ -41,9 +42,12 @@ export default class Server extends WWW {
         });
       });
     }
+  }
 
-    this.initRenderer();
-    this.registerMiddlewares();
+  async setup() {
+    this.builder = new SsrBuilder(this.aver);
+    await this.builder.initRenderer();
+    await this.registerMiddlewares();
     this.registerRoutes();
 
     this.app.use((err, req, res, next) => {
@@ -57,56 +61,22 @@ export default class Server extends WWW {
     });
   }
     
-  initRenderer() {
-    const self = this;
-        
-    if (this.isProd) {
-      const serverBundle = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-server-bundle.json'));
-      const clientManifest = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-client-manifest.json'));
-      this.renderer = this.createRenderer(serverBundle, Object.assign({
-        clientManifest: clientManifest
-      }, this.config.createRenderer));
-    } else {
-      const Builder = require('@averjs/renderer').default;
-      const builder = new Builder(this.middlewares);
-      this.readyPromise = builder.compile((bundle, options) => {
-        self.renderer = self.createRenderer(bundle, Object.assign(bundle, options, this.config.createRenderer));
-      });
-    }
-  }
-    
-  createRenderer(bundle, options) {
-    const bundleOptions = {
-      cache: new LRU({
-        max: 1000,
-        maxAge: 1000 * 60 * 15
-      }),
-      runInNewContext: false
-    };
-
-    if (this.isProd) {
-      Object.assign(bundleOptions, {
-        template: fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../dist/index.ssr.html'), 'utf-8')
-      });
-    }
-
-    return createBundleRenderer(bundle, Object.assign(options, bundleOptions));
-  }
-    
-  registerMiddlewares() {
+  async registerMiddlewares() {
     const serve = (path, cache) => express.static(path, {
       maxAge: cache && this.isProd ? 1000 * 60 * 60 * 24 * 30 : 0
     });
+
+    await this.aver.callHook('server:before-register-middlewares', { app: this.app, middlewares: this.middlewares });
         
     this.middlewares.push(helmet());
     this.logging();
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));
         
-    this.middlewares.push(['/dist', serve('./dist', true)]);
-    this.middlewares.push(['/public', serve('./public', true)]);
-    this.middlewares.push(['/static', serve('./static', true)]);
-    this.middlewares.push(['/storage', express.static('./storage')]);
+    this.middlewares.push([ '/dist', serve('./dist', true) ]);
+    this.middlewares.push([ '/public', serve('./public', true) ]);
+    this.middlewares.push([ '/static', serve('./static', true) ]);
+    this.middlewares.push([ '/storage', express.static('./storage') ]);
 
     this.middlewares.push(bodyParser.json());
     this.middlewares.push(bodyParser.urlencoded({ extended: false }));
@@ -117,21 +87,15 @@ export default class Server extends WWW {
         csrf({ cookie: true })(req, res, next);
       });
     }
-        
-    for (const middleware of this.hooks.middlewares) {
-      middleware({
-        app: this.app,
-        server: this.server,
-        middlewares: this.middlewares
-      });
-    }
 
     const middlewaresPath = path.resolve(process.env.API_PATH, './middlewares');
     if (fs.existsSync(middlewaresPath)) {
       this.middlewares.push((req, res, next) => {
-        require(middlewaresPath)(req, res, next);
+        requireModule(middlewaresPath)(req, res, next);
       });
     }
+
+    await this.aver.callHook('server:after-register-middlewares', { app: this.app, middlewares: this.middlewares });
 
     for (const middleware of this.middlewares) {
       if (typeof middleware === 'function') this.app.use(middleware);
@@ -179,12 +143,11 @@ export default class Server extends WWW {
   }
     
   registerRoutes() {
-    const self = this;
     const routesPath = path.resolve(process.env.API_PATH, './routes');
 
     if (fs.existsSync(routesPath)) {
       this.app.use((req, res, next) => {
-        require(routesPath)(req, res, next);
+        requireModule(routesPath)(req, res, next);
       });
     }
 
@@ -213,41 +176,24 @@ export default class Server extends WWW {
     });
 
     this.app.get('*', this.isProd ? this.render.bind(this) : (req, res) => {
-      self.readyPromise.then(() => self.render(req, res));
+      this.builder.readyPromise.then(async() => {
+        await this.render(req, res);
+      });
     });
   }
     
-  render(req, res) {
-    const self = this;
+  async render(req, res) {
     const s = Date.now();
-    const context = {
-      title: process.env.APP_NAME,
-      url: req.url,
-      cookies: req.cookies,
-      host: req.headers.host
-    };
 
-    if (this.config.csrf) Object.assign(context, { csrfToken: req.csrfToken() });
-
-    if (typeof req.flash === 'function') Object.assign(context, { flash: req.flash() });
-    if (typeof req.isAuthenticated === 'function') Object.assign(context, { isAuthenticated: req.isAuthenticated(), user: req.user });
-        
-    this.renderer.renderToString(context, (err, html) => {
+    try {
+      const html = await this.builder.build(req);
+            
       res.setHeader('Content-Type', 'text/html');
-            
-      if (err) {
-        if (err.code === 404) {
-          return res.status(404).send('404 | Page Not Found');
-        } else {
-          console.error(`error during render : ${req.url}`);
-          console.error(err.stack);
-          return res.status(500).send('500 | Internal Server Error');
-        }
-      }
-            
-      if (!self.isProd) console.log(`whole request: ${Date.now() - s}ms`);
-            
-      return res.send(html);
-    });
+      res.send(html);
+
+      if (!this.isProd) console.log(`whole request: ${Date.now() - s}ms`);
+    } catch (err) {
+      res.status(err.code || 500).send(err.message);
+    }
   }
 }
