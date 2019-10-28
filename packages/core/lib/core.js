@@ -26,10 +26,10 @@ export default class Core extends Hookable {
     this.config = getAverjsConfig();
 
     this.plugins = new PluginContainer(this);
-    this.plugins.register();
   }
 
   async run() {
+    await this.plugins.register();
     this.initModuleAliases();
     const server = new Server(this);
     await server.setup();
@@ -37,6 +37,7 @@ export default class Core extends Hookable {
   }
 
   async build(args) {
+    await this.plugins.register();
     const renderer = new Renderer(args, this);
     await renderer.setup();
     await renderer.compile();
