@@ -1,18 +1,18 @@
 import AverCli from '../lib';
-import Renderer, { mockCompile } from '@averjs/renderer';
-jest.mock('@averjs/renderer');
+import Core, { mockBuild } from '@averjs/core';
+jest.mock('@averjs/core');
 
 const OLD_ARGV = [ ...process.argv ];
 const OLD_ENV = { ...process.env };
 let outputData = '';
 
 beforeEach(() => {
-  Renderer.mockClear();
-  mockCompile.mockClear();
+  Core.mockClear();
+  mockBuild.mockClear();
 
   outputData = '';
-  console['log'] = jest.fn(inputs => (outputData = inputs));
-  console['error'] = jest.fn(inputs => (outputData = inputs));
+  console.log = jest.fn(inputs => (outputData = inputs));
+  console.error = jest.fn(inputs => (outputData = inputs));
 
   process.argv = [ ...OLD_ARGV ];
   process.env = { ...OLD_ENV };
@@ -33,7 +33,7 @@ test('run should execute renderer', async() => {
   const cli = new AverCli();
   await cli.run();
 
-  expect(mockCompile.mock.calls.length).toBe(1);
+  expect(mockBuild.mock.calls.length).toBe(1);
 });
 
 test('run should set NODE_ENV to "production" when not set', async() => {
@@ -53,5 +53,5 @@ test('static should be passed to renderer constructor', async() => {
   const cli = new AverCli();
   await cli.run();
 
-  expect(Renderer.mock.calls[0][0].static).toBeTruthy();
+  expect(mockBuild.mock.calls[0][0].static).toBeTruthy();
 });
