@@ -12,7 +12,7 @@ test('should change progressbar option to false', () => {
 });
 
 test('should match default snapshot config when no config file is present', () => {
-  process.env.PROJECT_PATH = '';
+  process.env.PROJECT_PATH = '/aver';
   const config = getAverjsConfig();
   expect(config).toMatchSnapshot();
 });
