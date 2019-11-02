@@ -1,4 +1,5 @@
 export default () => ({
+  postcss: {},
   css: {
     extract: false,
     styleResources: {
