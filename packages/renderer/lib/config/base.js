@@ -78,15 +78,9 @@ export default class WebpackBaseConfiguration {
   }
 
   alias() {
-    this.chainConfig.resolve
-      .alias
-        .set('@', path.join(process.env.PROJECT_PATH))
-        .set('@@', path.resolve(process.env.PROJECT_PATH, '../'))
-        .set('@components', path.resolve(process.env.PROJECT_PATH, './components'))
-        .set('@resources', path.resolve(process.env.PROJECT_PATH, './resources'))
-        .set('@mixins', path.resolve(process.env.PROJECT_PATH, './mixins'))
-        .set('@pages', path.resolve(process.env.PROJECT_PATH, './pages'))
-        .set('@vuex', path.resolve(process.env.PROJECT_PATH, './vuex'));
+    for (const alias of Object.keys(this.globalConfig.alias)) {
+      this.chainConfig.resolve.alias.set(alias, this.globalConfig.alias[alias]);
+    }
   }
 
   rules() {

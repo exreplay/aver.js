@@ -13,6 +13,15 @@ Object {
   "progressbar": true,
   "store": Object {},
   "webpack": Object {
+    "alias": Object {
+      "@": "/aver",
+      "@@": "/",
+      "@components": "/aver/components",
+      "@mixins": "/aver/mixins",
+      "@pages": "/aver/pages",
+      "@resources": "/aver/resources",
+      "@vuex": "/aver/vuex",
+    },
     "base": false,
     "client": false,
     "css": Object {
