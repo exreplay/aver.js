@@ -29,7 +29,7 @@ export default class PerformanceLoader {
   }
 
   warmupLoaders() {
-    if (!this.prod) {
+    if (!this.isProd) {
       for (const key of Object.keys(this.pools)) {
         const pool = this.pools[key];
         if (pool.loaders) warmup(pool.poolConfig, pool.loaders);
