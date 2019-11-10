@@ -13,7 +13,6 @@ export default class PerformanceLoader {
     return {
       vue: {
         poolConfig: { name: 'vue', poolTimeout },
-        loaders: [ 'vue-loader' ],
         useThread: false
       },
       js: {
@@ -32,7 +31,7 @@ export default class PerformanceLoader {
   warmupLoaders() {
     for (const key of Object.keys(this.pools)) {
       const pool = this.pools[key];
-      if (pool.loaders) warmup(pool.poolConfig, pool.loaders);
+      if (pool.loaders && pool.useThread) warmup(pool.poolConfig, pool.loaders);
     }
   }
 
