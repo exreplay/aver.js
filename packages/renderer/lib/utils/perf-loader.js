@@ -14,7 +14,7 @@ export default class PerformanceLoader {
       vue: {
         poolConfig: { name: 'vue', poolTimeout },
         loaders: [ 'vue-loader' ],
-        useThread: true
+        useThread: false
       },
       js: {
         poolConfig: { name: 'js', poolTimeout },
