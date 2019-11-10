@@ -10,8 +10,6 @@ export default class StyleLoader {
     this.config = config;
     this.postcss = new PostCSS(this.config);
     this.perfLoader = perfLoader;
-
-    this.findPostcssConfig();
   }
 
   get stylesAreInline() {
