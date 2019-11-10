@@ -29,9 +29,11 @@ export default class PerformanceLoader {
   }
 
   warmupLoaders() {
-    for (const key of Object.keys(this.pools)) {
-      const pool = this.pools[key];
-      if (pool.loaders && pool.useThread) warmup(pool.poolConfig, pool.loaders);
+    if (!this.prod) {
+      for (const key of Object.keys(this.pools)) {
+        const pool = this.pools[key];
+        if (pool.loaders) warmup(pool.poolConfig, pool.loaders);
+      }
     }
   }
 
