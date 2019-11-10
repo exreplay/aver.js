@@ -12,7 +12,9 @@ export default class PerformanceLoader {
     const poolTimeout = !this.isProd ? Infinity : 2000;
     return {
       vue: {
-        useThread: false
+        poolConfig: { name: 'vue', poolTimeout },
+        loaders: [ 'vue-loader' ],
+        useThread: true
       },
       js: {
         poolConfig: { name: 'js', poolTimeout },
