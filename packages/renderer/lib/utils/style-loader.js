@@ -4,11 +4,14 @@ import map from 'lodash/map';
 import PostCSS from './postcss';
 
 export default class StyleLoader {
-  constructor(isServer, config) {
+  constructor(isServer, config, perfLoader) {
     this.isProd = process.env.NODE_ENV === 'production';
     this.isServer = isServer;
     this.config = config;
     this.postcss = new PostCSS(this.config);
+    this.perfLoader = perfLoader;
+
+    this.findPostcssConfig();
   }
 
   get stylesAreInline() {
@@ -45,7 +48,7 @@ export default class StyleLoader {
   }
 
   applyStyle(rule, module = false) {
-    this.performanceLoader(rule);
+    this.perfLoader.apply(rule, this.name);
 
     this.extract(rule);
         
@@ -53,29 +56,6 @@ export default class StyleLoader {
     else this.css(rule);
 
     this.postcss.apply(rule);
-  }
-
-  performanceLoader(rule) {
-    if (this.name === 'css' && !this.isProd) {
-      rule
-        .use('cache-loader')
-          .loader('cache-loader')
-          .options({
-            cacheDirectory: path.resolve(process.env.PROJECT_PATH, '../node_modules/.cache/cache-loader'),
-            cacheIdentifier: 'css'
-          })
-          .end();
-            
-      if (!this.config.css.extract) {
-        rule
-          .use('thread-loader')
-            .loader('thread-loader')
-            .options({
-              name: 'css',
-              poolTimeout: 2000
-            });
-      }
-    }
   }
 
   extract(rule) {

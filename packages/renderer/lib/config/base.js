@@ -3,10 +3,10 @@ import glob from 'glob-all';
 import webpack from 'webpack';
 import WebpackChain from 'webpack-chain';
 import { VueLoaderPlugin } from 'vue-loader';
-import { warmup } from 'thread-loader';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import PurgeCssPlugin from 'purgecss-webpack-plugin';
 import StyleLoader from '../utils/style-loader';
+import PerformanceLoader from '../utils/perf-loader';
 import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
 
@@ -22,10 +22,12 @@ export default class WebpackBaseConfiguration {
 
     this.commonRules = [];
 
-    if (!this.isProd) warmup({}, [ 'babel-loader', 'css-loader' ]);
-
     const { webpack } = aver.config;
     this.globalConfig = webpack;
+
+    this.perfLoader = new PerformanceLoader(this.isServer, this.globalConfig);
+    this.perfLoader.warmupLoaders();
+    this.styleLoader = new StyleLoader(this.isServer, this.globalConfig, this.perfLoader);
   }
 
   plugins() {
@@ -84,17 +86,13 @@ export default class WebpackBaseConfiguration {
   }
 
   rules() {
-    this.chainConfig.module
+    const vueLoaderRule = this.chainConfig.module
       .rule('vue-loader')
-        .test(/\.vue$/)
-        .use('cache-loader')
-          .loader('cache-loader')
-          .options({
-            cacheDirectory: path.resolve(process.env.PROJECT_PATH, '../node_modules/.cache/cache-loader'),
-            cacheIdentifier: 'vue-loader'
-          })
-          .end()
-        .use('vue-loader')
+        .test(/\.vue$/);
+
+    this.perfLoader.apply(vueLoaderRule, 'vue');
+
+    vueLoaderRule.use('vue-loader')
           .loader('vue-loader')
           .options({
             compilerOptions: {
@@ -128,27 +126,16 @@ export default class WebpackBaseConfiguration {
             cache: true
           });
 
-    this.chainConfig.module
+    const jsRule = this.chainConfig.module
       .rule('js')
         .test(/\.js$/)
         .include
           .add(process.env.PROJECT_PATH)
-          .end()
-        .use('cache-loader')
-          .loader('cache-loader')
-          .options({
-            cacheDirectory: path.resolve(process.env.PROJECT_PATH, '../node_modules/.cache/cache-loader'),
-            cacheIdentifier: 'js'
-          })
-          .end()
-        .use('thread-loader')
-          .loader('thread-loader')
-          .options({
-            name: 'js',
-            poolTimeout: !this.isProd ? Infinity : 2000
-          })
-          .end()
-        .use('babel-loader')
+          .end();
+
+    this.perfLoader.apply(jsRule, 'js');
+
+    jsRule.use('babel-loader')
           .loader('babel-loader')
           .options({
             presets: [
@@ -185,14 +172,12 @@ export default class WebpackBaseConfiguration {
           .end()
         .use('yaml')
           .loader('json-loader!yaml-loader');
-                
-    const styleLoader = new StyleLoader(this.isServer, this.globalConfig);
 
     const cssRule = this.chainConfig.module.rule('css-loader').test(/\.css$/);
-    styleLoader.apply('css', cssRule);
+    this.styleLoader.apply('css', cssRule);
 
     const scssRule = this.chainConfig.module.rule('scss-loader').test(/\.scss$/);
-    styleLoader.apply('scss', scssRule, [ {
+    this.styleLoader.apply('scss', scssRule, [ {
       name: 'sass-loader',
       options: { sourceMap: !this.isProd }
     } ]);
