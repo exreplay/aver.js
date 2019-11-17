@@ -1,6 +1,7 @@
 import path from 'path';
 
 export default () => ({
+  postcss: {},
   css: {
     extract: false,
     styleResources: {

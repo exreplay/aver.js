@@ -1,8 +1,7 @@
-import fs from 'fs';
 import path from 'path';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
-import SafeParser from 'postcss-safe-parser';
 import map from 'lodash/map';
+import PostCSS from './postcss';
 
 export default class StyleLoader {
   constructor(isServer, config, perfLoader) {
@@ -11,11 +10,11 @@ export default class StyleLoader {
     this.config = config;
     this.perfLoader = perfLoader;
 
-    this.findPostcssConfig();
+    if (this.config.postcss) this.postcss = new PostCSS(this.config);
   }
 
   get stylesAreInline() {
-    return this.postcssConfigExists || !this.config.css.extract;
+    return this.postcss || !this.config.css.extract;
   }
 
   get exportOnlyLocals() {
@@ -24,33 +23,9 @@ export default class StyleLoader {
 
   get importLoaders() {
     let cnt = 1;
-    if (this.postcssConfigExists) cnt++;
+    if (this.postcss) cnt++;
     if (this.stylesAreInline) cnt++;
     return cnt;
-  }
-
-  findPostcssConfig() {
-    const files = [
-      '.postcssrc',
-      '.postcssrc.js',
-      'postcss.config.js',
-      '.postcssrc.yaml',
-      '.postcssrc.json'
-    ];
-    const pkg = require(path.resolve(process.cwd(), './package.json'));
-    this.postcssConfigExists = false;
-
-    if (pkg.postcss) {
-      this.postcssConfigExists = true;
-      return;
-    }
-
-    for (const file of files) {
-      if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, `../${file}`))) {
-        this.postcssConfigExists = true;
-        break;
-      }
-    }
   }
 
   async apply(name, rule, loaders = []) {
@@ -79,7 +54,7 @@ export default class StyleLoader {
     if (module) this.cssModules(rule);
     else this.css(rule);
 
-    this.postcss(rule);
+    if (this.postcss) this.postcss.apply(rule);
   }
 
   extract(rule) {
@@ -135,29 +110,5 @@ export default class StyleLoader {
           sourceMap: !this.isProd,
           onlyLocals: this.exportOnlyLocals
         });
-  }
-
-  postcss(rule) {
-    if (this.stylesAreInline) {
-      rule
-        .use('cssnano')
-          .loader('postcss-loader')
-          .options({
-            sourceMap: !this.isProd,
-            plugins: [
-              require('cssnano')({
-                parser: SafeParser,
-                discardComments: { removeAll: true }
-              })
-            ]
-          });
-    }
-
-    if (this.postcssConfigExists) {
-      rule
-        .use('postcss')
-          .loader('postcss-loader')
-          .options({ sourceMap: !this.isProd });
-    }
   }
 }

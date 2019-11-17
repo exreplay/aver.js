@@ -41,18 +41,18 @@ export default class PerformanceLoader {
     const pool = this.pools[name];
     if (pool) {
       rule.use('cache-loader')
-          .loader('cache-loader')
-          .options({
-            cacheDirectory: path.resolve(process.env.PROJECT_PATH, `../node_modules/.cache/cache-loader/${this.isServer ? 'server' : 'client'}/${name}`),
-            cacheIdentifier: name
-          })
-          .end();
+        .loader('cache-loader')
+        .options({
+          cacheDirectory: path.resolve(process.env.PROJECT_PATH, `../node_modules/.cache/cache-loader/${this.isServer ? 'server' : 'client'}/${name}`),
+          cacheIdentifier: name
+        })
+        .end();
       
       if (pool.useThread) {
         rule.use('thread-loader')
-        .loader('thread-loader')
-        .options(pool.poolConfig)
-        .end();
+          .loader('thread-loader')
+          .options(pool.poolConfig)
+          .end();
       }
     }
   }
