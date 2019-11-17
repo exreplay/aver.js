@@ -1,5 +1,6 @@
 import SafeParser from 'postcss-safe-parser';
 import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 import {
   NodeJsInputFileSystem,
   CachedInputFileSystem,
@@ -8,7 +9,9 @@ import {
 
 export default class PostCSS {
   constructor(config) {
-    this.config = config;
+    this.config = cloneDeep(config);
+    this.preset = this.config.postcss.preset;
+    delete this.config.postcss.preset;
     this.isProd = process.env.NODE_ENV === 'production';
   }
 
@@ -19,7 +22,7 @@ export default class PostCSS {
         'postcss-import': {
           resolve: this.resolveImports.bind(this)
         },
-        'postcss-preset-env': this.config.postcss.preset || {},
+        'postcss-preset-env': this.preset || {},
         cssnano: {
           parser: SafeParser,
           discardComments: { removeAll: true }
@@ -32,7 +35,6 @@ export default class PostCSS {
     // ensure postcss-preset-env and cssnano comes last
     const sortedPluginsKeys = Object.keys(config.plugins).sort(a => a === 'postcss-preset-env').sort(a => a === 'cssnano');
     config.plugins = sortedPluginsKeys.map(p => require(p)(config.plugins[p]));
-    console.log(config.plugins);
   }
 
   resolveImports(id, basedir) {
