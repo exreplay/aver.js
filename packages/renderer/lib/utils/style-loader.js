@@ -8,12 +8,13 @@ export default class StyleLoader {
     this.isProd = process.env.NODE_ENV === 'production';
     this.isServer = isServer;
     this.config = config;
-    this.postcss = new PostCSS(this.config);
     this.perfLoader = perfLoader;
+
+    if (this.config.postcss) this.postcss = new PostCSS(this.config);
   }
 
   get stylesAreInline() {
-    return this.postcss.postcssConfigExists || !this.config.css.extract;
+    return this.postcss || !this.config.css.extract;
   }
 
   get exportOnlyLocals() {
@@ -22,7 +23,7 @@ export default class StyleLoader {
 
   get importLoaders() {
     let cnt = 1;
-    if (this.postcss.postcssConfigExists) cnt++;
+    if (this.postcss) cnt++;
     if (this.stylesAreInline) cnt++;
     return cnt;
   }
@@ -53,7 +54,7 @@ export default class StyleLoader {
     if (module) this.cssModules(rule);
     else this.css(rule);
 
-    this.postcss.apply(rule);
+    if (this.postcss) this.postcss.apply(rule);
   }
 
   extract(rule) {
