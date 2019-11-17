@@ -62,6 +62,7 @@
     "ora": "4.0.2",
     "postcss-import": "12.0.1",
     "postcss-loader": "3.0.0",
+    "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
     "progress-bar-webpack-plugin": "1.12.1",
     "pug-plain-loader": "1.0.0",

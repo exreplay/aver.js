@@ -19,6 +19,7 @@ export default class PostCSS {
         'postcss-import': {
           resolve: this.resolveImports.bind(this)
         },
+        'postcss-preset-env': this.config.postcss.preset || {},
         cssnano: {
           parser: SafeParser,
           discardComments: { removeAll: true }
@@ -28,9 +29,10 @@ export default class PostCSS {
   }
 
   loadPlugins(config) {
-    // ensure cssnano comes last
-    const sortedPluginsKeys = Object.keys(config.plugins).sort(a => a === 'cssnano');
+    // ensure postcss-preset-env and cssnano comes last
+    const sortedPluginsKeys = Object.keys(config.plugins).sort(a => a === 'postcss-preset-env').sort(a => a === 'cssnano');
     config.plugins = sortedPluginsKeys.map(p => require(p)(config.plugins[p]));
+    console.log(config.plugins);
   }
 
   resolveImports(id, basedir) {
