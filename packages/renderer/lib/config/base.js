@@ -170,8 +170,11 @@ export default class WebpackBaseConfiguration {
         .exclude
           .add(/node_modules/)
           .end()
-        .use('yaml')
-          .loader('json-loader!yaml-loader');
+        .use('json-loader')
+          .loader('json-loader')
+          .end()
+        .use('yaml-loader')
+          .loader('yaml-loader');
 
     const cssRule = this.chainConfig.module.rule('css-loader').test(/\.css$/);
     this.styleLoader.apply('css', cssRule);
