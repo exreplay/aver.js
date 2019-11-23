@@ -1,14 +1,17 @@
 {
   "name": "@averjs/shared-utils",
-  "version": "1.5.3",
+  "version": "2.0.0-4",
   "description": "shared utils for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/shared-utils.js",
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "/dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/exreplay/aver.js.git",
@@ -17,9 +20,15 @@
   "bugs": {
     "url": "https://github.com/exreplay/aver.js/issues"
   },
+  "aver": {
+    "build": true,
+    "copy": [
+      "lib/openChrome.applescript"
+    ]
+  },
   "dependencies": {
-    "chalk": "2.4.2",
-    "cross-spawn": "6.0.5",
+    "chalk": "3.0.0",
+    "cross-spawn": "7.0.1",
     "opn": "6.0.0"
   }
 }

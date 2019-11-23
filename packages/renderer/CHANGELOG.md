@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-4](https://github.com/exreplay/aver.js/compare/v2.0.0-3...v2.0.0-4) (2019-11-23)
+
+
+### Bug Fixes
+
+* **perf-loader:** only warmup in dev mode ([d1f6ced](https://github.com/exreplay/aver.js/commit/d1f6ced))
+* **perf-loader:** only warmup loaders where useThread is set to true ([#117](https://github.com/exreplay/aver.js/issues/117)) ([b3708b2](https://github.com/exreplay/aver.js/commit/b3708b2))
+* **renderer:** fixed yaml rule ([df5d743](https://github.com/exreplay/aver.js/commit/df5d743))
+
+
+### Features
+
+* **vuex:** support default vuex syntax ([#104](https://github.com/exreplay/aver.js/issues/104)) ([4fcb9e7](https://github.com/exreplay/aver.js/commit/4fcb9e7))
+* basic support for hook system ([#106](https://github.com/exreplay/aver.js/issues/106)) ([4a048f8](https://github.com/exreplay/aver.js/commit/4a048f8))
+* configure alias in aver config file ([#113](https://github.com/exreplay/aver.js/issues/113)) ([03dbade](https://github.com/exreplay/aver.js/commit/03dbade))
+
+
+
+
+
+# [2.0.0-3](https://github.com/exreplay/aver.js/compare/v2.0.0-2...v2.0.0-3) (2019-09-19)
+
+**Note:** Version bump only for package @averjs/renderer
+
+
+
+
+
+# [2.0.0-2](https://github.com/exreplay/aver.js/compare/v2.0.0-1...v2.0.0-2) (2019-09-18)
+
+
+### Bug Fixes
+
+* **renderer:** removed unnecessary includes in js rule ([ec18917](https://github.com/exreplay/aver.js/commit/ec18917))
+
+
+
+
+
+# [2.0.0-1](https://github.com/exreplay/aver.js/compare/v2.0.0-0...v2.0.0-1) (2019-09-03)
+
+**Note:** Version bump only for package @averjs/renderer
+
+
+
+
+
+# [2.0.0-0](https://github.com/exreplay/aver.js/compare/v1.5.3...v2.0.0-0) (2019-09-03)
+
+
+### Bug Fixes
+
+* **renderer:** load postcss config correctly ([#92](https://github.com/exreplay/aver.js/issues/92)) ([f37724d](https://github.com/exreplay/aver.js/commit/f37724d))
+* **renderer:** reuse browser tabs when port 80 is defined ([7631a21](https://github.com/exreplay/aver.js/commit/7631a21))
+
+
+### Features
+
+* **renderer:** added new config param process.env ([27fe2e7](https://github.com/exreplay/aver.js/commit/27fe2e7))
+* add rollup to build packages ([#56](https://github.com/exreplay/aver.js/issues/56)) ([537faa6](https://github.com/exreplay/aver.js/commit/537faa6))
+* added FilesChanged plugin ([8b8dc98](https://github.com/exreplay/aver.js/commit/8b8dc98))
+* vuex store config ([#95](https://github.com/exreplay/aver.js/issues/95)) ([b47ae0c](https://github.com/exreplay/aver.js/commit/b47ae0c))
+
+
+
+
+
 ## [1.5.3](https://github.com/exreplay/aver.js/compare/v1.5.2...v1.5.3) (2019-06-13)
 
 

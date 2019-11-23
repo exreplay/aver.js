@@ -1,10 +1,9 @@
-<!DOCTYPE html>{{ meta.inject() }}
-<html data-vue-meta-server-rendered {{{ meta.htmlAttrs.text() }}}>
-<head>
-    <% if (config.csrf) { %> <meta name="csrf-token" content="{{ csrfToken }}"> <% } %>
-    {{{ meta.meta.text() + meta.title.text() + meta.link.text() + meta.style.text() + meta.script.text() + meta.noscript.text() }}}
+<!DOCTYPE html>
+<html {{ HTML_ATTRS }}>
+<head {{ HEAD_ATTRS }}>
+{{ HEAD }}
 </head>
-<body {{{ meta.bodyAttrs.text() }}}>
-    <!--vue-ssr-outlet-->
+<body {{ BODY_ATTRS }}>
+{{ BODY }}
 </body>
 </html>

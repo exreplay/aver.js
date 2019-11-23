@@ -9,6 +9,7 @@
     "packages/vue-app/lib"
   ],
   "ignoreDeps": [
-    "core-js"
+    "core-js",
+    "memory-fs"
   ]
 }
