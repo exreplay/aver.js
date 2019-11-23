@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "connect-redis": "3.4.2",
-    "express-session": "1.16.2",
+    "express-session": "1.17.0",
     "ioredis": "4.14.1",
     "uuid": "3.3.3"
   }
