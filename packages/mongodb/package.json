@@ -18,7 +18,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "mongoose": "5.7.5",
+    "mongoose": "5.7.12",
     "mongoose-data-seed": "1.0.7"
   }
 }
