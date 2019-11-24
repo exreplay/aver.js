@@ -49,7 +49,7 @@
     "morgan": "1.9.1",
     "multer": "1.4.2",
     "ora": "4.0.3",
-    "rotating-file-stream": "1.4.6",
+    "rotating-file-stream": "2.0.0",
     "route-cache": "0.4.4",
     "uuid": "3.3.3",
     "vue": "2.6.10",
