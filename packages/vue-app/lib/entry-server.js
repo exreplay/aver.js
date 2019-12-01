@@ -27,12 +27,9 @@ export default async context => {
       throw error;
     }
         
-    for (const r of mixinContext.keys()) {
-      const EntryServerMixin = mixinContext(r).default;
-      if (typeof EntryServerMixin !== 'undefined') {
-        // eslint-disable-next-line no-new
-        new EntryServerMixin(context);
-      }
+    for (const key of mixinContext.keys()) {
+      const mixin = mixinContext(key).default;
+      if (typeof mixin === 'function') mixin(context);
     }
         
     for (const [key] of Object.entries(store._actions)) {
