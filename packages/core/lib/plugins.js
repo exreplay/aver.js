@@ -1,10 +1,12 @@
 import path from 'path';
 import fs from 'fs';
 
+const requireModule = require('esm')(module);
 export default class PluginContainer {
   constructor(aver) {
     this.aver = aver;
     this.config = aver.config;
+    this.cacheDir = path.resolve('node_modules/.cache/averjs');
   }
 
   async register() {
@@ -45,7 +47,6 @@ export default class PluginContainer {
   }
 
   require(src) {
-    const requireModule = require('esm')(module);
     let pluginPath;
 
     pluginPath = this.resolveModule(src);
@@ -58,6 +59,8 @@ export default class PluginContainer {
       throw new Error(`Could not resolve plugin '${src}'. Please make sure either the package is installed or the file exists.`);
     }
 
+    this.resolveEntryFiles(pluginPath);
+
     return requireModule(pluginPath).default;
   }
 
@@ -69,6 +72,35 @@ export default class PluginContainer {
         throw err;
       }
     }
+  }
+
+  resolveEntryFiles(pluginPath) {
+    const pluginPathDir = this.normalizePluginPath(pluginPath);
+
+    const appFile = path.resolve(pluginPathDir, './app.js');
+    const clientFile = path.resolve(pluginPathDir, './entry-client.js');
+    const serverFile = path.resolve(pluginPathDir, './entry-server.js');
+
+    if (!this.config.entries) this.config.entries = {};
+    if (!this.config.entries.app) this.config.entries.app = [];
+    if (!this.config.entries.client) this.config.entries.client = [];
+    if (!this.config.entries.server) this.config.entries.server = [];
+
+    if (fs.existsSync(appFile)) this.config.entries.app.push(this.relativeCacheDirPath(appFile));
+    if (fs.existsSync(clientFile)) this.config.entries.client.push(this.relativeCacheDirPath(clientFile));
+    if (fs.existsSync(serverFile)) this.config.entries.server.push(this.relativeCacheDirPath(serverFile));
+  }
+
+  normalizePluginPath(pluginPath) {
+    if (fs.lstatSync(pluginPath).isDirectory()) return pluginPath;
+    else return path.dirname(pluginPath);
+  }
+
+  relativeCacheDirPath(filePath) {
+    return path.relative(
+      path.resolve(process.cwd(), this.cacheDir),
+      filePath
+    );
   }
 
   resolvePath(plugin) {

@@ -53,7 +53,8 @@ export default class Renderer {
             i18n: this.config.i18n,
             csrf: this.config.csrf,
             router: this.config.router,
-            store: this.config.store
+            store: this.config.store,
+            entries: this.config.entries
           }
         });
 
