@@ -38,6 +38,7 @@ Object {
     "purgeCss": false,
     "server": false,
     "sw": false,
+    "transpileDependencies": Array [],
   },
 }
 `;
