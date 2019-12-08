@@ -75,9 +75,11 @@ export default class PluginContainer {
   }
 
   resolveEntryFiles(pluginPath) {
-    const appFile = path.resolve(pluginPath, './app.js');
-    const clientFile = path.resolve(pluginPath, './entry-client.js');
-    const serverFile = path.resolve(pluginPath, './entry-server.js');
+    const pluginPathDir = this.normalizePluginPath(pluginPath);
+
+    const appFile = path.resolve(pluginPathDir, './app.js');
+    const clientFile = path.resolve(pluginPathDir, './entry-client.js');
+    const serverFile = path.resolve(pluginPathDir, './entry-server.js');
 
     if (!this.config.entries) this.config.entries = {};
     if (!this.config.entries.app) this.config.entries.app = [];
@@ -87,6 +89,11 @@ export default class PluginContainer {
     if (fs.existsSync(appFile)) this.config.entries.app.push(this.relativeCacheDirPath(appFile));
     if (fs.existsSync(clientFile)) this.config.entries.client.push(this.relativeCacheDirPath(clientFile));
     if (fs.existsSync(serverFile)) this.config.entries.server.push(this.relativeCacheDirPath(serverFile));
+  }
+
+  normalizePluginPath(pluginPath) {
+    if (fs.lstatSync(pluginPath).isDirectory()) return pluginPath;
+    else return path.dirname(pluginPath);
   }
 
   relativeCacheDirPath(filePath) {
