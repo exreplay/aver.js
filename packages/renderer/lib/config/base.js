@@ -30,6 +30,18 @@ export default class WebpackBaseConfiguration {
     this.styleLoader = new StyleLoader(this.isServer, this.globalConfig, this.perfLoader);
   }
 
+  get transpileDeps() {
+    return this.globalConfig.transpileDependencies.map(dep => {
+      if (typeof dep === 'string') {
+        return new RegExp(dep);
+      } else if (dep instanceof RegExp) {
+        return dep;
+      } else {
+        return false;
+      }
+    }).filter(_ => _);
+  }
+
   plugins() {
     if (!this.isServer && this.globalConfig.css.extract) {
       this.chainConfig
@@ -139,6 +151,9 @@ export default class WebpackBaseConfiguration {
 
             // transpile cache dir
             if (filepath.includes(this.cacheDir)) return false;
+
+            // check if user wants to transpile it
+            if (this.transpileDeps.some(dep => dep.test(filepath))) return false;
 
             // Ignore node_modules
             return /node_modules/.test(filepath);
