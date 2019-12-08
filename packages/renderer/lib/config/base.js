@@ -129,8 +129,20 @@ export default class WebpackBaseConfiguration {
     const jsRule = this.chainConfig.module
       .rule('js')
         .test(/\.js$/)
-        .include
-          .add(process.env.PROJECT_PATH)
+        .exclude
+          .add(filepath => {
+            // always transpile javascript in vue files
+            if (/\.vue\.js$/.test(filepath)) return false;
+            
+            // transpile project path
+            if (filepath.includes(process.env.PROJECT_PATH)) return false;
+
+            // transpile cache dir
+            if (filepath.includes(this.cacheDir)) return false;
+
+            // Ignore node_modules
+            return /node_modules/.test(filepath);
+          })
           .end();
 
     this.perfLoader.apply(jsRule, 'js');
