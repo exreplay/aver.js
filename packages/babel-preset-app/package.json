@@ -18,7 +18,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "@babel/core": "7.7.4",
+    "@babel/core": "7.7.5",
     "@babel/plugin-proposal-class-properties": "7.7.4",
     "@babel/plugin-proposal-decorators": "7.7.4",
     "@babel/plugin-proposal-object-rest-spread": "7.7.4",
@@ -26,9 +26,9 @@
     "@babel/plugin-transform-arrow-functions": "7.7.4",
     "@babel/plugin-transform-classes": "7.7.4",
     "@babel/plugin-transform-parameters": "7.7.4",
-    "@babel/plugin-transform-runtime": "7.7.4",
-    "@babel/preset-env": "7.7.4",
-    "@babel/runtime": "7.7.4",
+    "@babel/plugin-transform-runtime": "7.7.6",
+    "@babel/preset-env": "7.7.6",
+    "@babel/runtime": "7.7.6",
     "core-js": "2.6.5"
   }
 }

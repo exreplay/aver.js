@@ -27,6 +27,6 @@
     "@averjs/renderer": "2.0.0-4",
     "html-minifier": "4.0.0",
     "lru-cache": "5.1.1",
-    "vue-server-renderer": "2.6.10"
+    "vue-server-renderer": "2.6.11"
   }
 }
