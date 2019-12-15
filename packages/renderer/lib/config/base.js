@@ -219,7 +219,8 @@ export default class WebpackBaseConfiguration {
           .loader('url-loader')
           .options({
             limit: 1000,
-            name: '_averjs/fonts/[name].[hash:7].[ext]'
+            name: '_averjs/fonts/[name].[hash:7].[ext]',
+            esModule: false
           });
         
     this.chainConfig.module
@@ -229,7 +230,8 @@ export default class WebpackBaseConfiguration {
           .loader('url-loader')
           .options({
             limit: 1000,
-            name: '_averjs/img/[name].[hash:7].[ext]'
+            name: '_averjs/img/[name].[hash:7].[ext]',
+            esModule: false
           });
         
     this.chainConfig.module
@@ -238,7 +240,8 @@ export default class WebpackBaseConfiguration {
         .use('file-loader')
           .loader('file-loader')
           .options({
-            name: '_averjs/videos/[name].[hash:7].[ext]'
+            name: '_averjs/videos/[name].[hash:7].[ext]',
+            esModule: false
           });
         
     this.chainConfig.module
@@ -247,7 +250,8 @@ export default class WebpackBaseConfiguration {
         .use('file-loader')
           .loader('file-loader')
           .options({
-            name: '_averjs/resources/[name].[hash:7].[ext]'
+            name: '_averjs/resources/[name].[hash:7].[ext]',
+            esModule: false
           });
   }
 
