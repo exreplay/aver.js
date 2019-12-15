@@ -107,13 +107,13 @@ export default class Server extends WWW {
     const logDirectory = path.join(process.env.PROJECT_PATH, '../storage/log');
     fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
-    const accessLogStream = rfs('access.log', {
+    const accessLogStream = rfs.createStream('access.log', {
       interval: '1d',
       maxFiles: 10,
       path: logDirectory
     });
 
-    const errorLogStream = rfs('error.log', {
+    const errorLogStream = rfs.createStream('error.log', {
       interval: '1d',
       maxFiles: 10,
       path: logDirectory
