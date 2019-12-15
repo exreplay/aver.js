@@ -211,7 +211,8 @@ export default class WebpackBaseConfiguration {
         .use('file-loader')
           .loader('file-loader')
           .options({
-            name: '_averjs/videos/[name].[hash:7].[ext]'
+            name: '_averjs/videos/[name].[hash:7].[ext]',
+            esModule: false
           });
         
     this.chainConfig.module
@@ -220,7 +221,8 @@ export default class WebpackBaseConfiguration {
         .use('file-loader')
           .loader('file-loader')
           .options({
-            name: '_averjs/resources/[name].[hash:7].[ext]'
+            name: '_averjs/resources/[name].[hash:7].[ext]',
+            esModule: false
           });
   }
 
