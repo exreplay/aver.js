@@ -4,7 +4,6 @@ import webpack from 'webpack';
 import WebpackChain from 'webpack-chain';
 import { VueLoaderPlugin } from 'vue-loader';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
-import PurgeCssPlugin from 'purgecss-webpack-plugin';
 import StyleLoader from '../utils/style-loader';
 import PerformanceLoader from '../utils/perf-loader';
 import Webpackbar from 'webpackbar';
@@ -76,18 +75,6 @@ export default class WebpackBaseConfiguration {
           .end()
         .plugin('module-concatenation')
           .use(webpack.optimize.ModuleConcatenationPlugin);
-            
-      if (this.globalConfig.purgeCss) {
-        this.chainConfig
-          .plugin('purge-css')
-            .use(PurgeCssPlugin, [ {
-              paths: glob.sync([
-                path.resolve(process.env.PROJECT_PATH, './**/*.js'),
-                path.resolve(process.env.PROJECT_PATH, './**/*.vue')
-              ]),
-              whitelistPatterns: [ /^_/ ]
-            } ]);
-      }
     }
   }
 
