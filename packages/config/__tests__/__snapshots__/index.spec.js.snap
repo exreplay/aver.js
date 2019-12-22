@@ -35,7 +35,6 @@ Object {
     "process": Object {
       "env": Object {},
     },
-    "purgeCss": false,
     "server": false,
     "sw": false,
     "transpileDependencies": Array [],
