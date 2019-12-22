@@ -1,6 +1,7 @@
 import path from 'path';
 
 export default () => ({
+  transpileDependencies: [],
   postcss: {},
   css: {
     extract: false,
