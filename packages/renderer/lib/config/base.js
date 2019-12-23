@@ -18,7 +18,6 @@ export default class WebpackBaseConfiguration {
     this.cacheDir = path.resolve('node_modules/.cache/averjs');
     
     this.isProd = process.env.NODE_ENV === 'production';
-    this.nodeEnv = process.env.NODE_ENV || 'development';
 
     this.commonRules = [];
 
