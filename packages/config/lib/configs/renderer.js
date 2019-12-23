@@ -19,7 +19,6 @@ export default () => ({
     '@pages': path.resolve(process.env.PROJECT_PATH, './pages'),
     '@vuex': path.resolve(process.env.PROJECT_PATH, './vuex')
   },
-  purgeCss: false,
   base: false,
   client: false,
   server: false,
