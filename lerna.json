@@ -2,16 +2,18 @@
   "version": "2.0.0-4",
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "conventionalCommits": true,
   "exact": true,
   "packages": [
     "packages/*"
   ],
   "changelog": {
+    "repo": "exreplay/aver.js",
     "labels": {
-      "feat": "New Feature",
-      "fix": "Bug Fix",
-      "refactor": "Code Refactoring"
-    }
+      "PR: New Feature": ":rocket: New Features",
+      "PR: Breaking Change": ":boom: Breaking Changes",
+      "PR: Bug Fix": ":bug: Bug Fix",
+      "PR: Internal": ":house: Internal"
+    },
+    "cacheDir": ".changelog"
   }
 }
