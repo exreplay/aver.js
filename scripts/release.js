@@ -39,11 +39,11 @@ export default class Release {
     ]);
 
     if (release) {
-      if (await this.gitBranch() !== 'development') {
+      if (await this.gitBranch() !== 'development' && !this.test) {
         console.log(
           logSymbols.warning,
           chalk.bold.red(
-            `You are not in the 'development' branch! Please switch.`
+            'You are not in the \'development\' branch! Please switch.'
           )
         );
         process.exit(0);
@@ -83,11 +83,11 @@ export default class Release {
   }
 
   async preReleaseSync() {
-    const spinner = ora(`Pre release sync`).start();
+    const spinner = ora('Pre release sync').start();
     
     try {
       await exec('git', [ 'add', '-A' ]);
-      await exec('git', [ 'commit', '-m', `chore: pre release sync` ]);
+      await exec('git', [ 'commit', '-m', 'chore: pre release sync' ]);
     } catch (err) {} finally {
       spinner.succeed();
     }
