@@ -9,7 +9,8 @@
     "build": "node -r esm ./scripts/dev",
     "release": "node -r esm ./scripts/release",
     "lint": "eslint --ext .js,.vue .",
-    "test": "jest && codecov"
+    "test": "jest && codecov",
+    "version": "node -r esm ./scripts/generateChangelog.js"
   },
   "devDependencies": {
     "@babel/core": "7.7.5",
