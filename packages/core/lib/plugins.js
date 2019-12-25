@@ -10,7 +10,7 @@ export default class PluginContainer {
   }
 
   async register() {
-    if (this.config.buildPlugins && Array.isArray(this.config.buildPlugins)) {
+    if (this.config.buildPlugins && Array.isArray(this.config.buildPlugins) && !this.config._production) {
       await this.sequence(this.config.buildPlugins);
     }
 
