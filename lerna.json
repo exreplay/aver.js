@@ -12,8 +12,8 @@
       "PR: New Feature": ":rocket: New Features",
       "PR: Breaking Change": ":boom: Breaking Changes",
       "PR: Bug Fix": ":bug: Bug Fix",
-      "PR: Internal": ":house: Internal",
-      "PR: Refactor": ":nail_care: Code Refactoring"
+      "PR: Refactor": ":nail_care: Code Refactoring",
+      "PR: Internal": ":house: Internal"
     },
     "cacheDir": ".changelog"
   }
