@@ -3,6 +3,7 @@
 exports[`should match default snapshot config when no config file is present 1`] = `
 Object {
   "aliases": Object {},
+  "buildPlugins": Array [],
   "createRenderer": Object {},
   "csrf": true,
   "csrfExclude": Array [],
