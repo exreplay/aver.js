@@ -2,7 +2,7 @@ import Queue from './queue';
 
 export default class Queueable {
   constructor(name) {
-    if (!Queue) throw new Error(`In order to use Queues, check that redis is running and the env variables are set.`);
+    if (!Queue) throw new Error('In order to use Queues, check that redis is running and the env variables are set.');
 
     this.name = name;
     this.setupProcess();

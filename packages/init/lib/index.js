@@ -55,13 +55,13 @@ export default class Init {
   }
 
   modifyPackageJson() {
-    const spinner = ora(`Modifying package.json`).start();
+    const spinner = ora('Modifying package.json').start();
     const corePackageJSON = require(path.resolve(this.appDir, './package.json'));
     const packageJSONPath = path.resolve(process.env.PROJECT_PATH, '../package.json');
     const packageJSON = require(packageJSONPath);
     
     fs.writeFileSync(packageJSONPath, JSON.stringify(merge(corePackageJSON, packageJSON), null, 2));
-    spinner.succeed(`Successfully modified package.json!`);
+    spinner.succeed('Successfully modified package.json!');
   }
 
   writeFile(file, data) {
