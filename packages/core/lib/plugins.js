@@ -10,10 +10,18 @@ export default class PluginContainer {
   }
 
   async register() {
-    if (!Array.isArray(this.config.plugins)) return;
+    if (this.config.buildPlugins && Array.isArray(this.config.buildPlugins) && !this.config._production) {
+      await this.sequence(this.config.buildPlugins);
+    }
 
+    if (this.config.plugins && Array.isArray(this.config.plugins)) {
+      await this.sequence(this.config.plugins);
+    }
+  }
+
+  async sequence(plugins) {
     // Run plugins in sequence by promisify everyone
-    await this.config.plugins.reduce((promise, plugin) => {
+    await plugins.reduce((promise, plugin) => {
       return promise.then(() => this.addModule(plugin));
     }, Promise.resolve());
   }
