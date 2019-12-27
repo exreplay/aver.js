@@ -12,13 +12,13 @@ let outputData = '';
 beforeEach(function() {
   outputData = '';
   const storeLog = inputs => (outputData = inputs);
-  console['log'] = jest.fn(storeLog);
-  console['error'] = jest.fn(storeLog);
+  console.log = jest.fn(storeLog);
+  console.error = jest.fn(storeLog);
 });
 
 test('cli should at least have the help command', () => {
   const cli = new AverCli();
-  expect(cli.availableCommands['help']).toBeInstanceOf(HelpCommand);
+  expect(cli.availableCommands.help).toBeInstanceOf(HelpCommand);
 });
 
 test('help getter should identify help arg', () => {
@@ -72,7 +72,7 @@ test('test command should be added correctly and executed', () => {
 
   const cli = new AverCli();
   cli.addCommand(new TestCommand());
-  expect(cli.availableCommands['test']).toBeInstanceOf(TestCommand);
+  expect(cli.availableCommands.test).toBeInstanceOf(TestCommand);
   expect(cli.aliases).toEqual(expect.objectContaining({ t: 'test' }));
 
   cli.run();

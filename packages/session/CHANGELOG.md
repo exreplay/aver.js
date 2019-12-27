@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-4](https://github.com/exreplay/aver.js/compare/v2.0.0-3...v2.0.0-4) (2019-11-23)
+
+
+### Bug Fixes
+
+* **session:** update plugin to make use of enhanced plugin system ([#111](https://github.com/exreplay/aver.js/issues/111)) ([077056f](https://github.com/exreplay/aver.js/commit/077056f))
+
+
+### Features
+
+* basic support for hook system ([#106](https://github.com/exreplay/aver.js/issues/106)) ([4a048f8](https://github.com/exreplay/aver.js/commit/4a048f8))
+
+
+
+
+
 # [2.0.0-3](https://github.com/exreplay/aver.js/compare/v2.0.0-2...v2.0.0-3) (2019-09-19)
 
 **Note:** Version bump only for package @averjs/session

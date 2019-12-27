@@ -11,6 +11,15 @@ const mixinContext = require.context('@/', false, /^\.\/entry-server\.js$/i);
 
 export default async context => {
   try {
+    const entries = [
+      <% 
+        if(typeof config.entries !== 'undefined' && typeof config.entries.server !== 'undefined') {
+          for(const entry of config.entries.server) {
+            print(`require('${entry}')`);
+          }
+        }
+      %>
+    ];
     const { app, router, store } = createApp({ isServer: true, context });
     const { url } = context;
     const meta = app.$meta();
@@ -27,12 +36,14 @@ export default async context => {
       throw error;
     }
         
-    for (const r of mixinContext.keys()) {
-      const EntryServerMixin = mixinContext(r).default;
-      if (typeof EntryServerMixin !== 'undefined') {
-        // eslint-disable-next-line no-new
-        new EntryServerMixin(context);
-      }
+    for (const key of mixinContext.keys()) {
+      const mixin = mixinContext(key).default;
+      if (typeof mixin === 'function') mixin(context);
+    }
+
+    for(const entry of entries) {
+      const mixin = entry.default;
+      if(typeof mixin === 'function') mixin(context);
     }
         
     for (const [key] of Object.entries(store._actions)) {

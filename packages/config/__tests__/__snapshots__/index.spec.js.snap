@@ -3,6 +3,7 @@
 exports[`should match default snapshot config when no config file is present 1`] = `
 Object {
   "aliases": Object {},
+  "buildPlugins": Array [],
   "createRenderer": Object {},
   "csrf": true,
   "csrfExclude": Array [],
@@ -13,6 +14,15 @@ Object {
   "progressbar": true,
   "store": Object {},
   "webpack": Object {
+    "alias": Object {
+      "@": "/aver",
+      "@@": "/",
+      "@components": "/aver/components",
+      "@mixins": "/aver/mixins",
+      "@pages": "/aver/pages",
+      "@resources": "/aver/resources",
+      "@vuex": "/aver/vuex",
+    },
     "base": false,
     "client": false,
     "css": Object {
@@ -22,12 +32,13 @@ Object {
         "resources": Array [],
       },
     },
+    "postcss": Object {},
     "process": Object {
       "env": Object {},
     },
-    "purgeCss": false,
     "server": false,
     "sw": false,
+    "transpileDependencies": Array [],
   },
 }
 `;

@@ -15,7 +15,7 @@ export default class Usage {
   }
 
   get globalCommand() {
-    return this.availableCommands['help'].args.find(option => this.argv[option.name]);
+    return this.availableCommands.help.args.find(option => this.argv[option.name]);
   }
   
   constructor() {
@@ -57,7 +57,7 @@ export default class Usage {
 
     try {
       // No matter how help is set, do not run the actual command, instead show default help or for specified command
-      if (this.help) await this.availableCommands['help'].run(this.executedCommand !== 'help' && commandToExecute);
+      if (this.help) await this.availableCommands.help.run(this.executedCommand !== 'help' && commandToExecute);
       else await commandToExecute.run(this.argv);
     } catch (err) {
       console.error(err);

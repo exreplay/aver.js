@@ -10,8 +10,8 @@ beforeEach(function() {
   mockRun.mockClear();
 
   outputData = '';
-  console['log'] = jest.fn(inputs => (outputData = inputs));
-  console['error'] = jest.fn(inputs => (outputData = inputs));
+  console.log = jest.fn(inputs => (outputData = inputs));
+  console.error = jest.fn(inputs => (outputData = inputs));
 
   process.argv = [ ...OLD_ARGV ];
 });

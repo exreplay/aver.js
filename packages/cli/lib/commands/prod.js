@@ -13,6 +13,7 @@ export default class ProductionCommand extends Command {
     if (typeof process.env.NODE_ENV === 'undefined') process.env.NODE_ENV = 'production';
 
     const core = new Core();
+    core.config._production = true;
     core.run();
   }
 }

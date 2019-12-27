@@ -1,7 +1,24 @@
-# Change Log
+# [2.0.0-4](https://github.com/exreplay/aver.js/compare/v2.0.0-3...v2.0.0-4) (2019-11-23)
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+### Bug Fixes
+
+* **perf-loader:** only warmup in dev mode ([d1f6ced](https://github.com/exreplay/aver.js/commit/d1f6ced))
+* **perf-loader:** only warmup loaders where useThread is set to true ([#117](https://github.com/exreplay/aver.js/issues/117)) ([b3708b2](https://github.com/exreplay/aver.js/commit/b3708b2))
+* **renderer:** fixed yaml rule ([df5d743](https://github.com/exreplay/aver.js/commit/df5d743))
+* **session:** update plugin to make use of enhanced plugin system ([#111](https://github.com/exreplay/aver.js/issues/111)) ([077056f](https://github.com/exreplay/aver.js/commit/077056f))
+
+
+### Features
+
+* **vuex:** support default vuex syntax ([#104](https://github.com/exreplay/aver.js/issues/104)) ([4fcb9e7](https://github.com/exreplay/aver.js/commit/4fcb9e7))
+* basic support for hook system ([#106](https://github.com/exreplay/aver.js/issues/106)) ([4a048f8](https://github.com/exreplay/aver.js/commit/4a048f8))
+* configure alias in aver config file ([#113](https://github.com/exreplay/aver.js/issues/113)) ([03dbade](https://github.com/exreplay/aver.js/commit/03dbade))
+* enhance plugin system ([#109](https://github.com/exreplay/aver.js/issues/109)) ([d191918](https://github.com/exreplay/aver.js/commit/d191918))
+
+
+
+
 
 # [2.0.0-3](https://github.com/exreplay/aver.js/compare/v2.0.0-2...v2.0.0-3) (2019-09-19)
 

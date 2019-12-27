@@ -1,7 +1,6 @@
 import { createApp } from './app';
 import Vue from 'vue';
 import axios from 'axios';
-import forEach from 'lodash/forEach';
 import { composeComponentOptions } from './utils';
 const { app, router, store } = createApp({ isServer: false });
 
@@ -40,15 +39,26 @@ class ClientEntry {
   }
 
   initMixin() {
+    const entries = [
+      <% 
+        if(typeof config.entries !== 'undefined' && typeof config.entries.client !== 'undefined') {
+          for(const entry of config.entries.client) {
+            print(`require('${entry}')`);
+          }
+        }
+      %>
+    ];
+
     const mixinContext = require.context('@/', false, /^\.\/entry-client\.js$/i);
-        
-    forEach(mixinContext.keys(), r => {
-      const EntryClientMixin = mixinContext(r).default;
-      if (typeof EntryClientMixin !== 'undefined') {
-        // eslint-disable-next-line no-unused-vars
-        const mixin = new EntryClientMixin();
-      }
-    });
+    for(const key of mixinContext.keys()) {
+      const mixin = mixinContext(key).default;
+      if (typeof mixin === 'function') mixin();
+    }
+
+    for(const entry of entries) {
+      const mixin = entry.default;
+      if(typeof mixin === 'function') mixin();
+    }
   }
 
   addMobileCheck() {

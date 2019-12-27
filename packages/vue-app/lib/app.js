@@ -6,7 +6,6 @@ import App from '@/App.vue';
 import { createRouter } from './router/';
 import { createStore } from './store/';
 import { sync } from 'vuex-router-sync';
-import forEach from 'lodash/forEach';
 import * as Cookies from 'js-cookie';
 <% if (config.progressbar) { %> 
 import VueProgressBar from 'vue-progressbar';
@@ -67,14 +66,26 @@ export function createApp(ssrContext) {
 
   Vue.router = router;
 
+  const entries = [
+    <% 
+      if(typeof config.entries !== 'undefined' && typeof config.entries.app !== 'undefined') {
+        for(const entry of config.entries.app) {
+          print(`require('${entry}')`);
+        }
+      }
+    %>
+  ];
+
   const mixinContext = require.context('@/', false, /^\.\/app\.js$/i);
-        
-  forEach(mixinContext.keys(), r => {
-    const Mixin = mixinContext(r).default;
-    if (typeof Mixin !== 'undefined') {
-      const mixin = new Mixin(ssrContext);
-    }
-  });
+  for(const key of mixinContext.keys()) {
+    const mixin = mixinContext(key).default;
+    if(typeof mixin === 'function') mixin(ssrContext);
+  }
+
+  for(const entry of entries) {
+    const mixin = entry.default;
+    if(typeof mixin === 'function') mixin(ssrContext);
+  }
     
   const app = new Vue({
     i18n,

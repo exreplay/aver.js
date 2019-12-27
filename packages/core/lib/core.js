@@ -1,9 +1,11 @@
 import Server from './server';
 import Hookable from './hookable';
 import path from 'path';
-import fs from 'fs-extra';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import { getAverjsConfig } from '@averjs/config';
+import Renderer from '@averjs/renderer';
+import PluginContainer from './plugins';
 
 export default class Core extends Hookable {
   constructor() {
@@ -20,27 +22,25 @@ export default class Core extends Hookable {
     } else {
       console.warn("In order to use dotenv, please create a '.env' file in your project root.");
     }
-  }
-  
-  async run() {
+
     this.config = getAverjsConfig();
+
+    this.plugins = new PluginContainer(this);
+  }
+
+  async run() {
+    await this.plugins.register();
     this.initModuleAliases();
-    this.registerPlugins();
     const server = new Server(this);
     await server.setup();
     server.startServer();
   }
 
-  registerPlugins() {
-    if (!Array.isArray(this.config.plugins)) return;
-
-    const requireModule = require('esm')(module);
-
-    for (const plugin of this.config.plugins) {
-      if (typeof plugin === 'string') requireModule(plugin).default(this, {});
-      else if (Array.isArray(plugin)) requireModule(plugin[0]).default(this, plugin[1] || {});
-      else if (typeof plugin === 'function') plugin(this, {});
-    }
+  async build(args) {
+    await this.plugins.register();
+    const renderer = new Renderer(args, this);
+    await renderer.setup();
+    await renderer.compile();
   }
 
   initModuleAliases() {

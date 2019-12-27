@@ -1,6 +1,6 @@
 {
   "name": "@averjs/mongodb",
-  "version": "2.0.0-3",
+  "version": "2.0.0-4",
   "description": "mongodb support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -18,7 +18,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "mongoose": "5.7.5",
+    "mongoose": "5.8.1",
     "mongoose-data-seed": "1.0.7"
   }
 }

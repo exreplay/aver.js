@@ -21,7 +21,7 @@ beforeEach(() => {
   setupTestProjectDirectory();
 
   outputData = '';
-  console['log'] = jest.fn(inputs => (outputData = inputs));
+  console.log = jest.fn(inputs => (outputData = inputs));
 });
 
 afterEach(() => {
@@ -120,7 +120,7 @@ test('trimLines should remove all whitespaces at the beginning of every line', (
     import a from 'module';
 
     const b = { ...a };
-  `)).toEqual(`import a from 'module';\n\nconst b = { ...a };\n`);
+  `)).toEqual('import a from \'module\';\n\nconst b = { ...a };\n');
 });
 
 test('modifying package.json should not overwrite default values', () => {

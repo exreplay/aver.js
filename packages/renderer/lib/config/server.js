@@ -45,7 +45,8 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         whitelist: [
           /es6-promise|\.(?!(?:js|json)$).{1,5}$/i,
           /\.css$/,
-          /\?vue&type=style/
+          /\?vue&type=style/,
+          ...this.transpileDeps
         ],
         modulesDir: 'node_modules'
       }));
