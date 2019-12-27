@@ -154,7 +154,8 @@ export default class WebpackBaseConfiguration {
               [
                 require.resolve('@averjs/babel-preset-app'),
                 {
-                  buildTarget: this.isServer ? 'server' : 'client'
+                  buildTarget: this.isServer ? 'server' : 'client',
+                  ...this.globalConfig.babel
                 }
               ]
             ]

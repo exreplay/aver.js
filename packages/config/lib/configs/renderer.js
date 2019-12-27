@@ -1,6 +1,7 @@
 import path from 'path';
 
 export default () => ({
+  babel: {},
   transpileDependencies: [],
   postcss: {},
   css: {
