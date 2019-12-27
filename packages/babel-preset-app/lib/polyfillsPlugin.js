@@ -12,7 +12,7 @@ function getModulePath(mod, useAbsolutePath) {
 }
 
 function createImport(path, mod, useAbsolutePath) {
-  addSideEffect(path, getModulePath(mod, useAbsolutePath));
+  return addSideEffect(path, getModulePath(mod, useAbsolutePath));
 }
 
 // add polyfill imports to the first file encountered.
