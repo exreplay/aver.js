@@ -7,7 +7,6 @@ const { getPolyfills, getDefaultPolyfills } = require('./getPolyfills');
 module.exports = (context, options = {}) => {
   const presets = [];
   const plugins = [];
-  const runtimePath = path.dirname(require.resolve('@babel/runtime/package.json'));
   const {
     polyfills: userPolyfills,
     buildTarget,
@@ -24,14 +23,8 @@ module.exports = (context, options = {}) => {
     forceAllTransforms,
     decoratorsBeforeExport,
     decoratorsLegacy = true,
-    absoluteRuntime = runtimePath,
-    corejs = 2,
-    /**
-     * The useAbsolutePath option is for later, when babel-preset-app uses core-js 3 for default.
-     * For now it is recommended to stick with version 2 because many plugins are still using it.
-     * If we would use version 3 for default, users are forced to install core-js 3 in order for the plugin to work and that is not good experience.
-     */
-    useAbsolutePath = false
+    absoluteRuntime,
+    corejs = 2
   } = options;
 
   const targets = buildTarget === 'server' ? { node: 'current' } : {
@@ -47,7 +40,7 @@ module.exports = (context, options = {}) => {
       ignoreBrowserslistConfig,
       configPath
     });
-    plugins.push([ require('./polyfillsPlugin'), { polyfills, useAbsolutePath } ]);
+    plugins.push([ require('./polyfillsPlugin'), { polyfills } ]);
   } else {
     polyfills = [];
   }
