@@ -15,8 +15,22 @@ The default behavior for polyfilling is to use core-js 2. This is also the recom
 
 ## core-js 3
 
-First you need to install the following packages.
+First install the following packages. Be aware that those should be installed in the root of your project.
 
 ```bash
 yarn add --dev core-js@3 @babel/runtime-corejs3
+```
+
+The last thing to do is to set the corejs version in the babel config param.
+
+```js
+
+export default {
+  webpack: {
+    babel: {
+      corejs: 3
+    }
+  }
+}
+
 ```
