@@ -15,7 +15,7 @@ function transformFactory(codeToTransform, options) {
 }
 
 test('polyfill detection for core-js', () => {
-  let { code } = transformFactory(`const a = new Map()`, {
+  let { code } = transformFactory('const a = new Map()', {
     presets: [
       [ preset, { buildTarget: 'server' } ]
     ]
@@ -23,7 +23,7 @@ test('polyfill detection for core-js', () => {
 
   expect(code).toMatch('runtime-corejs2/core-js/map');
 
-  ;({ code } = transformFactory(`const a = new Map()`.trim()));
+  ;({ code } = transformFactory('const a = new Map()'.trim()));
 
   expect(code).toMatch('runtime-corejs2/core-js/map');
   expect(code).toMatch('es6.promise');
@@ -32,17 +32,17 @@ test('polyfill detection for core-js', () => {
 
 test('dynamic import', () => {
   expect(() => {
-    transformFactory(`const test = () => import('test.vue');`);
+    transformFactory('const test = () => import(\'test.vue\');');
   }).not.toThrow();
 });
 
 test('rest spread should use assign polyfill', () => {
-  let { code } = transformFactory(`const a = { ...b };`);
+  const { code } = transformFactory('const a = { ...b };');
   expect(code).toMatch('@babel/runtime-corejs2/core-js/object/assign');
 });
 
 test('regenerator runtime should be included on client', () => {
-  let { code } = transformFactory(`
+  const { code } = transformFactory(`
     async function test() {
       await Promise.resolve();
     }
@@ -54,7 +54,7 @@ test('regenerator runtime should be included on client', () => {
 });
 
 test('decorators should create a _class var', () => {
-  let { code } = transformFactory(`
+  const { code } = transformFactory(`
     function test() {}
     @test class decoratedClass {}
   `);
