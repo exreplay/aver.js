@@ -1,10 +1,9 @@
 // Props to vue-cli
 // TODO: Add modern mode
 
-const path = require('path');
 const { getPolyfills, getDefaultPolyfills } = require('./getPolyfills');
 
-module.exports = (context, options = {}) => {
+module.exports = (_context, options = {}) => {
   const presets = [];
   const plugins = [];
   const {
