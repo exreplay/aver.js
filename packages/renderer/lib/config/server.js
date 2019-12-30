@@ -46,7 +46,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
           /es6-promise|\.(?!(?:js|json)$).{1,5}$/i,
           /\.css$/,
           /\?vue&type=style/,
-          ...this.transpileDeps
+          ...this.babelLoader.transpileDeps
         ],
         modulesDir: 'node_modules'
       }));
