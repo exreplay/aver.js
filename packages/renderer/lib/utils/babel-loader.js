@@ -1,4 +1,6 @@
 import path from 'path';
+import merge from 'lodash/merge';
+import { isPureObject } from '@averjs/shared-utils';
 
 export default class BabelLoader {
   constructor(isServer, config, perfLoader) {
@@ -18,6 +20,20 @@ export default class BabelLoader {
         return false;
       }
     }).filter(_ => _);
+  }
+
+  presetConfig() {
+    let config = {
+      buildTarget: this.isServer ? 'server' : 'client'
+    };
+
+    if (typeof this.config.babel === 'function') {
+      this.config.babel({ isServer: this.isServer }, config);
+    } else if (isPureObject(this.config.babel)) {
+      config = merge({}, config, this.config.babel);
+    }
+
+    return config;
   }
 
   apply(chain) {
@@ -51,10 +67,7 @@ export default class BabelLoader {
             presets: [
               [
                 require.resolve('@averjs/babel-preset-app'),
-                {
-                  buildTarget: this.isServer ? 'server' : 'client',
-                  ...this.config.babel
-                }
+                this.presetConfig()
               ]
             ]
           });
