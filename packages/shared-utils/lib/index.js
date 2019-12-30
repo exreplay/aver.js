@@ -1,5 +1,4 @@
 import openBrowser from './openBrowser';
 
-export {
-  openBrowser
-};
+export * from './types';
+export { openBrowser };
