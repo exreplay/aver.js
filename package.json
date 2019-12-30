@@ -13,8 +13,8 @@
     "version": "node -r esm ./scripts/generateChangelog.js && git add CHANGELOG.md"
   },
   "devDependencies": {
-    "@babel/core": "7.7.5",
-    "@babel/preset-env": "7.7.6",
+    "@babel/core": "7.7.7",
+    "@babel/preset-env": "7.7.7",
     "babel-jest": "24.9.0",
     "codecov": "3.6.1",
     "cross-spawn": "7.0.1",

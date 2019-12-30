@@ -9,7 +9,7 @@ module.exports = {
 
   testEnvironment: 'node',
   moduleFileExtensions: [
-    'js'
+    'js', 'json'
   ],
   transform: {
     '^.+\\.js?$': 'babel-jest'

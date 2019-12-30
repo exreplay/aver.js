@@ -5,6 +5,7 @@ import { VueLoaderPlugin } from 'vue-loader';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import StyleLoader from '../utils/style-loader';
 import PerformanceLoader from '../utils/perf-loader';
+import BabelLoader from '../utils/babel-loader';
 import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
 
@@ -25,18 +26,7 @@ export default class WebpackBaseConfiguration {
     this.perfLoader = new PerformanceLoader(this.isServer, this.globalConfig);
     this.perfLoader.warmupLoaders();
     this.styleLoader = new StyleLoader(this.isServer, this.globalConfig, this.perfLoader);
-  }
-
-  get transpileDeps() {
-    return this.globalConfig.transpileDependencies.map(dep => {
-      if (typeof dep === 'string') {
-        return new RegExp(dep);
-      } else if (dep instanceof RegExp) {
-        return dep;
-      } else {
-        return false;
-      }
-    }).filter(_ => _);
+    this.babelLoader = new BabelLoader(this.isServer, this.globalConfig, this.perfLoader);
   }
 
   plugins() {
@@ -122,43 +112,8 @@ export default class WebpackBaseConfiguration {
           .options({
             cache: true
           });
-
-    const jsRule = this.chainConfig.module
-      .rule('js')
-        .test(/\.js$/)
-        .exclude
-          .add(filepath => {
-            // always transpile javascript in vue files
-            if (/\.vue\.js$/.test(filepath)) return false;
-            
-            // transpile project path
-            if (filepath.includes(process.env.PROJECT_PATH)) return false;
-
-            // transpile cache dir
-            if (filepath.includes(this.cacheDir)) return false;
-
-            // check if user wants to transpile it
-            if (this.transpileDeps.some(dep => dep.test(filepath))) return false;
-
-            // Ignore node_modules
-            return /node_modules/.test(filepath);
-          })
-          .end();
-
-    this.perfLoader.apply(jsRule, 'js');
-
-    jsRule.use('babel-loader')
-          .loader('babel-loader')
-          .options({
-            presets: [
-              [
-                require.resolve('@averjs/babel-preset-app'),
-                {
-                  buildTarget: this.isServer ? 'server' : 'client'
-                }
-              ]
-            ]
-          });
+    
+    this.babelLoader.apply(this.chainConfig);
         
     this.chainConfig.module
       .rule('pug')

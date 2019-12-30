@@ -23,6 +23,7 @@ Object {
       "@resources": "/aver/resources",
       "@vuex": "/aver/vuex",
     },
+    "babel": Object {},
     "base": false,
     "client": false,
     "css": Object {
