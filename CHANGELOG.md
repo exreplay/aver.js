@@ -1,3 +1,41 @@
+## 2.0.0-5 (2019-12-30)
+
+#### :rocket: New Features
+* `babel-preset-app`, `config`, `core`, `renderer`, `shared-utils`
+  * [#74](https://github.com/exreplay/aver.js/pull/74) feat(babel-preset-app): add support for core-js 3 ([@exreplay](https://github.com/exreplay))
+* `cli`, `config`, `core`
+  * [#135](https://github.com/exreplay/aver.js/pull/135) feat: buildPlugins config parameter ([@exreplay](https://github.com/exreplay))
+* `config`, `renderer`
+  * [#127](https://github.com/exreplay/aver.js/pull/127) feat: transpile config parameter ([@exreplay](https://github.com/exreplay))
+* `core`, `renderer`, `vue-app`
+  * [#126](https://github.com/exreplay/aver.js/pull/126) feat: detect entry files in plugins ([@exreplay](https://github.com/exreplay))
+
+#### :boom: Breaking Changes
+* `config`, `renderer`
+  * [#133](https://github.com/exreplay/aver.js/pull/133) refactor!: removed purgeCss config in favor of new plugin ([@exreplay](https://github.com/exreplay))
+* `vue-app`
+  * [#125](https://github.com/exreplay/aver.js/pull/125) refactor(vue-app): changed lodash forEach to for of loop and call mixins as function ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `core`
+  * [#131](https://github.com/exreplay/aver.js/pull/131) fix(core): use `createStream` function ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#134](https://github.com/exreplay/aver.js/pull/134) chore: use lerna-changelog to generate changelog pr based ([@exreplay](https://github.com/exreplay))
+  * [#124](https://github.com/exreplay/aver.js/pull/124) chore(deps): update dependency memfs to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#130](https://github.com/exreplay/aver.js/pull/130) chore(deps): update dependency inquirer to v7.0.1 ([@renovate[bot]](https://github.com/apps/renovate))
+* `renderer`
+  * [#123](https://github.com/exreplay/aver.js/pull/123) chore(deps): update dependency url-loader to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#122](https://github.com/exreplay/aver.js/pull/122) chore(deps): update dependency file-loader to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#129](https://github.com/exreplay/aver.js/pull/129) chore(deps): update dependency webpack-chain to v6.2.0 ([@renovate[bot]](https://github.com/apps/renovate))
+* `core`
+  * [#120](https://github.com/exreplay/aver.js/pull/120) chore(deps): update dependency rotating-file-stream to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 # [2.0.0-4](https://github.com/exreplay/aver.js/compare/v2.0.0-3...v2.0.0-4) (2019-11-23)
 
 
