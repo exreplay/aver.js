@@ -84,19 +84,30 @@ export default class PluginContainer {
 
   resolveEntryFiles(pluginPath) {
     const pluginPathDir = this.normalizePluginPath(pluginPath);
+    let dirname = pluginPathDir.split('/');
+    dirname = dirname[dirname.length - 1];
 
     const appFile = path.resolve(pluginPathDir, './app.js');
     const clientFile = path.resolve(pluginPathDir, './entry-client.js');
     const serverFile = path.resolve(pluginPathDir, './entry-server.js');
 
-    if (!this.config.entries) this.config.entries = {};
-    if (!this.config.entries.app) this.config.entries.app = [];
-    if (!this.config.entries.client) this.config.entries.client = [];
-    if (!this.config.entries.server) this.config.entries.server = [];
+    if (fs.existsSync(appFile)) {
+      const dst = dirname + '/' + 'app.js';
+      this.config.templates.push({ src: appFile, dst });
+      this.config.entries.app.push('./' + dst);
+    }
 
-    if (fs.existsSync(appFile)) this.config.entries.app.push(this.relativeCacheDirPath(appFile));
-    if (fs.existsSync(clientFile)) this.config.entries.client.push(this.relativeCacheDirPath(clientFile));
-    if (fs.existsSync(serverFile)) this.config.entries.server.push(this.relativeCacheDirPath(serverFile));
+    if (fs.existsSync(clientFile)) {
+      const dst = dirname + '/' + 'entry-client.js';
+      this.config.templates.push({ src: clientFile, dst });
+      this.config.entries.client.push('./' + dst);
+    }
+
+    if (fs.existsSync(serverFile)) {
+      const dst = dirname + '/' + 'entry-server.js';
+      this.config.templates.push({ src: serverFile, dst });
+      this.config.entries.server.push('./' + dst);
+    }
   }
 
   normalizePluginPath(pluginPath) {
