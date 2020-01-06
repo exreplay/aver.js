@@ -2,7 +2,8 @@
   "name": "averjs",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/@averjs/*",
+    "packages/test"
   ],
   "scripts": {
     "dev": "node -r esm ./scripts/dev --watch",

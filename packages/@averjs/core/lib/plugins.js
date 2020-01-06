@@ -84,19 +84,28 @@ export default class PluginContainer {
 
   resolveEntryFiles(pluginPath) {
     const pluginPathDir = this.normalizePluginPath(pluginPath);
+    let dirname = pluginPathDir.split('/');
+    dirname = dirname[dirname.length - 1];
+    const pluginCachePath = path.resolve(this.cacheDir, dirname);
+
+    if (!fs.existsSync(pluginCachePath)) fs.mkdirSync(pluginCachePath);
 
     const appFile = path.resolve(pluginPathDir, './app.js');
     const clientFile = path.resolve(pluginPathDir, './entry-client.js');
     const serverFile = path.resolve(pluginPathDir, './entry-server.js');
 
-    if (!this.config.entries) this.config.entries = {};
-    if (!this.config.entries.app) this.config.entries.app = [];
-    if (!this.config.entries.client) this.config.entries.client = [];
-    if (!this.config.entries.server) this.config.entries.server = [];
+    if (fs.existsSync(appFile)) fs.copyFileSync(appFile, path.resolve(pluginCachePath, './app.js'));
+    if (fs.existsSync(clientFile)) fs.copyFileSync(clientFile, path.resolve(pluginCachePath, './entry-client.js'));
+    if (fs.existsSync(serverFile)) fs.copyFileSync(serverFile, path.resolve(pluginCachePath, './entry-server.js'));
 
-    if (fs.existsSync(appFile)) this.config.entries.app.push(this.relativeCacheDirPath(appFile));
-    if (fs.existsSync(clientFile)) this.config.entries.client.push(this.relativeCacheDirPath(clientFile));
-    if (fs.existsSync(serverFile)) this.config.entries.server.push(this.relativeCacheDirPath(serverFile));
+    // if (!this.config.entries) this.config.entries = {};
+    // if (!this.config.entries.app) this.config.entries.app = [];
+    // if (!this.config.entries.client) this.config.entries.client = [];
+    // if (!this.config.entries.server) this.config.entries.server = [];
+
+    // if (fs.existsSync(appFile)) this.config.entries.app.push(this.relativeCacheDirPath(appFile));
+    // if (fs.existsSync(clientFile)) this.config.entries.client.push(this.relativeCacheDirPath(clientFile));
+    // if (fs.existsSync(serverFile)) this.config.entries.server.push(this.relativeCacheDirPath(serverFile));
   }
 
   normalizePluginPath(pluginPath) {
