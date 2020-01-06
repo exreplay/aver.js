@@ -36,7 +36,11 @@ export default class Renderer {
   }
 
   prepareTemplates() {
-    const templates = vueApp();
+    const templates = [
+      ...this.config.templates,
+      ...vueApp()
+    ];
+
     for (const templateFile of templates) {
       const finalResolvedPath = path.resolve(this.cacheDir, templateFile.dst);
       const fileToCompile = fs.readFileSync(templateFile.src, 'utf8');
