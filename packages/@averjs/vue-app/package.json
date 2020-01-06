@@ -5,10 +5,14 @@
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
-  "main": "lib/app.js",
+  "main": "dist/vue-app.js",
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "/dist",
+    "/templates"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/exreplay/aver.js.git",
@@ -16,5 +20,8 @@
   },
   "bugs": {
     "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "aver": {
+    "build": true
   }
 }
