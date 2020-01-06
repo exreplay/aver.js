@@ -15,6 +15,7 @@ export default class StaticBuilder extends BaseBuilder {
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
     this.distPath = path.join(process.env.PROJECT_PATH, '../dist');
+    this.cacheDir = path.resolve('node_modules/.cache/averjs');
 
     this.initRenderer();
   }
@@ -73,7 +74,7 @@ export default class StaticBuilder extends BaseBuilder {
       const HTML_ATTRS = htmlAttrs.text(true);
       const BODY_ATTRS = bodyAttrs.text();
   
-      const fileToCompile = fs.readFileSync(path.resolve(require.resolve('@averjs/vue-app'), '../index.template.html'), 'utf-8');
+      const fileToCompile = fs.readFileSync(path.resolve(this.cacheDir, './index.template.html'), 'utf-8');
       const compiled = template(fileToCompile, { interpolate: /{{([\s\S]+?)}}/g });
       const compiledTemplate = compiled({
         HTML_ATTRS,

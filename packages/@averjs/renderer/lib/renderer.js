@@ -2,12 +2,12 @@ import fs from 'fs-extra';
 import path from 'path';
 import webpack from 'webpack';
 import template from 'lodash/template';
-import klawSync from 'klaw-sync';
 import WebpackClientConfiguration from './config/client';
 import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
 import { StaticBuilder } from '@averjs/builder';
+import vueApp from '@averjs/vue-app';
 
 export default class Renderer {
   constructor(options, aver) {
@@ -36,30 +36,23 @@ export default class Renderer {
   }
 
   prepareTemplates() {
-    const appDir = path.resolve(require.resolve('@averjs/vue-app'), '../');
-    const files = klawSync(appDir);
-    for (const file of files) {
-      if (file.stats.isDirectory()) {
-        const dirName = path.basename(file.path);
-        fs.mkdirpSync(path.resolve(this.cacheDir, dirName));
-      } else if (file.stats.isFile()) {
-        const fileName = path.basename(file.path);
-        const pathName = path.basename(path.dirname(file.path));
-        const fileToCompile = fs.readFileSync(file.path, 'utf8');
-        const compiled = template(fileToCompile, { interpolate: /<%=([\s\S]+?)%>/g });
-        const compiledApp = compiled({
-          config: {
-            progressbar: this.config.progressbar,
-            i18n: this.config.i18n,
-            csrf: this.config.csrf,
-            router: this.config.router,
-            store: this.config.store,
-            entries: this.config.entries
-          }
-        });
+    const templates = vueApp();
+    for (const templateFile of templates) {
+      const finalResolvedPath = path.resolve(this.cacheDir, templateFile.dst);
+      const fileToCompile = fs.readFileSync(templateFile.src, 'utf8');
+      const compiled = template(fileToCompile, { interpolate: /<%=([\s\S]+?)%>/g });
+      const compiledApp = compiled({
+        config: {
+          progressbar: this.config.progressbar,
+          i18n: this.config.i18n,
+          csrf: this.config.csrf,
+          router: this.config.router,
+          store: this.config.store,
+          entries: this.config.entries
+        }
+      });
 
-        fs.writeFileSync(path.resolve(this.cacheDir, pathName !== 'lib' ? `${pathName}/${fileName}` : fileName), compiledApp);
-      }
+      fs.outputFileSync(finalResolvedPath, compiledApp);
     }
   }
     

@@ -14,6 +14,7 @@ export default class SsrBuilder extends BaseBuilder {
     this.renderer = null;
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
+    this.cacheDir = path.resolve('node_modules/.cache/averjs');
   }
 
   async initRenderer() {
@@ -87,7 +88,7 @@ export default class SsrBuilder extends BaseBuilder {
 
       const templatePath = this.isProd
         ? path.resolve(process.cwd(), './dist/index.ssr.html')
-        : path.resolve(require.resolve('@averjs/vue-app'), '../index.template.html');
+        : path.resolve(this.cacheDir, './index.template.html');
       const fileToCompile = fs.readFileSync(templatePath, 'utf-8');
       const compiled = template(fileToCompile, { interpolate: /{{([\s\S]+?)}}/g });
       const compiledTemplate = compiled({
