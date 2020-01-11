@@ -7,12 +7,18 @@ Object {
   "createRenderer": Object {},
   "csrf": true,
   "csrfExclude": Array [],
+  "entries": Object {
+    "app": Array [],
+    "client": Array [],
+    "server": Array [],
+  },
   "i18n": Object {
     "silentTranslationWarn": true,
   },
   "plugins": Array [],
   "progressbar": true,
   "store": Object {},
+  "templates": Array [],
   "webpack": Object {
     "alias": Object {
       "@": "/aver",

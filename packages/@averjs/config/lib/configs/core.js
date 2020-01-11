@@ -1,5 +1,11 @@
 export default () => ({
   buildPlugins: [],
   plugins: [],
-  aliases: {}
+  aliases: {},
+  templates: [],
+  entries: {
+    app: [],
+    client: [],
+    server: []
+  }
 });
