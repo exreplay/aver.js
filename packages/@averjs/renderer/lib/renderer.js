@@ -26,10 +26,7 @@ export default class Renderer {
   }
 
   async setup() {
-    if (!fs.existsSync(this.cacheDir)) {
-      fs.mkdirpSync(this.cacheDir);
-      this.prepareTemplates();
-    }
+    this.prepareTemplates();
 
     this.clientConfig = await new WebpackClientConfiguration(this.aver).config(this.options.static);
     this.serverConfig = await new WebpackServerConfiguration(this.aver).config(this.options.static);
