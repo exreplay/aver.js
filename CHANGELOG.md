@@ -1,3 +1,13 @@
+## 2.0.0-7 (2020-01-18)
+
+#### :bug: Bug Fix
+* `@averjs/babel-preset-app`, `@averjs/cli`, `@averjs/core`, `@averjs/renderer`
+  * [#143](https://github.com/exreplay/aver.js/pull/143) fix: distribute dependencies correctly ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-6 (2020-01-17)
 
 #### :rocket: New Features
