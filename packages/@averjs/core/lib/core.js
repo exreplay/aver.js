@@ -4,7 +4,6 @@ import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import { getAverjsConfig } from '@averjs/config';
-import Renderer from '@averjs/renderer';
 import PluginContainer from './plugins';
 
 export default class Core extends Hookable {
@@ -38,7 +37,8 @@ export default class Core extends Hookable {
 
   async build(args) {
     await this.plugins.register();
-    const renderer = new Renderer(args, this);
+    const AverRenderer = require('@averjs/renderer');
+    const renderer = new AverRenderer(args, this);
     await renderer.setup();
     await renderer.compile();
   }

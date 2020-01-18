@@ -27,9 +27,6 @@
     "@babel/plugin-transform-classes": "7.7.4",
     "@babel/plugin-transform-parameters": "7.7.7",
     "@babel/plugin-transform-runtime": "7.7.6",
-    "@babel/preset-env": "7.7.7",
-    "@babel/runtime": "7.7.7",
-    "@babel/runtime-corejs2": "7.7.7",
-    "core-js": "2.6.5"
+    "@babel/preset-env": "7.7.7"
   }
 }

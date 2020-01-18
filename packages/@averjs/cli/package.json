@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "@averjs/init": "2.0.0-6",
-    "command-line-usage": "6.1.0"
+    "command-line-usage": "6.1.0",
+    "minimist": "1.2.0"
   },
   "aver": {
     "build": true
