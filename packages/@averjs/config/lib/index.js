@@ -6,12 +6,14 @@ import { defaultAverjsConfig, defaultFileName } from './configs';
 export function getAverjsConfig() {
   const requireModule = require('esm')(module);
   const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);
-  const defaultConfig = defaultAverjsConfig();
+  const config = defaultAverjsConfig();
   let userConfig = {};
 
   if (fs.existsSync(globalConfPath)) userConfig = requireModule(globalConfPath).default;
 
-  defaultConfig.cacheDir = path.resolve('node_modules/.cache/averjs');
+  config.rootDir = process.cwd();
 
-  return merge(defaultConfig, userConfig);
+  config.cacheDir = path.resolve(config.rootDir, './node_modules/.cache/averjs');
+
+  return merge(config, userConfig);
 }
