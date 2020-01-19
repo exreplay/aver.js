@@ -15,6 +15,7 @@ export default class WebpackBaseConfiguration {
     this.isServer = isServer;
     this.libRoot = path.resolve(require.resolve('@averjs/core'), '../');
     this.cacheDir = aver.config.cacheDir;
+    this.distPath = aver.config.distPath;
     
     this.isProd = process.env.NODE_ENV === 'production';
 
@@ -201,7 +202,7 @@ export default class WebpackBaseConfiguration {
   async config(isStatic) {
     this.chainConfig
       .output
-        .path(path.resolve(process.env.PROJECT_PATH, '../dist/'))
+        .path(this.distPath)
         .publicPath(isStatic ? '/' : '/dist/')
         .end()
       .node

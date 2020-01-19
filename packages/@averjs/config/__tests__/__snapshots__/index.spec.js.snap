@@ -8,6 +8,8 @@ Object {
   "createRenderer": Object {},
   "csrf": true,
   "csrfExclude": Array [],
+  "distDir": "./dist",
+  "distPath": "/dist",
   "entries": Object {
     "app": Array [],
     "client": Array [],

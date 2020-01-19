@@ -15,12 +15,13 @@ export default class SsrBuilder extends BaseBuilder {
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
     this.cacheDir = aver.config.cacheDir;
+    this.distPath = aver.config.distPath;
   }
 
   async initRenderer() {
     if (this.isProd) {
-      const serverBundle = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-server-bundle.json'));
-      const clientManifest = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-client-manifest.json'));
+      const serverBundle = require(path.join(this.distPath, './vue-ssr-server-bundle.json'));
+      const clientManifest = require(path.join(this.distPath, './vue-ssr-client-manifest.json'));
       this.renderer = this.createRenderer(serverBundle, Object.assign({
         clientManifest: clientManifest
       }, this.config.createRenderer));
@@ -87,7 +88,7 @@ export default class SsrBuilder extends BaseBuilder {
       const BODY_ATTRS = bodyAttrs.text();
 
       const templatePath = this.isProd
-        ? path.resolve(process.cwd(), './dist/index.ssr.html')
+        ? path.resolve(this.distPath, './index.ssr.html')
         : path.resolve(this.cacheDir, './index.template.html');
       const fileToCompile = fs.readFileSync(templatePath, 'utf-8');
       const compiled = template(fileToCompile, { interpolate: /{{([\s\S]+?)}}/g });

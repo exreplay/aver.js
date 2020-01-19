@@ -16,7 +16,7 @@ export default class Renderer {
     this.isProd = process.env.NODE_ENV === 'production';
     this.options = options;
     this.cacheDir = aver.config.cacheDir;
-    this.distPath = path.join(process.env.PROJECT_PATH, '../dist');
+    this.distPath = aver.config.distPath;
     this.mfs = new MFS();
     this.isBrowserOpen = false;
     this.bundle = null;

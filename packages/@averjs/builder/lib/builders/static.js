@@ -14,15 +14,15 @@ export default class StaticBuilder extends BaseBuilder {
     this.renderer = null;
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
-    this.distPath = path.join(process.env.PROJECT_PATH, '../dist');
+    this.distPath = config.distPath;
     this.cacheDir = config.cacheDir;
 
     this.initRenderer();
   }
 
   initRenderer() {
-    const serverBundle = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-server-bundle.json'));
-    const clientManifest = require(path.join(process.env.PROJECT_PATH, '../dist/vue-ssr-client-manifest.json'));
+    const serverBundle = require(path.join(this.distPath, './vue-ssr-server-bundle.json'));
+    const clientManifest = require(path.join(this.distPath, './vue-ssr-client-manifest.json'));
     this.renderer = this.createRenderer(serverBundle, Object.assign({
       clientManifest: clientManifest
     }, this.config.createRenderer));

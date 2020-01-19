@@ -15,5 +15,8 @@ export function getAverjsConfig() {
 
   config.cacheDir = path.resolve(config.rootDir, './node_modules/.cache/averjs');
 
+  config.distDir = './dist';
+  config.distPath = path.resolve(config.rootDir, config.distDir);
+
   return merge(config, userConfig);
 }
