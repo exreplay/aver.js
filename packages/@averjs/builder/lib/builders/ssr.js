@@ -14,7 +14,7 @@ export default class SsrBuilder extends BaseBuilder {
     this.renderer = null;
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
-    this.cacheDir = path.resolve('node_modules/.cache/averjs');
+    this.cacheDir = aver.config.cacheDir;
   }
 
   async initRenderer() {

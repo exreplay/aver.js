@@ -15,7 +15,7 @@ export default class Renderer {
     this.config = aver.config;
     this.isProd = process.env.NODE_ENV === 'production';
     this.options = options;
-    this.cacheDir = path.resolve('node_modules/.cache/averjs');
+    this.cacheDir = aver.config.cacheDir;
     this.distPath = path.join(process.env.PROJECT_PATH, '../dist');
     this.mfs = new MFS();
     this.isBrowserOpen = false;

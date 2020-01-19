@@ -15,7 +15,7 @@ export default class StaticBuilder extends BaseBuilder {
     this.readyPromise = null;
     this.isProd = process.env.NODE_ENV === 'production';
     this.distPath = path.join(process.env.PROJECT_PATH, '../dist');
-    this.cacheDir = path.resolve('node_modules/.cache/averjs');
+    this.cacheDir = config.cacheDir;
 
     this.initRenderer();
   }

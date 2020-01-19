@@ -1,13 +1,12 @@
-import path from 'path';
 import merge from 'lodash/merge';
 import { isPureObject } from '@averjs/shared-utils';
 
 export default class BabelLoader {
   constructor(isServer, config, perfLoader) {
-    this.config = config;
+    this.config = config.webpack;
     this.isServer = isServer;
     this.perfLoader = perfLoader;
-    this.cacheDir = path.resolve('node_modules/.cache/averjs');
+    this.cacheDir = config.cacheDir;
   }
 
   get transpileDeps() {

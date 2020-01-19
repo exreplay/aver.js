@@ -14,7 +14,7 @@ export default class WebpackBaseConfiguration {
     this.chainConfig = new WebpackChain();
     this.isServer = isServer;
     this.libRoot = path.resolve(require.resolve('@averjs/core'), '../');
-    this.cacheDir = path.resolve('node_modules/.cache/averjs');
+    this.cacheDir = aver.config.cacheDir;
     
     this.isProd = process.env.NODE_ENV === 'production';
 
@@ -26,7 +26,7 @@ export default class WebpackBaseConfiguration {
     this.perfLoader = new PerformanceLoader(this.isServer, this.globalConfig);
     this.perfLoader.warmupLoaders();
     this.styleLoader = new StyleLoader(this.isServer, this.globalConfig, this.perfLoader);
-    this.babelLoader = new BabelLoader(this.isServer, this.globalConfig, this.perfLoader);
+    this.babelLoader = new BabelLoader(this.isServer, aver.config, this.perfLoader);
   }
 
   plugins() {
