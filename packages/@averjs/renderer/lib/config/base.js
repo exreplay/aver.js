@@ -13,7 +13,6 @@ export default class WebpackBaseConfiguration {
   constructor(isServer, aver) {
     this.chainConfig = new WebpackChain();
     this.isServer = isServer;
-    this.libRoot = path.resolve(require.resolve('@averjs/core'), '../');
     this.cacheDir = aver.config.cacheDir;
     this.distPath = aver.config.distPath;
     
