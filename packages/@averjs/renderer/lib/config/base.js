@@ -1,4 +1,3 @@
-import path from 'path';
 import webpack from 'webpack';
 import WebpackChain from 'webpack-chain';
 import { VueLoaderPlugin } from 'vue-loader';
