@@ -6,7 +6,7 @@ export default class PluginContainer {
   constructor(aver) {
     this.aver = aver;
     this.config = aver.config;
-    this.cacheDir = path.resolve('node_modules/.cache/averjs');
+    this.cacheDir = aver.config.cacheDir;
   }
 
   async register() {

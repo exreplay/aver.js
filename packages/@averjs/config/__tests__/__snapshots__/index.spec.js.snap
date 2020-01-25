@@ -4,9 +4,12 @@ exports[`should match default snapshot config when no config file is present 1`]
 Object {
   "aliases": Object {},
   "buildPlugins": Array [],
+  "cacheDir": "/node_modules/.cache/averjs",
   "createRenderer": Object {},
   "csrf": true,
   "csrfExclude": Array [],
+  "distDir": "./dist",
+  "distPath": "/dist",
   "entries": Object {
     "app": Array [],
     "client": Array [],
@@ -17,6 +20,7 @@ Object {
   },
   "plugins": Array [],
   "progressbar": true,
+  "rootDir": "/",
   "store": Object {},
   "templates": Array [],
   "webpack": Object {

@@ -1,3 +1,33 @@
+## 2.0.0-7 (2020-01-18)
+
+#### :bug: Bug Fix
+* `@averjs/babel-preset-app`, `@averjs/cli`, `@averjs/core`, `@averjs/renderer`
+  * [#143](https://github.com/exreplay/aver.js/pull/143) fix: distribute dependencies correctly ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-6 (2020-01-17)
+
+#### :rocket: New Features
+* `@averjs/config`, `@averjs/core`, `@averjs/renderer`
+  * [#139](https://github.com/exreplay/aver.js/pull/139) feat: compile entry files from plugins with lodash template ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#142](https://github.com/exreplay/aver.js/pull/142) fix: init persisted state after replace state ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/renderer`
+  * [#140](https://github.com/exreplay/aver.js/pull/140) revert: always compile templates even when cacheDir exists to keep files up to date ([@exreplay](https://github.com/exreplay))
+* `@averjs/builder`, `@averjs/renderer`, `@averjs/vue-app`
+  * [#138](https://github.com/exreplay/aver.js/pull/138) refactor: changed the way templates are compiled ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-5 (2019-12-30)
 
 #### :rocket: New Features
