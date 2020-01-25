@@ -22,6 +22,8 @@ export default class Server extends WWW {
     this.aver = aver;
     this.config = aver.config;
     this.isProd = process.env.NODE_ENV === 'production';
+    this.distDir = aver.config.distDir;
+    this.distPath = aver.config.distPath;
     this.middlewares = [];
 
     fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) || fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
@@ -73,7 +75,7 @@ export default class Server extends WWW {
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));
         
-    this.middlewares.push([ '/dist', serve('./dist', true) ]);
+    this.middlewares.push([ '/dist', serve(this.distDir, true) ]);
     this.middlewares.push([ '/public', serve('./public', true) ]);
     this.middlewares.push([ '/static', serve('./static', true) ]);
     this.middlewares.push([ '/storage', express.static('./storage') ]);
@@ -157,7 +159,7 @@ export default class Server extends WWW {
 
     this.app.get('/service-worker.js', (req, res, next) => {
       try {
-        const sw = fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../dist/service-worker.js'));
+        const sw = fs.readFileSync(path.resolve(this.distPath, './service-worker.js'));
         res.set({ 'Content-Type': 'application/javascript; charset=UTF-8' });
         res.send(sw);
       } catch (err) {

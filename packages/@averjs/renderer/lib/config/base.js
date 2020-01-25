@@ -1,4 +1,3 @@
-import path from 'path';
 import webpack from 'webpack';
 import WebpackChain from 'webpack-chain';
 import { VueLoaderPlugin } from 'vue-loader';
@@ -13,8 +12,8 @@ export default class WebpackBaseConfiguration {
   constructor(isServer, aver) {
     this.chainConfig = new WebpackChain();
     this.isServer = isServer;
-    this.libRoot = path.resolve(require.resolve('@averjs/core'), '../');
-    this.cacheDir = path.resolve('node_modules/.cache/averjs');
+    this.cacheDir = aver.config.cacheDir;
+    this.distPath = aver.config.distPath;
     
     this.isProd = process.env.NODE_ENV === 'production';
 
@@ -26,7 +25,7 @@ export default class WebpackBaseConfiguration {
     this.perfLoader = new PerformanceLoader(this.isServer, this.globalConfig);
     this.perfLoader.warmupLoaders();
     this.styleLoader = new StyleLoader(this.isServer, this.globalConfig, this.perfLoader);
-    this.babelLoader = new BabelLoader(this.isServer, this.globalConfig, this.perfLoader);
+    this.babelLoader = new BabelLoader(this.isServer, aver.config, this.perfLoader);
   }
 
   plugins() {
@@ -201,7 +200,7 @@ export default class WebpackBaseConfiguration {
   async config(isStatic) {
     this.chainConfig
       .output
-        .path(path.resolve(process.env.PROJECT_PATH, '../dist/'))
+        .path(this.distPath)
         .publicPath(isStatic ? '/' : '/dist/')
         .end()
       .node
