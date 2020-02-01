@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "mongoose": "5.8.11",
-    "mongoose-data-seed": "1.0.7"
+    "mongoose-data-seed": "2.1.6"
   }
 }
