@@ -1,12 +1,11 @@
 import './register-component-hooks';
 import Vue from 'vue';
-import VueI18n from 'vue-i18n';
 import axios from 'axios';
 import App from '@/App.vue';
 import { createRouter } from './router/';
 import { createStore } from './store/';
+import { createI18n } from './i18n';
 import { sync } from 'vuex-router-sync';
-import * as Cookies from 'js-cookie';
 <% if (config.progressbar) { %> 
 import VueProgressBar from 'vue-progressbar';
 <% } %>
@@ -29,9 +28,6 @@ const options = {
 Vue.use(VueProgressBar, <% typeof config.progressbar === 'object' ? print('Object.assign(options, JSON.parse(\''+JSON.stringify(config.progressbar)+'\'))') : print('options') %>);
 <% } %>
 
-
-Vue.use(VueI18n);
-
 axios.interceptors.response.use((response) => {
   return response;
 }, (error) => {
@@ -39,26 +35,7 @@ axios.interceptors.response.use((response) => {
 });
 
 export function createApp(ssrContext) {
-  const i18nConfig = {
-    locale: 'de',
-    fallbackLocale: 'de'
-  };
-
-  const i18n = new VueI18n(<% if(typeof config.i18n !== 'undefined') print('Object.assign(i18nConfig, JSON.parse(\''+JSON.stringify(config.i18n)+'\'))') %>);
-
-  if (!ssrContext.isServer) i18n.locale = Cookies.get('language') || 'de';
-  else i18n.locale = ssrContext.context.cookies['language'] || 'de';
-
-  Vue.prototype.$locale = {
-    change: (lang) => {
-      i18n.locale = lang;
-      Cookies.set('language', i18n.locale, { secure: process.env.NODE_ENV === 'production' });
-    },
-    current: () => {
-      return i18n.locale;
-    }
-  };
-
+  const i18n = createI18n(ssrContext);
   const router = createRouter({ i18n });
   const store = createStore(ssrContext);
 
