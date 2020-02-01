@@ -18,7 +18,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "connect-redis": "3.4.2",
+    "connect-redis": "4.0.4",
     "express-session": "1.17.0",
     "ioredis": "4.14.1",
     "uuid": "3.4.0"
