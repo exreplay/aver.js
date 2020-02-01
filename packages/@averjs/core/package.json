@@ -55,7 +55,7 @@
     "uuid": "3.3.3",
     "vue": "2.6.11",
     "vue-class-component": "7.1.0",
-    "vue-client-only": "^2.0.0",
+    "vue-client-only": "2.0.0",
     "vue-i18n": "8.15.3",
     "vue-meta": "2.3.1",
     "vue-progressbar": "0.7.5",
