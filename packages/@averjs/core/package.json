@@ -35,7 +35,6 @@
     "compression": "1.7.4",
     "cookie-parser": "1.4.4",
     "core-js": "2.6.5",
-    "cross-env": "6.0.3",
     "csurf": "1.10.0",
     "debug": "4.1.1",
     "dotenv": "8.2.0",
