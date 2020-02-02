@@ -1,3 +1,34 @@
+## v2.0.0-8 (2020-02-02)
+
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#151](https://github.com/exreplay/aver.js/pull/151) feat: moved i18n config to its own file with support for mixins ([@exreplay](https://github.com/exreplay))
+
+#### :boom: Breaking Changes
+* `@averjs/builder`, `@averjs/vue-app`
+  * [#153](https://github.com/exreplay/aver.js/pull/153) feat: pass whole req object to server entries ([@exreplay](https://github.com/exreplay))
+* `@averjs/mailer`
+  * [#152](https://github.com/exreplay/aver.js/pull/152) refactor(mailer): overhaul mailer plugin ([@exreplay](https://github.com/exreplay))
+* `@averjs/mongodb`
+  * [#79](https://github.com/exreplay/aver.js/pull/79) chore(deps): update dependency mongoose-data-seed to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/session`
+  * [#93](https://github.com/exreplay/aver.js/pull/93) chore(deps): update dependency connect-redis to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`
+  * [#60](https://github.com/exreplay/aver.js/pull/60) chore(deps): update dependency express-validator to v6 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#147](https://github.com/exreplay/aver.js/pull/147) refactor: replace `vue-no-ssr` with `vue-client-only` ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#136](https://github.com/exreplay/aver.js/pull/136) chore(deps): update dependency eslint-plugin-node to v11 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/mailer`
+  * [#145](https://github.com/exreplay/aver.js/pull/145) chore(deps): update dependency email-templates to v7 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/builder`, `@averjs/config`, `@averjs/core`, `@averjs/renderer`
+  * [#144](https://github.com/exreplay/aver.js/pull/144) refactor: globalized config paths ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-7 (2020-01-18)
 
 #### :bug: Bug Fix
