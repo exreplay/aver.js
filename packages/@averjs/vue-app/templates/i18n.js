@@ -5,7 +5,7 @@ import merge from 'lodash/merge';
 
 Vue.use(VueI18n);
 
-export function createI18n(ssrContext) {
+export function createI18n({ isServer, context }) {
   let i18nConfig = {
     locale: 'de',
     fallbackLocale: 'de'
@@ -24,8 +24,8 @@ export function createI18n(ssrContext) {
 
   const i18n = new VueI18n(i18nConfig);
 
-  if (!ssrContext.isServer) i18n.locale = Cookies.get('language') || i18nConfig.locale;
-  else i18n.locale = ssrContext.context.cookies.language || i18nConfig.locale;
+  if (!isServer) i18n.locale = Cookies.get('language') || i18nConfig.locale;
+  else i18n.locale = context.req.cookies.language || i18nConfig.locale;
 
   Vue.prototype.$locale = {
     change: (lang) => {
