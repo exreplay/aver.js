@@ -34,8 +34,9 @@ export default class StaticBuilder extends BaseBuilder {
       const context = {
         title: process.env.APP_NAME,
         url: route.path,
-        cookies: '',
-        host: ''
+        req: {
+          cookies: []
+        }
       };
 
       if (this.config.csrf) Object.assign(context, { csrfToken: '' });
