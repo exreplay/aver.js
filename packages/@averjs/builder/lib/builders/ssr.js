@@ -39,14 +39,10 @@ export default class SsrBuilder extends BaseBuilder {
     const context = {
       title: process.env.APP_NAME,
       url: req.url,
-      cookies: req.cookies,
-      host: req.headers.host
+      req
     };
 
     if (this.config.csrf) Object.assign(context, { csrfToken: req.csrfToken() });
-
-    if (typeof req.flash === 'function') Object.assign(context, { flash: req.flash() });
-    if (typeof req.isAuthenticated === 'function') Object.assign(context, { isAuthenticated: req.isAuthenticated(), user: req.user });
     
     try {
       const html = await this.renderer.renderToString(context);
