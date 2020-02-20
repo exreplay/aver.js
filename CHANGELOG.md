@@ -1,3 +1,16 @@
+## v2.0.0-9 (2020-02-20)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#157](https://github.com/exreplay/aver.js/pull/157) fix: fix vue-meta hydration by setting ssrAppId to 1 ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* [#156](https://github.com/exreplay/aver.js/pull/156) Update dependency codecov to v3.6.5 [SECURITY] ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## v2.0.0-8 (2020-02-02)
 
 #### :rocket: New Features
