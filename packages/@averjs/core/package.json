@@ -1,6 +1,6 @@
 {
   "name": "@averjs/core",
-  "version": "2.0.0-8",
+  "version": "2.0.0-9",
   "description": "the averjs core",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -23,9 +23,9 @@
     "build": true
   },
   "dependencies": {
-    "@averjs/builder": "2.0.0-8",
-    "@averjs/cli": "2.0.0-8",
-    "@averjs/config": "2.0.0-8",
+    "@averjs/builder": "2.0.0-9",
+    "@averjs/cli": "2.0.0-9",
+    "@averjs/config": "2.0.0-9",
     "@averjs/vuex-decorators": "2.2.2",
     "@babel/runtime": "7.8.4",
     "@babel/runtime-corejs2": "7.8.4",
