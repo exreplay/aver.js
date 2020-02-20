@@ -3,7 +3,9 @@ import VueRouter from 'vue-router';
 import Meta from 'vue-meta';
 
 Vue.use(VueRouter);
-Vue.use(Meta);
+Vue.use(Meta, {
+  ssrAppId: 1
+});
 
 export function createRouter({ i18n }) {
   const routes = require('@/pages').default;
