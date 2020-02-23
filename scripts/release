@@ -66,7 +66,7 @@ class ReleaseScript {
     this.removeNoHupOut();
     // Grep all verdaccio processes and kill them. Exclude the grep process
     console.log(logSymbols.info, 'Cleanup verdaccio processes before exit');
-    execa.shellSync(`ps -ef | grep -i 'verdaccio' | grep -v grep | awk '{print $2}' | xargs kill -9`);
+    execa.shellSync('ps -ef | grep -i \'verdaccio\' | grep -v grep | awk \'{print $2}\' | xargs kill -9');
     fs.removeSync(path.resolve(__dirname, './verdaccio'));
     process.exit();
   }
@@ -77,6 +77,11 @@ class ReleaseScript {
 }
 
 (async() => {
+  if (!process.env.GITHUB_AUTH) {
+    console.error('Please provie a GITHUB_AUTH token, otherwise the changelog can not be created. Use export GITHUB_AUTH="token".');
+    process.exit(1);
+  }
+
   let test = false;
 
   for (const arg of process.argv) {
@@ -90,7 +95,7 @@ class ReleaseScript {
     await inquirer.prompt([
       {
         name: 'exit',
-        message: `We keep this process up and running so you can have a look at verdaccio to see if everything worked out correctly. Hit enter to exit.`,
+        message: 'We keep this process up and running so you can have a look at verdaccio to see if everything worked out correctly. Hit enter to exit.',
         type: 'confirm'
       }
     ]);
