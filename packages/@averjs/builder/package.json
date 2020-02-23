@@ -1,6 +1,6 @@
 {
   "name": "@averjs/builder",
-  "version": "2.0.0-9",
+  "version": "2.0.0-10",
   "description": "The builder package for averjs.",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",

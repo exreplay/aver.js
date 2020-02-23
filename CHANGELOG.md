@@ -1,3 +1,24 @@
+## 2.0.0-10 (2020-02-23)
+
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#158](https://github.com/exreplay/aver.js/pull/158) feat: pass vue app options to app mixins ([@exreplay](https://github.com/exreplay))
+
+#### :boom: Breaking Changes
+* `@averjs/vue-app`
+  * [#159](https://github.com/exreplay/aver.js/pull/159) feat: pass to and from to async data from vue-router ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#160](https://github.com/exreplay/aver.js/pull/160) chore: check if GITHUB_AUTH token is set ([@exreplay](https://github.com/exreplay))
+  * [#155](https://github.com/exreplay/aver.js/pull/155) chore(deps): update dependency pify to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`
+  * [#154](https://github.com/exreplay/aver.js/pull/154) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## v2.0.0-9 (2020-02-20)
 
 #### :bug: Bug Fix
