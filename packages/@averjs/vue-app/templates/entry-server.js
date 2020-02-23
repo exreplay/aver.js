@@ -58,7 +58,10 @@ export default async context => {
       if (typeof asyncData === 'function' && asyncData) {
         await asyncData({
           store,
-          route: router.currentRoute,
+          route: {
+            to: router.currentRoute,
+            from: undefined
+          },
           isServer: true
         });
       }
@@ -68,7 +71,10 @@ export default async context => {
     if (typeof asyncData === 'function' && asyncData) {
       await asyncData({
         store,
-        route: router.currentRoute,
+        route: {
+          to: router.currentRoute,
+          from: undefined
+        },
         isServer: true
       });
     }

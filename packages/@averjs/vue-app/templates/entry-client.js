@@ -27,7 +27,7 @@ class ClientEntry {
         if (!asyncDataHooks.length) return next();
 
         try {
-          await Promise.all(asyncDataHooks.map(hook => hook({ store, route: to, isServer: false })))
+          await Promise.all(asyncDataHooks.map(hook => hook({ store, route: { to, from }, isServer: false })))
           next();
         } catch(err) {
           next(err);
@@ -95,7 +95,7 @@ class ClientEntry {
           try {
             await asyncData({
               store: this.$store,
-              route: to,
+              route: { to, from },
               isServer: false
             });
             next();
