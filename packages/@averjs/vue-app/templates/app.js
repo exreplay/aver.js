@@ -43,6 +43,14 @@ export function createApp(ssrContext) {
 
   Vue.router = router;
 
+  const appOptions = {
+    i18n,
+    router,
+    store,
+    ssrContext,
+    render: h => h(App)
+  };
+
   const entries = [
     <% 
       if(typeof config.entries !== 'undefined' && typeof config.entries.app !== 'undefined') {
@@ -56,21 +64,15 @@ export function createApp(ssrContext) {
   const mixinContext = require.context('@/', false, /^\.\/app\.js$/i);
   for(const key of mixinContext.keys()) {
     const mixin = mixinContext(key).default;
-    if(typeof mixin === 'function') mixin(ssrContext);
+    if(typeof mixin === 'function') mixin({ ...ssrContext, appOptions });
   }
 
   for(const entry of entries) {
     const mixin = entry.default;
-    if(typeof mixin === 'function') mixin(ssrContext);
+    if(typeof mixin === 'function') mixin({ ...ssrContext, appOptions });
   }
     
-  const app = new Vue({
-    i18n,
-    router,
-    store,
-    ssrContext,
-    render: h => h(App)
-  });
+  const app = new Vue(appOptions);
 
   return { app, router, store };
 };
