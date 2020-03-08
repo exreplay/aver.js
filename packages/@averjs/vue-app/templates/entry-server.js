@@ -22,6 +22,10 @@ export default async context => {
     const mixinContext = require.context('@/', false, /^\.\/entry-server\.js$/i);
     for (const key of mixinContext.keys()) entries.push(mixinContext(key));
 
+    const renderedFns = [];
+    const contextRendered = fn => {
+      if(typeof fn === 'function') renderedFns.push(fn);
+    }
     const { app, router, store, userReturns } = createApp({ isServer: true, context });
     const { url } = context;
     const meta = app.$meta();
@@ -40,7 +44,7 @@ export default async context => {
 
     for(const entry of entries) {
       const mixin = entry.default;
-      if(typeof mixin === 'function') mixin({...context, userReturns});
+      if(typeof mixin === 'function') mixin({...context, userReturns, contextRendered});
     }
         
     for (const [key] of Object.entries(store._actions)) {
@@ -76,7 +80,8 @@ export default async context => {
       });
     }
 
-    context.rendered = () => {
+    context.rendered = async () => {
+      for(const fn of renderedFns) await fn(context);
       context.state = store.state;
     };
         
