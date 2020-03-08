@@ -74,6 +74,15 @@ export default class StaticBuilder extends BaseBuilder {
       const HEAD_ATTRS = headAttrs.text();
       const HTML_ATTRS = htmlAttrs.text(true);
       const BODY_ATTRS = bodyAttrs.text();
+
+      await this.aver.callHook('builder:before-compile-static', {
+        context,
+        HTML_ATTRS,
+        HEAD_ATTRS,
+        HEAD,
+        BODY_ATTRS,
+        BODY
+      });
   
       const fileToCompile = fs.readFileSync(path.resolve(this.cacheDir, './index.template.html'), 'utf-8');
       const compiled = template(fileToCompile, { interpolate: /{{([\s\S]+?)}}/g });
