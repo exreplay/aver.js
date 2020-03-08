@@ -83,6 +83,15 @@ export default class SsrBuilder extends BaseBuilder {
       const HTML_ATTRS = htmlAttrs.text(true);
       const BODY_ATTRS = bodyAttrs.text();
 
+      await this.aver.callHook('builder:before-compile-ssr', {
+        context,
+        HTML_ATTRS,
+        HEAD_ATTRS,
+        HEAD,
+        BODY_ATTRS,
+        BODY
+      });
+
       const templatePath = this.isProd
         ? path.resolve(this.distPath, './index.ssr.html')
         : path.resolve(this.cacheDir, './index.template.html');
