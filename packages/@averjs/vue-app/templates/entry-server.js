@@ -7,7 +7,6 @@ Vue.prototype.$auth = null;
 Vue.prototype.$modernizr = {};
 <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
 
-const mixinContext = require.context('@/', false, /^\.\/entry-server\.js$/i);
 
 export default async context => {
   try {
@@ -15,11 +14,14 @@ export default async context => {
       <% 
         if(typeof config.entries !== 'undefined' && typeof config.entries.server !== 'undefined') {
           for(const entry of config.entries.server) {
-            print(`require('${entry}')`);
+            print(`require('${entry}'),`);
           }
         }
       %>
     ];
+    const mixinContext = require.context('@/', false, /^\.\/entry-server\.js$/i);
+    for (const key of mixinContext.keys()) entries.push(mixinContext(key));
+
     const { app, router, store } = createApp({ isServer: true, context });
     const { url } = context;
     const meta = app.$meta();
@@ -34,11 +36,6 @@ export default async context => {
       const error = new Error('Page not found!');
       error.code = 404;
       throw error;
-    }
-        
-    for (const key of mixinContext.keys()) {
-      const mixin = mixinContext(key).default;
-      if (typeof mixin === 'function') mixin(context);
     }
 
     for(const entry of entries) {

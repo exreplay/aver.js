@@ -43,17 +43,13 @@ class ClientEntry {
       <% 
         if(typeof config.entries !== 'undefined' && typeof config.entries.client !== 'undefined') {
           for(const entry of config.entries.client) {
-            print(`require('${entry}')`);
+            print(`require('${entry}'),`);
           }
         }
       %>
     ];
-
     const mixinContext = require.context('@/', false, /^\.\/entry-client\.js$/i);
-    for(const key of mixinContext.keys()) {
-      const mixin = mixinContext(key).default;
-      if (typeof mixin === 'function') mixin();
-    }
+    for(const key of mixinContext.keys()) entries.push(mixinContext(key));
 
     for(const entry of entries) {
       const mixin = entry.default;
