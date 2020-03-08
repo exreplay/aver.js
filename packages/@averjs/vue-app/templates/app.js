@@ -1,6 +1,7 @@
 import './register-component-hooks';
 import Vue from 'vue';
 import axios from 'axios';
+import merge from 'lodash/merge';
 import App from '@/App.vue';
 import { createRouter } from './router/';
 import { createStore } from './store/';
@@ -60,16 +61,17 @@ export function createApp(ssrContext) {
       }
     %>
   ];
+  let userReturns = {};
 
   const mixinContext = require.context('@/', false, /^\.\/app\.js$/i);
-  for(const key of mixinContext.keys()) entries.push(mixinContext(key));
+  for(const key of mixinContext.keys()) entries.push(mixinContext(key).default);
 
   for(const entry of entries) {
     const mixin = entry.default;
-    if(typeof mixin === 'function') mixin({ ...ssrContext, appOptions });
+    if(typeof mixin === 'function') userReturns = merge(userReturns, mixin({ ...ssrContext, appOptions }));
   }
     
   const app = new Vue(appOptions);
 
-  return { app, router, store };
+  return { app, router, store, userReturns };
 };
