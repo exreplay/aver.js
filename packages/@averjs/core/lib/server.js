@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import bodyParser from 'body-parser';
 import rfs from 'rotating-file-stream';
-import uuid from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import chokidar from 'chokidar';
 import indexOf from 'lodash/indexOf';
 import WWW from './www';
@@ -125,7 +125,7 @@ export default class Server extends WWW {
     logger.token('error', req => req.error);
 
     this.middlewares.push((req, res, next) => {
-      req.id = (new Date().getTime()) + '-' + uuid();
+      req.id = (new Date().getTime()) + '-' + uuidv4();
       next();
     });
 

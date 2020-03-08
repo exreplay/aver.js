@@ -1,13 +1,13 @@
 import session from 'express-session';
 import Redis from 'ioredis';
 import ConnectRedis from 'connect-redis';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 export default class SessionAdapter {
   constructor(app, config) {
     const sessionConf = {
-      secret: process.env.REDIS_SECRET || uuid.v4(),
-      genid: () => uuid.v4(),
+      secret: process.env.REDIS_SECRET || uuidv4(),
+      genid: () => uuidv4(),
       resave: false,
       saveUninitialized: false,
       cookie: {
