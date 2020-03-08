@@ -82,6 +82,8 @@ export default class Renderer {
       serverCompiler.watch({}, (err, stats) => {
         if (err) throw err;
         stats = stats.toJson();
+        stats.errors.forEach(err => console.error(err));
+        stats.warnings.forEach(err => console.warn(err));
         if (stats.errors.length) return;
               
         this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
