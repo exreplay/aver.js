@@ -22,7 +22,7 @@ export default async context => {
     const mixinContext = require.context('@/', false, /^\.\/entry-server\.js$/i);
     for (const key of mixinContext.keys()) entries.push(mixinContext(key));
 
-    const { app, router, store } = createApp({ isServer: true, context });
+    const { app, router, store, userReturns } = createApp({ isServer: true, context });
     const { url } = context;
     const meta = app.$meta();
 
@@ -40,7 +40,7 @@ export default async context => {
 
     for(const entry of entries) {
       const mixin = entry.default;
-      if(typeof mixin === 'function') mixin(context);
+      if(typeof mixin === 'function') mixin({...context, userReturns});
     }
         
     for (const [key] of Object.entries(store._actions)) {

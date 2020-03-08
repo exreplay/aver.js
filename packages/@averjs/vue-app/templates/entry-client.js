@@ -2,7 +2,7 @@ import { createApp } from './app';
 import Vue from 'vue';
 import axios from 'axios';
 import { composeComponentOptions } from './utils';
-const { app, router, store } = createApp({ isServer: false });
+const { app, router, store, userReturns } = createApp({ isServer: false });
 
 // eslint-disable-next-line no-unused-vars
 class ClientEntry {
@@ -53,7 +53,7 @@ class ClientEntry {
 
     for(const entry of entries) {
       const mixin = entry.default;
-      if(typeof mixin === 'function') mixin();
+      if(typeof mixin === 'function') mixin({ userReturns });
     }
   }
 
