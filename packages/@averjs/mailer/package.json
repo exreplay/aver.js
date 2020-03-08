@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "email-templates": "7.0.4",
-    "nodemailer": "6.4.3",
+    "nodemailer": "6.4.4",
     "pug": "2.0.4"
   }
 }
