@@ -1,3 +1,13 @@
+## 2.0.0-12 (2020-03-10)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#171](https://github.com/exreplay/aver.js/pull/171) fix: do not push default from app entry ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-11 (2020-03-10)
 
 #### :rocket: New Features
