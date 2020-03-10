@@ -1,3 +1,37 @@
+## 2.0.0-11 (2020-03-10)
+
+#### :rocket: New Features
+* `@averjs/core`
+  * [#170](https://github.com/exreplay/aver.js/pull/170) feat: pass http server to middleware hooks ([@exreplay](https://github.com/exreplay))
+* `@averjs/vue-app`
+  * [#167](https://github.com/exreplay/aver.js/pull/167) feat: added hook for context rendered in server entry ([@exreplay](https://github.com/exreplay))
+  * [#166](https://github.com/exreplay/aver.js/pull/166) feat: app entries can return a object which is getting passed and can be reused by client and server entries ([@exreplay](https://github.com/exreplay))
+* `@averjs/builder`
+  * [#164](https://github.com/exreplay/aver.js/pull/164) feat(builder): added before compile hooks ([@exreplay](https://github.com/exreplay))
+
+#### :boom: Breaking Changes
+* `@averjs/core`, `@averjs/session`
+  * [#161](https://github.com/exreplay/aver.js/pull/161) chore(deps): update dependency uuid to v7 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#168](https://github.com/exreplay/aver.js/pull/168) fix(renderer): properly output server errors ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/core`, `@averjs/vue-app`
+  * [#165](https://github.com/exreplay/aver.js/pull/165) refactor(plugins): entries should be placed in `entries` folder ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#146](https://github.com/exreplay/aver.js/pull/146) chore(deps): update jest monorepo to v25 (major) ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#163](https://github.com/exreplay/aver.js/pull/163) chore(deps): update dependency rollup to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`
+  * [#162](https://github.com/exreplay/aver.js/pull/162) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-10 (2020-02-23)
 
 #### :rocket: New Features
