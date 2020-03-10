@@ -68,7 +68,7 @@ export default class Server extends WWW {
       maxAge: cache && this.isProd ? 1000 * 60 * 60 * 24 * 30 : 0
     });
 
-    await this.aver.callHook('server:before-register-middlewares', { app: this.app, middlewares: this.middlewares });
+    await this.aver.callHook('server:before-register-middlewares', { app: this.app, middlewares: this.middlewares, server: this.server });
         
     this.middlewares.push(helmet());
     this.logging();
@@ -97,7 +97,7 @@ export default class Server extends WWW {
       });
     }
 
-    await this.aver.callHook('server:after-register-middlewares', { app: this.app, middlewares: this.middlewares });
+    await this.aver.callHook('server:after-register-middlewares', { app: this.app, middlewares: this.middlewares, server: this.server });
 
     for (const middleware of this.middlewares) {
       if (typeof middleware === 'function') this.app.use(middleware);
