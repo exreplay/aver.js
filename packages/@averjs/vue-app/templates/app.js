@@ -64,7 +64,7 @@ export function createApp(ssrContext) {
   let userReturns = {};
 
   const mixinContext = require.context('@/', false, /^\.\/app\.js$/i);
-  for(const key of mixinContext.keys()) entries.push(mixinContext(key).default);
+  for(const key of mixinContext.keys()) entries.push(mixinContext(key));
 
   for(const entry of entries) {
     const mixin = entry.default;
