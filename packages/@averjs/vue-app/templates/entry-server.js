@@ -26,7 +26,7 @@ export default async context => {
     const contextRendered = fn => {
       if(typeof fn === 'function') renderedFns.push(fn);
     }
-    const { app, router, store, userReturns } = createApp({ isServer: true, context });
+    const { app, router, store, userReturns } = await createApp({ isServer: true, context });
     const { url } = context;
     const meta = app.$meta();
 
@@ -44,7 +44,7 @@ export default async context => {
 
     for(const entry of entries) {
       const mixin = entry.default;
-      if(typeof mixin === 'function') mixin({...context, userReturns, contextRendered});
+      if(typeof mixin === 'function') await mixin({...context, userReturns, contextRendered});
     }
         
     for (const [key] of Object.entries(store._actions)) {
