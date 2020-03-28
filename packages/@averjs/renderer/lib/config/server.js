@@ -53,13 +53,13 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         
     if (typeof this.globalConfig.server === 'function') this.globalConfig.server(this.chainConfig);
 
+    await this.aver.callHook('renderer:server-config', this.chainConfig);
+
     const config = Object.assign(this.chainConfig.toConfig(), {
       entry: {
         app: path.join(this.cacheDir, 'entry-server.js')
       }
     });
-
-    await this.aver.callHook('renderer:server-config', this.chainConfig);
 
     return cloneDeep(config);
   }
