@@ -1,3 +1,31 @@
+## 2.0.0-13 (2020-03-28)
+
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#174](https://github.com/exreplay/aver.js/pull/174) feat: entry files can now be async ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#180](https://github.com/exreplay/aver.js/pull/180) fix(renderer): call server and client hooks before creating config ([@exreplay](https://github.com/exreplay))
+* `@averjs/websocket`
+  * [#173](https://github.com/exreplay/aver.js/pull/173) fix: make websocket plugin compatible with new plugin api ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/babel-preset-app`, `@averjs/cli`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`
+  * [#172](https://github.com/exreplay/aver.js/pull/172) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`
+  * [#179](https://github.com/exreplay/aver.js/pull/179) chore(deps): update dependency vuex-persistedstate to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#177](https://github.com/exreplay/aver.js/pull/177) chore(deps): update dependency fs-extra to v9 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/cli`
+  * [#181](https://github.com/exreplay/aver.js/pull/181) chore(deps): update dependency minimist to v1.2.2 [security] ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#176](https://github.com/exreplay/aver.js/pull/176) chore(deps): update dependency url-loader to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#175](https://github.com/exreplay/aver.js/pull/175) chore(deps): update dependency file-loader to v6 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-12 (2020-03-10)
 
 #### :bug: Bug Fix
