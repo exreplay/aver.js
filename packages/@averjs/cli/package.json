@@ -27,7 +27,7 @@
   "dependencies": {
     "@averjs/init": "2.0.0-12",
     "command-line-usage": "6.1.0",
-    "minimist": "1.2.0"
+    "minimist": "1.2.2"
   },
   "aver": {
     "build": true
