@@ -35,7 +35,7 @@ axios.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
-export function createApp(ssrContext) {
+export async function createApp(ssrContext) {
   const i18n = createI18n(ssrContext);
   const router = createRouter({ i18n });
   const store = createStore(ssrContext);
@@ -68,7 +68,8 @@ export function createApp(ssrContext) {
 
   for(const entry of entries) {
     const mixin = entry.default;
-    if(typeof mixin === 'function') userReturns = merge(userReturns, mixin({ ...ssrContext, appOptions }));
+    const returns = await mixin({ ...ssrContext, appOptions });
+    if(typeof mixin === 'function') userReturns = merge(userReturns, returns);
   }
     
   const app = new Vue(appOptions);
