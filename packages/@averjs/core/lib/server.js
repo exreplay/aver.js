@@ -144,7 +144,7 @@ export default class Server extends WWW {
     }));
   }
     
-  registerRoutes() {
+  async registerRoutes() {
     const routesPath = path.resolve(process.env.API_PATH, './routes');
 
     if (fs.existsSync(routesPath)) {
@@ -152,6 +152,8 @@ export default class Server extends WWW {
         requireModule(routesPath)(req, res, next);
       });
     }
+
+    await this.aver.callHook('server:before-register-routes', { app: this.app, middlewares: this.middlewares, server: this.server });
 
     this.app.get('/favicon.ico', function(req, res) {
       res.sendStatus(204);
@@ -182,6 +184,8 @@ export default class Server extends WWW {
         await this.render(req, res);
       });
     });
+
+    await this.aver.callHook('server:after-register-routes', { app: this.app, middlewares: this.middlewares, server: this.server });
   }
     
   async render(req, res) {
