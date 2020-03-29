@@ -1,3 +1,23 @@
+## 2.0.0-14 (2020-03-29)
+
+#### :rocket: New Features
+* `@averjs/core`
+  * [#184](https://github.com/exreplay/aver.js/pull/184) feat: added before and after register routes hooks ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#186](https://github.com/exreplay/aver.js/pull/186) fix: disabled minify for html-webpack-plugin ([@exreplay](https://github.com/exreplay))
+* `@averjs/vue-app`
+  * [#183](https://github.com/exreplay/aver.js/pull/183) fix: app entry mixin is not getting called when no function is returned ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/core`
+  * [#185](https://github.com/exreplay/aver.js/pull/185) refactor: changed max age of express static to 1 year ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-13 (2020-03-28)
 
 #### :rocket: New Features
