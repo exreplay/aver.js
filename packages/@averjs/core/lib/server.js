@@ -65,7 +65,7 @@ export default class Server extends WWW {
     
   async registerMiddlewares() {
     const serve = (path, cache) => express.static(path, {
-      maxAge: cache && this.isProd ? 1000 * 60 * 60 * 24 * 30 : 0
+      maxAge: cache && this.isProd ? '1y' : 0
     });
 
     await this.aver.callHook('server:before-register-middlewares', { app: this.app, middlewares: this.middlewares, server: this.server });
