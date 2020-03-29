@@ -22,6 +22,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     const htmlPluginOptions = {
       filename: 'index.ssr.html',
       template: path.join(this.cacheDir, 'index.template.html'),
+      minify: false,
       inject: false
     };
 
