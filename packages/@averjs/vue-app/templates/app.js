@@ -68,8 +68,10 @@ export async function createApp(ssrContext) {
 
   for(const entry of entries) {
     const mixin = entry.default;
-    const returns = await mixin({ ...ssrContext, appOptions });
-    if(typeof mixin === 'function') userReturns = merge(userReturns, returns);
+    if(typeof mixin === 'function') {
+      const returns = await mixin({ ...ssrContext, appOptions });
+      userReturns = merge(userReturns, returns);
+    }
   }
     
   const app = new Vue(appOptions);
