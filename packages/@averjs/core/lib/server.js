@@ -50,7 +50,7 @@ export default class Server extends WWW {
     this.builder = new SsrBuilder(this.aver);
     await this.builder.initRenderer();
     await this.registerMiddlewares();
-    this.registerRoutes();
+    await this.registerRoutes();
 
     this.app.use((err, req, res, next) => {
       if (!this.isProd) console.error(err.stack);
