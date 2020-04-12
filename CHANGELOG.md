@@ -1,3 +1,23 @@
+## 2.0.0-15 (2020-04-12)
+
+#### :rocket: New Features
+* `@averjs/config`, `@averjs/core`, `@averjs/renderer`, `@averjs/vue-app`
+  * [#191](https://github.com/exreplay/aver.js/pull/191) feat: support for additional extensions ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`
+  * [#182](https://github.com/exreplay/aver.js/pull/182) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`, `@averjs/shared-utils`
+  * [#187](https://github.com/exreplay/aver.js/pull/187) chore(deps): update dependency chalk to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#188](https://github.com/exreplay/aver.js/pull/188) chore(deps): update dependency eslint-loader to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+* Other
+  * [#190](https://github.com/exreplay/aver.js/pull/190) chore(deps): update dependency rollup-plugin-license to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-14 (2020-03-29)
 
 #### :rocket: New Features
