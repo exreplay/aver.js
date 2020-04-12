@@ -44,6 +44,7 @@ export default class Renderer {
       const compiled = template(fileToCompile, { interpolate: /<%=([\s\S]+?)%>/g });
       const compiledApp = compiled({
         config: {
+          additionalExtensions: this.config.webpack.additionalExtensions,
           progressbar: this.config.progressbar,
           i18n: this.config.i18n,
           csrf: this.config.csrf,
