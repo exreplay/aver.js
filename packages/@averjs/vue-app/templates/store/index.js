@@ -8,7 +8,10 @@ import merge from 'lodash/merge'
 Vue.use(Vuex);
 
 export function createStore(ssrContext) {
-  const files = require.context('@/', true, /vuex\/([^/]+)\.js$/i);
+  const files = <%
+    const extensions = config.additionalExtensions.join('|');
+    print(`require.context('@/', true, /vuex\\/([^/]+)\\.(${extensions})$/i);`);
+  %>
   const modules = {};
   const persistent = [];
   const plugins = [];
@@ -59,8 +62,10 @@ The following files have been ignored:${ignoreGlobalStoresList}.
 
   defaultConfig = { ...defaultConfig, modules, plugins };
   <% if (typeof config.store === 'object') print('defaultConfig = merge(defaultConfig, JSON.parse(\''+JSON.stringify(config.store)+'\'))'); %>
-
-  const mixinContext = require.context('@/', false, /^\.\/store\.js$/i);
+  
+  const mixinContext = <%
+    print(`require.context('@/', false, /^\\.\\/store\\.(${extensions})$/i);`);
+  %>
   for (const r of mixinContext.keys()) {
     const mixin = mixinContext(r).default;
     if (typeof mixin !== 'undefined') {
@@ -74,7 +79,9 @@ The following files have been ignored:${ignoreGlobalStoresList}.
   if (module.hot) {
     files.keys().map(path => files(path));
     module.hot.accept(files.id, () => {
-      const newFiles = require.context('@/', true, /vuex\/([^/]+)\.js$/i);
+      const newFiles = <%
+        print(`require.context('@/', true, /vuex\\/([^/]+)\\.(${extensions})$/i);`);
+      %>
       const newModules = {};
       let newConfig = {};
 
