@@ -96,7 +96,7 @@ export default class PluginContainer {
       const dst = dirname + '/' + appEntry;
       this.config.templates.push({ src: path.resolve(entriesFolder, `./${appEntry}`), dst });
       this.config.entries.app.push('./' + dst);
-      entries.splice(appEntry, 1);
+      entries = entries.filter(entry => entry !== appEntry);
     }
 
     const clientEntry = this.findEntry('entry-client', entries);
@@ -104,7 +104,7 @@ export default class PluginContainer {
       const dst = dirname + '/' + clientEntry;
       this.config.templates.push({ src: path.resolve(entriesFolder, `./${clientEntry}`), dst });
       this.config.entries.client.push('./' + dst);
-      entries.splice(clientEntry, 1);
+      entries = entries.filter(entry => entry !== clientEntry);
     }
 
     const serverEntry = this.findEntry('entry-server', entries);
@@ -112,7 +112,7 @@ export default class PluginContainer {
       const dst = dirname + '/' + serverEntry;
       this.config.templates.push({ src: path.resolve(entriesFolder, `./${serverEntry}`), dst });
       this.config.entries.server.push('./' + dst);
-      entries.splice(serverEntry, 1);
+      entries = entries.filter(entry => entry !== serverEntry);
     }
 
     // register remaining files inside entries folder
