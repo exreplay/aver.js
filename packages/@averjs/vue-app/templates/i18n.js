@@ -13,7 +13,10 @@ export function createI18n({ isServer, context }) {
 
   <% if(typeof config.i18n !== 'undefined') print('i18nConfig = Object.assign(i18nConfig, JSON.parse(\''+JSON.stringify(config.i18n)+'\'));') %>
 
-  const mixinContext = require.context('@/', false, /^\.\/i18n\.js$/i);
+  const mixinContext = <%
+    const extensions = config.additionalExtensions.join('|');
+    print(`require.context('@/', false, /^\\.\\/i18n\\.(${extensions})$/i);`);
+  %>
   for (const r of mixinContext.keys()) {
     const mixin = mixinContext(r).default;
     if (typeof mixin !== 'undefined') {

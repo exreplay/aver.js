@@ -91,28 +91,28 @@ export default class PluginContainer {
 
     if (fs.existsSync(entriesFolder)) entries = fs.readdirSync(entriesFolder);
 
-    const appIndex = entries.indexOf('app.js');
-    if (appIndex !== -1) {
-      const dst = dirname + '/' + 'app.js';
-      this.config.templates.push({ src: path.resolve(entriesFolder, './app.js'), dst });
+    const appEntry = this.findEntry('app', entries);
+    if (typeof appEntry !== 'undefined') {
+      const dst = dirname + '/' + appEntry;
+      this.config.templates.push({ src: path.resolve(entriesFolder, `./${appEntry}`), dst });
       this.config.entries.app.push('./' + dst);
-      entries.splice(appIndex, 1);
+      entries = entries.filter(entry => entry !== appEntry);
     }
 
-    const clientIndex = entries.indexOf('entry-client.js');
-    if (clientIndex !== -1) {
-      const dst = dirname + '/' + 'entry-client.js';
-      this.config.templates.push({ src: path.resolve(entriesFolder, './entry-client.js'), dst });
+    const clientEntry = this.findEntry('entry-client', entries);
+    if (typeof clientEntry !== 'undefined') {
+      const dst = dirname + '/' + clientEntry;
+      this.config.templates.push({ src: path.resolve(entriesFolder, `./${clientEntry}`), dst });
       this.config.entries.client.push('./' + dst);
-      entries.splice(clientIndex, 1);
+      entries = entries.filter(entry => entry !== clientEntry);
     }
 
-    const serverIndex = entries.indexOf('entry-server.js');
-    if (serverIndex !== -1) {
-      const dst = dirname + '/' + 'entry-server.js';
-      this.config.templates.push({ src: path.resolve(entriesFolder, './entry-server.js'), dst });
+    const serverEntry = this.findEntry('entry-server', entries);
+    if (typeof serverEntry !== 'undefined') {
+      const dst = dirname + '/' + serverEntry;
+      this.config.templates.push({ src: path.resolve(entriesFolder, `./${serverEntry}`), dst });
       this.config.entries.server.push('./' + dst);
-      entries.splice(serverIndex, 1);
+      entries = entries.filter(entry => entry !== serverEntry);
     }
 
     // register remaining files inside entries folder
@@ -120,6 +120,11 @@ export default class PluginContainer {
       const dst = dirname + '/' + e;
       this.config.templates.push({ src: path.resolve(entriesFolder, `./${e}`), dst });
     }
+  }
+
+  findEntry(name, entries) {
+    const regex = new RegExp(`${name}\\.(${this.config.webpack.additionalExtensions.join('|')})`, 'i');
+    return entries.find(entry => entry.match(regex));
   }
 
   normalizePluginPath(pluginPath) {

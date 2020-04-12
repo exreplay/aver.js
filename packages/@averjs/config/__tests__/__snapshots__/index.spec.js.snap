@@ -24,6 +24,9 @@ Object {
   "store": Object {},
   "templates": Array [],
   "webpack": Object {
+    "additionalExtensions": Array [
+      "js",
+    ],
     "alias": Object {
       "@": "/aver",
       "@@": "/",

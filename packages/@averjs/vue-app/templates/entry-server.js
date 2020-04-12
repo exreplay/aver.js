@@ -19,7 +19,10 @@ export default async context => {
         }
       %>
     ];
-    const mixinContext = require.context('@/', false, /^\.\/entry-server\.js$/i);
+    const mixinContext = <%
+      const extensions = config.additionalExtensions.join('|');
+      print(`require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i);`);
+    %>
     for (const key of mixinContext.keys()) entries.push(mixinContext(key));
 
     const renderedFns = [];

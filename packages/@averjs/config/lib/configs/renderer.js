@@ -2,6 +2,7 @@ import path from 'path';
 
 export default () => ({
   babel: {},
+  additionalExtensions: [ 'js' ],
   transpileDependencies: [],
   postcss: {},
   css: {

@@ -49,7 +49,10 @@ import { composeComponentOptions } from './utils';
           }
         %>
       ];
-      const mixinContext = require.context('@/', false, /^\.\/entry-client\.js$/i);
+      const mixinContext = <%
+        const extensions = config.additionalExtensions.join('|');
+        print(`require.context('@/', false, /^\\.\\/entry-client\\.(${extensions})$/i);`);
+      %>
       for(const key of mixinContext.keys()) entries.push(mixinContext(key));
   
       for(const entry of entries) {

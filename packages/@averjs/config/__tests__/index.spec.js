@@ -11,6 +11,12 @@ test('should change progressbar option to false', () => {
   expect(config.webpack.css.extract).toBe(true);
 });
 
+test('should concat array with default values', () => {
+  const config = getAverjsConfig();
+  expect(config.progressbar).toBe(false);
+  expect(config.webpack.additionalExtensions).toEqual([ 'js', 'ts' ]);
+});
+
 test('should match default snapshot config when no config file is present', () => {
   jest.spyOn(process, 'cwd').mockReturnValue('/');
   
