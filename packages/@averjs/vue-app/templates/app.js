@@ -63,7 +63,10 @@ export async function createApp(ssrContext) {
   ];
   let userReturns = {};
 
-  const mixinContext = require.context('@/', false, /^\.\/app\.js$/i);
+  const mixinContext = <%
+    const extensions = config.additionalExtensions.join('|');
+    print(`require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i);`);
+  %>
   for(const key of mixinContext.keys()) entries.push(mixinContext(key));
 
   for(const entry of entries) {
