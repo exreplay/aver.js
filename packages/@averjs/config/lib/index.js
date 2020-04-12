@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import merge from 'lodash/merge';
+import mergeWith from 'lodash/mergeWith';
 import { defaultAverjsConfig, defaultFileName } from './configs';
 
 export function getAverjsConfig() {
@@ -18,5 +18,9 @@ export function getAverjsConfig() {
   config.distDir = './dist';
   config.distPath = path.resolve(config.rootDir, config.distDir);
 
-  return merge(config, userConfig);
+  return mergeWith(config, userConfig, (objValue, srcValue) => {
+    if (Array.isArray(objValue)) {
+      return objValue.concat(srcValue);
+    }
+  });
 }
