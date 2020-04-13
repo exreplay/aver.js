@@ -11,7 +11,7 @@ export default class Mongodb {
         
     this.registerModels();
 
-    mongoose.connect(this.getConnectionString(), { useNewUrlParser: true });
+    mongoose.connect(this.getConnectionString(), { useNewUrlParser: true, useUnifiedTopology: true });
     mongoose.set('useCreateIndex', true);
 
     mongoose.Promise = global.Promise;
