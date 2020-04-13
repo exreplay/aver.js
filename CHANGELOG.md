@@ -1,3 +1,19 @@
+## 2.0.0-16 (2020-04-13)
+
+#### :nail_care: Code Refactoring
+* `@averjs/config`
+  * [#194](https://github.com/exreplay/aver.js/pull/194) refactor: require aver config file without extension ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/mongodb`
+  * [#195](https://github.com/exreplay/aver.js/pull/195) chore: pass `useUnifiedTopology` to mongoose connect ([@exreplay](https://github.com/exreplay))
+* Other
+  * [#193](https://github.com/exreplay/aver.js/pull/193) chore: always treat lodash as external ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-15 (2020-04-12)
 
 #### :rocket: New Features
