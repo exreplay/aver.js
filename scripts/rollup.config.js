@@ -18,7 +18,7 @@ export default class RollupConfig {
       input: path.join(this.path, 'lib/index.js'),
       name: this.pkg.name.replace('@averjs/', ''),
       version: this.pkg.version,
-      external: []
+      external: [ 'lodash' ]
     };
   }
 
