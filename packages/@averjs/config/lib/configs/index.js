@@ -4,7 +4,7 @@ import server from './server';
 import renderer from './renderer';
 import vueApp from './vue-app';
 
-export const defaultFileName = 'aver-config.js';
+export const defaultFileName = 'aver-config';
 
 export function defaultAverjsConfig() {
   return {

@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import mergeWith from 'lodash/mergeWith';
 import { defaultAverjsConfig, defaultFileName } from './configs';
@@ -8,8 +7,16 @@ export function getAverjsConfig() {
   const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);
   const config = defaultAverjsConfig();
   let userConfig = {};
+  let configFile = null;
 
-  if (fs.existsSync(globalConfPath)) userConfig = requireModule(globalConfPath).default;
+  try {
+    configFile = require.resolve(globalConfPath);
+  } catch (err) {
+    if (err.code !== 'MODULE_NOT_FOUND') throw err;
+    else console.log('Could not find aver-config file. Proceeding with default config...');
+  }
+
+  if (configFile) userConfig = requireModule(configFile).default;
 
   config.rootDir = process.cwd();
 
