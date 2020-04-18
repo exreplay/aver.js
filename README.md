@@ -1,10 +1,10 @@
 <p align="center">
-    <img src="assets/logo.jpeg" width="80%" alt="averjs logo">
+    <img width="180" src="assets/logo.jpeg" alt="averjs logo">
     <br><br>
     <a href="https://www.npmjs.com/package/@averjs/core"><img src="https://badgen.net/npm/v/@averjs/core?icon=npm" alt="Version"></a>
+    <img src="https://img.shields.io/npm/dm/@averjs/core.svg" alt="Downloads"></a>
     <a href="https://circleci.com/gh/exreplay/aver.js"><img src="https://badgen.net/circleci/github/exreplay/aver.js?icon=circleci" alt="CircleCi"></a>
     <a href="https://codecov.io/gh/exreplay/aver.js"><img src="https://codecov.io/gh/exreplay/aver.js/branch/development/graph/badge.svg" alt="Codecov"></a>
-    <a href="https://lerna.js.org/"><img src="https://badgen.net/badge/maintained%20width/lerna/cc00ff" alt="lerna"></a>
 </p>
 
 ## aver.js
