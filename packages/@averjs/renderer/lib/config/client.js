@@ -105,7 +105,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
             test: /node_modules[\\/](vue|vue-loader|vue-router|vuex|vue-meta|core-js|babel-runtime|es6-promise|axios|webpack|setimmediate|timers-browserify|process|regenerator-runtime|cookie|js-cookie|is-buffer|dotprop|nuxt\.js)[\\/]/,
             chunks: 'all',
             priority: 10,
-            name: true
+            name: 'common'
           }
         }
       });
