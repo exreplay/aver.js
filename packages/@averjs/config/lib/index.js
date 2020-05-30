@@ -16,7 +16,10 @@ export function getAverjsConfig() {
     else console.log('Could not find aver-config file. Proceeding with default config...');
   }
 
-  if (configFile) userConfig = requireModule(configFile).default;
+  if (configFile) {
+    if (process.env.NODE_ENV === 'test') userConfig = require(configFile).default;
+    else userConfig = requireModule(configFile).default;
+  }
 
   config.rootDir = process.cwd();
 
