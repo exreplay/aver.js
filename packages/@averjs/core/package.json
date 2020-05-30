@@ -51,7 +51,7 @@
     "ora": "4.0.3",
     "rotating-file-stream": "2.0.2",
     "route-cache": "0.4.4",
-    "uuid": "7.0.3",
+    "uuid": "8.1.0",
     "vue": "2.6.11",
     "vue-class-component": "7.2.3",
     "vue-client-only": "2.0.0",
