@@ -32,11 +32,15 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       this.chainConfig
         .plugin('copy')
           .use(CopyWebpackPlugin, [
-            [ {
-              from: path.join(this.projectRoot, 'resources/images'),
-              to: path.join(this.projectRoot, '../public/images'),
-              force: true
-            } ]
+            {
+              patterns: [
+                {
+                  from: path.join(this.projectRoot, 'resources/images'),
+                  to: path.join(this.projectRoot, '../public/images'),
+                  force: true
+                }
+              ]
+            }
           ]);
     }
 
