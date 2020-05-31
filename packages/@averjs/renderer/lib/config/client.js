@@ -96,7 +96,12 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig
       .plugin('workbox')
-        .use(WorkboxWebpackModule[mode], [ conf ]);
+      .use(WorkboxWebpackModule[mode], [
+        {
+          ...conf,
+          inlineWorkboxRuntime: true
+        }
+      ]);
   }
 
   optimization() {
