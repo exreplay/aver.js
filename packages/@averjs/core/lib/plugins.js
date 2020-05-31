@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import chokidar from 'chokidar';
 
 const requireModule = require('esm')(module);
 export default class PluginContainer {
@@ -7,6 +8,7 @@ export default class PluginContainer {
     this.aver = aver;
     this.config = aver.config;
     this.cacheDir = aver.config.cacheDir;
+    this.isProd = process.env.NODE_ENV === 'production';
   }
 
   async register() {
@@ -17,6 +19,34 @@ export default class PluginContainer {
     if (this.config.plugins && Array.isArray(this.config.plugins)) {
       await this.sequence(this.config.plugins);
     }
+
+    if (!this.isProd) this.registerEntriesFileWatcher();
+  }
+
+  registerEntriesFileWatcher() {
+    const watcher = chokidar.watch(
+      // generate a new set of unique paths
+      [ ...new Set(this.config.templates.map(temp => temp.entriesFolder)) ]
+    );
+          
+    watcher.on('ready', () => {
+      watcher.on('all', (event, id) => {
+        for (const template of this.config.templates) {
+          const changedFileDir = path.dirname(id);
+          const finalResolvedPath = path.resolve(this.cacheDir, path.dirname(template.dst), path.basename(id));
+
+          if (template.entriesFolder === changedFileDir && event !== 'unlink') {
+            fs.copyFileSync(id, finalResolvedPath);
+            console.log(`Updated ${path.basename(id)} entry file.`);
+            break;
+          } else if (template.entriesFolder === changedFileDir && event === 'unlink') {
+            fs.unlinkSync(finalResolvedPath);
+            console.log(`Removed ${path.basename(id)} entry file.`);
+            break;
+          }
+        };
+      });
+    });
   }
 
   async sequence(plugins) {
@@ -88,13 +118,13 @@ export default class PluginContainer {
     dirname = dirname[dirname.length - 1];
     const entriesFolder = path.resolve(pluginPathDir, './entries');
     let entries = [];
-
+    
     if (fs.existsSync(entriesFolder)) entries = fs.readdirSync(entriesFolder);
 
     const appEntry = this.findEntry('app', entries);
     if (typeof appEntry !== 'undefined') {
       const dst = dirname + '/' + appEntry;
-      this.config.templates.push({ src: path.resolve(entriesFolder, `./${appEntry}`), dst });
+      this.config.templates.push({ src: path.resolve(entriesFolder, `./${appEntry}`), dst, entriesFolder });
       this.config.entries.app.push('./' + dst);
       entries = entries.filter(entry => entry !== appEntry);
     }
@@ -102,7 +132,7 @@ export default class PluginContainer {
     const clientEntry = this.findEntry('entry-client', entries);
     if (typeof clientEntry !== 'undefined') {
       const dst = dirname + '/' + clientEntry;
-      this.config.templates.push({ src: path.resolve(entriesFolder, `./${clientEntry}`), dst });
+      this.config.templates.push({ src: path.resolve(entriesFolder, `./${clientEntry}`), dst, entriesFolder });
       this.config.entries.client.push('./' + dst);
       entries = entries.filter(entry => entry !== clientEntry);
     }
@@ -110,7 +140,7 @@ export default class PluginContainer {
     const serverEntry = this.findEntry('entry-server', entries);
     if (typeof serverEntry !== 'undefined') {
       const dst = dirname + '/' + serverEntry;
-      this.config.templates.push({ src: path.resolve(entriesFolder, `./${serverEntry}`), dst });
+      this.config.templates.push({ src: path.resolve(entriesFolder, `./${serverEntry}`), dst, entriesFolder });
       this.config.entries.server.push('./' + dst);
       entries = entries.filter(entry => entry !== serverEntry);
     }
@@ -118,7 +148,7 @@ export default class PluginContainer {
     // register remaining files inside entries folder
     for (const e of entries) {
       const dst = dirname + '/' + e;
-      this.config.templates.push({ src: path.resolve(entriesFolder, `./${e}`), dst });
+      this.config.templates.push({ src: path.resolve(entriesFolder, `./${e}`), dst, entriesFolder });
     }
   }
 
