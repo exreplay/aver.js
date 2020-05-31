@@ -48,22 +48,26 @@ export default class Renderer {
           
     watcher.on('ready', () => {
       watcher.on('all', (event, id) => {
-        let template = this.config.templates.find(temp => temp.src === id);
-        if (!template) {
-          // Try to find any entry file from same plugin to get the plugin path
-          const registeredTemplate = this.config.templates.find(temp => path.resolve(temp.pluginPath, './entries') === path.dirname(id));
-          
-          template = {
-            src: id,
-            dst: path.join(registeredTemplate.pluginPath.split('/').pop(), path.basename(id))
-          };
-
-          // Push the newly created entry template into the config templates array so we dont have to construct the path again later
-          this.config.templates.push(template);
+        if (event !== 'addDir' && event !== 'unlinkDir') {
+          let template = this.config.templates.find(temp => temp.src === id);
+          if (!template) {
+            // Try to find any entry file from same plugin to get the plugin path
+            const registeredTemplate = this.config.templates.find(temp => {
+              return !path.relative(path.resolve(temp.pluginPath, './entries'), id).startsWith('..');
+            });
+            const dirname = path.join(registeredTemplate.pluginPath, './entries');
+            const pluginName = registeredTemplate.pluginPath.split('/').pop();
+            const dst = path.join(pluginName, path.relative(dirname, id));
+  
+            template = { src: id, dst };
+  
+            // Push the newly created entry template into the config templates array so we dont have to construct the path again later
+            this.config.templates.push(template);
+          }
+  
+          if (event === 'unlink') fs.unlinkSync(path.resolve(this.cacheDir, template.dst));
+          else this.writeTemplateFile(template);
         }
-
-        if (event === 'unlink') fs.unlinkSync(path.resolve(this.cacheDir, template.dst));
-        else this.writeTemplateFile(template);
       });
     });
   }
