@@ -8,6 +8,7 @@ import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
 import { StaticBuilder } from '@averjs/builder';
 import vueApp from '@averjs/vue-app';
+import chokidar from 'chokidar';
 
 export default class Renderer {
   constructor(options, aver) {
@@ -38,23 +39,51 @@ export default class Renderer {
       ...vueApp()
     ];
 
-    for (const templateFile of templates) {
-      const finalResolvedPath = path.resolve(this.cacheDir, templateFile.dst);
-      const fileToCompile = fs.readFileSync(templateFile.src, 'utf8');
-      const compiled = template(fileToCompile, { interpolate: /<%=([\s\S]+?)%>/g });
-      const compiledApp = compiled({
-        config: {
-          additionalExtensions: this.config.webpack.additionalExtensions,
-          progressbar: this.config.progressbar,
-          i18n: this.config.i18n,
-          csrf: this.config.csrf,
-          router: this.config.router,
-          store: this.config.store
-        }
-      });
+    for (const templateFile of templates) this.writeTemplateFile(templateFile);
 
-      fs.outputFileSync(finalResolvedPath, compiledApp);
-    }
+    const watcher = chokidar.watch(
+      // generate a new set of unique paths
+      [ ...new Set(this.config.templates.map(temp => path.resolve(temp.pluginPath, './entries'))) ]
+    );
+          
+    watcher.on('ready', () => {
+      watcher.on('all', (event, id) => {
+        let template = this.config.templates.find(temp => temp.src === id);
+        if (!template) {
+          // Try to find any entry file from same plugin to get the plugin path
+          const registeredTemplate = this.config.templates.find(temp => path.resolve(temp.pluginPath, './entries') === path.dirname(id));
+          
+          template = {
+            src: id,
+            dst: path.join(registeredTemplate.pluginPath.split('/').pop(), path.basename(id))
+          };
+
+          // Push the newly created entry template into the config templates array so we dont have to construct the path again later
+          this.config.templates.push(template);
+        }
+
+        if (event === 'unlink') fs.unlinkSync(path.resolve(this.cacheDir, template.dst));
+        else this.writeTemplateFile(template);
+      });
+    });
+  }
+
+  writeTemplateFile(templateFile) {
+    const finalResolvedPath = path.resolve(this.cacheDir, templateFile.dst);
+    const fileToCompile = fs.readFileSync(templateFile.src, 'utf8');
+    const compiled = template(fileToCompile, { interpolate: /<%=([\s\S]+?)%>/g });
+    const compiledApp = compiled({
+      config: {
+        additionalExtensions: this.config.webpack.additionalExtensions,
+        progressbar: this.config.progressbar,
+        i18n: this.config.i18n,
+        csrf: this.config.csrf,
+        router: this.config.router,
+        store: this.config.store
+      }
+    });
+
+    fs.outputFileSync(finalResolvedPath, compiledApp);
   }
     
   async compile(cb) {
