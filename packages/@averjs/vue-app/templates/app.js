@@ -52,28 +52,29 @@ export async function createApp(ssrContext) {
     render: h => h(App)
   };
 
-  const entries = [
-    <% 
-      if(typeof config.entries !== 'undefined' && typeof config.entries.app !== 'undefined') {
-        for(const entry of config.entries.app) {
-          print(`require('${entry}'),`);
+  
+  let userReturns = {};
+  <%
+    const extensions = config.additionalExtensions.join('|');
+    print(`
+  const entries = require.context('./', true, /app\\.(${extensions})$/i);
+  const mixinContext = require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i);
+    `);
+  %>
+  const entryMixins = [ entries, mixinContext ];
+
+  for(const entryMixin of entryMixins) {
+    for(const entry of entryMixin.keys()) {
+      if(
+        (entryMixin.id.includes('.cache') && entry !== './app.js')
+        || !entryMixin.id.includes('.cache')
+      ) {
+        const mixin = entryMixin(entry).default;
+        if(typeof mixin === 'function') {
+          const returns = await mixin({ ...ssrContext, appOptions });
+          userReturns = merge(userReturns, returns);
         }
       }
-    %>
-  ];
-  let userReturns = {};
-
-  const mixinContext = <%
-    const extensions = config.additionalExtensions.join('|');
-    print(`require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i);`);
-  %>
-  for(const key of mixinContext.keys()) entries.push(mixinContext(key));
-
-  for(const entry of entries) {
-    const mixin = entry.default;
-    if(typeof mixin === 'function') {
-      const returns = await mixin({ ...ssrContext, appOptions });
-      userReturns = merge(userReturns, returns);
     }
   }
     

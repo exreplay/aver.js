@@ -10,20 +10,14 @@ Vue.prototype.$modernizr = {};
 
 export default async context => {
   try {
-    const entries = [
-      <% 
-        if(typeof config.entries !== 'undefined' && typeof config.entries.server !== 'undefined') {
-          for(const entry of config.entries.server) {
-            print(`require('${entry}'),`);
-          }
-        }
-      %>
-    ];
-    const mixinContext = <%
+    <%
       const extensions = config.additionalExtensions.join('|');
-      print(`require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i);`);
+      print(`
+    const entries = require.context('./', true, /entry-server\\.(${extensions})$/i);
+    const mixinContext = require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i);
+      `);
     %>
-    for (const key of mixinContext.keys()) entries.push(mixinContext(key));
+    const entryMixins = [ entries, mixinContext ];
 
     const renderedFns = [];
     const contextRendered = fn => {
@@ -45,9 +39,16 @@ export default async context => {
       throw error;
     }
 
-    for(const entry of entries) {
-      const mixin = entry.default;
-      if(typeof mixin === 'function') await mixin({...context, userReturns, contextRendered});
+    for(const entryMixin of entryMixins) {
+      for(const entry of entryMixin.keys()) {
+        if(
+          (entryMixin.id.includes('.cache') && entry !== './entry-server.js')
+          || !entryMixin.id.includes('.cache')
+        ) {
+          const mixin = entryMixin(entry).default;
+          if(typeof mixin === 'function') await mixin({...context, userReturns, contextRendered});
+        }
+      }
     }
         
     for (const [key] of Object.entries(store._actions)) {
