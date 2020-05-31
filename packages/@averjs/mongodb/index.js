@@ -6,7 +6,8 @@ export default (options) => {
   if (process.argv.indexOf('build') !== -1) return;
 
   const {
-    mongooseOptions = {}
+    mongooseOptions = {},
+    requireModels = true
   } = options;
 
   if (!process.env.MONGODB_HOST && !process.env.MONGODB_USERNAME && !process.env.MONGODB_PASSWORT && !process.env.MONGODB_HOST && !process.env.MONGODB_DATENBANK) {
@@ -16,12 +17,14 @@ export default (options) => {
 
   const connectionString = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORT}@${process.env.MONGODB_HOST}/${process.env.MONGODB_DATENBANK}${(process.env.MONGODB_OPTIONS) ? process.env.MONGODB_OPTIONS : '?authSource=admin'}`;
 
-  const modelsDir = path.resolve(process.env.API_PATH, './models');
-
-  if (fs.existsSync(modelsDir)) {
-    const models = fs.readdirSync(modelsDir);
-    for (const model of models) {
-      require(path.resolve(modelsDir, model));
+  if (requireModels) {
+    const modelsDir = path.resolve(process.env.API_PATH, './models');
+  
+    if (fs.existsSync(modelsDir)) {
+      const models = fs.readdirSync(modelsDir);
+      for (const model of models) {
+        require(path.resolve(modelsDir, model));
+      }
     }
   }
 
