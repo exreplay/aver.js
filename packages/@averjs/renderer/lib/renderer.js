@@ -52,12 +52,10 @@ export default class Renderer {
           let template = this.config.templates.find(temp => temp.src === id);
           if (!template) {
             // Try to find any entry file from same plugin to get the plugin path
-            const registeredTemplate = this.config.templates.find(temp => {
+            const { dirname } = this.config.templates.find(temp => {
               return !path.relative(path.resolve(temp.pluginPath, './entries'), id).startsWith('..');
             });
-            const dirname = path.join(registeredTemplate.pluginPath, './entries');
-            const pluginName = registeredTemplate.pluginPath.split('/').pop();
-            const dst = path.join(pluginName, path.relative(dirname, id));
+            const dst = path.relative(dirname, id).replace('entries', dirname);
   
             template = { src: id, dst };
   

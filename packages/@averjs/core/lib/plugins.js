@@ -100,7 +100,7 @@ export default class PluginContainer {
 
     for (const entry of entries) {
       const dst = path.relative(dirname, entry.path).replace('entries', dirname);
-      this.config.templates.push({ src: entry.path, dst, pluginPath: pluginPathDir });
+      this.config.templates.push({ src: entry.path, dst, pluginPath: pluginPathDir, dirname });
       const foundEntry = Object.entries(entryNames).find(([ _, name ]) => entry.path.match(name));
       if (foundEntry && foundEntry[0]) this.config.entries[foundEntry[0]].push('./' + dst);
     }
