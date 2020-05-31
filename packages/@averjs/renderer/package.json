@@ -52,7 +52,6 @@
     "html-webpack-plugin": "4.3.0",
     "json-loader": "0.5.7",
     "kill-port": "1.6.0",
-    "klaw-sync": "6.0.0",
     "memory-fs": "0.4.1",
     "node-sass": "4.14.1",
     "nodemon": "2.0.4",

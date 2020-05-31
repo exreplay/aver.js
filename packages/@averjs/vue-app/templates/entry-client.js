@@ -40,24 +40,25 @@ import { composeComponentOptions } from './utils';
     }
   
     async initMixin() {
-      const entries = [
-        <% 
-          if(typeof config.entries !== 'undefined' && typeof config.entries.client !== 'undefined') {
-            for(const entry of config.entries.client) {
-              print(`require('${entry}'),`);
-            }
-          }
-        %>
-      ];
-      const mixinContext = <%
+      <%
         const extensions = config.additionalExtensions.join('|');
-        print(`require.context('@/', false, /^\\.\\/entry-client\\.(${extensions})$/i);`);
+        print(`
+      const entries = require.context('./', true, /entry-client\\.(${extensions})$/i);
+      const mixinContext = require.context('@/', false, /^\\.\\/entry-client\\.(${extensions})$/i);
+        `);
       %>
-      for(const key of mixinContext.keys()) entries.push(mixinContext(key));
+      const entryMixins = [ entries, mixinContext ];
   
-      for(const entry of entries) {
-        const mixin = entry.default;
-        if(typeof mixin === 'function') await mixin({ userReturns });
+      for(const entryMixin of entryMixins) {
+        for(const entry of entryMixin.keys()) {
+          if(
+            (entryMixin.id.includes('.cache') && entry !== './entry-client.js')
+            || !entryMixin.id.includes('.cache')
+          ) {
+            const mixin = entryMixin(entry).default;
+            if(typeof mixin === 'function') await mixin({ userReturns });
+          }
+        }
       }
     }
   

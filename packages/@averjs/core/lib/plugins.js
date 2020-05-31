@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import klawSync from 'klaw-sync';
 
 const requireModule = require('esm')(module);
 export default class PluginContainer {
@@ -88,43 +89,21 @@ export default class PluginContainer {
     dirname = dirname[dirname.length - 1];
     const entriesFolder = path.resolve(pluginPathDir, './entries');
     let entries = [];
+    
+    if (fs.existsSync(entriesFolder)) entries = klawSync(entriesFolder, { nodir: true });
 
-    if (fs.existsSync(entriesFolder)) entries = fs.readdirSync(entriesFolder);
+    const entryNames = {
+      app: new RegExp(`app\\.(${this.config.webpack.additionalExtensions.join('|')})`, 'i'),
+      client: new RegExp(`entry-client\\.(${this.config.webpack.additionalExtensions.join('|')})`, 'i'),
+      server: new RegExp(`entry-server\\.(${this.config.webpack.additionalExtensions.join('|')})`, 'i')
+    };
 
-    const appEntry = this.findEntry('app', entries);
-    if (typeof appEntry !== 'undefined') {
-      const dst = dirname + '/' + appEntry;
-      this.config.templates.push({ src: path.resolve(entriesFolder, `./${appEntry}`), dst });
-      this.config.entries.app.push('./' + dst);
-      entries = entries.filter(entry => entry !== appEntry);
+    for (const entry of entries) {
+      const dst = path.relative(dirname, entry.path).replace('entries', dirname);
+      this.config.templates.push({ src: entry.path, dst, pluginPath: pluginPathDir, dirname });
+      const foundEntry = Object.entries(entryNames).find(([ _, name ]) => entry.path.match(name));
+      if (foundEntry && foundEntry[0]) this.config.entries[foundEntry[0]].push('./' + dst);
     }
-
-    const clientEntry = this.findEntry('entry-client', entries);
-    if (typeof clientEntry !== 'undefined') {
-      const dst = dirname + '/' + clientEntry;
-      this.config.templates.push({ src: path.resolve(entriesFolder, `./${clientEntry}`), dst });
-      this.config.entries.client.push('./' + dst);
-      entries = entries.filter(entry => entry !== clientEntry);
-    }
-
-    const serverEntry = this.findEntry('entry-server', entries);
-    if (typeof serverEntry !== 'undefined') {
-      const dst = dirname + '/' + serverEntry;
-      this.config.templates.push({ src: path.resolve(entriesFolder, `./${serverEntry}`), dst });
-      this.config.entries.server.push('./' + dst);
-      entries = entries.filter(entry => entry !== serverEntry);
-    }
-
-    // register remaining files inside entries folder
-    for (const e of entries) {
-      const dst = dirname + '/' + e;
-      this.config.templates.push({ src: path.resolve(entriesFolder, `./${e}`), dst });
-    }
-  }
-
-  findEntry(name, entries) {
-    const regex = new RegExp(`${name}\\.(${this.config.webpack.additionalExtensions.join('|')})`, 'i');
-    return entries.find(entry => entry.match(regex));
   }
 
   normalizePluginPath(pluginPath) {
