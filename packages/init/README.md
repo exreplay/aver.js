@@ -1,6 +1,0 @@
-# `init`
-
-> TODO: description
-
-## Usage
-
