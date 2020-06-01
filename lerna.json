@@ -1,17 +1,20 @@
 {
-  "version": "2.0.0-4",
+  "version": "2.0.0-17",
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "conventionalCommits": true,
   "exact": true,
   "packages": [
-    "packages/*"
+    "packages/@averjs/*"
   ],
   "changelog": {
+    "repo": "exreplay/aver.js",
     "labels": {
-      "feat": "New Feature",
-      "fix": "Bug Fix",
-      "refactor": "Code Refactoring"
-    }
+      "PR: New Feature": ":rocket: New Features",
+      "PR: Breaking Change": ":boom: Breaking Changes",
+      "PR: Bug Fix": ":bug: Bug Fix",
+      "PR: Refactor": ":nail_care: Code Refactoring",
+      "PR: Internal": ":house: Internal"
+    },
+    "cacheDir": ".changelog"
   }
 }

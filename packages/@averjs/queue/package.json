@@ -1,0 +1,24 @@
+{
+  "name": "@averjs/queue",
+  "version": "2.0.0-17",
+  "description": "queue support for averjs",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/queue"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "dependencies": {
+    "ioredis": "4.17.3",
+    "kue": "0.11.6"
+  }
+}

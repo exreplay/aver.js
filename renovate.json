@@ -6,7 +6,7 @@
   ],
   "rangeStrategy": "pin",
   "ignorePaths": [
-    "packages/vue-app/lib"
+    "packages/@averjs/vue-app/lib"
   ],
   "ignoreDeps": [
     "core-js",

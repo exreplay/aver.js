@@ -1,0 +1,24 @@
+{
+  "name": "@averjs/websocket",
+  "version": "2.0.0-17",
+  "description": "websocket support for averjs",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/websocket"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "dependencies": {
+    "socket.io": "2.3.0",
+    "socket.io-redis": "5.2.0"
+  }
+}

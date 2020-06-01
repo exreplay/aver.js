@@ -1,0 +1,26 @@
+{
+  "name": "@averjs/config",
+  "version": "2.0.0-17",
+  "description": "managing the configuration",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "dist/config.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "/dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/config"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "aver": {
+    "build": true
+  }
+}

@@ -9,3 +9,4 @@ yarn-error.log
 tmp
 verdaccio
 packages/test
+.changelog

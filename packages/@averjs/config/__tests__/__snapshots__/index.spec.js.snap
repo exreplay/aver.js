@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should match default snapshot config when no config file is present 1`] = `
+Object {
+  "aliases": Object {},
+  "buildPlugins": Array [],
+  "cacheDir": "/node_modules/.cache/averjs",
+  "createRenderer": Object {},
+  "csrf": true,
+  "csrfExclude": Array [],
+  "distDir": "./dist",
+  "distPath": "/dist",
+  "entries": Object {
+    "app": Array [],
+    "client": Array [],
+    "server": Array [],
+  },
+  "i18n": Object {
+    "silentTranslationWarn": true,
+  },
+  "plugins": Array [],
+  "progressbar": true,
+  "rootDir": "/",
+  "store": Object {},
+  "templates": Array [],
+  "webpack": Object {
+    "additionalExtensions": Array [
+      "js",
+    ],
+    "alias": Object {
+      "@": "/aver",
+      "@@": "/",
+      "@components": "/aver/components",
+      "@mixins": "/aver/mixins",
+      "@pages": "/aver/pages",
+      "@resources": "/aver/resources",
+      "@vuex": "/aver/vuex",
+    },
+    "babel": Object {},
+    "base": false,
+    "client": false,
+    "css": Object {
+      "extract": false,
+      "styleResources": Object {
+        "options": Object {},
+        "resources": Array [],
+      },
+    },
+    "postcss": Object {},
+    "process": Object {
+      "env": Object {},
+    },
+    "server": false,
+    "sw": false,
+    "transpileDependencies": Array [],
+  },
+}
+`;

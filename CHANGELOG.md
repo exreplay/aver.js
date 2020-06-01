@@ -1,7 +1,390 @@
-# Change Log
+## 2.0.0-17 (2020-06-01)
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#208](https://github.com/exreplay/aver.js/pull/208) feat: pass vuex store instance and the ssrContext to router entry ([@exreplay](https://github.com/exreplay))
+* `@averjs/core`, `@averjs/renderer`, `@averjs/vue-app`
+  * [#205](https://github.com/exreplay/aver.js/pull/205) feat: hot reload entry files from plugins ([@exreplay](https://github.com/exreplay))
+* `@averjs/mongodb`
+  * [#207](https://github.com/exreplay/aver.js/pull/207) feat: added options for mongodb and guard on build command ([@exreplay](https://github.com/exreplay))
+* `@averjs/session`
+  * [#206](https://github.com/exreplay/aver.js/pull/206) feat: add config options to session package ([@exreplay](https://github.com/exreplay))
+* `@averjs/renderer`
+  * [#150](https://github.com/exreplay/aver.js/pull/150) chore(deps): update dependency workbox-webpack-plugin to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#200](https://github.com/exreplay/aver.js/pull/200) chore(deps): update dependency eslint to v7 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/mailer`
+  * [#204](https://github.com/exreplay/aver.js/pull/204) chore(deps): update dependency pug to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`, `@averjs/vue-app`
+  * [#202](https://github.com/exreplay/aver.js/pull/202) chore(deps): update dependency @averjs/vuex-decorators to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### :house: Internal
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`
+  * [#192](https://github.com/exreplay/aver.js/pull/192) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/config`
+  * [#199](https://github.com/exreplay/aver.js/pull/199) chore(deps): update jest monorepo to v26 (major) ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#201](https://github.com/exreplay/aver.js/pull/201) chore(deps): update dependency copy-webpack-plugin to v6 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#198](https://github.com/exreplay/aver.js/pull/198) chore(deps): update dependency terser-webpack-plugin to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`, `@averjs/session`
+  * [#197](https://github.com/exreplay/aver.js/pull/197) chore(deps): update dependency uuid to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-16 (2020-04-13)
+
+#### :nail_care: Code Refactoring
+* `@averjs/config`
+  * [#194](https://github.com/exreplay/aver.js/pull/194) refactor: require aver config file without extension ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/mongodb`
+  * [#195](https://github.com/exreplay/aver.js/pull/195) chore: pass `useUnifiedTopology` to mongoose connect ([@exreplay](https://github.com/exreplay))
+* Other
+  * [#193](https://github.com/exreplay/aver.js/pull/193) chore: always treat lodash as external ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-15 (2020-04-12)
+
+#### :rocket: New Features
+* `@averjs/config`, `@averjs/core`, `@averjs/renderer`, `@averjs/vue-app`
+  * [#191](https://github.com/exreplay/aver.js/pull/191) feat: support for additional extensions ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`
+  * [#182](https://github.com/exreplay/aver.js/pull/182) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`, `@averjs/shared-utils`
+  * [#187](https://github.com/exreplay/aver.js/pull/187) chore(deps): update dependency chalk to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#188](https://github.com/exreplay/aver.js/pull/188) chore(deps): update dependency eslint-loader to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+* Other
+  * [#190](https://github.com/exreplay/aver.js/pull/190) chore(deps): update dependency rollup-plugin-license to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-14 (2020-03-29)
+
+#### :rocket: New Features
+* `@averjs/core`
+  * [#184](https://github.com/exreplay/aver.js/pull/184) feat: added before and after register routes hooks ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#186](https://github.com/exreplay/aver.js/pull/186) fix: disabled minify for html-webpack-plugin ([@exreplay](https://github.com/exreplay))
+* `@averjs/vue-app`
+  * [#183](https://github.com/exreplay/aver.js/pull/183) fix: app entry mixin is not getting called when no function is returned ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/core`
+  * [#185](https://github.com/exreplay/aver.js/pull/185) refactor: changed max age of express static to 1 year ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-13 (2020-03-28)
+
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#174](https://github.com/exreplay/aver.js/pull/174) feat: entry files can now be async ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#180](https://github.com/exreplay/aver.js/pull/180) fix(renderer): call server and client hooks before creating config ([@exreplay](https://github.com/exreplay))
+* `@averjs/websocket`
+  * [#173](https://github.com/exreplay/aver.js/pull/173) fix: make websocket plugin compatible with new plugin api ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/babel-preset-app`, `@averjs/cli`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`
+  * [#172](https://github.com/exreplay/aver.js/pull/172) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`
+  * [#179](https://github.com/exreplay/aver.js/pull/179) chore(deps): update dependency vuex-persistedstate to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#177](https://github.com/exreplay/aver.js/pull/177) chore(deps): update dependency fs-extra to v9 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/cli`
+  * [#181](https://github.com/exreplay/aver.js/pull/181) chore(deps): update dependency minimist to v1.2.2 [security] ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#176](https://github.com/exreplay/aver.js/pull/176) chore(deps): update dependency url-loader to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#175](https://github.com/exreplay/aver.js/pull/175) chore(deps): update dependency file-loader to v6 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-12 (2020-03-10)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#171](https://github.com/exreplay/aver.js/pull/171) fix: do not push default from app entry ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-11 (2020-03-10)
+
+#### :rocket: New Features
+* `@averjs/core`
+  * [#170](https://github.com/exreplay/aver.js/pull/170) feat: pass http server to middleware hooks ([@exreplay](https://github.com/exreplay))
+* `@averjs/vue-app`
+  * [#167](https://github.com/exreplay/aver.js/pull/167) feat: added hook for context rendered in server entry ([@exreplay](https://github.com/exreplay))
+  * [#166](https://github.com/exreplay/aver.js/pull/166) feat: app entries can return a object which is getting passed and can be reused by client and server entries ([@exreplay](https://github.com/exreplay))
+* `@averjs/builder`
+  * [#164](https://github.com/exreplay/aver.js/pull/164) feat(builder): added before compile hooks ([@exreplay](https://github.com/exreplay))
+
+#### :boom: Breaking Changes
+* `@averjs/core`, `@averjs/session`
+  * [#161](https://github.com/exreplay/aver.js/pull/161) chore(deps): update dependency uuid to v7 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#168](https://github.com/exreplay/aver.js/pull/168) fix(renderer): properly output server errors ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/core`, `@averjs/vue-app`
+  * [#165](https://github.com/exreplay/aver.js/pull/165) refactor(plugins): entries should be placed in `entries` folder ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#146](https://github.com/exreplay/aver.js/pull/146) chore(deps): update jest monorepo to v25 (major) ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#163](https://github.com/exreplay/aver.js/pull/163) chore(deps): update dependency rollup to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`
+  * [#162](https://github.com/exreplay/aver.js/pull/162) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-10 (2020-02-23)
+
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#158](https://github.com/exreplay/aver.js/pull/158) feat: pass vue app options to app mixins ([@exreplay](https://github.com/exreplay))
+
+#### :boom: Breaking Changes
+* `@averjs/vue-app`
+  * [#159](https://github.com/exreplay/aver.js/pull/159) feat: pass to and from to async data from vue-router ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#160](https://github.com/exreplay/aver.js/pull/160) chore: check if GITHUB_AUTH token is set ([@exreplay](https://github.com/exreplay))
+  * [#155](https://github.com/exreplay/aver.js/pull/155) chore(deps): update dependency pify to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`
+  * [#154](https://github.com/exreplay/aver.js/pull/154) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## v2.0.0-9 (2020-02-20)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#157](https://github.com/exreplay/aver.js/pull/157) fix: fix vue-meta hydration by setting ssrAppId to 1 ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* [#156](https://github.com/exreplay/aver.js/pull/156) Update dependency codecov to v3.6.5 [SECURITY] ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## v2.0.0-8 (2020-02-02)
+
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#151](https://github.com/exreplay/aver.js/pull/151) feat: moved i18n config to its own file with support for mixins ([@exreplay](https://github.com/exreplay))
+
+#### :boom: Breaking Changes
+* `@averjs/builder`, `@averjs/vue-app`
+  * [#153](https://github.com/exreplay/aver.js/pull/153) feat: pass whole req object to server entries ([@exreplay](https://github.com/exreplay))
+* `@averjs/mailer`
+  * [#152](https://github.com/exreplay/aver.js/pull/152) refactor(mailer): overhaul mailer plugin ([@exreplay](https://github.com/exreplay))
+* `@averjs/mongodb`
+  * [#79](https://github.com/exreplay/aver.js/pull/79) chore(deps): update dependency mongoose-data-seed to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/session`
+  * [#93](https://github.com/exreplay/aver.js/pull/93) chore(deps): update dependency connect-redis to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`
+  * [#60](https://github.com/exreplay/aver.js/pull/60) chore(deps): update dependency express-validator to v6 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#147](https://github.com/exreplay/aver.js/pull/147) refactor: replace `vue-no-ssr` with `vue-client-only` ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#136](https://github.com/exreplay/aver.js/pull/136) chore(deps): update dependency eslint-plugin-node to v11 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/mailer`
+  * [#145](https://github.com/exreplay/aver.js/pull/145) chore(deps): update dependency email-templates to v7 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/builder`, `@averjs/config`, `@averjs/core`, `@averjs/renderer`
+  * [#144](https://github.com/exreplay/aver.js/pull/144) refactor: globalized config paths ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-7 (2020-01-18)
+
+#### :bug: Bug Fix
+* `@averjs/babel-preset-app`, `@averjs/cli`, `@averjs/core`, `@averjs/renderer`
+  * [#143](https://github.com/exreplay/aver.js/pull/143) fix: distribute dependencies correctly ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-6 (2020-01-17)
+
+#### :rocket: New Features
+* `@averjs/config`, `@averjs/core`, `@averjs/renderer`
+  * [#139](https://github.com/exreplay/aver.js/pull/139) feat: compile entry files from plugins with lodash template ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#142](https://github.com/exreplay/aver.js/pull/142) fix: init persisted state after replace state ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/renderer`
+  * [#140](https://github.com/exreplay/aver.js/pull/140) revert: always compile templates even when cacheDir exists to keep files up to date ([@exreplay](https://github.com/exreplay))
+* `@averjs/builder`, `@averjs/renderer`, `@averjs/vue-app`
+  * [#138](https://github.com/exreplay/aver.js/pull/138) refactor: changed the way templates are compiled ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.0-5 (2019-12-30)
+
+#### :rocket: New Features
+* `babel-preset-app`, `config`, `core`, `renderer`, `shared-utils`
+  * [#74](https://github.com/exreplay/aver.js/pull/74) feat(babel-preset-app): add support for core-js 3 ([@exreplay](https://github.com/exreplay))
+* `cli`, `config`, `core`
+  * [#135](https://github.com/exreplay/aver.js/pull/135) feat: buildPlugins config parameter ([@exreplay](https://github.com/exreplay))
+* `config`, `renderer`
+  * [#127](https://github.com/exreplay/aver.js/pull/127) feat: transpile config parameter ([@exreplay](https://github.com/exreplay))
+* `core`, `renderer`, `vue-app`
+  * [#126](https://github.com/exreplay/aver.js/pull/126) feat: detect entry files in plugins ([@exreplay](https://github.com/exreplay))
+
+#### :boom: Breaking Changes
+* `config`, `renderer`
+  * [#133](https://github.com/exreplay/aver.js/pull/133) refactor!: removed purgeCss config in favor of new plugin ([@exreplay](https://github.com/exreplay))
+* `vue-app`
+  * [#125](https://github.com/exreplay/aver.js/pull/125) refactor(vue-app): changed lodash forEach to for of loop and call mixins as function ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `core`
+  * [#131](https://github.com/exreplay/aver.js/pull/131) fix(core): use `createStream` function ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#134](https://github.com/exreplay/aver.js/pull/134) chore: use lerna-changelog to generate changelog pr based ([@exreplay](https://github.com/exreplay))
+  * [#124](https://github.com/exreplay/aver.js/pull/124) chore(deps): update dependency memfs to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#130](https://github.com/exreplay/aver.js/pull/130) chore(deps): update dependency inquirer to v7.0.1 ([@renovate[bot]](https://github.com/apps/renovate))
+* `renderer`
+  * [#123](https://github.com/exreplay/aver.js/pull/123) chore(deps): update dependency url-loader to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#122](https://github.com/exreplay/aver.js/pull/122) chore(deps): update dependency file-loader to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#129](https://github.com/exreplay/aver.js/pull/129) chore(deps): update dependency webpack-chain to v6.2.0 ([@renovate[bot]](https://github.com/apps/renovate))
+* `core`
+  * [#120](https://github.com/exreplay/aver.js/pull/120) chore(deps): update dependency rotating-file-stream to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+# [2.0.0-4](https://github.com/exreplay/aver.js/compare/v2.0.0-3...v2.0.0-4) (2019-11-23)
+
+
+### Bug Fixes
+
+* **perf-loader:** only warmup in dev mode ([d1f6ced](https://github.com/exreplay/aver.js/commit/d1f6ced))
+* **perf-loader:** only warmup loaders where useThread is set to true ([#117](https://github.com/exreplay/aver.js/issues/117)) ([b3708b2](https://github.com/exreplay/aver.js/commit/b3708b2))
+* **renderer:** fixed yaml rule ([df5d743](https://github.com/exreplay/aver.js/commit/df5d743))
+* **session:** update plugin to make use of enhanced plugin system ([#111](https://github.com/exreplay/aver.js/issues/111)) ([077056f](https://github.com/exreplay/aver.js/commit/077056f))
+
+
+### Features
+
+* **vuex:** support default vuex syntax ([#104](https://github.com/exreplay/aver.js/issues/104)) ([4fcb9e7](https://github.com/exreplay/aver.js/commit/4fcb9e7))
+* basic support for hook system ([#106](https://github.com/exreplay/aver.js/issues/106)) ([4a048f8](https://github.com/exreplay/aver.js/commit/4a048f8))
+* configure alias in aver config file ([#113](https://github.com/exreplay/aver.js/issues/113)) ([03dbade](https://github.com/exreplay/aver.js/commit/03dbade))
+* enhance plugin system ([#109](https://github.com/exreplay/aver.js/issues/109)) ([d191918](https://github.com/exreplay/aver.js/commit/d191918))
+
+
+
+
+
+# [2.0.0-3](https://github.com/exreplay/aver.js/compare/v2.0.0-2...v2.0.0-3) (2019-09-19)
+
+**Note:** Version bump only for package averjs
+
+
+
+
+
+# [2.0.0-2](https://github.com/exreplay/aver.js/compare/v2.0.0-1...v2.0.0-2) (2019-09-18)
+
+
+### Bug Fixes
+
+* **renderer:** removed unnecessary includes in js rule ([ec18917](https://github.com/exreplay/aver.js/commit/ec18917))
+
+
+
+
+
+# [2.0.0-1](https://github.com/exreplay/aver.js/compare/v2.0.0-0...v2.0.0-1) (2019-09-03)
+
+
+### Bug Fixes
+
+* **deps:** added missing init package to cli ([9febd4e](https://github.com/exreplay/aver.js/commit/9febd4e))
+
+
+
+
+
+# [2.0.0-0](https://github.com/exreplay/aver.js/compare/v1.5.3...v2.0.0-0) (2019-09-03)
+
+
+### Bug Fixes
+
+* **cli:** use dev command when no arg is passed ([db22831](https://github.com/exreplay/aver.js/commit/db22831))
+* **cli:** use help command when none is passed ([aaf428c](https://github.com/exreplay/aver.js/commit/aaf428c))
+* **cli:** use init instead of core package on init command ([ccfba47](https://github.com/exreplay/aver.js/commit/ccfba47))
+* **core:** added back "@babel/runtime-corejs2" dep ([6a90e70](https://github.com/exreplay/aver.js/commit/6a90e70))
+* **core:** init now shows an ora spinner and does not fail when file or dir already exists ([cd5e08e](https://github.com/exreplay/aver.js/commit/cd5e08e))
+* **core:** path to app dir is now correct ([036a837](https://github.com/exreplay/aver.js/commit/036a837))
+* **core:** writeFile now works properly ([c51d2b9](https://github.com/exreplay/aver.js/commit/c51d2b9))
+* **deps:** pinned @averjs/friendly-errors-webpack-plugin ([bb2e83d](https://github.com/exreplay/aver.js/commit/bb2e83d))
+* **init:** fixed wrong package name ([3132a95](https://github.com/exreplay/aver.js/commit/3132a95))
+* **init:** use init package instead of core package for `appDir` ([2ec0d05](https://github.com/exreplay/aver.js/commit/2ec0d05))
+* **renderer:** load postcss config correctly ([#92](https://github.com/exreplay/aver.js/issues/92)) ([f37724d](https://github.com/exreplay/aver.js/commit/f37724d))
+* **renderer:** reuse browser tabs when port 80 is defined ([7631a21](https://github.com/exreplay/aver.js/commit/7631a21))
+* overwrite env variables when changed ([c266358](https://github.com/exreplay/aver.js/commit/c266358)), closes [#42](https://github.com/exreplay/aver.js/issues/42)
+* **vue-app:** better check for asyncData method ([406000f](https://github.com/exreplay/aver.js/commit/406000f))
+* **vue-app:** if user passes routes parameter, delete it ([b52344d](https://github.com/exreplay/aver.js/commit/b52344d))
+* **vue-app:** import app first on server ([9507e57](https://github.com/exreplay/aver.js/commit/9507e57))
+* **vue-app:** import right package ([442818c](https://github.com/exreplay/aver.js/commit/442818c))
+* **vue-app:** moved component register hooks to extra file and imported it before anything else ([b64f6e4](https://github.com/exreplay/aver.js/commit/b64f6e4))
+* **vue-app:** use property instead of class components to register hooks ([5518360](https://github.com/exreplay/aver.js/commit/5518360))
+
+
+### Features
+
+* **cli:** added global version command ([bf0bc33](https://github.com/exreplay/aver.js/commit/bf0bc33))
+* **cli:** added prod command ([94f1f4b](https://github.com/exreplay/aver.js/commit/94f1f4b))
+* **renderer:** added new config param process.env ([27fe2e7](https://github.com/exreplay/aver.js/commit/27fe2e7))
+* **vue-app:** assign user config to default router config ([0dac69d](https://github.com/exreplay/aver.js/commit/0dac69d))
+* add rollup to build packages ([#56](https://github.com/exreplay/aver.js/issues/56)) ([537faa6](https://github.com/exreplay/aver.js/commit/537faa6))
+* added FilesChanged plugin ([8b8dc98](https://github.com/exreplay/aver.js/commit/8b8dc98))
+* added new cli package ([b363f2f](https://github.com/exreplay/aver.js/commit/b363f2f))
+* vuex store config ([#95](https://github.com/exreplay/aver.js/issues/95)) ([b47ae0c](https://github.com/exreplay/aver.js/commit/b47ae0c))
+
+
+
+
 
 # [2.0.0-4](https://github.com/exreplay/aver.js/compare/v2.0.0-3...v2.0.0-4) (2019-11-23)
 

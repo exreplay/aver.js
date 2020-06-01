@@ -1,0 +1,27 @@
+{
+  "name": "@averjs/vue-app",
+  "version": "2.0.0-17",
+  "description": "The vue app for averjs",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "dist/vue-app.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "/dist",
+    "/templates"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/vue-app"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "aver": {
+    "build": true
+  }
+}
