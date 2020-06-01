@@ -1,6 +1,6 @@
 {
   "name": "@averjs/mongodb",
-  "version": "2.0.0-16",
+  "version": "2.0.0-17",
   "description": "mongodb support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",

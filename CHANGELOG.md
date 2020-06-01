@@ -1,3 +1,37 @@
+## 2.0.0-17 (2020-06-01)
+
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#208](https://github.com/exreplay/aver.js/pull/208) feat: pass vuex store instance and the ssrContext to router entry ([@exreplay](https://github.com/exreplay))
+* `@averjs/core`, `@averjs/renderer`, `@averjs/vue-app`
+  * [#205](https://github.com/exreplay/aver.js/pull/205) feat: hot reload entry files from plugins ([@exreplay](https://github.com/exreplay))
+* `@averjs/mongodb`
+  * [#207](https://github.com/exreplay/aver.js/pull/207) feat: added options for mongodb and guard on build command ([@exreplay](https://github.com/exreplay))
+* `@averjs/session`
+  * [#206](https://github.com/exreplay/aver.js/pull/206) feat: add config options to session package ([@exreplay](https://github.com/exreplay))
+* `@averjs/renderer`
+  * [#150](https://github.com/exreplay/aver.js/pull/150) chore(deps): update dependency workbox-webpack-plugin to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#200](https://github.com/exreplay/aver.js/pull/200) chore(deps): update dependency eslint to v7 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/mailer`
+  * [#204](https://github.com/exreplay/aver.js/pull/204) chore(deps): update dependency pug to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`, `@averjs/vue-app`
+  * [#202](https://github.com/exreplay/aver.js/pull/202) chore(deps): update dependency @averjs/vuex-decorators to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### :house: Internal
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`
+  * [#192](https://github.com/exreplay/aver.js/pull/192) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/config`
+  * [#199](https://github.com/exreplay/aver.js/pull/199) chore(deps): update jest monorepo to v26 (major) ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#201](https://github.com/exreplay/aver.js/pull/201) chore(deps): update dependency copy-webpack-plugin to v6 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#198](https://github.com/exreplay/aver.js/pull/198) chore(deps): update dependency terser-webpack-plugin to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`, `@averjs/session`
+  * [#197](https://github.com/exreplay/aver.js/pull/197) chore(deps): update dependency uuid to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-16 (2020-04-13)
 
 #### :nail_care: Code Refactoring
