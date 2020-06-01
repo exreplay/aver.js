@@ -37,8 +37,8 @@ axios.interceptors.response.use((response) => {
 
 export async function createApp(ssrContext) {
   const i18n = createI18n(ssrContext);
-  const router = createRouter({ i18n });
   const store = createStore(ssrContext);
+  const router = createRouter({ i18n, store, ssrContext });
 
   sync(store, router);
 
