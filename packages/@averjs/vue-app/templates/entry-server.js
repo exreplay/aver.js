@@ -13,7 +13,7 @@ export default async context => {
     <%
       const extensions = config.additionalExtensions.join('|');
       print(`
-    const entries = require.context('./', true, /entry-server\\.(${extensions})$/i);
+    const entries = require.context('./', true, /.\\/[^/]+\\/entry-server\\.(${extensions})$/i);
     const mixinContext = require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i);
       `);
     %>
@@ -41,13 +41,8 @@ export default async context => {
 
     for(const entryMixin of entryMixins) {
       for(const entry of entryMixin.keys()) {
-        if(
-          (entryMixin.id.includes('.cache') && entry !== './entry-server.js')
-          || !entryMixin.id.includes('.cache')
-        ) {
-          const mixin = entryMixin(entry).default;
-          if(typeof mixin === 'function') await mixin({...context, userReturns, contextRendered});
-        }
+        const mixin = entryMixin(entry).default;
+        if(typeof mixin === 'function') await mixin({...context, userReturns, contextRendered});
       }
     }
         
