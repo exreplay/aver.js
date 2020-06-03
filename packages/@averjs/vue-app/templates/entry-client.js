@@ -43,7 +43,7 @@ import { composeComponentOptions } from './utils';
       <%
         const extensions = config.additionalExtensions.join('|');
         print(`
-      const entries = require.context('./', true, /entry-client\\.(${extensions})$/i);
+      const entries = require.context('./', true, /.\\/[^/]+\\/entry-client\\.(${extensions})$/i);
       const mixinContext = require.context('@/', false, /^\\.\\/entry-client\\.(${extensions})$/i);
         `);
       %>
@@ -51,13 +51,8 @@ import { composeComponentOptions } from './utils';
   
       for(const entryMixin of entryMixins) {
         for(const entry of entryMixin.keys()) {
-          if(
-            (entryMixin.id.includes('.cache') && entry !== './entry-client.js')
-            || !entryMixin.id.includes('.cache')
-          ) {
-            const mixin = entryMixin(entry).default;
-            if(typeof mixin === 'function') await mixin({ userReturns });
-          }
+          const mixin = entryMixin(entry).default;
+          if(typeof mixin === 'function') await mixin({ userReturns });
         }
       }
     }

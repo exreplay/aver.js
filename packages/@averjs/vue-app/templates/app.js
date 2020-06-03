@@ -57,7 +57,7 @@ export async function createApp(ssrContext) {
   <%
     const extensions = config.additionalExtensions.join('|');
     print(`
-  const entries = require.context('./', true, /app\\.(${extensions})$/i);
+  const entries = require.context('./', true, /.\\/[^/]\\/app\\.(${extensions})$/i);
   const mixinContext = require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i);
     `);
   %>
@@ -65,15 +65,10 @@ export async function createApp(ssrContext) {
 
   for(const entryMixin of entryMixins) {
     for(const entry of entryMixin.keys()) {
-      if(
-        (entryMixin.id.includes('.cache') && entry !== './app.js')
-        || !entryMixin.id.includes('.cache')
-      ) {
-        const mixin = entryMixin(entry).default;
-        if(typeof mixin === 'function') {
-          const returns = await mixin({ ...ssrContext, appOptions });
-          userReturns = merge(userReturns, returns);
-        }
+      const mixin = entryMixin(entry).default;
+      if(typeof mixin === 'function') {
+        const returns = await mixin({ ...ssrContext, appOptions });
+        userReturns = merge(userReturns, returns);
       }
     }
   }
