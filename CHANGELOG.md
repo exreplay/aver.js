@@ -1,3 +1,13 @@
+## 2.0.0-18 (2020-06-03)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#210](https://github.com/exreplay/aver.js/pull/210) fix: fixed mixins by updating regex which would cause endless loop in production ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-17 (2020-06-01)
 
 #### :rocket: New Features
