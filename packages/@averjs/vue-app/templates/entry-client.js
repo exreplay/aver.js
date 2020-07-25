@@ -34,8 +34,14 @@ import { composeComponentOptions } from './utils';
             next(err);
           }
         });
-  
-        app.$mount('#app');
+        
+        if(window.__AVER__.routePath === router.currentRoute.fullPath) app.$mount('#app');
+        else {
+          const unregister = router.afterEach((to, from, next) => {
+            unregister();
+            app.$mount('#app');
+          });
+        }
       });
     }
   

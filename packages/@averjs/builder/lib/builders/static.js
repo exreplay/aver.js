@@ -34,6 +34,9 @@ export default class StaticBuilder extends BaseBuilder {
       const context = {
         title: process.env.APP_NAME,
         url: route.path,
+        aver: {
+          routePath: route.path
+        },
         req: {
           cookies: []
         }
@@ -64,6 +67,7 @@ export default class StaticBuilder extends BaseBuilder {
         script.text({ pbody: true }),
         noscript.text({ pbody: true }),
         html,
+        `<script>window.__AVER__=${serialize(context.aver, { isJSON: true })}</script>`,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
         context.renderScripts(),
         style.text({ body: true }),
