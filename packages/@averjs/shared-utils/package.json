@@ -27,7 +27,7 @@
     ]
   },
   "dependencies": {
-    "chalk": "4.0.0",
+    "chalk": "4.1.0",
     "cross-spawn": "7.0.3",
     "opn": "6.0.0"
   }
