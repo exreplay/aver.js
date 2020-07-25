@@ -42,7 +42,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         .splitChunks(false)
         .end()
       .externals(nodeExternals({
-        whitelist: [
+        allowlist: [
           /es6-promise|\.(?!(?:js|json)$).{1,5}$/i,
           /\.css$/,
           /\?vue&type=style/,
