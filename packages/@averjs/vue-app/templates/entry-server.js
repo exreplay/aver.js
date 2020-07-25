@@ -24,10 +24,18 @@ export default async context => {
       if(typeof fn === 'function') renderedFns.push(fn);
     }
     const { app, router, store, userReturns } = await createApp({ isServer: true, context });
-    const { url } = context;
     const meta = app.$meta();
 
-    router.push(url);
+    await new Promise((resolve, reject) => {
+      router.push(context.url, resolve, () => {
+        // if a navigation guard redirects to a new url, wait for it to be resolved, before continue
+        const unregister = router.afterEach((to, from, next) => {
+          context.url = to.fullPath;
+          unregister();
+          resolve();
+        });
+      });
+    });
     context.meta = meta;
 
     await new Promise((resolve, reject) => router.onReady(resolve, reject));
