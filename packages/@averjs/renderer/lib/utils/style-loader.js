@@ -91,9 +91,9 @@ export default class StyleLoader {
       .use('css-loader')
         .loader('css-loader')
         .options({
+          esModule: false,
           importLoaders: this.importLoaders,
-          sourceMap: !this.isProd,
-          onlyLocals: this.exportOnlyLocals
+          sourceMap: !this.isProd
         });
   }
 
@@ -102,13 +102,13 @@ export default class StyleLoader {
       .use('css-loader')
         .loader('css-loader')
         .options({
+          esModule: false,
           modules: {
-            localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`
+            localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
+            exportOnlyLocals: this.exportOnlyLocals,
+            exportLocalsConvention: 'camelCase'
           },
-          importLoaders: this.importLoaders,
-          localsConvention: 'camelCase',
-          sourceMap: !this.isProd,
-          onlyLocals: this.exportOnlyLocals
+          importLoaders: this.importLoaders
         });
   }
 }
