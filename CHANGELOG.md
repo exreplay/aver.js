@@ -1,3 +1,30 @@
+## 2.0.0 (2020-07-26)
+
+#### :bug: Bug Fix
+* `@averjs/builder`, `@averjs/vue-app`
+  * [#219](https://github.com/exreplay/aver.js/pull/219) fix: navigation guards fail when redirecting inside it ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#222](https://github.com/exreplay/aver.js/pull/222) chore(deps): update dependency css-loader to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#213](https://github.com/exreplay/aver.js/pull/213) chore(deps): update dependency webpack-node-externals to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#212](https://github.com/exreplay/aver.js/pull/212) chore(deps): update dependency sass-loader to v9 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/websocket`
+  * [#209](https://github.com/exreplay/aver.js/pull/209) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/builder`
+  * [#215](https://github.com/exreplay/aver.js/pull/215) chore(deps): update dependency lru-cache to v6 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/session`
+  * [#214](https://github.com/exreplay/aver.js/pull/214) chore(deps): update dependency connect-redis to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`
+  * [#220](https://github.com/exreplay/aver.js/pull/220) chore(deps): update dependency lodash to v4.17.19 [security] ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#211](https://github.com/exreplay/aver.js/pull/211) chore(deps): update dependency vue-property-decorator to v9 ([@renovate[bot]](https://github.com/apps/renovate))
+* Other
+  * [#217](https://github.com/exreplay/aver.js/pull/217) chore(deps): update dependency codecov to v3.7.1 [security] ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0-18 (2020-06-03)
 
 #### :bug: Bug Fix
