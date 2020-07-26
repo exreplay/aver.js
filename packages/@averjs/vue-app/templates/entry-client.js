@@ -35,7 +35,7 @@ import { composeComponentOptions } from './utils';
           }
         });
         
-        if(window.__AVER__.routePath === router.currentRoute.fullPath) app.$mount('#app');
+        if(window.__AVER__.routePath === app.$options.context.route.fullPath) app.$mount('#app');
         else {
           const unregister = router.afterEach((to, from, next) => {
             unregister();
