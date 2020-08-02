@@ -1,11 +1,8 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore as createVuexStore } from 'vuex';
 import { ExportVuexStore, config } from '@averjs/vuex-decorators';
 import createPersistedState from 'vuex-persistedstate';
 import * as Cookies from 'js-cookie';
 import merge from 'lodash/merge'
-
-Vue.use(Vuex);
 
 export function createStore(ssrContext) {
   const files = <%
@@ -74,7 +71,7 @@ The following files have been ignored:${ignoreGlobalStoresList}.
     }
   }
 
-  const store = new Vuex.Store(defaultConfig);
+  const store = createVuexStore(defaultConfig);
   
   // Pass the final store to the @averjs/vuex-decorators configuration
   config.store = store;

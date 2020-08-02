@@ -2,7 +2,7 @@ import webpack from 'webpack';
 import WebpackBaseConfiguration from './base';
 import path from 'path';
 import nodeExternals from 'webpack-node-externals';
-import VueSSRServerPlugin from 'vue-server-renderer/server-plugin';
+import VueSSRServerPlugin from '../plugins/vue/server';
 import cloneDeep from 'lodash/cloneDeep';
 
 export default class WebpackServerConfiguration extends WebpackBaseConfiguration {

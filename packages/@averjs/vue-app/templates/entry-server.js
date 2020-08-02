@@ -1,11 +1,10 @@
 import { createApp } from './app';
-import Vue from 'vue';
+// import Vue from 'vue';
 import App from '@/App.vue';
 import { composeComponentOptions } from './utils';
 
-Vue.prototype.$auth = null;
-Vue.prototype.$modernizr = {};
-<% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
+// Vue.prototype.$auth = null;
+// <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
 
 
 export default async context => {
@@ -24,11 +23,12 @@ export default async context => {
       if(typeof fn === 'function') renderedFns.push(fn);
     }
     const { app, router, store, userReturns } = await createApp({ isServer: true, context });
-    const meta = app.$meta();
+    // const meta = app.$meta();
 
-    await new Promise((resolve, reject) => {
-      router.push(context.url, resolve, () => {
-        // if a navigation guard redirects to a new url, wait for it to be resolved, before continue
+    try {
+      await router.push(context.url);
+    } catch {
+      await new Promise((resolve, reject) => {
         const unregister = router.afterEach((to, from, next) => {
           context.aver.routePath = to.fullPath;
           context.url = to.fullPath;
@@ -38,11 +38,12 @@ export default async context => {
           resolve();
         });
       });
-    });
-    context.meta = meta;
+    }
+    // context.meta = meta;
+    context.meta = {};
 
-    await new Promise((resolve, reject) => router.onReady(resolve, reject));
-    const matchedComponents = router.getMatchedComponents();
+    await router.isReady();
+    const matchedComponents = router.currentRoute.value.matched.flatMap(record => Object.values(record.components));
 
     if (!matchedComponents.length) {
       const error = new Error('Page not found!');

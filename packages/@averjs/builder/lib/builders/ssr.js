@@ -50,42 +50,42 @@ export default class SsrBuilder extends BaseBuilder {
     try {
       const html = await this.renderer.renderToString(context);
 
-      const {
-        title, htmlAttrs, headAttrs, bodyAttrs, link,
-        style, script, noscript, meta
-      } = context.meta.inject();
+      // const {
+      //   title, htmlAttrs, headAttrs, bodyAttrs, link,
+      //   style, script, noscript, meta
+      // } = context.meta.inject();
 
       const HEAD = [];
 
       if (this.config.csrf) HEAD.push(`<meta name="csrf-token" content="${req.csrfToken()}">`);
 
       HEAD.push(
-        meta.text(),
-        title.text(),
-        link.text(),
+        // meta.text(),
+        // title.text(),
+        // link.text(),
         context.renderStyles(),
-        style.text(),
-        context.renderResourceHints(),
-        script.text(),
-        noscript.text()
+        // style.text(),
+        context.renderResourceHints()
+        // script.text(),
+        // noscript.text()
       );
 
       const BODY = [
-        style.text({ pbody: true }),
-        script.text({ pbody: true }),
-        noscript.text({ pbody: true }),
+        // style.text({ pbody: true }),
+        // script.text({ pbody: true }),
+        // noscript.text({ pbody: true }),
         html,
         `<script>window.__AVER__=${serialize(context.aver, { isJSON: true })}</script>`,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
-        context.renderScripts(),
-        style.text({ body: true }),
-        script.text({ body: true }),
-        noscript.text({ body: true })
+        context.renderScripts()
+        // style.text({ body: true }),
+        // script.text({ body: true }),
+        // noscript.text({ body: true })
       ];
 
-      const HEAD_ATTRS = headAttrs.text();
-      const HTML_ATTRS = htmlAttrs.text(true);
-      const BODY_ATTRS = bodyAttrs.text();
+      const HEAD_ATTRS = ''; // headAttrs.text();
+      const HTML_ATTRS = ''; // htmlAttrs.text(true);
+      const BODY_ATTRS = ''; // bodyAttrs.text();
 
       await this.aver.callHook('builder:before-compile-ssr', {
         context,

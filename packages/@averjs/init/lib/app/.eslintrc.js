@@ -7,52 +7,52 @@ module.exports = {
         }
     },
     env: {
-        "browser": true
+        browser: true
     },
     extends: [
         'plugin:vue/essential',
         'standard'
     ],
     plugins: [
-        "vue"
+        'vue'
     ],
     rules: {
         'generator-star-spacing': 'off',
     
-        "indent": ["error", 4],
+        indent: ['error', 4],
         
-        "no-tabs": "off",
+        'no-tabs': 'off',
 	
-		"prefer-promise-reject-errors": ["error", {
-        	"allowEmptyReject": true
+        'prefer-promise-reject-errors': ['error', {
+        	allowEmptyReject: true
         }],
 		
         // "vue/script-indent": ["error", 4, {
         //     "baseIndent": 1
         // }],
 
-        "no-multi-spaces": ["error", {
+        'no-multi-spaces': ['error', {
             exceptions: {
-                "ImportDeclaration": true
+                ImportDeclaration: true
             }
         }],
 
-        "semi": ["error", "always"],
+        semi: ['error', 'always'],
 
-        "space-before-function-paren": ["error", "never"],
+        'space-before-function-paren': ['error', 'never'],
         
-        "no-trailing-spaces": ["error", {
-            "skipBlankLines": true
+        'no-trailing-spaces': ['error', {
+            skipBlankLines: true
         }],
 
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
     },
-    "overrides": [
+    overrides: [
         {
-            "files": ["*.vue"],
-            "rules": {
-                "indent": "off",
-                "vue/script-indent": ["error", 4, { "baseIndent": 1 }]
+            files: ['*.vue'],
+            rules: {
+                indent: 'off',
+                'vue/script-indent': ['error', 4, { baseIndent: 1 }]
             }
         }
     ]

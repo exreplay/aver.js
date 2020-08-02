@@ -1,6 +1,6 @@
-import { Component } from 'vue-property-decorator';
+// import { Component } from 'vue-property-decorator';
 
-Component.registerHooks([
-  'asyncData',
-  'metaInfo'
-]);
+// Component.registerHooks([
+//   'asyncData',
+//   'metaInfo'
+// ]);

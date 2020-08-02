@@ -1,12 +1,10 @@
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
+import { createI18n as createVueI18n } from 'vue-i18n'
 import * as Cookies from 'js-cookie';
 import merge from 'lodash/merge';
 
-Vue.use(VueI18n);
-
 export function createI18n({ isServer, context }) {
   let i18nConfig = {
+    legacy: true,
     locale: 'de',
     fallbackLocale: 'de'
   };
@@ -25,20 +23,20 @@ export function createI18n({ isServer, context }) {
     }
   }
 
-  const i18n = new VueI18n(i18nConfig);
+  const i18n = createVueI18n(i18nConfig);
 
   if (!isServer) i18n.locale = Cookies.get('language') || i18nConfig.locale;
   else i18n.locale = context.req.cookies.language || i18nConfig.locale;
 
-  Vue.prototype.$locale = {
-    change: (lang) => {
-      i18n.locale = lang;
-      Cookies.set('language', i18n.locale, { secure: process.env.NODE_ENV === 'production' });
-    },
-    current: () => {
-      return i18n.locale;
-    }
-  };
+  // Vue.prototype.$locale = {
+  //   change: (lang) => {
+  //     i18n.locale = lang;
+  //     Cookies.set('language', i18n.locale, { secure: process.env.NODE_ENV === 'production' });
+  //   },
+  //   current: () => {
+  //     return i18n.locale;
+  //   }
+  // };
 
   return i18n;
 }

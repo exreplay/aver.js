@@ -1,5 +1,5 @@
 import './register-component-hooks';
-import Vue from 'vue';
+import { createApp as createVueApp, createSSRApp } from 'vue';
 import axios from 'axios';
 import merge from 'lodash/merge';
 import App from '@/App.vue';
@@ -7,27 +7,27 @@ import { createRouter } from './router/';
 import { createStore } from './store/';
 import { createI18n } from './i18n';
 import { sync } from 'vuex-router-sync';
-<% if (config.progressbar) { %> 
-import VueProgressBar from 'vue-progressbar';
-<% } %>
+// <% if (config.progressbar) { %> 
+// import VueProgressBar from 'vue-progressbar';
+// <% } %>
 
-<% if (config.progressbar) { %>
-const options = {
-  color: '#003B8E',
-  failedColor: '#E0001A',
-  thickness: '2px',
-  transition: {
-    speed: '0.2s',
-    opacity: '0.6s',
-    termination: 300
-  },
-  autoRevert: true,
-  location: 'top',
-  inverse: false
-};
+// <% if (config.progressbar) { %>
+// const options = {
+//   color: '#003B8E',
+//   failedColor: '#E0001A',
+//   thickness: '2px',
+//   transition: {
+//     speed: '0.2s',
+//     opacity: '0.6s',
+//     termination: 300
+//   },
+//   autoRevert: true,
+//   location: 'top',
+//   inverse: false
+// };
 
-Vue.use(VueProgressBar, <% typeof config.progressbar === 'object' ? print('Object.assign(options, JSON.parse(\''+JSON.stringify(config.progressbar)+'\'))') : print('options') %>);
-<% } %>
+// Vue.use(VueProgressBar, <% typeof config.progressbar === 'object' ? print('Object.assign(options, JSON.parse(\''+JSON.stringify(config.progressbar)+'\'))') : print('options') %>);
+// <% } %>
 
 axios.interceptors.response.use((response) => {
   return response;
@@ -51,15 +51,10 @@ export async function createApp(ssrContext) {
 
   sync(store, router);
 
-  Vue.router = router;
-
   const appOptions = {
     i18n,
-    router,
-    store,
     ssrContext,
-    context: {},
-    render: h => h(App)
+    context: {}
   };
 
   
@@ -90,7 +85,11 @@ export async function createApp(ssrContext) {
     appOptions.context.route = router.resolve(path).route;
   }
     
-  const app = new Vue(appOptions);
+  const app = ssrContext.isServer ? createSSRApp(App) : createVueApp(App);
+
+  app.use(store);
+  app.use(router);
+  if (!ssrContext.isServer) app.use(i18n);
 
   return { app, router, store, userReturns };
 };

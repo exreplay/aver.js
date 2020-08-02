@@ -1,13 +1,9 @@
-import LRU from 'lru-cache';
-import { createBundleRenderer } from 'vue-server-renderer';
+import { createBundleRenderer } from 'vue-bundle-renderer';
 
 export default class BaseBuilder {
   createRenderer(bundle, options) {
     const bundleOptions = {
-      cache: new LRU({
-        max: 1000,
-        maxAge: 1000 * 60 * 15
-      }),
+      vueServerRenderer: require('@vue/server-renderer'),
       runInNewContext: false
     };
   

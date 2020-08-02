@@ -2,7 +2,7 @@ import webpack from 'webpack';
 import WebpackBaseConfiguration from './base';
 import fs from 'fs';
 import path from 'path';
-import VueSSRClientPlugin from 'vue-server-renderer/client-plugin';
+import VueSSRClientPlugin from '../plugins/vue/client';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HTMLPlugin from 'html-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
@@ -52,6 +52,8 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         .use(webpack.DefinePlugin, [ {
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
           'process.env.VUE_ENV': JSON.stringify('client'),
+          __VUE_OPTIONS_API__: JSON.stringify(true),
+          __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
           PRODUCTION: this.isProd,
           ...this.globalConfig.process.env
         } ])
