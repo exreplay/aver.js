@@ -106,18 +106,32 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
   optimization() {
     super.optimization();
-        
-    this.chainConfig.optimization
-      .splitChunks({
-        cacheGroups: {
-          commons: {
-            test: /node_modules[\\/](vue|vue-loader|vue-router|vuex|vue-meta|core-js|babel-runtime|es6-promise|axios|webpack|setimmediate|timers-browserify|process|regenerator-runtime|cookie|js-cookie|is-buffer|dotprop|nuxt\.js)[\\/]/,
-            chunks: 'all',
-            priority: 10,
-            name: true
-          }
+
+    this.chainConfig.optimization.runtimeChunk('single');
+
+    const splitChunks = {
+      cacheGroups: {
+        commons: {
+          test: /node_modules[\\/](vue|vue-loader|vue-router|vuex|vue-meta|core-js|babel-runtime|es6-promise|axios|webpack|setimmediate|timers-browserify|process|regenerator-runtime|cookie|js-cookie|is-buffer|dotprop)[\\/].*\.js$/,
+          chunks: 'all',
+          priority: 10,
+          name: true
         }
-      });
+      }
+    };
+    
+    if (process.env.NODE_ENV === 'production' && this.globalConfig.css.extract) {
+      splitChunks.cacheGroups.styles = {
+        name: 'styles',
+        test: /\.(s?css|vue)$/,
+        minChunks: 1,
+        chunks: 'all',
+        enforce: true
+      };
+    }
+    
+    this.chainConfig.optimization
+      .splitChunks(splitChunks);
 
     const TerserPlugin = require('terser-webpack-plugin');
 
