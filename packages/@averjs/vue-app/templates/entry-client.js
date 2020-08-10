@@ -11,7 +11,8 @@ import { composeComponentOptions } from './utils';
       <% if (config.csrf) { %> this.configureCSRF(); <% } %>
       // this.setRouterMixins();
       await this.initMixin();
-  
+      
+      await router.isReady();
       router.beforeResolve(async (to, from, next) => {
         const matched = to.matched;
         const prevMatched = from.matched;
