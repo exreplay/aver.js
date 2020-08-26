@@ -25,21 +25,22 @@ export default async context => {
     const { app, router, store, userReturns } = await createApp({ isServer: true, context });
     // const meta = app.$meta();
 
-    try {
-      await router.push(context.url);
-    } catch {
-      await new Promise((resolve, reject) => {
-        const unregister = router.afterEach((to, from, next) => {
-          context.aver.routePath = to.fullPath;
-          context.url = to.fullPath;
-          context.params = to.params;
-          context.query = to.query;
-          unregister();
-          resolve();
-        });
-      });
-    }
+    // try {
+    //   await router.push(context.url);
+    // } catch {
+    //   await new Promise((resolve, reject) => {
+    //     const unregister = router.afterEach((to, from, next) => {
+    //       context.aver.routePath = to.fullPath;
+    //       context.url = to.fullPath;
+    //       context.params = to.params;
+    //       context.query = to.query;
+    //       unregister();
+    //       resolve();
+    //     });
+    //   });
+    // }
     // context.meta = meta;
+    await router.push(context.url);
     context.meta = {};
 
     await router.isReady();

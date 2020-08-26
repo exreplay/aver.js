@@ -8937,16 +8937,6 @@ eslint-plugin-standard@4.0.1:
   resolved "https://registry.yarnpkg.com/eslint-plugin-standard/-/eslint-plugin-standard-4.0.1.tgz#ff0519f7ffaff114f76d1bd7c3996eef0f6e20b4"
   integrity sha512-v/KBnfyaOMPmZc/dmc6ozOdWqekGp7bBGq4jLAecEfPGmfKiWS4sA8sC0LqiV9w5qmXAtXVn4M3p1jSyhY85SQ==
 
-eslint-plugin-vue@7.0.0-beta.1:
-  version "7.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-7.0.0-beta.1.tgz#818e2e88767581c136e6964f18179910e36ff5f9"
-  integrity sha512-kUkSwRZeMDwaNcCoj5ZTuaxRTzPNazKJCgd56MxKzsIe7SbNBpIiyyS2QQYh5WOr9M3tTKNROQJGSrh3KV5LOw==
-  dependencies:
-    eslint-utils "^2.1.0"
-    natural-compare "^1.4.0"
-    semver "^7.3.2"
-    vue-eslint-parser "^7.1.0"
-
 eslint-plugin-vue@7.0.0-beta.2:
   version "7.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-7.0.0-beta.2.tgz#4828923ec24193060f80567bf8c15b18e13968b3"

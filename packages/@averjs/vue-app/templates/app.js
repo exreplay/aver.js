@@ -45,7 +45,9 @@ function getLocation (base) {
 }
 
 export async function createApp(ssrContext) {
-  const i18n = createI18n(ssrContext);
+  const app = ssrContext.isServer ? createSSRApp(App) : createVueApp(App);
+
+  const i18n = createI18n({ app, ssrContext});
   const store = createStore(ssrContext);
   const router = createRouter({ i18n, store, ssrContext });
 
@@ -84,8 +86,6 @@ export async function createApp(ssrContext) {
     const path = getLocation(router.options.base);
     appOptions.context.route = router.resolve(path).route;
   }
-    
-  const app = ssrContext.isServer ? createSSRApp(App) : createVueApp(App);
 
   app.use(store);
   app.use(router);
