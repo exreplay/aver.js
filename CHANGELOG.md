@@ -1,3 +1,13 @@
+## 2.0.1 (2020-08-26)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#231](https://github.com/exreplay/aver.js/pull/231) fix: split fullPath by hash ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0 (2020-07-26)
 
 #### :bug: Bug Fix
