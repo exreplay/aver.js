@@ -6,6 +6,8 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/cli.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
   "bin": {
     "aver": "./bin/aver.js"
   },
