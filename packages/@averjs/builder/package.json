@@ -21,7 +21,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": true
+    "build": false
   },
   "dependencies": {
     "html-minifier": "4.0.0",

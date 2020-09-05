@@ -20,7 +20,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": true
+    "build": false
   },
   "dependencies": {
     "@averjs/builder": "2.0.1",

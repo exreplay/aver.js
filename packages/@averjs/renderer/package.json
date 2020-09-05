@@ -21,7 +21,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": true
+    "build": false
   },
   "dependencies": {
     "@averjs/babel-preset-app": "2.0.1",
