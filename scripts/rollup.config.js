@@ -1,10 +1,10 @@
 import path from 'path';
-import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import license from 'rollup-plugin-license';
 import copy from 'rollup-plugin-copy';
+import typescript from 'rollup-plugin-typescript2';
+import json from '@rollup/plugin-json';
 import builtins from './builtins';
 import { getNextVersion } from './utils';
 
@@ -15,7 +15,7 @@ export default class RollupConfig {
     this.releaseType = releaseType;
 
     this.options = {
-      input: path.join(this.path, 'lib/index.js'),
+      input: path.join(this.path, 'lib/index.ts'),
       name: this.pkg.name.replace('@averjs/', ''),
       version: this.pkg.version,
       external: [ 'lodash' ]
@@ -58,6 +58,8 @@ export default class RollupConfig {
       );
     }
 
+    plugins.push(json());
+
     plugins.push(
       resolve({
         only: [
@@ -66,20 +68,7 @@ export default class RollupConfig {
       })
     );
 
-    plugins.push(commonjs());
-
-    plugins.push(
-      babel({
-        runtimeHelpers: true,
-        extensions: [ '.js' ],
-        exclude: 'node_modules/**',
-        babelrc: false,
-        presets: [
-          [ '@babel/preset-env', { modules: false } ]
-        ],
-        plugins: [ '@babel/plugin-transform-runtime' ]
-      })
-    );
+    plugins.push(typescript());
 
     if (this.releaseType) plugins.push(terser());
 
