@@ -18,7 +18,7 @@
     "resolveJsonModule": true
   },
   "include": [
-    "packages/@averjs"
+    "packages/@averjs/**/*.ts"
   ],
   "exclude": [
     "node_modules",

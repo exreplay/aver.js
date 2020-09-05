@@ -68,7 +68,14 @@ export default class RollupConfig {
       })
     );
 
-    plugins.push(typescript());
+    plugins.push(typescript({
+      tsconfigOverride: {
+        include: [
+          this.path,
+          path.resolve(__dirname, '../packages/@averjs/globals.d.ts')
+        ]
+      }
+    }));
 
     if (this.releaseType) plugins.push(terser());
 
