@@ -14,4 +14,4 @@ export function defaultAverjsConfig() {
     webpack: renderer(),
     ...vueApp()
   };
-};
+}

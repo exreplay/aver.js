@@ -21,6 +21,6 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": false
+    "build": true
   }
 }

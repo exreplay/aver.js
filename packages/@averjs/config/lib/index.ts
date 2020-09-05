@@ -2,10 +2,18 @@ import path from 'path';
 import mergeWith from 'lodash/mergeWith';
 import { defaultAverjsConfig, defaultFileName } from './configs';
 
+interface InternalConfig {
+  rootDir?: string;
+  cacheDir?: string;
+  distPath?: string;
+  distDir?: string;
+}
+
 export function getAverjsConfig() {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const requireModule = require('esm')(module);
   const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);
-  const config = defaultAverjsConfig();
+  const config: ReturnType<typeof defaultAverjsConfig> & InternalConfig = defaultAverjsConfig();
   let userConfig = {};
   let configFile = null;
 
@@ -17,6 +25,7 @@ export function getAverjsConfig() {
   }
 
   if (configFile) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     if (process.env.NODE_ENV === 'test') userConfig = require(configFile).default;
     else userConfig = requireModule(configFile).default;
   }
