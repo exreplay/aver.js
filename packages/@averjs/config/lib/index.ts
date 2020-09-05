@@ -3,17 +3,20 @@ import mergeWith from 'lodash/mergeWith';
 import { defaultAverjsConfig, defaultFileName } from './configs';
 
 interface InternalConfig {
-  rootDir?: string;
-  cacheDir?: string;
-  distPath?: string;
-  distDir?: string;
+  rootDir: string;
+  cacheDir: string;
+  distPath: string;
+  distDir: string;
 }
+
+export type AverConfig = ReturnType<typeof defaultAverjsConfig> & InternalConfig;
+type AverConfigPartial = ReturnType<typeof defaultAverjsConfig> & Partial<InternalConfig>;
 
 export function getAverjsConfig() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const requireModule = require('esm')(module);
   const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);
-  const config: ReturnType<typeof defaultAverjsConfig> & InternalConfig = defaultAverjsConfig();
+  const config: AverConfigPartial = defaultAverjsConfig();
   let userConfig = {};
   let configFile = null;
 
@@ -37,7 +40,7 @@ export function getAverjsConfig() {
   config.distDir = './dist';
   config.distPath = path.resolve(config.rootDir, config.distDir);
 
-  return mergeWith(config, userConfig, (objValue, srcValue) => {
+  return mergeWith(config as AverConfig, userConfig, (objValue, srcValue) => {
     if (Array.isArray(objValue)) {
       return objValue.concat(srcValue);
     }
