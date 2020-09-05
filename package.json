@@ -16,8 +16,12 @@
   "devDependencies": {
     "@rollup/plugin-json": "4.1.0",
     "@types/command-line-usage": "5.0.1",
+    "@types/csurf": "^1.9.36",
+    "@types/html-minifier": "^4.0.0",
     "@types/lodash": "4.14.161",
+    "@types/lru-cache": "^5.1.0",
     "@types/minimist": "1.2.0",
+    "@types/serialize-javascript": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "3.10.1",
     "@typescript-eslint/parser": "3.10.1",
     "codecov": "3.7.2",

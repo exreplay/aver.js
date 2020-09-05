@@ -1,19 +1,28 @@
-import BaseBuilder from './base';
+/* eslint-disable @typescript-eslint/no-var-requires */
+import BaseBuilder, { BuilderContext } from './base';
 import path from 'path';
 import fs from 'fs';
 import serialize from 'serialize-javascript';
 import template from 'lodash/template';
 import { minify } from 'html-minifier';
 import HTMLCodeError from '../errors/HTMLCodeError';
+import { AverConfig } from '@averjs/config';
+import { BundleRenderer, BundleRendererOptions } from 'vue-server-renderer';
+import { Request } from 'express';
 
 export default class SsrBuilder extends BaseBuilder {
-  constructor(aver) {
+  aver: any;
+  config: AverConfig;
+  renderer: BundleRenderer | null = null;
+  readyPromise: Promise<boolean> | null = null;
+  isProd = process.env.NODE_ENV === 'production';
+  cacheDir: string;
+  distPath: string;
+
+  constructor(aver: any) {
     super();
     this.aver = aver;
     this.config = aver.config;
-    this.renderer = null;
-    this.readyPromise = null;
-    this.isProd = process.env.NODE_ENV === 'production';
     this.cacheDir = aver.config.cacheDir;
     this.distPath = aver.config.distPath;
   }
@@ -29,14 +38,14 @@ export default class SsrBuilder extends BaseBuilder {
       const Renderer = require('@averjs/renderer');
       const renderer = new Renderer({}, this.aver);
       await renderer.setup();
-      this.readyPromise = renderer.compile((bundle, options) => {
+      this.readyPromise = renderer.compile((bundle: string, options: BundleRendererOptions) => {
         this.renderer = this.createRenderer(bundle, Object.assign(options, this.config.createRenderer));
       });
     }
   }
 
-  async build(req) {
-    const context = {
+  async build(req: Request) {
+    const context: BuilderContext = {
       title: process.env.APP_NAME,
       url: req.url,
       aver: {
@@ -48,7 +57,8 @@ export default class SsrBuilder extends BaseBuilder {
     if (this.config.csrf) Object.assign(context, { csrfToken: req.csrfToken() });
     
     try {
-      const html = await this.renderer.renderToString(context);
+      const html = await this.renderer?.renderToString(context);
+      if(!context.meta) return;
 
       const {
         title, htmlAttrs, headAttrs, bodyAttrs, link,
@@ -60,32 +70,32 @@ export default class SsrBuilder extends BaseBuilder {
       if (this.config.csrf) HEAD.push(`<meta name="csrf-token" content="${req.csrfToken()}">`);
 
       HEAD.push(
-        meta.text(),
-        title.text(),
-        link.text(),
-        context.renderStyles(),
-        style.text(),
-        context.renderResourceHints(),
-        script.text(),
-        noscript.text()
+        meta?.text(),
+        title?.text(),
+        link?.text(),
+        context.renderStyles?.(),
+        style?.text(),
+        context.renderResourceHints?.(),
+        script?.text(),
+        noscript?.text()
       );
 
       const BODY = [
-        style.text({ pbody: true }),
-        script.text({ pbody: true }),
-        noscript.text({ pbody: true }),
+        style?.text({ pbody: true }),
+        script?.text({ pbody: true }),
+        noscript?.text({ pbody: true }),
         html,
         `<script>window.__AVER__=${serialize(context.aver, { isJSON: true })}</script>`,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
-        context.renderScripts(),
-        style.text({ body: true }),
-        script.text({ body: true }),
-        noscript.text({ body: true })
+        context.renderScripts?.(),
+        style?.text({ body: true }),
+        script?.text({ body: true }),
+        noscript?.text({ body: true })
       ];
 
-      const HEAD_ATTRS = headAttrs.text();
-      const HTML_ATTRS = htmlAttrs.text(true);
-      const BODY_ATTRS = bodyAttrs.text();
+      const HEAD_ATTRS = headAttrs?.text();
+      const HTML_ATTRS = htmlAttrs?.text(true);
+      const BODY_ATTRS = bodyAttrs?.text();
 
       await this.aver.callHook('builder:before-compile-ssr', {
         context,

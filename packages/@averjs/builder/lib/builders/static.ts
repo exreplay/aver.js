@@ -1,21 +1,32 @@
-import BaseBuilder from './base';
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+import BaseBuilder, { BuilderContext } from './base';
 import path from 'path';
 import fs from 'fs-extra';
 import serialize from 'serialize-javascript';
 import template from 'lodash/template';
 import { minify } from 'html-minifier';
+import { BundleRenderer } from 'vue-server-renderer';
+import { AverConfig } from '@averjs/config';
 
 const requireModule = require('esm')(module);
 
 export default class StaticBuilder extends BaseBuilder {
-  constructor(config) {
+  aver: any;
+  config: AverConfig;
+  renderer: BundleRenderer | null = null;
+  readyPromise: Promise<boolean> | null = null;
+  isProd = process.env.NODE_ENV === 'production';
+  distPath: string;
+  cacheDir: string;
+
+  constructor(aver: any) {
     super();
-    this.config = config;
-    this.renderer = null;
-    this.readyPromise = null;
+    this.aver = aver;
+    this.config = aver.config;
     this.isProd = process.env.NODE_ENV === 'production';
-    this.distPath = config.distPath;
-    this.cacheDir = config.cacheDir;
+    this.distPath = this.config.distPath;
+    this.cacheDir = this.config.cacheDir;
 
     this.initRenderer();
   }
@@ -31,7 +42,7 @@ export default class StaticBuilder extends BaseBuilder {
   async build() {
     const routes = requireModule(path.join(process.env.PROJECT_PATH, './pages')).default;
     for (const route of routes) {
-      const context = {
+      const context: BuilderContext = {
         title: process.env.APP_NAME,
         url: route.path,
         aver: {
@@ -44,7 +55,8 @@ export default class StaticBuilder extends BaseBuilder {
 
       if (this.config.csrf) Object.assign(context, { csrfToken: '' });
     
-      const html = await this.renderer.renderToString(context);
+      const html = await this.renderer?.renderToString(context);
+      if(!context.meta) return;
 
       const {
         title, htmlAttrs, bodyAttrs, headAttrs, link,
@@ -52,32 +64,32 @@ export default class StaticBuilder extends BaseBuilder {
       } = context.meta.inject();
 
       const HEAD = [
-        meta.text(),
-        title.text(),
-        link.text(),
-        context.renderStyles(),
-        style.text(),
-        context.renderResourceHints(),
-        script.text(),
-        noscript.text()
+        meta?.text(),
+        title?.text(),
+        link?.text(),
+        context.renderStyles?.(),
+        style?.text(),
+        context.renderResourceHints?.(),
+        script?.text(),
+        noscript?.text()
       ];
 
       const BODY = [
-        style.text({ pbody: true }),
-        script.text({ pbody: true }),
-        noscript.text({ pbody: true }),
+        style?.text({ pbody: true }),
+        script?.text({ pbody: true }),
+        noscript?.text({ pbody: true }),
         html,
         `<script>window.__AVER__=${serialize(context.aver, { isJSON: true })}</script>`,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
-        context.renderScripts(),
-        style.text({ body: true }),
-        script.text({ body: true }),
-        noscript.text({ body: true })
+        context.renderScripts?.(),
+        style?.text({ body: true }),
+        script?.text({ body: true }),
+        noscript?.text({ body: true })
       ];
       
-      const HEAD_ATTRS = headAttrs.text();
-      const HTML_ATTRS = htmlAttrs.text(true);
-      const BODY_ATTRS = bodyAttrs.text();
+      const HEAD_ATTRS = headAttrs?.text();
+      const HTML_ATTRS = htmlAttrs?.text(true);
+      const BODY_ATTRS = bodyAttrs?.text();
 
       await this.aver.callHook('builder:before-compile-static', {
         context,

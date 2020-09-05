@@ -1,5 +1,8 @@
 export default class HTMLCodeError extends Error {
-  constructor(code, ...params) {
+  code: number;
+  date: Date;
+
+  constructor(code: number, ...params: any[]) {
     super(...params);
   
     if (Error.captureStackTrace) {
