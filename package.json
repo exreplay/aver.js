@@ -14,14 +14,15 @@
     "version": "node -r esm ./scripts/generateChangelog.js && git add CHANGELOG.md"
   },
   "devDependencies": {
-    "@rollup/plugin-json": "^4.1.0",
-    "@types/command-line-usage": "^5.0.1",
-    "@types/minimist": "^1.2.0",
-    "@typescript-eslint/eslint-plugin": "^3.10.1",
-    "@typescript-eslint/parser": "^3.10.1",
+    "@rollup/plugin-json": "4.1.0",
+    "@types/command-line-usage": "5.0.1",
+    "@types/lodash": "4.14.161",
+    "@types/minimist": "1.2.0",
+    "@typescript-eslint/eslint-plugin": "3.10.1",
+    "@typescript-eslint/parser": "3.10.1",
     "codecov": "3.7.2",
     "cross-spawn": "7.0.3",
-    "eslint": "^7.7.0",
+    "eslint": "7.7.0",
     "esm": "3.2.25",
     "inquirer": "7.3.3",
     "jest": "26.1.0",
@@ -35,8 +36,8 @@
     "rollup-plugin-license": "2.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-terser": "6.1.0",
-    "rollup-plugin-typescript2": "^0.27.2",
-    "typescript": "^4.0.2",
+    "rollup-plugin-typescript2": "0.27.2",
+    "typescript": "4.0.2",
     "verdaccio": "4.8.0"
   },
   "dependencies": {}
