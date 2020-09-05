@@ -1,27 +1,26 @@
-import Command from './command';
-import commandLineUsage from 'command-line-usage';
+import Command, { CommandInterfaceDictionary, CommandInterface } from './command';
+import commandLineUsage, { Section } from 'command-line-usage';
 import VersionCommand from './version';
 
-export default class HelpCommand extends Command {
-  constructor(commands) {
+export default class HelpCommand extends Command implements CommandInterface {
+  name = 'help';
+  aliases = [
+    'h'
+  ];
+  description = 'Shows this help or for a specific command.';
+  commands: CommandInterfaceDictionary = {};
+
+  constructor(commands: CommandInterfaceDictionary) {
     super();
-
-    this.name = 'help';
-    this.aliases = [
-      'h'
-    ];
-    this.description = 'Shows this help or for a specific command.';
     this.commands = commands;
-    this.args = [];
-
     this.addArg(new VersionCommand());
   }
 
-  addArg(command) {
+  addArg(command: CommandInterface) {
     this.args.push(
       {
         name: command.name,
-        alias: command.alias,
+        alias: command.alias || '',
         type: command.type,
         description: command.description,
         command
@@ -49,8 +48,8 @@ export default class HelpCommand extends Command {
     `.trim();
   }
 
-  generateCommandLineUsage(command) {
-    const cmd = [];
+  generateCommandLineUsage(command?: CommandInterface) {
+    const cmd: Section[] = [];
     const head = command ? {
       header: `aver ${command.name}`,
       content: command.description
@@ -91,7 +90,7 @@ export default class HelpCommand extends Command {
     return commandLineUsage(cmd);
   }
 
-  run(command) {
+  run(command?: CommandInterface) {
     console.log(this.generateCommandLineUsage(command));
   }
 }

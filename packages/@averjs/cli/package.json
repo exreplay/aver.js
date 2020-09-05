@@ -25,6 +25,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
+    "@averjs/core": "2.0.1",
     "@averjs/init": "2.0.1",
     "command-line-usage": "6.1.0",
     "minimist": "1.2.5"
