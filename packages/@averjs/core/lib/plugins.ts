@@ -5,13 +5,6 @@ import klawSync, { Item } from 'klaw-sync';
 import Core from './core';
 import { AverConfig } from '@averjs/config';
 
-export interface Templates {
-  src: string;
-  dst: string;
-  pluginPath: string;
-  dirname: string
-}
-
 export type Plugin<T = string> = 
   T |
   ((this: Core) => void) |

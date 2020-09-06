@@ -26,6 +26,7 @@
     "build": true
   },
   "devDependencies": {
-    "@averjs/core": "2.0.1"
+    "@averjs/core": "2.0.1",
+    "@averjs/vue-app": "2.0.1"
   }
 }

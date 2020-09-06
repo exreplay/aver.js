@@ -1,4 +1,5 @@
-import { Templates, Plugin } from '@averjs/core/dist/plugins';
+import { Plugin } from '@averjs/core/dist/plugins';
+import { Templates } from '@averjs/vue-app';
 
 interface CoreConfig {
   buildPlugins: Plugin[],

@@ -1,10 +1,17 @@
 import klawSync from 'klaw-sync';
 import path from 'path';
 
+export interface Templates {
+  src: string;
+  dst: string;
+  pluginPath?: string;
+  dirname?: string
+}
+
 export default () => {
   const templatesPath = path.resolve(__dirname, '../templates');
   const files = klawSync(templatesPath);
-  const templates = [];
+  const templates: Templates[] = [];
 
   for (const file of files) {
     if (!file.stats.isDirectory()) {
