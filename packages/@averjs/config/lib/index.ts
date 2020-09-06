@@ -7,12 +7,13 @@ interface InternalConfig {
   cacheDir: string;
   distPath: string;
   distDir: string;
+  _production: boolean;
 }
 
 export type AverConfig = ReturnType<typeof defaultAverjsConfig> & InternalConfig;
 type AverConfigPartial = ReturnType<typeof defaultAverjsConfig> & Partial<InternalConfig>;
 
-export function getAverjsConfig() {
+export function getAverjsConfig(): AverConfig {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const requireModule = require('esm')(module);
   const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);

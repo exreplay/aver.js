@@ -24,5 +24,8 @@
   },
   "aver": {
     "build": true
+  },
+  "devDependencies": {
+    "@averjs/core": "2.0.1"
   }
 }

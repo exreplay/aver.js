@@ -8,10 +8,10 @@ export const defaultFileName = 'aver-config';
 
 export function defaultAverjsConfig() {
   return {
-    ...app(),
-    ...core(),
-    ...server(),
-    webpack: renderer(),
-    ...vueApp()
+    ...app() as ReturnType<typeof app>,
+    ...core() as ReturnType<typeof core>,
+    ...server() as ReturnType<typeof server>,
+    webpack: renderer() as ReturnType<typeof renderer>,
+    ...vueApp() as ReturnType<typeof vueApp>
   };
 }
