@@ -1,8 +1,14 @@
-import { connect, connection, set } from 'mongoose';
+import { connect, connection, set, ConnectionOptions } from 'mongoose';
 import path from 'path';
 import fs from 'fs';
+import { PluginFunction } from '@averjs/core/lib/plugins';
 
-export default (options) => {
+export interface MongodbPluginOptions {
+  mongooseOptions: ConnectionOptions,
+  requireModels: boolean;
+}
+
+const plugin: PluginFunction = (options: MongodbPluginOptions) => {
   if (process.argv.indexOf('build') !== -1) return;
 
   const {
@@ -36,3 +42,5 @@ export default (options) => {
     console.log('Connection to MongoDB successfull!');
   });
 };
+
+export default plugin;
