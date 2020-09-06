@@ -1,12 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
 import fs from 'fs-extra';
 import ora from 'ora';
 import merge from 'lodash/merge';
 
 export default class Init {
-  constructor() {
-    this.appDir = path.resolve(__dirname, './app');
-  }
+  appDir = path.resolve(__dirname, './app');
 
   run() {
     this.createSrcDir();
@@ -54,7 +53,7 @@ export default class Init {
     console.log('Project setup successfull!');
   }
 
-  modifyPackageJson() {
+  private modifyPackageJson() {
     const spinner = ora('Modifying package.json').start();
     const corePackageJSON = require(path.resolve(this.appDir, './package.json'));
     const packageJSONPath = path.resolve(process.env.PROJECT_PATH, '../package.json');
@@ -64,7 +63,7 @@ export default class Init {
     spinner.succeed('Successfully modified package.json!');
   }
 
-  writeFile(file, data) {
+  private writeFile(file: string, data: string) {
     const spinner = ora(`Writing file "${file}"`).start();
     const destination = path.resolve(process.env.PROJECT_PATH, '../', file);
 
@@ -76,7 +75,7 @@ export default class Init {
     }
   }
 
-  copyFile(file, removeUnderscore = false) {
+  private copyFile(file: string, removeUnderscore = false) {
     const spinner = ora(`Copying "${file}"`).start();
     const destinationFile = removeUnderscore ? file.replace(/^_/g, '') : file;
     const destination = path.resolve(process.env.PROJECT_PATH, `../${destinationFile}`);
@@ -89,7 +88,7 @@ export default class Init {
     }
   }
 
-  createSrcDir() {
+  private createSrcDir() {
     const srcSpinner = ora('Creating "src" directory').start();
 
     if (fs.existsSync(process.env.PROJECT_PATH)) {
@@ -100,7 +99,7 @@ export default class Init {
     }
   }
 
-  createApiDir(dir) {
+  private createApiDir(dir?: string) {
     const spinner = ora(`Creating "${dir}" directory`).start();
     const dirPath = path.resolve(process.env.API_PATH, dir ? `./${dir}` : '');
 
@@ -112,7 +111,7 @@ export default class Init {
     }
   }
 
-  trimLines(s) {
+  private trimLines(s: string) {
     const lines = s.split('\n');
     const trimmedLines = [];
 
