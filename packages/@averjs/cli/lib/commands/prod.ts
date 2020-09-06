@@ -1,6 +1,4 @@
 import Command, { CommandInterface } from './command';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-ignore
 import Core from '@averjs/core';
 
 export default class ProductionCommand extends Command implements CommandInterface {
