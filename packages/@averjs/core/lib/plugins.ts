@@ -1,10 +1,29 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
 import fs from 'fs';
-import klawSync from 'klaw-sync';
+import klawSync, { Item } from 'klaw-sync';
+import Core from './core';
+import { AverConfig } from '@averjs/config';
+
+export interface Templates {
+  src: string;
+  dst: string;
+  pluginPath: string;
+  dirname: string
+}
+
+export type Plugin<T = string> = 
+  T |
+  ((this: Core) => void) |
+  [T, unknown?]
 
 const requireModule = require('esm')(module);
 export default class PluginContainer {
-  constructor(aver) {
+  aver: Core;
+  config: AverConfig;
+  cacheDir: string;
+
+  constructor(aver: Core) {
     this.aver = aver;
     this.config = aver.config;
     this.cacheDir = aver.config.cacheDir;
@@ -20,14 +39,14 @@ export default class PluginContainer {
     }
   }
 
-  async sequence(plugins) {
+  async sequence(plugins: Plugin[]) {
     // Run plugins in sequence by promisify everyone
     await plugins.reduce((promise, plugin) => {
       return promise.then(() => this.addModule(plugin));
     }, Promise.resolve());
   }
 
-  async addModule(plugin) {
+  async addModule(plugin: Plugin) {
     let src;
     let options;
     let handler;
@@ -40,7 +59,7 @@ export default class PluginContainer {
       [ src, options ] = plugin;
     }
 
-    if (!handler) {
+    if (!handler && src) {
       handler = this.require(src);
     }
 
@@ -55,7 +74,7 @@ export default class PluginContainer {
     await handler.call(this, options);
   }
 
-  require(src) {
+  require(src: string) {
     let pluginPath;
 
     pluginPath = this.resolveModule(src);
@@ -73,7 +92,7 @@ export default class PluginContainer {
     return requireModule(pluginPath).default;
   }
 
-  resolveModule(plugin) {
+  resolveModule(plugin: string) {
     try {
       return require.resolve(plugin);
     } catch (err) {
@@ -83,12 +102,12 @@ export default class PluginContainer {
     }
   }
 
-  resolveEntryFiles(pluginPath) {
+  resolveEntryFiles(pluginPath: string) {
     const pluginPathDir = this.normalizePluginPath(pluginPath);
-    let dirname = pluginPathDir.split('/');
+    let dirname: string | string[] = pluginPathDir.split('/');
     dirname = dirname[dirname.length - 1];
     const entriesFolder = path.resolve(pluginPathDir, './entries');
-    let entries = [];
+    let entries: Readonly<Item[]> = [];
     
     if (fs.existsSync(entriesFolder)) entries = klawSync(entriesFolder, { nodir: true });
 
@@ -106,19 +125,19 @@ export default class PluginContainer {
     }
   }
 
-  normalizePluginPath(pluginPath) {
+  normalizePluginPath(pluginPath: string) {
     if (fs.lstatSync(pluginPath).isDirectory()) return pluginPath;
     else return path.dirname(pluginPath);
   }
 
-  relativeCacheDirPath(filePath) {
+  relativeCacheDirPath(filePath: string) {
     return path.relative(
       path.resolve(process.cwd(), this.cacheDir),
       filePath
     );
   }
 
-  resolvePath(plugin) {
+  resolvePath(plugin: string) {
     const pluginPath = path.resolve(process.env.PROJECT_PATH, '../', plugin);
     if (fs.existsSync(pluginPath)) return pluginPath;
     else return undefined;

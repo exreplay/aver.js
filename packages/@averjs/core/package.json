@@ -5,6 +5,8 @@
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "main": "dist/core.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -20,7 +22,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": false
+    "build": true
   },
   "dependencies": {
     "@averjs/builder": "2.0.1",

@@ -1,12 +1,17 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import Server from './server';
 import Hookable from './hookable';
 import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
-import { getAverjsConfig } from '@averjs/config';
+import { getAverjsConfig, AverConfig } from '@averjs/config';
 import PluginContainer from './plugins';
+import { ParsedArgs } from 'minimist';
 
 export default class Core extends Hookable {
+  config: AverConfig;
+  plugins: PluginContainer;
+
   constructor() {
     super();
 
@@ -15,15 +20,11 @@ export default class Core extends Hookable {
       for (const k in envConfig) {
         process.env[k] = envConfig[k];
       }
-      if (dotenv.error) {
-        throw dotenv.error;
-      }
     } else {
       console.warn("In order to use dotenv, please create a '.env' file in your project root.");
     }
 
     this.config = getAverjsConfig();
-
     this.plugins = new PluginContainer(this);
   }
 
@@ -35,7 +36,7 @@ export default class Core extends Hookable {
     server.startServer();
   }
 
-  async build(args) {
+  async build(args: ParsedArgs) {
     await this.plugins.register();
     const AverRenderer = require('@averjs/renderer');
     const renderer = new AverRenderer(args, this);

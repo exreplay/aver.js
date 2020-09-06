@@ -5,3 +5,10 @@ declare namespace NodeJS {
     PROJECT_PATH: string;
   }
 }
+
+declare namespace Express {
+  export interface Request {
+     id?: string;
+     error?: string;
+  }
+}

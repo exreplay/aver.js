@@ -1,4 +1,5 @@
-const path = require('path');
+import Core from './core';
+import path from 'path';
 
 /**
  * Remove in next major version, where a index.js file in root directory is not needed anymore.
@@ -7,4 +8,4 @@ const path = require('path');
 process.env.PROJECT_PATH = path.resolve(process.cwd(), './src');
 process.env.API_PATH = path.resolve(process.cwd(), './api');
 
-module.exports = require('./core.js');
+export default Core;

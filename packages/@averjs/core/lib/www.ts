@@ -2,11 +2,12 @@ import express from 'express';
 import http from 'http';
 
 export default class WWW {
+  app = express();
+  port = this.normalizePort(process.env.PORT || '3000');
+  server = http.createServer(this.app);
+
   constructor() {
-    this.app = express();
-    this.port = this.normalizePort(process.env.PORT || '3000');
     this.app.set('port', this.port);
-    this.server = http.createServer(this.app);
   }
 
   startServer() {
@@ -14,7 +15,7 @@ export default class WWW {
     this.server.on('error', this.onError.bind(this));
   }
     
-  normalizePort(val) {
+  normalizePort(val: string) {
     const port = parseInt(val, 10);
         
     if (isNaN(port)) return val;
@@ -23,10 +24,10 @@ export default class WWW {
     return false;
   }
     
-  onError(error) {
+  onError(error: Error & { syscall: string; code: string; }) {
     if (error.syscall !== 'listen') throw error;
         
-    const bind = typeof port === 'string'
+    const bind = typeof this.port === 'string'
       ? 'Pipe ' + this.port
       : 'Port ' + this.port;
     

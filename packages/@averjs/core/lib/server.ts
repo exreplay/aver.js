@@ -1,4 +1,5 @@
-import express from 'express';
+/* eslint-disable @typescript-eslint/no-var-requires */
+import express, { Handler, Request, Response, ErrorRequestHandler } from 'express';
 import compression from 'compression';
 import path from 'path';
 import fs from 'fs';
@@ -13,18 +14,28 @@ import chokidar from 'chokidar';
 import indexOf from 'lodash/indexOf';
 import WWW from './www';
 import { SsrBuilder } from '@averjs/builder';
+import Core from './core';
+import { AverConfig } from '@averjs/config';
 
 const requireModule = require('esm')(module);
 
+export type ExpressMiddlewares = (Handler | [string, Handler])[];
+
 export default class Server extends WWW {
-  constructor(aver) {
+  aver: Core;
+  config: AverConfig;
+  isProd = process.env.NODE_ENV === 'production';
+  distDir: string;
+  distPath: string;
+  middlewares: ExpressMiddlewares = [];
+  builder: SsrBuilder | null = null;
+
+  constructor(aver: Core) {
     super();
     this.aver = aver;
     this.config = aver.config;
-    this.isProd = process.env.NODE_ENV === 'production';
     this.distDir = aver.config.distDir;
     this.distPath = aver.config.distPath;
-    this.middlewares = [];
 
     fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) || fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
 
@@ -52,7 +63,7 @@ export default class Server extends WWW {
     await this.registerMiddlewares();
     await this.registerRoutes();
 
-    this.app.use((err, req, res, next) => {
+    const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       if (!this.isProd) console.error(err.stack);
       req.error = err.stack;
       res.status(err.status || 500).json(Object.assign({
@@ -60,11 +71,13 @@ export default class Server extends WWW {
         errorId: req.id,
         msg: err.message
       }, (err.data) ? { data: err.data } : {}));
-    });
+    };
+
+    this.app.use(errorHandler);
   }
     
   async registerMiddlewares() {
-    const serve = (path, cache) => express.static(path, {
+    const serve = (path: string, cache: boolean) => express.static(path, {
       maxAge: cache && this.isProd ? '1y' : 0
     });
 
@@ -121,8 +134,8 @@ export default class Server extends WWW {
       path: logDirectory
     });
 
-    logger.token('id', req => req.id);
-    logger.token('error', req => req.error);
+    logger.token('id', (req: Request) => req.id);
+    logger.token('error', (req: Request) => req.error);
 
     this.middlewares.push((req, res, next) => {
       req.id = (new Date().getTime()) + '-' + uuidv4();
@@ -180,7 +193,7 @@ export default class Server extends WWW {
     });
 
     this.app.get('*', this.isProd ? this.render.bind(this) : (req, res) => {
-      this.builder.readyPromise.then(async() => {
+      this.builder?.readyPromise?.then(async() => {
         await this.render(req, res);
       });
     });
@@ -188,11 +201,11 @@ export default class Server extends WWW {
     await this.aver.callHook('server:after-register-routes', { app: this.app, middlewares: this.middlewares, server: this.server });
   }
     
-  async render(req, res) {
+  async render(req: Request, res: Response) {
     const s = Date.now();
 
     try {
-      const html = await this.builder.build(req);
+      const html = await this.builder?.build(req);
             
       res.setHeader('Content-Type', 'text/html');
       res.send(html);
