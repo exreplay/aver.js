@@ -1,4 +1,4 @@
-import webpack from 'webpack';
+import webpack, { Configuration } from 'webpack';
 import WebpackBaseConfiguration from './base';
 import fs from 'fs';
 import path from 'path';
@@ -9,12 +9,21 @@ import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import SafeParser from 'postcss-safe-parser';
 import cloneDeep from 'lodash/cloneDeep';
 import FriendlyErrorsPlugin from '@averjs/friendly-errors-webpack-plugin';
+import Core from '@averjs/core';
+import TerserPlugin, { ExtractCommentOptions } from 'terser-webpack-plugin';
+import { GenerateSW, GenerateSWOptions, InjectManifest, InjectManifestOptions } from 'workbox-webpack-plugin';
+
+export interface RendererClientConfig extends Configuration {
+  entry: {
+    app: string | string[]
+  }
+}
 
 export default class WebpackClientConfiguration extends WebpackBaseConfiguration {
-  constructor(aver) {
+  projectRoot = path.resolve(process.env.PROJECT_PATH, '.');
+
+  constructor(aver: Core) {
     super(false, aver);
-    this.aver = aver;
-    this.projectRoot = path.resolve(process.env.PROJECT_PATH, '.');
   }
 
   plugins() {
@@ -26,7 +35,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       inject: false
     };
 
-    if (this.isProd && typeof this.globalConfig.sw !== 'undefined') this.serviceWorker();
+    if (this.isProd) this.serviceWorker();
 
     if (fs.existsSync(path.join(this.projectRoot, 'resources/images'))) {
       this.chainConfig
@@ -53,7 +62,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
           'process.env.VUE_ENV': JSON.stringify('client'),
           PRODUCTION: this.isProd,
-          ...this.globalConfig.process.env
+          ...this.webpackConfig.process?.env
         } ])
         .end()
       .plugin('vue-ssr-client')
@@ -70,38 +79,39 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
   }
 
   serviceWorker() {
-    const WorkboxWebpackModule = require('workbox-webpack-plugin');
-    const swConfig = this.globalConfig.sw;
-    const mode = swConfig.mode || 'GenerateSW';
-    delete swConfig.mode;
+    if(!this.webpackConfig.sw) return;
 
-    const conf = {
+    let plugin: GenerateSW | InjectManifest = GenerateSW;
+    const swConfig = this.webpackConfig.sw;
+    const mode = swConfig.mode || 'GenerateSW';
+    let conf = {
       exclude: [
         /\.map$/,
         /img\/icons\//,
         /favicon\.ico$/,
         /manifest\.json$/
       ]
-    };
+    } as GenerateSWOptions | InjectManifestOptions;
 
-    if (mode === 'GenerateSW') {
-      Object.assign(conf, { cacheId: 'averjs' });
+    delete swConfig.mode;
+
+    if (mode === 'GenerateSW' && 'cacheId' in conf) {
+      conf.cacheId = 'averjs';
+      conf.inlineWorkboxRuntime = true;
+    }
+    else if (mode === 'InjectManifest' && 'swSrc' in conf) {
+      plugin = InjectManifest;
+      conf.swSrc = path.resolve(process.env.PROJECT_PATH, conf.swSrc);
     }
 
-    Object.assign(conf, { ...swConfig });
-
-    if (mode === 'InjectManifest') {
-      Object.assign(conf, { swSrc: path.resolve(process.env.PROJECT_PATH, conf.swSrc) });
+    conf = {
+      ...conf,
+      ...swConfig
     }
 
     this.chainConfig
       .plugin('workbox')
-      .use(WorkboxWebpackModule[mode], [
-        {
-          ...conf,
-          inlineWorkboxRuntime: true
-        }
-      ]);
+      .use(plugin, [ conf ]);
   }
 
   optimization() {
@@ -119,8 +129,6 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         }
       });
 
-    const TerserPlugin = require('terser-webpack-plugin');
-
     this.chainConfig.optimization
       .minimizer('terser')
         .use(TerserPlugin, [ {
@@ -129,7 +137,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
           parallel: false,
           extractComments: {
             filename: 'LICENSES'
-          },
+          } as ExtractCommentOptions,
           terserOptions: {
             compress: {
               // turn off flags with small gains to speed up minification
@@ -188,7 +196,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         } ]);
   }
 
-  async config(isStatic) {
+  async config(isStatic: boolean): Promise<RendererClientConfig> {
     await super.config(isStatic);
         
     this.chainConfig
@@ -198,7 +206,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       .output
         .filename(`_averjs/js/${this.isProd ? '[contenthash].' : '[name].'}js`);
         
-    if (typeof this.globalConfig.client === 'function') this.globalConfig.client(this.chainConfig);
+    if (typeof this.webpackConfig.client === 'function') this.webpackConfig.client(this.chainConfig);
     
     await this.aver.callHook('renderer:client-config', this.chainConfig);
 

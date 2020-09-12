@@ -2,10 +2,19 @@ import path from 'path';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import map from 'lodash/map';
 import PostCSS from './postcss';
+import PerformanceLoader from './perf-loader';
+import { AverConfig } from '@averjs/config';
+import { Rule } from 'webpack-chain';
 
 export default class StyleLoader {
-  constructor(isServer, config, perfLoader) {
-    this.isProd = process.env.NODE_ENV === 'production';
+  isProd = process.env.NODE_ENV === 'production';
+  isServer: boolean;
+  config: AverConfig['webpack'];
+  perfLoader: PerformanceLoader;
+  postcss: PostCSS | null = null;
+  name: string | null = null;
+
+  constructor(isServer: boolean, config: AverConfig['webpack'], perfLoader: PerformanceLoader) {
     this.isServer = isServer;
     this.config = config;
     this.perfLoader = perfLoader;
@@ -14,11 +23,11 @@ export default class StyleLoader {
   }
 
   get stylesAreInline() {
-    return this.postcss || !this.config.css.extract;
+    return this.postcss || !this.config.css?.extract;
   }
 
   get exportOnlyLocals() {
-    return this.isServer && this.config.css.extract;
+    return this.isServer && this.config.css?.extract;
   }
 
   get importLoaders() {
@@ -28,7 +37,7 @@ export default class StyleLoader {
     return cnt;
   }
 
-  async apply(name, rule, loaders = []) {
+  async apply(name: string, rule: Rule, loaders: { name: string, options: any }[] = []) {
     this.name = name;
 
     const moduleRule = rule.oneOf(`${name}-module`).resourceQuery(/module/);
@@ -46,8 +55,8 @@ export default class StyleLoader {
     this.styleResources(plainRule);
   }
 
-  applyStyle(rule, module = false) {
-    this.perfLoader.apply(rule, this.name);
+  applyStyle(rule: Rule<Rule>, module = false) {
+    this.perfLoader.apply(rule, this.name || '');
 
     this.extract(rule);
         
@@ -57,13 +66,13 @@ export default class StyleLoader {
     if (this.postcss) this.postcss.apply(rule);
   }
 
-  extract(rule) {
-    if (this.config.css.extract && !this.isServer) {
+  extract(rule: Rule<Rule>) {
+    if (this.config.css?.extract && !this.isServer) {
       rule
         .use('extract-css')
           .loader(ExtractCssPlugin.loader)
           .options({ reloadAll: true });
-    } else if (!this.config.css.extract) {
+    } else if (!this.config.css?.extract) {
       rule
         .use('vue-style-loader')
           .loader('vue-style-loader')
@@ -71,22 +80,25 @@ export default class StyleLoader {
     }
   }
 
-  styleResources(rule) {
-    const { resources, options } = this.config.css.styleResources;
-    if (resources.length === 0 || this.name === 'css') return;
+  styleResources(rule: Rule<Rule>) {
+    if(!this.config.css?.styleResources) return;
+
+    const { resources, options = { patterns: [] } } = this.config.css.styleResources;
+    if (resources?.length === 0 || this.name === 'css') return;
     
     const patterns = map(resources, resource => path.resolve(process.cwd(), resource));
+    options.patterns = [
+      ...options.patterns as string[],
+      ...patterns
+    ]
 
     rule
       .use('style-resources-loader')
         .loader('style-resources-loader')
-        .options({
-          patterns,
-          ...options
-        });
+        .options(options);
   }
 
-  css(rule) {
+  css(rule: Rule<Rule>) {
     rule
       .use('css-loader')
         .loader('css-loader')
@@ -97,7 +109,7 @@ export default class StyleLoader {
         });
   }
 
-  cssModules(rule) {
+  cssModules(rule: Rule<Rule>) {
     rule
       .use('css-loader')
         .loader('css-loader')

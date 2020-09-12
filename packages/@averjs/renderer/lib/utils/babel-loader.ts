@@ -1,8 +1,18 @@
 import merge from 'lodash/merge';
 import { isPureObject } from '@averjs/shared-utils';
+import { AverConfig } from '@averjs/config';
+import PerformanceLoader from './perf-loader';
+import Config, {  } from 'webpack-chain';
+
+type ExcludesFalse = <T>(x: T | false) => x is T;
 
 export default class BabelLoader {
-  constructor(isServer, config, perfLoader) {
+  config: AverConfig['webpack'];
+  isServer: boolean;
+  perfLoader: PerformanceLoader;
+  cacheDir: string;
+
+  constructor(isServer: boolean, config: AverConfig, perfLoader: PerformanceLoader) {
     this.config = config.webpack;
     this.isServer = isServer;
     this.perfLoader = perfLoader;
@@ -10,6 +20,8 @@ export default class BabelLoader {
   }
 
   get transpileDeps() {
+    if(!this.config.transpileDependencies) return [];
+    
     return this.config.transpileDependencies.map(dep => {
       if (typeof dep === 'string') {
         return new RegExp(dep);
@@ -18,7 +30,7 @@ export default class BabelLoader {
       } else {
         return false;
       }
-    }).filter(_ => _);
+    }).filter(Boolean as unknown as ExcludesFalse);
   }
 
   presetConfig() {
@@ -35,7 +47,7 @@ export default class BabelLoader {
     return config;
   }
 
-  apply(chain) {
+  apply(chain: Config) {
     const jsRule = chain.module
       .rule('js')
         .test(/\.js$/)
@@ -51,7 +63,7 @@ export default class BabelLoader {
             if (filepath.includes(this.cacheDir)) return false;
 
             // check if user wants to transpile it
-            if (this.transpileDeps.some(dep => dep.test(filepath))) return false;
+            if (this.transpileDeps.some(dep => dep && dep.test(filepath))) return false;
 
             // Ignore node_modules
             return /node_modules/.test(filepath);

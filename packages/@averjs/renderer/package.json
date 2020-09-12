@@ -6,6 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/renderer.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -21,7 +22,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": false
+    "build": true
   },
   "dependencies": {
     "@averjs/babel-preset-app": "2.0.1",

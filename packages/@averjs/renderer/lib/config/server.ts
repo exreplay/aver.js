@@ -1,14 +1,14 @@
-import webpack from 'webpack';
+import webpack, { Configuration } from 'webpack';
 import WebpackBaseConfiguration from './base';
 import path from 'path';
 import nodeExternals from 'webpack-node-externals';
 import VueSSRServerPlugin from 'vue-server-renderer/server-plugin';
 import cloneDeep from 'lodash/cloneDeep';
+import Core from '@averjs/core';
 
 export default class WebpackServerConfiguration extends WebpackBaseConfiguration {
-  constructor(aver) {
+  constructor(aver: Core) {
     super(true, aver);
-    this.aver = aver;
   }
 
   plugins() {
@@ -26,7 +26,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         .use(VueSSRServerPlugin);
   }
 
-  async config(isStatic) {
+  async config(isStatic: boolean): Promise<Configuration> {
     await super.config(isStatic);
 
     this.chainConfig
@@ -39,7 +39,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         .filename('bundle.server.js')
         .end()
       .optimization
-        .splitChunks(false)
+        .splitChunks({})
         .end()
       .externals(nodeExternals({
         allowlist: [
@@ -51,7 +51,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         modulesDir: 'node_modules'
       }));
         
-    if (typeof this.globalConfig.server === 'function') this.globalConfig.server(this.chainConfig);
+    if (typeof this.webpackConfig.server === 'function') this.webpackConfig.server(this.chainConfig);
 
     await this.aver.callHook('renderer:server-config', this.chainConfig);
 

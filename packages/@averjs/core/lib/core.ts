@@ -6,7 +6,7 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 import { getAverjsConfig, AverConfig } from '@averjs/config';
 import PluginContainer from './plugins';
-import { ParsedArgs } from 'minimist';
+import { RendererOptions } from '@averjs/renderer';
 
 export default class Core extends Hookable {
   config: AverConfig;
@@ -36,10 +36,10 @@ export default class Core extends Hookable {
     server.startServer();
   }
 
-  async build(args: ParsedArgs) {
+  async build(args: RendererOptions) {
     await this.plugins.register();
-    const AverRenderer = require('@averjs/renderer');
-    const renderer = new AverRenderer(args, this);
+    const { default: Renderer} = await import('@averjs/renderer');
+    const renderer = new Renderer(args, this);
     await renderer.setup();
     await renderer.compile();
   }

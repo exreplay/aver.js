@@ -1,14 +1,30 @@
 import path from 'path';
 import { warmup } from 'thread-loader';
+import { AverConfig } from '@averjs/config';
+import { Module, Rule } from 'webpack-chain';
+
+interface PoolConfig {
+  [index: string]: {
+    poolConfig: {
+      name: string;
+      poolTimeout: number;
+    },
+    loaders?: string[];
+    useThread: boolean;
+  }
+}
 
 export default class PerformanceLoader {
-  constructor(isServer, config) {
+  isServer: boolean;
+  config: AverConfig['webpack'];
+  isProd = process.env.NODE_ENV === 'production';
+
+  constructor(isServer: boolean, config: AverConfig['webpack']) {
     this.isServer = isServer;
     this.config = config;
-    this.isProd = process.env.NODE_ENV === 'production';
   }
 
-  get pools() {
+  get pools(): PoolConfig {
     const poolTimeout = !this.isProd ? Infinity : 2000;
     return {
       vue: {
@@ -23,7 +39,7 @@ export default class PerformanceLoader {
       css: {
         poolConfig: { name: 'css', poolTimeout },
         loaders: [ 'css-loader' ],
-        useThread: !this.config.css.extract
+        useThread: !this.config.css?.extract
       }
     };
   }
@@ -37,7 +53,7 @@ export default class PerformanceLoader {
     }
   }
 
-  apply(rule, name) {
+  apply(rule: Rule<Rule | Module>, name: string) {
     const pool = this.pools[name];
     if (pool) {
       rule.use('cache-loader')

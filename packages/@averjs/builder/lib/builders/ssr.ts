@@ -7,7 +7,7 @@ import template from 'lodash/template';
 import { minify } from 'html-minifier';
 import HTMLCodeError from '../errors/HTMLCodeError';
 import { AverConfig } from '@averjs/config';
-import { BundleRenderer, BundleRendererOptions } from 'vue-server-renderer';
+import { BundleRenderer } from 'vue-server-renderer';
 import { Request } from 'express';
 import Core from '@averjs/core';
 
@@ -15,7 +15,7 @@ export default class SsrBuilder extends BaseBuilder {
   aver: Core;
   config: AverConfig;
   renderer: BundleRenderer | null = null;
-  readyPromise: Promise<boolean> | null = null;
+  readyPromise: Promise<void> | null = null;
   isProd = process.env.NODE_ENV === 'production';
   cacheDir: string;
   distPath: string;
@@ -36,10 +36,10 @@ export default class SsrBuilder extends BaseBuilder {
         clientManifest: clientManifest
       }, this.config.createRenderer));
     } else {
-      const Renderer = require('@averjs/renderer');
+      const { default: Renderer} = await import('@averjs/renderer');
       const renderer = new Renderer({}, this.aver);
       await renderer.setup();
-      this.readyPromise = renderer.compile((bundle: string, options: BundleRendererOptions) => {
+      this.readyPromise = renderer.compile((bundle, options) => {
         this.renderer = this.createRenderer(bundle, Object.assign(options, this.config.createRenderer));
       });
     }

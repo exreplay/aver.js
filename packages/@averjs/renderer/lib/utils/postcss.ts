@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import SafeParser from 'postcss-safe-parser';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
@@ -6,16 +7,25 @@ import {
   CachedInputFileSystem,
   ResolverFactory
 } from 'enhanced-resolve';
+import { AverConfig } from '@averjs/config';
+import PostCSSPresetEnv from 'postcss-preset-env';
+import { Rule } from 'webpack-chain';
 
 export default class PostCSS {
-  constructor(config) {
+  config: AverConfig['webpack'];
+  preset: PostCSSPresetEnv.pluginOptions;
+  isProd = process.env.NODE_ENV === 'production';
+
+  constructor(config: AverConfig['webpack']) {
     this.config = cloneDeep(config);
-    this.preset = this.config.postcss.preset;
-    delete this.config.postcss.preset;
-    this.isProd = process.env.NODE_ENV === 'production';
+    this.preset = this.config.postcss?.preset;
+    delete this.config.postcss?.preset;
   }
 
-  get defaultConfig() {
+  get defaultConfig(): {
+    sourceMap: boolean;
+    plugins: AverConfig['webpack']['postcss']
+  } {
     return {
       sourceMap: !this.isProd,
       plugins: {
@@ -31,16 +41,17 @@ export default class PostCSS {
     };
   }
 
-  loadPlugins(config) {
+  loadPlugins(config: AverConfig['webpack']['postcss']) {
+    if(!config) return;
     // ensure postcss-preset-env and cssnano comes last
-    const sortedPluginsKeys = Object.keys(config.plugins).sort(a => a === 'postcss-preset-env').sort(a => a === 'cssnano');
+    const sortedPluginsKeys = Object.keys(config.plugins).sort(a => a === 'postcss-preset-env' ? 1 : -1).sort(a => a === 'cssnano' ? 1 : -1);
     config.plugins = sortedPluginsKeys.map(p => require(p)(config.plugins[p]));
   }
 
-  resolveImports(id, basedir) {
+  resolveImports(id: string, basedir: string) {
     const options = {
       alias: this.config.alias,
-      fileSystem: new CachedInputFileSystem(new NodeJsInputFileSystem(), 4000),
+      fileSystem: new CachedInputFileSystem(new NodeJsInputFileSystem(), 4000).fileSystem,
       extensions: [ '.css' ],
       useSyncFileSystemCalls: true
     };
@@ -49,7 +60,7 @@ export default class PostCSS {
     return resolver.resolveSync({}, basedir, id);
   }
 
-  apply(rule) {
+  apply(rule: Rule<Rule>) {
     const config = merge({}, this.defaultConfig, this.config.postcss);
     this.loadPlugins(config);
 

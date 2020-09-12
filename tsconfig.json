@@ -15,7 +15,8 @@
     "strict": true,
     "removeComments": false,
     "strictNullChecks": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "downlevelIteration": true
   },
   "include": [
     "packages/@averjs/**/*.ts"

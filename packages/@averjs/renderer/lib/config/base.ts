@@ -1,4 +1,4 @@
-import webpack from 'webpack';
+import webpack, { Configuration } from 'webpack';
 import WebpackChain from 'webpack-chain';
 import { VueLoaderPlugin } from 'vue-loader';
 import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
@@ -7,9 +7,28 @@ import PerformanceLoader from '../utils/perf-loader';
 import BabelLoader from '../utils/babel-loader';
 import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
+import Core from '@averjs/core';
+import { AverConfig } from '@averjs/config';
 
 export default class WebpackBaseConfiguration {
-  constructor(isServer, aver) {
+  aver: Core;
+  webpackConfig: AverConfig['webpack'];
+
+  chainConfig = new WebpackChain();
+  isServer: boolean;
+  cacheDir: string;
+  distPath: string;
+  isProd = process.env.NODE_ENV === 'production';
+  commonRules = [];
+
+  perfLoader: PerformanceLoader;
+  styleLoader: StyleLoader;
+  babelLoader: BabelLoader;
+
+  constructor(isServer: boolean, aver: Core) {
+    this.aver = aver;
+    this.webpackConfig = aver.config.webpack;
+
     this.chainConfig = new WebpackChain();
     this.isServer = isServer;
     this.cacheDir = aver.config.cacheDir;
@@ -19,17 +38,14 @@ export default class WebpackBaseConfiguration {
 
     this.commonRules = [];
 
-    const { webpack } = aver.config;
-    this.globalConfig = webpack;
-
-    this.perfLoader = new PerformanceLoader(this.isServer, this.globalConfig);
+    this.perfLoader = new PerformanceLoader(this.isServer, this.webpackConfig);
     this.perfLoader.warmupLoaders();
-    this.styleLoader = new StyleLoader(this.isServer, this.globalConfig, this.perfLoader);
+    this.styleLoader = new StyleLoader(this.isServer, this.webpackConfig, this.perfLoader);
     this.babelLoader = new BabelLoader(this.isServer, aver.config, this.perfLoader);
   }
 
   plugins() {
-    if (!this.isServer && this.globalConfig.css.extract) {
+    if (!this.isServer && this.webpackConfig.css?.extract) {
       this.chainConfig
         .plugin('extract-css')
           .use(ExtractCssPlugin, [ {
@@ -66,8 +82,10 @@ export default class WebpackBaseConfiguration {
   }
 
   alias() {
-    for (const alias of Object.keys(this.globalConfig.alias)) {
-      this.chainConfig.resolve.alias.set(alias, this.globalConfig.alias[alias]);
+    if(!this.webpackConfig.alias) return;
+
+    for (const alias of Object.keys(this.webpackConfig.alias)) {
+      this.chainConfig.resolve.alias.set(alias, this.webpackConfig.alias[alias]);
     }
   }
 
@@ -200,10 +218,10 @@ export default class WebpackBaseConfiguration {
           });
   }
 
-  optimization() {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  optimization() {}
 
-  async config(isStatic) {
+  async config(isStatic: boolean): Promise<Configuration | void> {
     this.chainConfig
       .output
         .path(this.distPath)
@@ -218,7 +236,7 @@ export default class WebpackBaseConfiguration {
         .set('child_process', 'empty')
         .end()
       .devtool(this.isProd ? false : 'cheap-module-eval-source-map')
-      .mode(process.env.NODE_ENV)
+      .mode(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production' ? process.env.NODE_ENV : 'none')
       .module
         .noParse(/es6-promise\.js$/)
         .end()
@@ -245,8 +263,8 @@ export default class WebpackBaseConfiguration {
     this.optimization();
     this.plugins();
 
-    if (typeof this.globalConfig.base === 'function') this.globalConfig.base(this.chainConfig);
+    if (typeof this.webpackConfig.base === 'function') this.webpackConfig.base(this.chainConfig);
 
     await this.aver.callHook('renderer:base-config', this.chainConfig);
   }
-};
+}

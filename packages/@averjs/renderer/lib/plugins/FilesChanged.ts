@@ -1,10 +1,11 @@
 import path from 'path';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
+import { Compiler } from 'webpack';
 
 export default class FilesChanged {
-  apply(compiler) {
-    compiler.hooks.watchRun.tap('averjs', compiler => {
+  apply(compiler: Compiler) {
+    compiler.hooks.watchRun.tap('averjs', (compiler: any) => {
       const { watchFileSystem } = compiler;
       const watcher = watchFileSystem.watcher || watchFileSystem.wfs.watcher;
 
