@@ -6,6 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/shared-utils.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -21,7 +22,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": false,
+    "build": true,
     "copy": [
       "lib/openChrome.applescript"
     ]
@@ -29,6 +30,6 @@
   "dependencies": {
     "chalk": "4.1.0",
     "cross-spawn": "7.0.3",
-    "opn": "6.0.0"
+    "open": "7.2.1"
   }
 }

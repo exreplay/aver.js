@@ -7,13 +7,14 @@
 
 'use strict';
 
-var chalk = require('chalk');
-var execSync = require('child_process').execSync;
-var spawn = require('cross-spawn');
-var opn = require('opn');
+import chalk from 'chalk';
+import { execSync } from 'child_process';
+import spawn from 'cross-spawn';
+import open from 'open';
 
-// https://github.com/sindresorhus/opn#app
-var OSX_CHROME = 'google chrome';
+enum Browser {
+  OSX_CHROME = 'google chrome'
+}
 
 const Actions = Object.freeze({
   NONE: 0,
@@ -40,12 +41,12 @@ function getBrowserEnv() {
   return { action, value };
 }
 
-function executeNodeScript(scriptPath, url) {
+function executeNodeScript(scriptPath: string, url: string) {
   const extraArgs = process.argv.slice(2);
   const child = spawn('node', [ scriptPath, ...extraArgs, url ], {
     stdio: 'inherit'
   });
-  child.on('close', code => {
+  child.on('close', (code: number) => {
     if (code !== 0) {
       console.log();
       console.log(
@@ -60,14 +61,14 @@ function executeNodeScript(scriptPath, url) {
   return true;
 }
 
-function startBrowserProcess(browser, url) {
+function startBrowserProcess(browser: string | undefined, url: string) {
   // If we're on OS X, the user hasn't specifically
   // requested a different browser, we can try opening
   // Chrome with AppleScript. This lets us reuse an
   // existing tab when possible instead of creating a new one.
   const shouldTryOpenChromeWithAppleScript =
     process.platform === 'darwin' &&
-    (typeof browser !== 'string' || browser === OSX_CHROME);
+    (typeof browser !== 'string' || browser === Browser.OSX_CHROME);
 
   if (shouldTryOpenChromeWithAppleScript) {
     try {
@@ -92,11 +93,11 @@ function startBrowserProcess(browser, url) {
     browser = undefined;
   }
 
-  // Fallback to opn
+  // Fallback to open
   // (It will always open new tab)
   try {
-    var options = { app: browser, wait: false };
-    opn(url, options).catch(() => {}); // Prevent `unhandledRejection` error.
+    const options = { app: browser, wait: false };
+    open(url, options).catch(); // Prevent `unhandledRejection` error.
     return true;
   } catch (err) {
     return false;
@@ -107,14 +108,14 @@ function startBrowserProcess(browser, url) {
  * Reads the BROWSER environment variable and decides what to do with it. Returns
  * true if it opened a browser or ran a node.js script, otherwise false.
  */
-function openBrowser(url) {
+function openBrowser(url: string) {
   const { action, value } = getBrowserEnv();
   switch (action) {
   case Actions.NONE:
     // Special case: BROWSER="none" will prevent opening completely.
     return false;
   case Actions.SCRIPT:
-    return executeNodeScript(value, url);
+    return executeNodeScript(value || '', url);
   case Actions.BROWSER:
     return startBrowserProcess(value, url);
   default:
@@ -122,4 +123,4 @@ function openBrowser(url) {
   }
 }
 
-module.exports = openBrowser;
+export default openBrowser;
