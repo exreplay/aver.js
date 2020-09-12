@@ -21,7 +21,7 @@ interface BeforeCompileSsrContext {
 }
 type BeforeCompileStaticContext = BeforeCompileSsrContext;
 
-interface TappableHooks { 
+interface TappableHooks {
   'server:before-register-middlewares': (context: RegisterMiddlewaresContext) => void;
   'server:after-register-middlewares': (context: RegisterMiddlewaresContext) => void;
   'server:before-register-routes': (context: RegisterRoutesContext) => void;
@@ -54,7 +54,7 @@ export default class Hookable {
     if (!this.hooks[name]) return;
     
     for (const hook of this.hooks[name]) {
-      await hook(args as never);
+      await (hook as (...args: unknown[]) => void)(...args);
     }
   }
 }
