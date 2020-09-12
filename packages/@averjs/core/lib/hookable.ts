@@ -2,6 +2,7 @@ import Config from 'webpack-chain';
 import { Express } from 'express';
 import { ExpressMiddlewares } from './server';
 import { Server } from 'http';
+import { BuilderContext } from '@averjs/builder/dist/builders/base';
 
 interface RegisterMiddlewaresContext {
   app: Express;
@@ -9,16 +10,23 @@ interface RegisterMiddlewaresContext {
   server: Server;
 }
 type RegisterRoutesContext = RegisterMiddlewaresContext;
+
 interface BeforeCompileSsrContext {
-  context: { [ key: string ]: Record<string, unknown> };
-  BODY: string[];
+  context: BuilderContext;
+  HTML_ATTR?: string,
+  HEAD_ATTRS?: string,
+  HEAD: (string | undefined)[],
+  BODY_ATTRS?: string,
+  BODY: (string | undefined)[];
 }
+type BeforeCompileStaticContext = BeforeCompileSsrContext;
 
 interface TappableHooks { 
   'server:before-register-middlewares': (context: RegisterMiddlewaresContext) => void;
   'server:after-register-middlewares': (context: RegisterMiddlewaresContext) => void;
   'server:before-register-routes': (context: RegisterRoutesContext) => void;
   'server:after-register-routes': (context: RegisterRoutesContext) => void;
+  'builder:before-compile-static': (context: BeforeCompileStaticContext) => void;
   'builder:before-compile-ssr': (context: BeforeCompileSsrContext) => void;
   'renderer:base-config': (chain: Config) => void;
   'renderer:client-config': (chain: Config) => void;
