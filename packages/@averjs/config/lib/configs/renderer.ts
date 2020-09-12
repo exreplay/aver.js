@@ -1,6 +1,42 @@
 import path from 'path';
+import Config from 'webpack-chain';
+import { GenerateSWOptions, InjectManifestOptions } from 'workbox-webpack-plugin';
+import { StyleResourcesLoaderOptions } from 'style-resources-loader';
 
-export default () => ({
+export interface AverWebpackConfig {
+  babel?: any;
+  additionalExtensions?: string[];
+  transpileDependencies?: (string | RegExp)[];
+  postcss?: {
+    [index: string]: any
+  };
+  css?: {
+    extract?: boolean,
+    styleResources?: {
+      resources?: string[],
+      options?: StyleResourcesLoaderOptions
+    }
+  },
+  alias?: {
+    [index: string]: string;
+    '@': string;
+    '@@': string;
+    '@components': string;
+    '@resources': string;
+    '@mixins': string;
+    '@pages': string;
+    '@vuex': string;
+  },
+  base?: false | ((chain: Config) => void);
+  client?: false | ((chain: Config) => void);
+  server?: false | ((chain: Config) => void);
+  sw?: false | GenerateSWOptions | InjectManifestOptions;
+  process?: {
+    env?: Record<string, any>
+  }
+}
+
+export default (): AverWebpackConfig => ({
   babel: {},
   additionalExtensions: [ 'js' ],
   transpileDependencies: [],
@@ -9,7 +45,9 @@ export default () => ({
     extract: false,
     styleResources: {
       resources: [],
-      options: {}
+      options: {
+        patterns: []
+      }
     }
   },
   alias: {

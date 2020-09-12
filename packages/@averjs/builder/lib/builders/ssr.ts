@@ -9,9 +9,10 @@ import HTMLCodeError from '../errors/HTMLCodeError';
 import { AverConfig } from '@averjs/config';
 import { BundleRenderer, BundleRendererOptions } from 'vue-server-renderer';
 import { Request } from 'express';
+import Core from '@averjs/core';
 
 export default class SsrBuilder extends BaseBuilder {
-  aver: any;
+  aver: Core;
   config: AverConfig;
   renderer: BundleRenderer | null = null;
   readyPromise: Promise<boolean> | null = null;
@@ -19,7 +20,7 @@ export default class SsrBuilder extends BaseBuilder {
   cacheDir: string;
   distPath: string;
 
-  constructor(aver: any) {
+  constructor(aver: Core) {
     super();
     this.aver = aver;
     this.config = aver.config;

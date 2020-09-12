@@ -1,22 +1,22 @@
 import { Plugin } from '@averjs/core/dist/plugins';
 import { Templates } from '@averjs/vue-app';
 
-interface CoreConfig {
-  buildPlugins: Plugin[],
-  plugins: Plugin[],
-  aliases: {
+export interface AverCoreConfig {
+  buildPlugins?: Plugin[],
+  plugins?: Plugin[],
+  aliases?: {
     [key: string]: string;
   },
-  templates: Templates[],
-  entries: {
-    [key: string]: string[];
-    app: string[],
-    client: string[],
-    server: string[]
+  templates?: Templates[],
+  entries?: {
+    [key: string]: string[] | undefined;
+    app?: string[],
+    client?: string[],
+    server?: string[]
   }
 }
 
-export default (): CoreConfig => ({
+export default (): AverCoreConfig => ({
   buildPlugins: [],
   plugins: [],
   aliases: {},

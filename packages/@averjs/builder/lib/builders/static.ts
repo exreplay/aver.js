@@ -8,11 +8,12 @@ import template from 'lodash/template';
 import { minify } from 'html-minifier';
 import { BundleRenderer } from 'vue-server-renderer';
 import { AverConfig } from '@averjs/config';
+import Core from '@averjs/core';
 
 const requireModule = require('esm')(module);
 
 export default class StaticBuilder extends BaseBuilder {
-  aver: any;
+  aver: Core;
   config: AverConfig;
   renderer: BundleRenderer | null = null;
   readyPromise: Promise<boolean> | null = null;
@@ -20,7 +21,7 @@ export default class StaticBuilder extends BaseBuilder {
   distPath: string;
   cacheDir: string;
 
-  constructor(aver: any) {
+  constructor(aver: Core) {
     super();
     this.aver = aver;
     this.config = aver.config;

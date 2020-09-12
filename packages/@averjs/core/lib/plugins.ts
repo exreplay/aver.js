@@ -106,16 +106,16 @@ export default class PluginContainer {
     if (fs.existsSync(entriesFolder)) entries = klawSync(entriesFolder, { nodir: true });
 
     const entryNames = {
-      app: new RegExp(`app\\.(${this.config.webpack.additionalExtensions.join('|')})`, 'i'),
-      client: new RegExp(`entry-client\\.(${this.config.webpack.additionalExtensions.join('|')})`, 'i'),
-      server: new RegExp(`entry-server\\.(${this.config.webpack.additionalExtensions.join('|')})`, 'i')
+      app: new RegExp(`app\\.(${this.config.webpack.additionalExtensions?.join('|')})`, 'i'),
+      client: new RegExp(`entry-client\\.(${this.config.webpack.additionalExtensions?.join('|')})`, 'i'),
+      server: new RegExp(`entry-server\\.(${this.config.webpack.additionalExtensions?.join('|')})`, 'i')
     };
 
     for (const entry of entries) {
       const dst = path.relative(dirname, entry.path).replace('entries', dirname);
-      this.config.templates.push({ src: entry.path, dst, pluginPath: pluginPathDir, dirname });
+      this.config.templates?.push({ src: entry.path, dst, pluginPath: pluginPathDir, dirname });
       const foundEntry = Object.entries(entryNames).find(([ _, name ]) => entry.path.match(name));
-      if (foundEntry && foundEntry[0]) this.config.entries[foundEntry[0]].push('./' + dst);
+      if (foundEntry && foundEntry[0]) this.config.entries?.[foundEntry[0]]?.push('./' + dst);
     }
   }
 
