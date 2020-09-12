@@ -21,6 +21,6 @@
     "connect-redis": "5.0.0",
     "express-session": "1.17.1",
     "ioredis": "4.17.3",
-    "uuid": "8.2.0"
+    "uuid": "8.3.0"
   }
 }
