@@ -30,8 +30,8 @@ export default class Renderer {
   distPath: string;
   mfs = new MFS();
   isBrowserOpen = false;
-  bundle = '';
-  clientManifest: BundleRendererOptions['clientManifest'] = {};
+  bundle: string | null = null;
+  clientManifest: BundleRendererOptions['clientManifest'] | null = null;
   resolve: ((value?: void | PromiseLike<void> | undefined) => void) | null = null;
   readyPromise: Promise<void> = new Promise(resolve => { this.resolve = resolve; });
   cb: RendererCallback | null = null;
