@@ -72,7 +72,7 @@ export default class RollupConfig {
       tsconfigOverride: {
         include: [
           this.path,
-          path.resolve(__dirname, '../packages/@averjs/globals.d.ts')
+          path.resolve(__dirname, '../packages/@averjs/*.d.ts')
         ]
       }
     }));
