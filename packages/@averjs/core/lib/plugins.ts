@@ -5,7 +5,7 @@ import klawSync, { Item } from 'klaw-sync';
 import Core from './core';
 import { AverConfig } from '@averjs/config';
 
-export type PluginFunction = (this: Core, ...args: any[]) => void;
+export type PluginFunction = (this: PluginContainer, ...args: any[]) => void;
 export type Plugin<T = string> = 
   T |
   PluginFunction |
