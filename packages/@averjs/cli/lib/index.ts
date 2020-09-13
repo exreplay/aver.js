@@ -5,6 +5,7 @@ import BuildCommand from './commands/build';
 import ProductionCommand from './commands/prod';
 import parseArgs, { ParsedArgs } from 'minimist';
 import { CommandInterface, CommandInterfaceDictionary } from './commands/command';
+import './global';
 
 export default class Usage {
   private argv: ParsedArgs;
