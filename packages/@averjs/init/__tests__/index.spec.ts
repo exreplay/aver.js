@@ -1,7 +1,7 @@
 import Init from '../lib';
 import path from 'path';
 import fs from 'fs-extra';
-import { infoMsg, succeedMsg } from 'ora';
+import { infoMsg, succeedMsg } from '../__mocks__/ora';
 
 const pathToDir = path.resolve(__dirname, './tmp');
 
@@ -79,17 +79,17 @@ test('copyFile should not copy when file already exists', () => {
 test('passing removeUnderscore should remove it but only the leading', () => {
   const init = new Init();
   init.appDir = path.resolve(__dirname, '../__fixtures__');
-  init.copyFile('_test_with_underscore.js', true);
-  expect(fs.existsSync(path.resolve(pathToDir, './test_with_underscore.js'))).toBeTruthy();
-  expect(succeedMsg).toBe('File "_test_with_underscore.js" successfully copied!');
+  init.copyFile('_test_with_underscore.ts', true);
+  expect(fs.existsSync(path.resolve(pathToDir, './test_with_underscore.ts'))).toBeTruthy();
+  expect(succeedMsg).toBe('File "_test_with_underscore.ts" successfully copied!');
 });
 
 test('passing removeUnderscore should remove it but only the leading', () => {
   const init = new Init();
   init.appDir = path.resolve(__dirname, '../__fixtures__');
-  init.copyFile('_test_with_underscore.js', true);
-  expect(fs.existsSync(path.resolve(pathToDir, './test_with_underscore.js'))).toBeTruthy();
-  expect(succeedMsg).toBe('File "_test_with_underscore.js" successfully copied!');
+  init.copyFile('_test_with_underscore.ts', true);
+  expect(fs.existsSync(path.resolve(pathToDir, './test_with_underscore.ts'))).toBeTruthy();
+  expect(succeedMsg).toBe('File "_test_with_underscore.ts" successfully copied!');
 });
 
 test('createApiDir with no args should create the root api directory', () => {
@@ -126,7 +126,7 @@ test('trimLines should remove all whitespaces at the beginning of every line', (
 test('modifying package.json should not overwrite default values', () => {
   const init = new Init();
   init.modifyPackageJson();
-  const pkg = JSON.parse(fs.readFileSync(path.resolve(pathToDir, './package.json').toString()));
+  const pkg = JSON.parse(fs.readFileSync(path.resolve(pathToDir, './package.json').toString()).toString());
   expect(pkg.name).toBe('test');
   expect(pkg.scripts.live).toBe('testcommand');
   expect(succeedMsg).toBe('Successfully modified package.json!');

@@ -4,9 +4,9 @@ export let succeedMsg = '';
 class Ora {
   start() { return this; }
 
-  info(msg) { infoMsg = msg; }
+  info(msg: string) { infoMsg = msg; }
 
-  succeed(msg) { succeedMsg = msg; }
+  succeed(msg: string) { succeedMsg = msg; }
 }
 
 export default () => new Ora();
