@@ -4,8 +4,7 @@ import Email from 'email-templates';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
   namespace Express {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    interface Request {
+    export interface Request {
       mailer: Email;
     }
   }

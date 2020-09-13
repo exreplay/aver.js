@@ -2,6 +2,7 @@ import { connect, connection, set, ConnectionOptions } from 'mongoose';
 import path from 'path';
 import fs from 'fs';
 import { PluginFunction } from '@averjs/core/lib/plugins';
+import './global';
 
 export interface MongodbPluginOptions {
   mongooseOptions: ConnectionOptions,
@@ -16,7 +17,7 @@ const plugin: PluginFunction = (options: MongodbPluginOptions) => {
     requireModels = true
   } = options;
 
-  if (!process.env.MONGODB_HOST && !process.env.MONGODB_USERNAME && !process.env.MONGODB_PASSWORT && !process.env.MONGODB_HOST && !process.env.MONGODB_DATENBANK) {
+  if (!process.env.MONGODB_HOST && !process.env.MONGODB_USERNAME && !process.env.MONGODB_PASSWORT && !process.env.MONGODB_DATENBANK) {
     console.error('\nThe following .env variables have to be defined in order for Mongodb to work:\nMONGODB_HOST, MONGODB_USERNAME, MONGODB_PASSWORT, MONGODB_HOST, MONGODB_DATENBANK\n');
     return;
   }
