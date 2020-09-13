@@ -5,12 +5,12 @@ import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import { getAverjsConfig, AverConfig } from '@averjs/config';
-import PluginContainer from './plugins';
+import PluginContainer, { PluginContainerInterface } from './plugins';
 import { RendererOptions } from '@averjs/renderer';
 
 export default class Core extends Hookable {
   config: AverConfig;
-  plugins: PluginContainer;
+  plugins: PluginContainerInterface;
 
   constructor() {
     super();

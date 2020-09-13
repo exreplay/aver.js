@@ -5,13 +5,14 @@ import klawSync, { Item } from 'klaw-sync';
 import Core from './core';
 import { AverConfig } from '@averjs/config';
 
-export type PluginFunction = (this: PluginContainer, ...args: any[]) => void;
+export type PluginFunction = (this: PluginContainerInterface, ...args: any[]) => void;
 export type Plugin<T = string> = 
   T |
   PluginFunction |
   [T, unknown?]
 
 const requireModule = require('esm')(module);
+
 export default class PluginContainer {
   aver: Core;
   config: AverConfig;
@@ -141,3 +142,5 @@ export default class PluginContainer {
     else return undefined;
   }
 }
+
+export type PluginContainerInterface<T = PluginContainer> = {[K in keyof T]: T[K]}
