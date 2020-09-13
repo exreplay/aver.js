@@ -1,9 +1,17 @@
 import nodemailer from 'nodemailer';
-import Email from 'email-templates';
+import Email, { EmailConfig } from 'email-templates';
 import path from 'path';
 import merge from 'lodash/merge';
+import { PluginFunction } from '@averjs/core/dist/plugins';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import './global';
 
-function establishConnection(nodemailerConfig) {
+export interface MailerOptions {
+  emailTemplatesConfig: EmailConfig;
+  nodemailerConfig: SMTPTransport.Options
+}
+
+function establishConnection(nodemailerConfig: SMTPTransport.Options) {
   const defaultConfig = {
     pool: true,
     host: process.env.SMTP_HOST,
@@ -26,17 +34,16 @@ function establishConnection(nodemailerConfig) {
   return transporter;
 }
 
-export default function(options) {
-  const {
-    emailTemplatesConfig = {},
-    nodemailerConfig = {}
-  } = options;
-
+const plugin: PluginFunction = function(options: MailerOptions) {
   if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
     console.warn('Mailer disabled. You need to provide the following env variables: SMTP_HOST, SMTP_PORT, SMTP_USER and SMTP_PASSWORD.');
     return;
   }
 
+  const {
+    emailTemplatesConfig = {},
+    nodemailerConfig = {}
+  } = options;
   const transporter = establishConnection(nodemailerConfig);
 
   const defaultEmailTemplatesConfig = {
@@ -52,14 +59,16 @@ export default function(options) {
         relativeTo: path.resolve(process.env.API_PATH, '../public/')
       }
     }
-  };
+  } as EmailConfig;
 
   const mailer = new Email(merge({}, defaultEmailTemplatesConfig, emailTemplatesConfig));
 
-  this.aver.tap('server:after-register-middlewares', ({ app, middlewares }) => {
+  this.aver.tap('server:after-register-middlewares', ({ middlewares }) => {
     middlewares.push((req, res, next) => {
       req.mailer = mailer;
       next();
     });
   });
 };
+
+export default plugin;
