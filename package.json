@@ -6,6 +6,7 @@
     "packages/test"
   ],
   "scripts": {
+    "rm-dist": "find ./packages/@averjs -name 'dist' -maxdepth 2 -exec rm -Rf {} \\;",
     "dev": "node -r esm ./scripts/dev --watch",
     "build": "node -r esm ./scripts/dev",
     "release": "node -r esm ./scripts/release",
