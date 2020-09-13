@@ -58,7 +58,8 @@ export default class PluginContainer {
     }
 
     if (typeof handler !== 'function') {
-      throw new Error('Plugin should export a function.');
+      if(src) throw new Error(`Plugin '${src}' should export a function. Got '${ typeof handler }'.`);
+      else throw new Error(`Plugins have to be defined as functions. Please check your aver config file.`);
     }
 
     if (!options) {
@@ -83,7 +84,10 @@ export default class PluginContainer {
 
     this.resolveEntryFiles(pluginPath);
 
-    return requireModule(pluginPath).default;
+    const requiredModule = requireModule(pluginPath);
+
+    if(requiredModule.default) return requiredModule.default;
+    else return requiredModule;
   }
 
   private resolveModule(plugin: string) {
