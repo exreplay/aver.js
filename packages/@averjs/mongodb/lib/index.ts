@@ -9,7 +9,7 @@ export interface MongodbPluginOptions {
   requireModels: boolean;
 }
 
-const plugin: PluginFunction = (options: MongodbPluginOptions) => {
+const plugin: PluginFunction = function(options: MongodbPluginOptions) {
   if (process.argv.indexOf('build') !== -1) return;
 
   const {
