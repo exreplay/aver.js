@@ -8,9 +8,9 @@ import { CommandInterface, CommandInterfaceDictionary } from './commands/command
 import './global';
 
 export default class Usage {
-  private argv: ParsedArgs;
-  private aliases: { [arg: string]: string } = {};
-  private availableCommands: CommandInterfaceDictionary = {};
+  argv: ParsedArgs;
+  aliases: { [arg: string]: string } = {};
+  availableCommands: CommandInterfaceDictionary = {};
 
   get help() {
     return this.argv._[0] === 'help' || this.argv.help;
