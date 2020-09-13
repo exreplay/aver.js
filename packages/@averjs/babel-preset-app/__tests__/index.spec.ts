@@ -2,7 +2,7 @@ import * as babel from '@babel/core';
 import preset from '../lib/index';
 import merge from 'lodash/merge';
 
-function transformFactory(codeToTransform, options) {
+function transformFactory(codeToTransform: string, options?: babel.TransformOptions) {
   const defaultOptions = {
     babelrc: false,
     presets: [
@@ -11,7 +11,7 @@ function transformFactory(codeToTransform, options) {
     filename: 'test-entry-file.js'
   };
 
-  return babel.transformSync(codeToTransform, merge(defaultOptions, options));
+  return babel.transformSync(codeToTransform, merge(defaultOptions, options)) || {};
 }
 
 test('polyfill detection for core-js', () => {
@@ -23,7 +23,7 @@ test('polyfill detection for core-js', () => {
 
   expect(code).toMatch('runtime-corejs2/core-js/map');
 
-  ;({ code } = transformFactory('const a = new Map()'.trim()));
+  ({ code } = transformFactory('const a = new Map()'.trim()));
 
   expect(code).toMatch('runtime-corejs2/core-js/map');
   expect(code).toMatch('es6.promise');
