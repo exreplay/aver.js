@@ -75,7 +75,7 @@ export default class RollupConfig {
       check: checkTs,
       tsconfigOverride: {
         include: [
-          this.path,
+          path.resolve(this.path, './lib'),
           path.resolve(__dirname, '../packages/@averjs/*.d.ts')
         ]
       }
