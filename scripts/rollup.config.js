@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
@@ -68,7 +69,10 @@ export default class RollupConfig {
       })
     );
 
+    const checkTs = fs.existsSync(path.resolve(this.path, './dist'));
+
     plugins.push(typescript({
+      check: checkTs,
       tsconfigOverride: {
         include: [
           this.path,
