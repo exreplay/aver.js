@@ -42,7 +42,9 @@ Object {
     "css": Object {
       "extract": false,
       "styleResources": Object {
-        "options": Object {},
+        "options": Object {
+          "patterns": Array [],
+        },
         "resources": Array [],
       },
     },
