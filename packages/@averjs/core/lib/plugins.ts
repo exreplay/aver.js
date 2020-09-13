@@ -15,7 +15,7 @@ const requireModule = require('esm')(module);
 export default class PluginContainer {
   aver: Core;
   config: AverConfig;
-  cacheDir: string;
+  private cacheDir: string;
 
   constructor(aver: Core) {
     this.aver = aver;
@@ -33,14 +33,14 @@ export default class PluginContainer {
     }
   }
 
-  async sequence(plugins: Plugin[]) {
+  private async sequence(plugins: Plugin[]) {
     // Run plugins in sequence by promisify everyone
     await plugins.reduce((promise, plugin) => {
       return promise.then(() => this.addModule(plugin));
     }, Promise.resolve());
   }
 
-  async addModule(plugin: Plugin) {
+  private async addModule(plugin: Plugin) {
     let src;
     let options;
     let handler;
@@ -68,7 +68,7 @@ export default class PluginContainer {
     await handler.call(this, options);
   }
 
-  require(src: string) {
+  private require(src: string) {
     let pluginPath;
 
     pluginPath = this.resolveModule(src);
@@ -86,7 +86,7 @@ export default class PluginContainer {
     return requireModule(pluginPath).default;
   }
 
-  resolveModule(plugin: string) {
+  private resolveModule(plugin: string) {
     try {
       return require.resolve(plugin);
     } catch (err) {
@@ -96,7 +96,7 @@ export default class PluginContainer {
     }
   }
 
-  resolveEntryFiles(pluginPath: string) {
+  private resolveEntryFiles(pluginPath: string) {
     const pluginPathDir = this.normalizePluginPath(pluginPath);
     let dirname: string | string[] = pluginPathDir.split('/');
     dirname = dirname[dirname.length - 1];
@@ -119,19 +119,19 @@ export default class PluginContainer {
     }
   }
 
-  normalizePluginPath(pluginPath: string) {
+  private normalizePluginPath(pluginPath: string) {
     if (fs.lstatSync(pluginPath).isDirectory()) return pluginPath;
     else return path.dirname(pluginPath);
   }
 
-  relativeCacheDirPath(filePath: string) {
+  private relativeCacheDirPath(filePath: string) {
     return path.relative(
       path.resolve(process.cwd(), this.cacheDir),
       filePath
     );
   }
 
-  resolvePath(plugin: string) {
+  private resolvePath(plugin: string) {
     const pluginPath = path.resolve(process.env.PROJECT_PATH, '../', plugin);
     if (fs.existsSync(pluginPath)) return pluginPath;
     else return undefined;
