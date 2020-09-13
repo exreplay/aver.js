@@ -3,17 +3,22 @@ import HelpCommand from '../lib/commands/help';
 import TestCommand from '../__fixtures__/TestCommand';
 import FailingCommand from '../__fixtures__/FailingCommand';
 
-function removeArg(cmd) {
-  process.argv = process.argv.filter(_ => _ !== cmd);
+let outputData = '';
+const tmpProcessArgv = [ ...process.argv ];
+
+function resetArgv() {
+  process.argv = [ ...tmpProcessArgv ];
 }
 
-let outputData = '';
-
-beforeEach(function() {
+beforeEach(() => {
   outputData = '';
-  const storeLog = inputs => (outputData = inputs);
+  const storeLog = (inputs: string) => (outputData = inputs);
   console.log = jest.fn(storeLog);
   console.error = jest.fn(storeLog);
+});
+
+afterEach(() => {
+  resetArgv();
 });
 
 test('cli should at least have the help command', () => {
@@ -27,13 +32,11 @@ test('help getter should identify help arg', () => {
   let cli = new AverCli();
   expect(cli.help).toBeTruthy();
 
-  removeArg('help');
+  resetArgv();
 
   process.argv.push('--h');
   cli = new AverCli();
   expect(cli.help).toBeTruthy();
-
-  removeArg('--h');
 });
 
 test('executedCommand should identify the given command, show help or execute dev when nothing is given', () => {
@@ -42,29 +45,25 @@ test('executedCommand should identify the given command, show help or execute de
   let cli = new AverCli();
   expect(cli.executedCommand).toBe('build');
 
-  removeArg('build');
+  resetArgv();
 
   cli = new AverCli();
   expect(cli.executedCommand).toBe('dev');
 
   process.argv.push('--h');
   cli = new AverCli();
-  expect(cli.executedCommand).toBeFalsy();
-
-  removeArg('--h');
+  expect(cli.executedCommand).toBe('help');
 });
 
 test('global command should be executed', () => {
   process.argv.push('--v');
 
   const cli = new AverCli();
-  expect(cli.globalCommand.name).toBe('version');
+  expect(cli.globalCommand?.name).toBe('version');
 
   expect(() => {
     cli.run();
   }).not.toThrow();
-
-  removeArg('--v');
 });
 
 test('test command should be added correctly and executed', () => {
@@ -77,8 +76,6 @@ test('test command should be added correctly and executed', () => {
 
   cli.run();
   expect(outputData).toBe('run executed');
-
-  removeArg('test');
 });
 
 test('help should be executed correctly', () => {
@@ -88,9 +85,6 @@ test('help should be executed correctly', () => {
   cli.addCommand(new TestCommand());
   cli.run();
   expect(outputData).toMatch('Testcommand for unit tests');
-
-  removeArg('test');
-  removeArg('--h');
 });
 
 test('catch block should be called when comman does not exist', () => {
@@ -98,8 +92,10 @@ test('catch block should be called when comman does not exist', () => {
 
   const cli = new AverCli();
   cli.addCommand(new FailingCommand());
-  cli.run();
-  expect(outputData).toEqual(new Error('failing'));
 
-  removeArg('fail');
+  try {
+    cli.run();
+  } catch(err) {
+    expect(err).toBe('failing');
+  }
 });

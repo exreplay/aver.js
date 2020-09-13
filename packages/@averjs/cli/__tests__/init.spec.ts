@@ -1,5 +1,5 @@
 import AverCli from '../lib';
-import Init, { mockRun } from '@averjs/init';
+import Init, { mockRun } from '../__mocks__/@averjs/init';
 jest.mock('@averjs/core');
 
 const OLD_ARGV = [ ...process.argv ];
