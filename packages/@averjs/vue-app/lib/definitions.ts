@@ -48,9 +48,9 @@ export interface AsyncDataContext<T extends any> {
   isServer: boolean;
 }
 
-export type AppEntry<T extends any> = (context: AppEntryContext<T>) => UserReturns | void;
-export type ServerEntry = (context: ServerEntryContext) => void;
-export type ClientEntry = (context: ClientEntryContext) => void;
+export type AppEntry<T = any> = (context: AppEntryContext<T>) => UserReturns | void | Promise<void> | Promise<UserReturns>;
+export type ServerEntry = (context: ServerEntryContext) => void | Promise<void>;
+export type ClientEntry = (context: ClientEntryContext) => void | Promise<void>;
 export type I18nEntry = (options: I18nOptions) => I18nOptions;
 export type RouterEntry<T extends any> = (context: RouterEntryContext<T>) => RouterOptions;
 export type StoreEntry<T extends any> = (options: StoreOptions<T>) => StoreOptions<T>;
