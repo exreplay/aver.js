@@ -1,5 +1,6 @@
 import klawSync from 'klaw-sync';
 import path from 'path';
+import './definitions';
 
 export interface Templates {
   src: string;
