@@ -3,10 +3,7 @@ import Vue from 'vue';
 import App from '@/App.vue';
 import { composeComponentOptions } from './utils';
 
-Vue.prototype.$auth = null;
-Vue.prototype.$modernizr = {};
 <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
-
 
 export default async context => {
   try {

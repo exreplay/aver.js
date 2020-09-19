@@ -6,6 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/builder.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -24,6 +25,7 @@
     "build": true
   },
   "dependencies": {
+    "@averjs/config": "2.0.1",
     "html-minifier": "4.0.0",
     "lru-cache": "6.0.0",
     "vue-server-renderer": "2.6.12"
