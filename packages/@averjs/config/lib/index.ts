@@ -10,7 +10,7 @@ interface InternalConfig {
   _production: boolean;
 }
 
-export type AverConfig = ReturnType<typeof defaultAverjsConfig> & InternalConfig;
+export type AverConfig = ReturnType<typeof defaultAverjsConfig> & InternalConfig & { [index: string]: any };
 type AverConfigPartial = ReturnType<typeof defaultAverjsConfig> & Partial<InternalConfig>;
 
 export function getAverjsConfig(): AverConfig {
