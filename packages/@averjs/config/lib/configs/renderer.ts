@@ -2,13 +2,23 @@ import path from 'path';
 import Config from 'webpack-chain';
 import { GenerateSWOptions, InjectManifestOptions } from 'workbox-webpack-plugin';
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
+import postcss, { ProcessOptions } from 'postcss';
+import PostCSSPresetEnv from 'postcss-preset-env';
 
 export interface AverWebpackConfig {
   babel?: any;
   additionalExtensions?: string[];
   transpileDependencies?: (string | RegExp)[];
   postcss?: {
-    [index: string]: any
+    preset?: PostCSSPresetEnv.pluginOptions;
+    sourceMap?: boolean;
+    execute?: boolean;
+    postcssOptions?: { 
+      plugins?: postcss.AcceptedPlugin[];
+    } & ProcessOptions;
+    plugins?: {
+      [index: string]: any;
+    }
   };
   css?: {
     extract?: boolean,

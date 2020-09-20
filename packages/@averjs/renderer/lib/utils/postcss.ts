@@ -18,14 +18,11 @@ export default class PostCSS {
 
   constructor(config: AverConfig['webpack']) {
     this.config = cloneDeep(config);
-    this.preset = this.config.postcss?.preset;
+    this.preset = this.config.postcss?.preset || {};
     delete this.config.postcss?.preset;
   }
 
-  get defaultConfig(): {
-    sourceMap: boolean;
-    plugins: AverConfig['webpack']['postcss']
-  } {
+  get defaultConfig(): AverConfig['webpack']['postcss'] {
     return {
       sourceMap: !this.isProd,
       plugins: {
@@ -42,10 +39,17 @@ export default class PostCSS {
   }
 
   loadPlugins(config: AverConfig['webpack']['postcss']) {
-    if(!config) return;
+    if(!config?.plugins) return;
+    if(!config.postcssOptions) config.postcssOptions = {};
+    if(!config.postcssOptions?.plugins) config.postcssOptions.plugins = [];
+
     // ensure postcss-preset-env and cssnano comes last
     const sortedPluginsKeys = Object.keys(config.plugins).sort(a => a === 'postcss-preset-env' ? 1 : -1).sort(a => a === 'cssnano' ? 1 : -1);
-    config.plugins = sortedPluginsKeys.map(p => require(p)(config.plugins[p]));
+    config.postcssOptions.plugins = [
+      ...sortedPluginsKeys.map(p => require(p)(config.plugins?.[p])),
+      ...config.postcssOptions.plugins
+    ]
+    delete config.plugins;
   }
 
   resolveImports(id: string, basedir: string) {
