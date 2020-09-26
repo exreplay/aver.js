@@ -2,7 +2,7 @@ import path from 'path';
 import Config from 'webpack-chain';
 import { GenerateSWOptions, InjectManifestOptions } from 'workbox-webpack-plugin';
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
-import postcss, { ProcessOptions } from 'postcss';
+import { ProcessOptions, AcceptedPlugin } from 'postcss';
 import PostCSSPresetEnv from 'postcss-preset-env';
 
 export interface AverWebpackConfig {
@@ -14,7 +14,7 @@ export interface AverWebpackConfig {
     sourceMap?: boolean;
     execute?: boolean;
     postcssOptions?: { 
-      plugins?: postcss.AcceptedPlugin[];
+      plugins?: AcceptedPlugin[];
     } & ProcessOptions;
     plugins?: {
       [index: string]: any;
