@@ -82,8 +82,11 @@ export default class Server extends WWW {
     });
 
     await this.aver.callHook('server:before-register-middlewares', { app: this.app, middlewares: this.middlewares, server: this.server });
-        
-    this.middlewares.push(helmet());
+
+    this.middlewares.push(helmet({
+      contentSecurityPolicy: false,
+      ...this.config.helmet
+    }));
     this.logging();
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));

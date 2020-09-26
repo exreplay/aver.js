@@ -1,17 +1,21 @@
-import app, { AverAppConfig } from './app';
-import core, { AverCoreConfig } from './core';
-import server, { AverServerConfig } from './server';
-import renderer, { AverWebpackConfig } from './renderer';
+import app from './app';
+import core from './core';
+import server from './server';
+import renderer from './renderer';
 import vueApp from './vue-app';
 
 export const defaultFileName = 'aver-config';
 
-export function defaultAverjsConfig() {
+type AverConfig = ReturnType<typeof app> & ReturnType<typeof core> & ReturnType<typeof server> & ReturnType<typeof vueApp> & {
+  webpack: ReturnType<typeof renderer>
+}
+
+export function defaultAverjsConfig(): AverConfig {
   return {
-    ...app() as AverAppConfig,
-    ...core() as AverCoreConfig,
-    ...server() as AverServerConfig,
-    webpack: renderer() as AverWebpackConfig,
+    ...app(),
+    ...core(),
+    ...server(),
+    webpack: renderer(),
     ...vueApp(),
   };
 }
