@@ -1,3 +1,15 @@
+## 2.1.2 (2020-09-27)
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#249](https://github.com/exreplay/aver.js/pull/249) fix: unpin postcss dependency ([@exreplay](https://github.com/exreplay))
+* `@averjs/config`
+  * [#248](https://github.com/exreplay/aver.js/pull/248) fix: added typings to vue app config ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.1.1 (2020-09-27)
 
 #### :bug: Bug Fix
