@@ -22,7 +22,6 @@
     "@types/copy-webpack-plugin": "6.0.0",
     "@types/cross-spawn": "6.0.2",
     "@types/csurf": "1.9.36",
-    "@types/enhanced-resolve": "3.0.6",
     "@types/helmet": "0.0.48",
     "@types/html-minifier": "4.0.0",
     "@types/klaw-sync": "6.0.0",
