@@ -10,6 +10,7 @@
   ],
   "ignoreDeps": [
     "core-js",
-    "memory-fs"
+    "memory-fs",
+    "postcss"
   ]
 }
