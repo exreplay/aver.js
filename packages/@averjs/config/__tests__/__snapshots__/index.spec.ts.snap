@@ -15,6 +15,7 @@ Object {
     "client": Array [],
     "server": Array [],
   },
+  "helmet": Object {},
   "i18n": Object {
     "silentTranslationWarn": true,
   },
