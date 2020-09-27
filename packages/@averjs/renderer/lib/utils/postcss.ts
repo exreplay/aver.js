@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import fs from 'fs';
 import SafeParser from 'postcss-safe-parser';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import {
-  NodeJsInputFileSystem,
   CachedInputFileSystem,
   ResolverFactory
 } from 'enhanced-resolve';
@@ -53,9 +53,9 @@ export default class PostCSS {
   }
 
   resolveImports(id: string, basedir: string) {
-    const options = {
+    const options: Parameters<typeof ResolverFactory['createResolver']>[0] = {
       alias: this.config.alias,
-      fileSystem: new CachedInputFileSystem(new NodeJsInputFileSystem(), 4000).fileSystem,
+      fileSystem: new CachedInputFileSystem(fs, 4000).fileSystem,
       extensions: [ '.css' ],
       useSyncFileSystemCalls: true
     };
