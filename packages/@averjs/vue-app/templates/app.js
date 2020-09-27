@@ -35,6 +35,15 @@ axios.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
+// Logic from vue-router https://github.com/vuejs/vue-router/blob/4c81be8ffb00b545396766f0a7ffff3c779b64db/src/history/html5.js#L88
+function getLocation (base) {
+  let path = decodeURI(window.location.pathname)
+  if (base && path.toLowerCase().indexOf(base.toLowerCase()) === 0) {
+    path = path.slice(base.length)
+  }
+  return (path || '/') + window.location.search + window.location.hash
+}
+
 export async function createApp(ssrContext) {
   const i18n = createI18n(ssrContext);
   const store = createStore(ssrContext);
@@ -49,6 +58,7 @@ export async function createApp(ssrContext) {
     router,
     store,
     ssrContext,
+    context: {},
     render: h => h(App)
   };
 
@@ -57,7 +67,7 @@ export async function createApp(ssrContext) {
   <%
     const extensions = config.additionalExtensions.join('|');
     print(`
-  const entries = require.context('./', true, /app\\.(${extensions})$/i);
+  const entries = require.context('./', true, /.\\/[^/]\\/app\\.(${extensions})$/i);
   const mixinContext = require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i);
     `);
   %>
@@ -65,17 +75,19 @@ export async function createApp(ssrContext) {
 
   for(const entryMixin of entryMixins) {
     for(const entry of entryMixin.keys()) {
-      if(
-        (entryMixin.id.includes('.cache') && entry !== './app.js')
-        || !entryMixin.id.includes('.cache')
-      ) {
-        const mixin = entryMixin(entry).default;
-        if(typeof mixin === 'function') {
-          const returns = await mixin({ ...ssrContext, appOptions });
-          userReturns = merge(userReturns, returns);
-        }
+      const mixin = entryMixin(entry).default;
+      if(typeof mixin === 'function') {
+        const returns = await mixin({ ...ssrContext, appOptions });
+        userReturns = merge(userReturns, returns);
       }
     }
+  }
+
+  if(ssrContext.isServer) {
+    appOptions.context.route = router.resolve(ssrContext.context.url).route;
+  } else {
+    const path = getLocation(router.options.base);
+    appOptions.context.route = router.resolve(path).route;
   }
     
   const app = new Vue(appOptions);

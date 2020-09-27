@@ -1,11 +1,12 @@
 {
   "name": "@averjs/config",
-  "version": "2.0.0-17",
+  "version": "2.1.0",
   "description": "managing the configuration",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/config.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -22,5 +23,9 @@
   },
   "aver": {
     "build": true
+  },
+  "devDependencies": {
+    "@averjs/core": "2.1.0",
+    "@averjs/vue-app": "2.1.0"
   }
 }

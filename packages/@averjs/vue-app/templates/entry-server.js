@@ -3,17 +3,14 @@ import Vue from 'vue';
 import App from '@/App.vue';
 import { composeComponentOptions } from './utils';
 
-Vue.prototype.$auth = null;
-Vue.prototype.$modernizr = {};
 <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
-
 
 export default async context => {
   try {
     <%
       const extensions = config.additionalExtensions.join('|');
       print(`
-    const entries = require.context('./', true, /entry-server\\.(${extensions})$/i);
+    const entries = require.context('./', true, /.\\/[^/]+\\/entry-server\\.(${extensions})$/i);
     const mixinContext = require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i);
       `);
     %>
@@ -24,10 +21,21 @@ export default async context => {
       if(typeof fn === 'function') renderedFns.push(fn);
     }
     const { app, router, store, userReturns } = await createApp({ isServer: true, context });
-    const { url } = context;
     const meta = app.$meta();
 
-    router.push(url);
+    await new Promise((resolve, reject) => {
+      router.push(context.url, resolve, () => {
+        // if a navigation guard redirects to a new url, wait for it to be resolved, before continue
+        const unregister = router.afterEach((to, from, next) => {
+          context.aver.routePath = to.fullPath;
+          context.url = to.fullPath;
+          context.params = to.params;
+          context.query = to.query;
+          unregister();
+          resolve();
+        });
+      });
+    });
     context.meta = meta;
 
     await new Promise((resolve, reject) => router.onReady(resolve, reject));
@@ -41,13 +49,8 @@ export default async context => {
 
     for(const entryMixin of entryMixins) {
       for(const entry of entryMixin.keys()) {
-        if(
-          (entryMixin.id.includes('.cache') && entry !== './entry-server.js')
-          || !entryMixin.id.includes('.cache')
-        ) {
-          const mixin = entryMixin(entry).default;
-          if(typeof mixin === 'function') await mixin({...context, userReturns, contextRendered});
-        }
+        const mixin = entryMixin(entry).default;
+        if(typeof mixin === 'function') await mixin({...context, userReturns, contextRendered});
       }
     }
         

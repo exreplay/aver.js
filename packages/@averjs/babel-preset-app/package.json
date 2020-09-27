@@ -1,6 +1,6 @@
 {
   "name": "@averjs/babel-preset-app",
-  "version": "2.0.0-17",
+  "version": "2.1.0",
   "description": "babel-preset-app for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -18,15 +18,15 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "@babel/core": "7.10.2",
-    "@babel/plugin-proposal-class-properties": "7.10.1",
-    "@babel/plugin-proposal-decorators": "7.10.1",
-    "@babel/plugin-proposal-object-rest-spread": "7.10.1",
+    "@babel/core": "7.11.6",
+    "@babel/plugin-proposal-class-properties": "7.10.4",
+    "@babel/plugin-proposal-decorators": "7.10.5",
+    "@babel/plugin-proposal-object-rest-spread": "7.11.0",
     "@babel/plugin-syntax-dynamic-import": "7.8.3",
-    "@babel/plugin-transform-arrow-functions": "7.10.1",
-    "@babel/plugin-transform-classes": "7.10.1",
-    "@babel/plugin-transform-parameters": "7.10.1",
-    "@babel/plugin-transform-runtime": "7.10.1",
-    "@babel/preset-env": "7.10.2"
+    "@babel/plugin-transform-arrow-functions": "7.10.4",
+    "@babel/plugin-transform-classes": "7.10.4",
+    "@babel/plugin-transform-parameters": "7.10.5",
+    "@babel/plugin-transform-runtime": "7.11.5",
+    "@babel/preset-env": "7.11.5"
   }
 }
