@@ -52,7 +52,7 @@ export default (): AverWebpackConfig => ({
   transpileDependencies: [],
   postcss: {},
   css: {
-    extract: false,
+    extract: process.env.NODE_ENV === 'production',
     styleResources: {
       resources: [],
       options: {
