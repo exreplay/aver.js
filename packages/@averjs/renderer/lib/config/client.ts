@@ -12,6 +12,7 @@ import FriendlyErrorsPlugin from '@averjs/friendly-errors-webpack-plugin';
 import Core from '@averjs/core';
 import TerserPlugin, { ExtractCommentOptions } from 'terser-webpack-plugin';
 import { GenerateSW, GenerateSWOptions, InjectManifest, InjectManifestOptions } from 'workbox-webpack-plugin';
+import { SplitChunksOptions } from 'webpack-chain';
 
 export interface RendererClientConfig extends Configuration {
   entry: {
@@ -119,7 +120,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig.optimization.runtimeChunk('single');
 
-    const splitChunks = {
+    const splitChunks: SplitChunksOptions = {
       cacheGroups: {
         commons: {
           test: /node_modules[\\/](vue|vue-loader|vue-router|vuex|vue-meta|core-js|babel-runtime|es6-promise|axios|webpack|setimmediate|timers-browserify|process|regenerator-runtime|cookie|js-cookie|is-buffer|dotprop)[\\/].*\.js$/,
@@ -130,7 +131,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       }
     };
     
-    if (process.env.NODE_ENV === 'production' && this.globalConfig.css.extract) {
+    if (process.env.NODE_ENV === 'production' && this.webpackConfig.css?.extract) {
       splitChunks.cacheGroups.styles = {
         name: 'styles',
         test: /\.(s?css|vue)$/,
