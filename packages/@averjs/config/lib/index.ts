@@ -10,10 +10,11 @@ interface InternalConfig {
   _production: boolean;
 }
 
-export type AverConfig = ReturnType<typeof defaultAverjsConfig> & InternalConfig & { [index: string]: any };
-type AverConfigPartial = ReturnType<typeof defaultAverjsConfig> & Partial<InternalConfig>;
+export type AverConfig = ReturnType<typeof defaultAverjsConfig> & { [index: string]: any };
+type AverInternalConfig = AverConfig & InternalConfig;
+type AverConfigPartial = AverConfig & Partial<InternalConfig>;
 
-export function getAverjsConfig(): AverConfig {
+export function getAverjsConfig(): AverInternalConfig {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const requireModule = require('esm')(module);
   const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);
@@ -41,7 +42,7 @@ export function getAverjsConfig(): AverConfig {
   config.distDir = './dist';
   config.distPath = path.resolve(config.rootDir, config.distDir);
 
-  return mergeWith(config as AverConfig, userConfig, (objValue, srcValue) => {
+  return mergeWith(config as AverInternalConfig, userConfig, (objValue, srcValue) => {
     if (Array.isArray(objValue)) {
       return objValue.concat(srcValue);
     }
