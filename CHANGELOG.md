@@ -1,3 +1,15 @@
+## 2.1.1 (2020-09-27)
+
+#### :bug: Bug Fix
+* `@averjs/config`
+  * [#245](https://github.com/exreplay/aver.js/pull/245) fix: fixed typings in aver config ([@exreplay](https://github.com/exreplay))
+* `@averjs/renderer`
+  * [#246](https://github.com/exreplay/aver.js/pull/246) fix: pin postcss-loader to v7.0.17 ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.1.0 (2020-09-27)
 
 #### :rocket: New Features
