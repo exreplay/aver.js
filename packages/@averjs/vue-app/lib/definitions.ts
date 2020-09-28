@@ -6,8 +6,9 @@ import { BuilderContext } from '@averjs/builder/dist/builders/base';
 
 export type UserReturns = Record<string, unknown>;
 
-export interface SSRContext extends BuilderContext {
+export interface SSRContext {
   isServer: boolean;
+  context: BuilderContext;
 }
 
 export interface AppEntryContext<T extends any> extends SSRContext {
@@ -16,7 +17,7 @@ export interface AppEntryContext<T extends any> extends SSRContext {
     i18n: VueI18n;
     router: VueRouter;
     store: Store<T>;
-    ssrContext: SSRContext,
+    ssrContext: SSRContext;
     context: Record<string, unknown>;
     render: ComponentOptions<any, any, any, any>['render']
   }
