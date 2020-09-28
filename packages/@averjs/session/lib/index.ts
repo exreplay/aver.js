@@ -22,7 +22,7 @@ const plugin: PluginFunction = function(options: SessionPluginOptions) {
   } = options;
   let store = null;
 
-  if (!process.env.REDIS_PORT && !process.env.REDIS_HOST && !process.env.REDIS_PASSWORD) {
+  if (process.env.REDIS_PORT && process.env.REDIS_HOST && process.env.REDIS_PASSWORD) {
     const RedisStore = ConnectRedis(session);
     const client = new Redis(parseInt(process.env.REDIS_PORT), process.env.REDIS_HOST, {
       password: process.env.REDIS_PASSWORD
