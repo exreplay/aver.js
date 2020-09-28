@@ -17,15 +17,15 @@ export interface AppEntryContext<T extends any> extends SSRContext {
     i18n: VueI18n;
     router: VueRouter;
     store: Store<T>;
-    ssrContext: SSRContext,
+    ssrContext: SSRContext;
     context: Record<string, unknown>;
     render: ComponentOptions<any, any, any, any>['render']
   }
 }
 
-export interface ServerEntryContext extends SSRContext {
+export interface ServerEntryContext extends BuilderContext {
   userReturns: UserReturns;
-  contextRendered: (fn: (context: SSRContext) => void) => void;
+  contextRendered: (fn: (context: BuilderContext) => void) => void;
 }
 
 export interface ClientEntryContext {
