@@ -6,9 +6,8 @@ import { BuilderContext } from '@averjs/builder/dist/builders/base';
 
 export type UserReturns = Record<string, unknown>;
 
-export interface SSRContext {
+export interface SSRContext extends BuilderContext {
   isServer: boolean;
-  context: BuilderContext;
 }
 
 export interface AppEntryContext<T extends any> extends SSRContext {
