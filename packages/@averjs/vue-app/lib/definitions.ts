@@ -22,9 +22,9 @@ export interface AppEntryContext<T extends any> extends SSRContext {
   }
 }
 
-export interface ServerEntryContext extends SSRContext {
+export interface ServerEntryContext extends BuilderContext {
   userReturns: UserReturns;
-  contextRendered: (fn: (context: SSRContext) => void) => void;
+  contextRendered: (fn: (context: BuilderContext) => void) => void;
 }
 
 export interface ClientEntryContext {
