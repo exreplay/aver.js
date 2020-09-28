@@ -1,3 +1,19 @@
+## 2.1.3 (2020-09-28)
+
+#### :bug: Bug Fix
+* Other
+  * [#253](https://github.com/exreplay/aver.js/pull/253) fix: fixed vue-app definitions ([@exreplay](https://github.com/exreplay))
+* `@averjs/session`
+  * [#252](https://github.com/exreplay/aver.js/pull/252) fix: fixed process.env check in if statement ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#250](https://github.com/exreplay/aver.js/pull/250) chore(deps): update dependency eslint-plugin-import to v2.22.1 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.1.2 (2020-09-27)
 
 #### :bug: Bug Fix
