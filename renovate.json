@@ -4,7 +4,10 @@
     "group:allNonMajor",
     ":semanticCommitTypeAll(chore)"
   ],
-  "rangeStrategy": "pin",
+  "rangeStrategy": "bump",
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "ignorePaths": [
     "packages/@averjs/vue-app/lib"
   ],
