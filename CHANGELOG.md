@@ -1,3 +1,15 @@
+## 2.1.4 (2020-09-29)
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#254](https://github.com/exreplay/aver.js/pull/254) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/builder`, `@averjs/cli`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/websocket`
+  * [#255](https://github.com/exreplay/aver.js/pull/255) chore: use semver ranges for packages ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.1.3 (2020-09-28)
 
 #### :bug: Bug Fix
