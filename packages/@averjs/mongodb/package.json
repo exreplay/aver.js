@@ -22,8 +22,8 @@
     "build": true
   },
   "dependencies": {
-    "mongoose": "5.10.7",
-    "mongoose-data-seed": "2.1.6"
+    "mongoose": "^5.10.7",
+    "mongoose-data-seed": "^2.1.6"
   },
   "devDependencies": {
     "@types/mongoose": "5.7.36"

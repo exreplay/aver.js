@@ -28,8 +28,8 @@
     ]
   },
   "dependencies": {
-    "chalk": "4.1.0",
-    "cross-spawn": "7.0.3",
-    "open": "7.2.1"
+    "chalk": "^4.1.0",
+    "cross-spawn": "^7.0.3",
+    "open": "^7.2.1"
   }
 }

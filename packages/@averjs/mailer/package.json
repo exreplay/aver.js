@@ -22,9 +22,9 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "email-templates": "7.1.1",
-    "nodemailer": "6.4.11",
-    "pug": "3.0.0"
+    "email-templates": "^7.1.1",
+    "nodemailer": "^6.4.11",
+    "pug": "^3.0.0"
   },
   "devDependencies": {
     "@types/email-templates": "7.1.0",

@@ -28,8 +28,8 @@
   "dependencies": {
     "@averjs/core": "2.1.2",
     "@averjs/init": "2.1.2",
-    "command-line-usage": "6.1.0",
-    "minimist": "1.2.5"
+    "command-line-usage": "^6.1.0",
+    "minimist": "^1.2.5"
   },
   "aver": {
     "build": true

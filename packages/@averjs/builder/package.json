@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@averjs/config": "2.1.2",
-    "html-minifier": "4.0.0",
-    "lru-cache": "6.0.0",
-    "vue-server-renderer": "2.6.12"
+    "html-minifier": "^4.0.0",
+    "lru-cache": "^6.0.0",
+    "vue-server-renderer": "^2.6.12"
   }
 }
