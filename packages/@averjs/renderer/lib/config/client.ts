@@ -85,29 +85,25 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     let plugin: GenerateSW | InjectManifest = GenerateSW;
     const swConfig = this.webpackConfig.sw;
     const mode = swConfig.mode || 'GenerateSW';
-    let conf = {
+    const conf = {
       exclude: [
         /\.map$/,
         /img\/icons\//,
         /favicon\.ico$/,
         /manifest\.json$/
-      ]
+      ],
+      ...swConfig
     } as GenerateSWOptions | InjectManifestOptions;
 
     delete swConfig.mode;
 
     if (mode === 'GenerateSW' && 'cacheId' in conf) {
-      conf.cacheId = 'averjs';
+      if(!conf.cacheId) conf.cacheId = 'averjs';
       conf.inlineWorkboxRuntime = true;
     }
     else if (mode === 'InjectManifest' && 'swSrc' in conf) {
       plugin = InjectManifest;
       conf.swSrc = path.resolve(process.env.PROJECT_PATH, conf.swSrc);
-    }
-
-    conf = {
-      ...conf,
-      ...swConfig
     }
 
     this.chainConfig
