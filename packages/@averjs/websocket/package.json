@@ -1,6 +1,6 @@
 {
   "name": "@averjs/websocket",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "websocket support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",

@@ -1,3 +1,13 @@
+## 2.1.5 (2020-10-02)
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#258](https://github.com/exreplay/aver.js/pull/258) fix: spread user sw config before checking for mode ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.1.4 (2020-09-29)
 
 #### :house: Internal
