@@ -9,12 +9,14 @@ module.exports = {
 
   testEnvironment: 'node',
   moduleFileExtensions: [
-    'js', 'json'
+    'js', 'json', 'ts'
   ],
   transform: {
-    '^.+\\.js?$': 'babel-jest'
+    '^.+\\.js?$': 'babel-jest',
+    '^.+\\.ts?$': 'ts-jest'
   },
   testMatch: [
-    '**/__tests__/**/*.spec.js'
+    '**/__tests__/**/*.spec.js',
+    '**/__tests__/**/*.spec.ts'
   ]
 };

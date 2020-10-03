@@ -1,3 +1,110 @@
+## 2.1.5 (2020-10-02)
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#258](https://github.com/exreplay/aver.js/pull/258) fix: spread user sw config before checking for mode ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.1.4 (2020-09-29)
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#254](https://github.com/exreplay/aver.js/pull/254) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/builder`, `@averjs/cli`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/websocket`
+  * [#255](https://github.com/exreplay/aver.js/pull/255) chore: use semver ranges for packages ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.1.3 (2020-09-28)
+
+#### :bug: Bug Fix
+* Other
+  * [#253](https://github.com/exreplay/aver.js/pull/253) fix: fixed vue-app definitions ([@exreplay](https://github.com/exreplay))
+* `@averjs/session`
+  * [#252](https://github.com/exreplay/aver.js/pull/252) fix: fixed process.env check in if statement ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#250](https://github.com/exreplay/aver.js/pull/250) chore(deps): update dependency eslint-plugin-import to v2.22.1 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.1.2 (2020-09-27)
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#249](https://github.com/exreplay/aver.js/pull/249) fix: unpin postcss dependency ([@exreplay](https://github.com/exreplay))
+* `@averjs/config`
+  * [#248](https://github.com/exreplay/aver.js/pull/248) fix: added typings to vue app config ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.1.1 (2020-09-27)
+
+#### :bug: Bug Fix
+* `@averjs/config`
+  * [#245](https://github.com/exreplay/aver.js/pull/245) fix: fixed typings in aver config ([@exreplay](https://github.com/exreplay))
+* `@averjs/renderer`
+  * [#246](https://github.com/exreplay/aver.js/pull/246) fix: pin postcss-loader to v7.0.17 ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.1.0 (2020-09-27)
+
+#### :rocket: New Features
+* `@averjs/config`, `@averjs/core`
+  * [#226](https://github.com/exreplay/aver.js/pull/226) feat: update helmet to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs`, `@averjs/babel-preset-app`, `@averjs/builder`, `@averjs/cli`, `@averjs/config`, `@averjs/core`, `@averjs/init`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/vue-app`
+  * [#236](https://github.com/exreplay/aver.js/pull/236) feat: typescript rewrite ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/config`, `@averjs/renderer`
+  * [#225](https://github.com/exreplay/aver.js/pull/225) refactor: enable css extract in production by default ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/core`, `@averjs/mongodb`, `@averjs/renderer`
+  * [#239](https://github.com/exreplay/aver.js/pull/239) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#241](https://github.com/exreplay/aver.js/pull/241) chore(deps): update dependency enhanced-resolve to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#240](https://github.com/exreplay/aver.js/pull/240) chore(deps): update dependency postcss-safe-parser to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#237](https://github.com/exreplay/aver.js/pull/237) chore(deps): update dependency thread-loader to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#227](https://github.com/exreplay/aver.js/pull/227) chore(deps): update dependency terser-webpack-plugin to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#230](https://github.com/exreplay/aver.js/pull/230) chore(deps): update dependency sass-loader to v10 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/config`, `@averjs/renderer`
+  * [#234](https://github.com/exreplay/aver.js/pull/234) chore(deps): update dependency postcss-loader to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/builder`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`, `@averjs/session`, `@averjs/websocket`
+  * [#223](https://github.com/exreplay/aver.js/pull/223) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* Other
+  * [#232](https://github.com/exreplay/aver.js/pull/232) chore(deps): update dependency eslint-plugin-jest to v24 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#229](https://github.com/exreplay/aver.js/pull/229) chore(deps): update dependency rollup-plugin-terser to v7 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`, `@averjs/renderer`
+  * [#228](https://github.com/exreplay/aver.js/pull/228) chore(deps): update dependency ora to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.0.1 (2020-08-26)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#231](https://github.com/exreplay/aver.js/pull/231) fix: split fullPath by hash ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.0.0 (2020-07-26)
 
 #### :bug: Bug Fix

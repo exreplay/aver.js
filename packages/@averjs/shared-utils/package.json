@@ -1,11 +1,12 @@
 {
   "name": "@averjs/shared-utils",
-  "version": "2.0.0",
+  "version": "2.1.5",
   "description": "shared utils for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/shared-utils.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -27,8 +28,8 @@
     ]
   },
   "dependencies": {
-    "chalk": "4.1.0",
-    "cross-spawn": "7.0.3",
-    "opn": "6.0.0"
+    "chalk": "^4.1.0",
+    "cross-spawn": "^7.0.3",
+    "open": "^7.2.1"
   }
 }
