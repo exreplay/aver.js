@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-disable */
+
 const path = require('path');
 
 process.env.PROJECT_PATH = path.resolve(process.cwd(), './src');
