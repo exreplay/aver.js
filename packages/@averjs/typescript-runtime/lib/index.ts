@@ -58,13 +58,14 @@ export default class CLI {
     const eslintrcPath = this.eslintrcPath;
     const eslintrc = await import(eslintrcPath);
     if(!eslintrc.extends?.find((e: string) => e === '@averjs/typescript/eslint')) {
-      const content = readFileSync(eslintrcPath, 'utf-8');
-      const lines = content.split('\n');
-      for(const i in lines) {
-        const line = lines[i];
-        if(line.includes('extends')) lines.splice(parseInt(i) + 1, 0, `    '@averjs/typescript/eslint',`);
-      }
-      writeFileSync(eslintrcPath, lines.join('\n'));
+      const updatedEslintrc = readFileSync(eslintrcPath, 'utf-8')
+        .split('\n')
+        .map((line, i, a) => {
+          if(line.includes('extends')) a.splice(i + 1, 0, `    '@averjs/typescript/eslint',`);
+          return line;
+        })
+        .join('\n');
+      writeFileSync(eslintrcPath, updatedEslintrc);
       eslintrcSpinner.succeed();
     } else {
       eslintrcSpinner.info('Skipping because plugin already exists.');
