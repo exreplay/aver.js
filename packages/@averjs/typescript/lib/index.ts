@@ -5,7 +5,6 @@ import { PluginFunction } from '@averjs/core/dist/plugins';
 import { ForkTsCheckerWebpackPluginOptions } from 'fork-ts-checker-webpack-plugin/lib/ForkTsCheckerWebpackPluginOptions';
 import { LoaderOptions } from 'ts-loader/dist/interfaces';
 import IgnoreNotFoundExportPlugin from './IgnoreNotFoundExportPlugin';
-import CLI from './cli';
 
 export type TSLoaderOptions = Partial<LoaderOptions>;
 
@@ -129,4 +128,3 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
 };
 
 export default plugin;
-export { CLI };
