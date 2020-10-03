@@ -98,8 +98,9 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
           .options(tsLoaderOptions);
   };
 
-  this.aver.config.webpack.additionalExtensions?.push('ts');
-  this.aver.config.webpack.additionalExtensions?.push('tsx');
+  if(!this.aver.config.webpack.additionalExtensions) this.aver.config.webpack.additionalExtensions = [];
+  this.aver.config.webpack.additionalExtensions.push('ts');
+  this.aver.config.webpack.additionalExtensions.push('tsx');
 
   this.aver.tap('renderer:client-config', chain => {
     setLoader(chain, false);
