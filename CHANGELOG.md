@@ -1,3 +1,17 @@
+## 2.2.0 (2020-10-04)
+
+#### :rocket: New Features
+* `@averjs/cli`, `@averjs/typescript-runtime`, `@averjs/typescript`
+  * [#259](https://github.com/exreplay/aver.js/pull/259) feat: added official typescript packages ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/init`, `@averjs/renderer`
+  * [#260](https://github.com/exreplay/aver.js/pull/260) refactor: use new @averjs/eslint-config package ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.1.5 (2020-10-02)
 
 #### :bug: Bug Fix
