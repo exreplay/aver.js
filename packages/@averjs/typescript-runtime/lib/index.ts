@@ -53,22 +53,5 @@ export default class CLI {
     } else {
       tsConfigServerSpinner.info('Skipping because tsconfig.server.json already exists.');
     }
-
-    const eslintrcSpinner = ora('Updating eslintrc').start();
-    const eslintrcPath = this.eslintrcPath;
-    const eslintrc = await import(eslintrcPath);
-    if(!eslintrc.extends?.find((e: string) => e === '@averjs/typescript/eslint')) {
-      const updatedEslintrc = readFileSync(eslintrcPath, 'utf-8')
-        .split('\n')
-        .map((line, i, a) => {
-          if(line.includes('extends')) a.splice(i + 1, 0, `    '@averjs/typescript/eslint',`);
-          return line;
-        })
-        .join('\n');
-      writeFileSync(eslintrcPath, updatedEslintrc);
-      eslintrcSpinner.succeed();
-    } else {
-      eslintrcSpinner.info('Skipping because plugin already exists.');
-    }
   }
 }
