@@ -9,7 +9,7 @@ Install the package
 ```bash
 $ yarn add --dev @averjs/typescript
 #or
-$ npm i -D @nuxtjs/typescript
+$ npm i -D @averjs/typescript
 ```
 
 Add the plugin to the `buildPlugins` array inside your aver-config.ts
