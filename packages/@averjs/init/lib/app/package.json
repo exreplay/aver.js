@@ -5,7 +5,7 @@
     "license": "MIT",
     "scripts": {
       "live": "aver prod",
-      "build": "rimraf dist && aver build",
-      "dev": "nodemon --ignore wordpress --ignore api --ignore public --ignore dist --ignore src --ignore storage --delay 80ms --exec 'aver'"
+      "build": "aver build",
+      "dev": "aver"
     }
 }
