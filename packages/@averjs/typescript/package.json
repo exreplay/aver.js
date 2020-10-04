@@ -11,9 +11,7 @@
     "access": "public"
   },
   "files": [
-    "/dist",
-    "bin",
-    "eslint.js"
+    "/dist"
   ],
   "repository": {
     "type": "git",
