@@ -5,7 +5,7 @@ import { CommandInterface } from '@averjs/cli/dist/commands/command';
 import ora from 'ora';
 
 export default class TypescriptInitCommand implements CommandInterface {
-  name = 'ts';
+  name = 'ts-init';
   description = 'Initialize typescript project with necessary files.';
 
   get tsConfigPath() { return resolve(process.env.PROJECT_PATH, '../tsconfig.json'); }
