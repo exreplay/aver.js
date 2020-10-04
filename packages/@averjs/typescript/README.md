@@ -36,7 +36,7 @@ export default {
         // or
         tsLoader: (default) => ({ ...default, /* add additional config */ }),
 
-        forkTsChecker: {}
+        forkTsChecker: {},
         // or
         forkTsChecker: (default) => ({ ...default, /* add additional config */ }),
       }
