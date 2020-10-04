@@ -21,7 +21,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/exreplay/aver.js.git",
-    "directory": "packages/typescript"
+    "directory": "packages/typescript-runtime"
   },
   "bugs": {
     "url": "https://github.com/exreplay/aver.js/issues"
