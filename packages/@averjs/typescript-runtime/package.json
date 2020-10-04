@@ -1,0 +1,35 @@
+{
+  "name": "@averjs/typescript-runtime",
+  "version": "2.1.5",
+  "description": "typescript runtime with ts-node for averjs",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "dist/typescript-runtime.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "aver-ts": "./bin/aver-ts.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "/dist",
+    "/bin",
+    "/templates"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/typescript-runtime"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "aver": {
+    "build": true
+  },
+  "dependencies": {
+    "ts-node": "^9.0.0"
+  }
+}

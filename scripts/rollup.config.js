@@ -41,7 +41,7 @@ export default class RollupConfig {
       format: 'cjs',
       preferConst: true,
       file: path.join(this.path, `dist/${this.options.name}.js`),
-      exports: 'auto'
+      exports: this.pkg.aver.exports || 'auto'
     };
   }
 
