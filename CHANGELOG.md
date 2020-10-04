@@ -1,3 +1,14 @@
+## 2.2.1 (2020-10-04)
+
+#### :bug: Bug Fix
+* `@averjs/typescript-runtime`
+  * [#262](https://github.com/exreplay/aver.js/pull/262) fix: use correct path for project in ts-node ([@exreplay](https://github.com/exreplay))
+  * [#261](https://github.com/exreplay/aver.js/pull/261) fix: register ts-node before executing runtime ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.2.0 (2020-10-04)
 
 #### :rocket: New Features
