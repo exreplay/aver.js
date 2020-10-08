@@ -20,6 +20,7 @@ export interface AverWebpackConfig {
       [index: string]: any;
     }
   };
+  runtimeChunk?: boolean | 'single' | 'multiple' | Config.RuntimeChunk,
   css?: {
     extract?: boolean,
     styleResources?: {
@@ -51,6 +52,7 @@ export default (): AverWebpackConfig => ({
   additionalExtensions: [ 'js' ],
   transpileDependencies: [],
   postcss: {},
+  runtimeChunk: 'single',
   css: {
     extract: process.env.NODE_ENV === 'production',
     styleResources: {
