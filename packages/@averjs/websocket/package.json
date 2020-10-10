@@ -5,7 +5,8 @@
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/websocket.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
