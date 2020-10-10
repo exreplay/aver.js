@@ -25,7 +25,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  // fs.removeSync(pathToDir);
+  fs.removeSync(pathToDir);
 });
 
 test('run command should finish', () => {

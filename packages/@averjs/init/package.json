@@ -12,7 +12,8 @@
     "access": "public"
   },
   "files": [
-    "/dist"
+    "/dist",
+    "/app"
   ],
   "repository": {
     "type": "git",
@@ -23,9 +24,6 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": true,
-    "copy": [
-      "lib/app"
-    ]
+    "build": true
   }
 }
