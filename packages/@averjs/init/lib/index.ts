@@ -5,7 +5,7 @@ import ora from 'ora';
 import merge from 'lodash/merge';
 
 export default class Init {
-  appDir = path.resolve(__dirname, './app');
+  appDir = path.resolve(__dirname, '../app');
 
   run() {
     this.createSrcDir();
