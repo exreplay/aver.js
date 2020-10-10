@@ -9,6 +9,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "aver": {
+    "build": true
+  },
+  "files": [
+    "/dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/exreplay/aver.js.git",
@@ -19,6 +25,11 @@
   },
   "dependencies": {
     "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.1",
     "socket.io-redis": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/socket.io": "^2.1.11",
+    "@types/socket.io-redis": "^1.0.26"
   }
 }

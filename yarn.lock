@@ -4225,6 +4225,13 @@
     "@types/html-to-text" "*"
     "@types/nodemailer" "*"
 
+"@types/engine.io@*":
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/@types/engine.io/-/engine.io-3.1.4.tgz#3d9472711d179daa7c95c051e50ad411e18a9bdc"
+  integrity sha512-98rXVukLD6/ozrQ2O80NAlWDGA4INg+tqsEReWJldqyi2fulC9V7Use/n28SWgROXKm6003ycWV4gZHoF8GA6w==
+  dependencies:
+    "@types/node" "*"
+
 "@types/estree@*":
   version "0.0.44"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.44.tgz#980cc5a29a3ef3bea6ff1f7d021047d7ea575e21"
@@ -4530,6 +4537,21 @@
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
+
+"@types/socket.io-redis@^1.0.26":
+  version "1.0.26"
+  resolved "https://registry.yarnpkg.com/@types/socket.io-redis/-/socket.io-redis-1.0.26.tgz#5cd3fd841c63c905df04bbd11d28d8f532529be4"
+  integrity sha512-RBNSxU1oftdazoIwv34DgEXE36F+46RgaKNS0GchkYpkb3dU+zCW+un5iqHAM2NO8reTz4pl/Qce2ZD0w1fLZQ==
+  dependencies:
+    "@types/socket.io" "*"
+
+"@types/socket.io@*", "@types/socket.io@^2.1.11":
+  version "2.1.11"
+  resolved "https://registry.yarnpkg.com/@types/socket.io/-/socket.io-2.1.11.tgz#e0d6759880e5f9818d5297a3328b36641bae996b"
+  integrity sha512-bVprmqPhJMLb9ZCm8g0Xy8kwBFRbnanOWSxzWkDkkIwxTvud5tKMfAJymXX6LQbizUKCS1yima7JM4BeLqjNqA==
+  dependencies:
+    "@types/engine.io" "*"
+    "@types/node" "*"
 
 "@types/source-list-map@*":
   version "0.1.2"
