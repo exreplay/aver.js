@@ -53,6 +53,7 @@ Object {
     "process": Object {
       "env": Object {},
     },
+    "runtimeChunk": "single",
     "server": false,
     "sw": false,
     "transpileDependencies": Array [],

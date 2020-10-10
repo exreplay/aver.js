@@ -136,6 +136,8 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         enforce: true
       };
     }
+
+    if (this.webpackConfig.runtimeChunk) this.chainConfig.optimization.runtimeChunk(this.webpackConfig.runtimeChunk);
     
     this.chainConfig.optimization
       .splitChunks(splitChunks);
