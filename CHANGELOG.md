@@ -1,3 +1,13 @@
+## 2.3.1 (2020-10-10)
+
+#### :bug: Bug Fix
+* `@averjs/websocket`
+  * [#269](https://github.com/exreplay/aver.js/pull/269) fix: fixed typings and main file ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.3.0 (2020-10-10)
 
 #### :rocket: New Features
