@@ -1,3 +1,26 @@
+## 2.3.0 (2020-10-10)
+
+#### :rocket: New Features
+* `@averjs/websocket`
+  * [#267](https://github.com/exreplay/aver.js/pull/267) feat: rewrite websocket package to typescript ([@exreplay](https://github.com/exreplay))
+* `@averjs/config`, `@averjs/renderer`
+  * [#266](https://github.com/exreplay/aver.js/pull/266) feat: added runtimeChunk config option ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `@averjs/init`
+  * [#268](https://github.com/exreplay/aver.js/pull/268) fix: do not copy app to dist folder ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#263](https://github.com/exreplay/aver.js/pull/263) chore(deps): lock file maintenance ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#257](https://github.com/exreplay/aver.js/pull/257) chore(deps): update dependency eslint-plugin-vue to v7 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`
+  * [#256](https://github.com/exreplay/aver.js/pull/256) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.2.1 (2020-10-04)
 
 #### :bug: Bug Fix
