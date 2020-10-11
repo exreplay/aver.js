@@ -2449,10 +2449,17 @@
   resolved "https://registry.yarnpkg.com/@types/html-to-text/-/html-to-text-5.1.2.tgz#59a723cce41b573b7fa606414e2ceaa886038098"
   integrity sha512-56PHFwRe18fmZ+UsN6GqUaoKfalOwFzxaBMRA2O5URde3d5mxdH1HvnIV7LSugCiO8JWlRdSL2L3xJXykCTKVg==
 
-"@types/ioredis@*", "@types/ioredis@4.17.4":
+"@types/ioredis@*":
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.17.4.tgz#e4c2d8d51ecb1f4752b660f8e19b88b1c5329b2e"
   integrity sha512-kb5+thmQJ7HHyOAnCOeqRJlF2fyvadHghnLLLKZzCNyShStJeIQtNGGDjA30gWqj6UFSDAWBfGEMKrFDrGfvzQ==
+  dependencies:
+    "@types/node" "*"
+
+"@types/ioredis@4.17.5":
+  version "4.17.5"
+  resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.17.5.tgz#9c8c6f08b98fd0f9e2dd40217434db607668ed21"
+  integrity sha512-MkG9WEGozGBDL869a0WJUBfDKodOFSfRfR4zSfq610MrdL9l+ToyHPyNqa4oSvAAAmldo06Gq1V+EzFRrNByfQ==
   dependencies:
     "@types/node" "*"
 
@@ -2508,10 +2515,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash@4.14.161":
-  version "4.14.161"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.161.tgz#a21ca0777dabc6e4f44f3d07f37b765f54188b18"
-  integrity sha512-EP6O3Jkr7bXvZZSZYlsgt5DIjiGr0dXP1/jVEwVLTFgg0d+3lWVQkRavYVQszV7dYUwvg0B8R0MBDpcmXg7XIA==
+"@types/lodash@4.14.162":
+  version "4.14.162"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.162.tgz#65d78c397e0d883f44afbf1f7ba9867022411470"
+  integrity sha512-alvcho1kRUnnD1Gcl4J+hK0eencvzq9rmzvFPRmP5rPHx9VVsJj6bKLTATPVf9ktgv4ujzh7T+XWKp+jhuODig==
 
 "@types/lru-cache@5.1.0":
   version "5.1.0"
