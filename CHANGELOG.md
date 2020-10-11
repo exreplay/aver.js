@@ -1,3 +1,17 @@
+## 2.3.2 (2020-10-11)
+
+#### :bug: Bug Fix
+* `@averjs/builder`, `@averjs/vue-app`
+  * [#272](https://github.com/exreplay/aver.js/pull/272) fix: removed client side condition for mounting app ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/session`
+  * [#271](https://github.com/exreplay/aver.js/pull/271) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.3.1 (2020-10-10)
 
 #### :bug: Bug Fix
