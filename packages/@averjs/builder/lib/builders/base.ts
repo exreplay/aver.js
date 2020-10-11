@@ -6,9 +6,6 @@ import { Request } from 'express';
 export interface BuilderContext {
   title: string | undefined;
   url: string;
-  aver: {
-    routePath: string;
-  };
   req: Partial<Request>;
   csrfToken?: string;
   meta?: VueMetaPlugin;
