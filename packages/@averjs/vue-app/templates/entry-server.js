@@ -27,7 +27,6 @@ export default async context => {
       router.push(context.url, resolve, () => {
         // if a navigation guard redirects to a new url, wait for it to be resolved, before continue
         const unregister = router.afterEach((to, from, next) => {
-          context.aver.routePath = to.fullPath;
           context.url = to.fullPath;
           context.params = to.params;
           context.query = to.query;

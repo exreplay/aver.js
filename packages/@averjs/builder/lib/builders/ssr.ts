@@ -49,9 +49,6 @@ export default class SsrBuilder extends BaseBuilder {
     const context: BuilderContext = {
       title: process.env.APP_NAME,
       url: req.url,
-      aver: {
-        routePath: req.url
-      },
       req
     };
 
@@ -86,7 +83,6 @@ export default class SsrBuilder extends BaseBuilder {
         script?.text({ pbody: true }),
         noscript?.text({ pbody: true }),
         html,
-        `<script>window.__AVER__=${serialize(context.aver, { isJSON: true })}</script>`,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
         context.renderScripts?.(),
         style?.text({ body: true }),
