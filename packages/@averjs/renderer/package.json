@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@averjs/babel-preset-app": "2.3.2",
-    "@averjs/eslint-config": "^1.0.0",
+    "@averjs/eslint-config": "^2.0.0",
     "@averjs/friendly-errors-webpack-plugin": "^2.0.0",
     "@averjs/shared-utils": "2.3.2",
     "@averjs/vue-app": "2.3.2",
