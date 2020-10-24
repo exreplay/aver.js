@@ -2,7 +2,7 @@ import webpack, { Configuration } from 'webpack';
 import WebpackBaseConfiguration from './base';
 import path from 'path';
 import nodeExternals from 'webpack-node-externals';
-import VueSSRServerPlugin from 'vue-server-renderer/server-plugin';
+import VueSSRServerPlugin from '../utils/vue/server-plugin';
 import cloneDeep from 'lodash/cloneDeep';
 import Core from '@averjs/core';
 
@@ -59,7 +59,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
       entry: {
         app: path.join(this.cacheDir, 'entry-server.js')
       }
-    });
+    } as Configuration);
 
     return cloneDeep(config);
   }

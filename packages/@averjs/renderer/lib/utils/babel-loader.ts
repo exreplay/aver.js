@@ -52,7 +52,7 @@ export default class BabelLoader {
       .rule('js')
         .test(/\.js$/)
         .exclude
-          .add(filepath => {
+          .add((filepath: string) => {
             // always transpile javascript in vue files
             if (/\.vue\.js$/.test(filepath)) return false;
             

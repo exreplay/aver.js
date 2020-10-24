@@ -7,7 +7,7 @@ const ModuleDependencyWarning = require('webpack/lib/ModuleDependencyWarning');
 const ANY_PATH = /./;
 const EXPORT_NOT_FOUND_REG_EXP = /export.*was not found in/;
 
-export default class IgnoreNotFoundExportPlugin implements webpack.Plugin {
+export default class IgnoreNotFoundExportPlugin {
   include: RegExp[] = [];
 
   /**
@@ -45,7 +45,7 @@ export default class IgnoreNotFoundExportPlugin implements webpack.Plugin {
           !(
             this.isModuleDependencyWarning(warning) &&
             EXPORT_NOT_FOUND_REG_EXP.test(warning.message) &&
-            this.isResourcePathAllowed(warning.module.resource)
+            this.isResourcePathAllowed(warning.module.context)
           )
       );
     });
