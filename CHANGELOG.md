@@ -1,3 +1,13 @@
+## 2.3.4 (2020-10-29)
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#284](https://github.com/exreplay/aver.js/pull/284) chore: remove console log from style resources ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.3.3 (2020-10-29)
 
 #### :bug: Bug Fix
