@@ -94,8 +94,6 @@ export default class StyleLoader {
       ...patterns
     ]
 
-    console.log(finalOptions);
-
     rule
       .use('style-resources-loader')
         .loader('style-resources-loader')
