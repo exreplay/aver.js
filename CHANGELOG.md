@@ -1,3 +1,21 @@
+## 2.3.3 (2020-10-29)
+
+#### :bug: Bug Fix
+* `@averjs/renderer`
+  * [#283](https://github.com/exreplay/aver.js/pull/283) fix: style resources duplicates patterns ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/typescript`
+  * [#273](https://github.com/exreplay/aver.js/pull/273) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#277](https://github.com/exreplay/aver.js/pull/277) chore(deps): update dependency @averjs/eslint-config to v2 ([@renovate[bot]](https://github.com/apps/renovate))
+* Other
+  * [#279](https://github.com/exreplay/aver.js/pull/279) chore(deps): update dependency eslint-config-standard to v15 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.3.2 (2020-10-11)
 
 #### :bug: Bug Fix
