@@ -24,11 +24,12 @@ const plugin: PluginFunction = function(options: SessionPluginOptions) {
 
   if (process.env.REDIS_PORT && process.env.REDIS_HOST && process.env.REDIS_PASSWORD) {
     const RedisStore = ConnectRedis(session);
-    const client = new Redis(parseInt(process.env.REDIS_PORT), process.env.REDIS_HOST, {
+    const redisClient = new Redis(parseInt(process.env.REDIS_PORT), process.env.REDIS_HOST, {
       password: process.env.REDIS_PASSWORD
     });
     store = new RedisStore({
-      client,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      client: redisClient as any,
       prefix: 'sess-' + new Date().getDate() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getFullYear() + ':',
       ttl,
       ...redisStoreConfig
