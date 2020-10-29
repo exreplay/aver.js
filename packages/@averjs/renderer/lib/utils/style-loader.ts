@@ -5,6 +5,7 @@ import PostCSS from './postcss';
 import PerformanceLoader from './perf-loader';
 import { AverConfig } from '@averjs/config';
 import { Rule } from 'webpack-chain';
+import { StyleResourcesLoaderOptions } from 'style-resources-loader';
 
 export default class StyleLoader {
   isProd = process.env.NODE_ENV === 'production';
@@ -83,19 +84,22 @@ export default class StyleLoader {
   styleResources(rule: Rule<Rule>) {
     if(!this.config.css?.styleResources) return;
 
-    const { resources, options = { patterns: [] } } = this.config.css.styleResources;
-    if (resources?.length === 0 || this.name === 'css') return;
+    const { resources = [], options = { patterns: [] } } = this.config.css.styleResources;
+    const finalOptions: StyleResourcesLoaderOptions = { patterns: [] };
+    if (this.name === 'css') return;
     
     const patterns = map(resources, resource => path.resolve(process.cwd(), resource));
-    options.patterns = [
+    finalOptions.patterns = [
       ...options.patterns as string[],
       ...patterns
     ]
 
+    console.log(finalOptions);
+
     rule
       .use('style-resources-loader')
         .loader('style-resources-loader')
-        .options(options);
+        .options(finalOptions);
   }
 
   css(rule: Rule<Rule>) {
