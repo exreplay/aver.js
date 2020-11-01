@@ -6,7 +6,6 @@ import { composeComponentOptions } from './utils';
 // Vue.prototype.$auth = null;
 // <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
 
-
 export default async context => {
   try {
     <%

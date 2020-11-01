@@ -1,11 +1,12 @@
 {
   "name": "@averjs/renderer",
-  "version": "2.0.0",
+  "version": "2.3.4",
   "description": "webpack configuration for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/renderer.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },

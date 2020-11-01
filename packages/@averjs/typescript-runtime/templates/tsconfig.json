@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "es2018",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": [
+      "esnext",
+      "esnext.asynciterable",
+      "dom"
+    ],
+    "allowJs": true,
+		"strict": true,
+		"isolatedModules": true,
+		"esModuleInterop": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@@/*": ["*"],
+      "@components/*": ["src/components/*"],
+      "@resources/*": ["src/resources/*"],
+      "@mixins/*": ["src/mixins/*"],
+      "@pages/*": ["src/pages/*"],
+      "@vuex/*": ["src/vuex/*"],
+    },
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ],
+    "types": [
+      "webpack-env",
+      "vue-i18n",
+      "@types/node"
+    ]
+  },
+  "include": [
+    "**/*.ts",
+    "src/**/*.vue",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

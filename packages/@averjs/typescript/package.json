@@ -1,0 +1,32 @@
+{
+  "name": "@averjs/typescript",
+  "version": "2.3.4",
+  "description": "typescript support for averjs",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "dist/typescript.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "/dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/typescript"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "aver": {
+    "build": true
+  },
+  "dependencies": {
+    "fork-ts-checker-webpack-plugin": "^5.2.1",
+    "ts-loader": "^8.0.7",
+    "typescript": "^4.0.5"
+  }
+}

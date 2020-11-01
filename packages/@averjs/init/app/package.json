@@ -1,0 +1,11 @@
+{
+    "name": "site",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+      "live": "aver prod",
+      "build": "aver build",
+      "dev": "aver"
+    }
+}

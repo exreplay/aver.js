@@ -35,15 +35,6 @@ axios.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
-// Logic from vue-router https://github.com/vuejs/vue-router/blob/4c81be8ffb00b545396766f0a7ffff3c779b64db/src/history/html5.js#L88
-function getLocation (base) {
-  let path = decodeURI(window.location.pathname)
-  if (base && path.toLowerCase().indexOf(base.toLowerCase()) === 0) {
-    path = path.slice(base.length)
-  }
-  return (path || '/') + window.location.search + window.location.hash
-}
-
 export async function createApp(ssrContext) {
   const app = ssrContext.isServer ? createSSRApp(App) : createVueApp(App);
 
@@ -78,13 +69,6 @@ export async function createApp(ssrContext) {
         userReturns = merge(userReturns, returns);
       }
     }
-  }
-
-  if(ssrContext.isServer) {
-    appOptions.context.route = router.resolve(ssrContext.context.url).route;
-  } else {
-    const path = getLocation(router.options.base);
-    appOptions.context.route = router.resolve(path).route;
   }
 
   app.use(store);

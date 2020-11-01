@@ -1,16 +1,19 @@
 {
   "name": "@averjs/init",
-  "version": "2.0.0",
+  "version": "2.3.4",
   "description": "The init package for averjs to quickly bootstrap a new projekt.",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/init.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "/dist"
+    "/dist",
+    "/app"
   ],
   "repository": {
     "type": "git",
@@ -21,9 +24,6 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "aver": {
-    "build": true,
-    "copy": [
-      "lib/app"
-    ]
+    "build": true
   }
 }

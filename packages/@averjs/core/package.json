@@ -1,10 +1,11 @@
 {
   "name": "@averjs/core",
-  "version": "2.0.0",
+  "version": "2.3.4",
   "description": "the averjs core",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "main": "dist/core.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },

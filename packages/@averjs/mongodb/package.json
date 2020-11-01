@@ -1,11 +1,12 @@
 {
   "name": "@averjs/mongodb",
-  "version": "2.0.0",
+  "version": "2.3.4",
   "description": "mongodb support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/mongodb.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -17,8 +18,14 @@
   "bugs": {
     "url": "https://github.com/exreplay/aver.js/issues"
   },
+  "aver": {
+    "build": true
+  },
   "dependencies": {
-    "mongoose": "5.9.25",
-    "mongoose-data-seed": "2.1.6"
+    "mongoose": "^5.10.11",
+    "mongoose-data-seed": "^2.1.6"
+  },
+  "devDependencies": {
+    "@types/mongoose": "5.7.36"
   }
 }

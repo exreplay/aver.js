@@ -33,14 +33,6 @@ import { composeComponentOptions } from './utils';
           next(err);
         }
       });
-      
-      // if(window.__AVER__.routePath === app.$options.context.route.fullPath) app.$mount('#app');
-      // else {
-      //   const unregister = router.afterEach((to, from, next) => {
-      //     unregister();
-      //     app.$mount('#app');
-      //   });
-      // }
 
       app.mount('#app');
     }
