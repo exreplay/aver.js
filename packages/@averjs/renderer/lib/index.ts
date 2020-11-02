@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import webpack, { Configuration } from 'webpack';
 import template from 'lodash/template';
-import WebpackClientConfiguration, { RendererClientConfig } from './config/client';
+import WebpackClientConfiguration from './config/client';
 import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
@@ -35,7 +35,7 @@ export default class Renderer {
   readyPromise: Promise<void> = new Promise(resolve => { this.resolve = resolve; });
   cb: RendererCallback | null = null;
 
-  clientConfig: RendererClientConfig | null = null;
+  clientConfig: Configuration = {};
   serverConfig: Configuration = {};
 
   constructor(options: RendererOptions, aver: Core) {
@@ -129,8 +129,8 @@ export default class Renderer {
       if(clientCompiler) {
         clientCompiler.hooks.done.tap('averjs', stats => {
           const jsonStats = stats.toJson();
-          jsonStats.errors.forEach(err => console.error(err));
-          jsonStats.warnings.forEach(err => console.warn(err));
+          jsonStats.errors.forEach((err: unknown) => console.error(err));
+          jsonStats.warnings.forEach((err: unknown) => console.warn(err));
           if (jsonStats.errors.length) return;
           
           this.clientManifest = JSON.parse(this.readFile('vue-ssr-client-manifest.json'));
@@ -141,9 +141,9 @@ export default class Renderer {
       // Compile server
       serverCompiler.watch({}, (err, stats) => {
         if (err) throw err;
-        const jsonStats = stats.toJson();
-        jsonStats.errors.forEach(err => console.error(err));
-        jsonStats.warnings.forEach(err => console.warn(err));
+        const jsonStats = stats?.toJson();
+        jsonStats.errors.forEach((err: unknown) => console.error(err));
+        jsonStats.warnings.forEach((err: unknown) => console.warn(err));
         if (jsonStats.errors.length) return;
               
         this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
@@ -207,7 +207,8 @@ export default class Renderer {
   setupClientCompiler() {
     if(!this.clientConfig) return;
 
-    this.clientConfig.entry.app = [ 'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app as string ];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if(this.clientConfig.entry) (this.clientConfig.entry as any).app = [ 'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', (this.clientConfig.entry as any).app as string ];
     if(this.clientConfig.output) this.clientConfig.output.filename = '[name].js';
     this.clientConfig.plugins?.push(
       new webpack.HotModuleReplacementPlugin(),
@@ -215,7 +216,7 @@ export default class Renderer {
     );
     
     const clientCompiler = webpack(this.clientConfig);
-    clientCompiler.outputFileSystem = this.mfs;
+    clientCompiler.outputFileSystem = this.mfs as never;
     const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
       publicPath: this.clientConfig.output?.publicPath,
       noInfo: true,
@@ -238,7 +239,7 @@ export default class Renderer {
 
   setupServerCompiler() {
     const serverCompiler = webpack(this.serverConfig);
-    serverCompiler.outputFileSystem = this.mfs;
+    serverCompiler.outputFileSystem = this.mfs as never;
     return serverCompiler;
   }
 

@@ -2,7 +2,7 @@ import webpack, { Configuration } from 'webpack';
 import WebpackBaseConfiguration from './base';
 import fs from 'fs';
 import path from 'path';
-import VueSSRClientPlugin from '../plugins/vue/client';
+import VueSSRClientPlugin from '../utils/vue/client-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HTMLPlugin from 'html-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
@@ -13,12 +13,6 @@ import Core from '@averjs/core';
 import TerserPlugin, { ExtractCommentOptions } from 'terser-webpack-plugin';
 import { GenerateSW, GenerateSWOptions, InjectManifest, InjectManifestOptions } from 'workbox-webpack-plugin';
 import { SplitChunksOptions } from 'webpack-chain';
-
-export interface RendererClientConfig extends Configuration {
-  entry: {
-    app: string | string[]
-  }
-}
 
 export default class WebpackClientConfiguration extends WebpackBaseConfiguration {
   projectRoot = path.resolve(process.env.PROJECT_PATH, '.');
@@ -123,15 +117,14 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         commons: {
           test: /node_modules[\\/](vue|vue-loader|vue-router|vuex|vue-meta|core-js|babel-runtime|es6-promise|axios|webpack|setimmediate|timers-browserify|process|regenerator-runtime|cookie|js-cookie|is-buffer|dotprop)[\\/].*\.js$/,
           chunks: 'all',
-          priority: 10,
-          name: true
+          priority: 10
         }
       }
     };
     
     if (process.env.NODE_ENV === 'production' && this.webpackConfig.css?.extract) {
       splitChunks.cacheGroups.styles = {
-        name: 'styles',
+        idHint: 'styles',
         test: /\.(s?css|vue)$/,
         minChunks: 1,
         chunks: 'all',
@@ -147,8 +140,6 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     this.chainConfig.optimization
       .minimizer('terser')
         .use(TerserPlugin, [ {
-          sourceMap: true,
-          cache: true,
           parallel: false,
           extractComments: {
             filename: 'LICENSES'
@@ -211,7 +202,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         } ]);
   }
 
-  async config(isStatic: boolean): Promise<RendererClientConfig> {
+  async config(isStatic: boolean): Promise<Configuration> {
     await super.config(isStatic);
         
     this.chainConfig
@@ -228,8 +219,11 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     const config = Object.assign(this.chainConfig.toConfig(), {
       entry: {
         app: path.join(this.cacheDir, 'entry-client.js')
+      },
+      optimization: {
+        moduleIds: 'deterministic'
       }
-    });
+    } as Configuration);
 
     return cloneDeep(config);
   }

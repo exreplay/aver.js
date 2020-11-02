@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
@@ -5,13 +6,11 @@ import { Compiler } from 'webpack';
 
 export default class FilesChanged {
   apply(compiler: Compiler) {
-    compiler.hooks.watchRun.tap('averjs', (compiler: any) => {
-      const { watchFileSystem } = compiler;
-      const watcher = watchFileSystem.watcher || watchFileSystem.wfs.watcher;
-
+    compiler.hooks.watchRun.tap('averjs', compiler => {
       let changedFiles = '';
-      for (const file of Object.keys(watcher.mtimes)) {
-        changedFiles += ` ${chalk.bold.blue(path.basename(file))},`;
+      
+      for (const file of compiler?.modifiedFiles?.values() || []) {
+        if(fs.lstatSync(file).isFile()) changedFiles += ` ${chalk.bold.blue(path.basename(file))},`;
       }
         
       console.log(
