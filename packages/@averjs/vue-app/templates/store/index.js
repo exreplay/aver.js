@@ -57,6 +57,22 @@ The following files have been ignored:${ignoreGlobalStoresList}.
     `);
   }
 
+  if (persistent.length > 0) {
+    plugins.push(
+      createPersistedState({
+        paths: persistent,
+        storage: {
+          getItem: key => {
+            if (ssrContext.isServer) return ssrContext.context.cookies[key];
+            return Cookies.get(key);
+          },
+          setItem: (key, value) => Cookies.set(key, value, { expires: 3, secure: process.env.NODE_ENV === 'production' }),
+          removeItem: key => Cookies.remove(key)
+        }
+      })
+    );
+  }
+
   defaultConfig = { ...defaultConfig, modules, plugins };
   <% if (typeof config.store === 'object') print('defaultConfig = merge(defaultConfig, JSON.parse(\''+JSON.stringify(config.store)+'\'))'); %>
   
@@ -114,20 +130,6 @@ The following files have been ignored:${ignoreGlobalStoresList}.
     if (window.__INITIAL_STATE__) {
       store.replaceState(window.__INITIAL_STATE__);
     }
-  }
-
-  if (persistent.length > 0) {
-    createPersistedState({
-      paths: persistent,
-      storage: {
-        getItem: key => {
-          if (ssrContext.isServer) return ssrContext.context.cookies[key];
-          return Cookies.get(key);
-        },
-        setItem: (key, value) => Cookies.set(key, value, { expires: 3, secure: process.env.NODE_ENV === 'production' }),
-        removeItem: key => Cookies.remove(key)
-      }
-    })(store);
   }
 
   return store;

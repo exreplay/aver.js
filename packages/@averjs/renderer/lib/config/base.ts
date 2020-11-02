@@ -115,7 +115,8 @@ export default class WebpackBaseConfiguration {
         .resourceQuery(/blockType=i18n/)
         .type('javascript/auto')
         .use('i18n')
-          .loader('@intlify/vue-i18n-loader', {
+          .loader('@intlify/vue-i18n-loader')
+          .options({
             preCompile: true
           });
         

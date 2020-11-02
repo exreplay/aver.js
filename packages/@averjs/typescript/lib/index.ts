@@ -43,7 +43,10 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
     typescript: {
       configFile: path.resolve(process.env.PROJECT_PATH, '../tsconfig.json'),
       extensions: {
-        vue: true
+        vue: {
+          enabled: true,
+          compiler: '@vue/compiler-sfc'
+        }
       }
     },
     formatter: 'codeframe',

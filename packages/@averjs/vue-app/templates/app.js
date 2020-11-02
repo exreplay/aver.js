@@ -1,5 +1,7 @@
+console.log('test');
+
 import './register-component-hooks';
-import { createApp as createVueApp, createSSRApp } from 'vue';
+import { createSSRApp } from 'vue';
 import axios from 'axios';
 import merge from 'lodash/merge';
 import App from '@/App.vue';
@@ -36,7 +38,7 @@ axios.interceptors.response.use((response) => {
 });
 
 export async function createApp(ssrContext) {
-  const app = ssrContext.isServer ? createSSRApp(App) : createVueApp(App);
+  const app = createSSRApp(App);
 
   const i18n = createI18n({ app, ssrContext});
   const store = createStore(ssrContext);
@@ -71,9 +73,9 @@ export async function createApp(ssrContext) {
     }
   }
 
-  app.use(store);
-  app.use(router);
-  if (!ssrContext.isServer) app.use(i18n);
+  app.use(store).use(router)
+  
+  if(!ssrContext.isServer) app.use(i18n);
 
   return { app, router, store, userReturns };
 };

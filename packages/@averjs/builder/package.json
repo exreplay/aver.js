@@ -25,9 +25,9 @@
     "build": true
   },
   "dependencies": {
-    "@vue/server-renderer": "3.0.0-rc.4",
-    "html-minifier": "4.0.0",
-    "lru-cache": "6.0.0",
-    "vue-bundle-renderer": "0.0.3"
+    "@vue/server-renderer": "^3.0.2",
+    "html-minifier": "^4.0.0",
+    "lru-cache": "^6.0.0",
+    "vue-bundle-renderer": "^0.2.2"
   }
 }

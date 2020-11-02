@@ -12,14 +12,13 @@ import vueApp, { Templates } from '@averjs/vue-app';
 import chokidar from 'chokidar';
 import { AverConfig } from '@averjs/config';
 import Core from '@averjs/core';
-import { BundleRendererOptions } from 'vue-server-renderer';
 import { ParsedArgs } from 'minimist';
 
 export interface RendererOptions extends Partial<ParsedArgs> {
   static?: boolean;
 }
 
-type RendererCallback = (bundle: string, options: BundleRendererOptions) => void;
+type RendererCallback = (bundle: string, options: any) => void;
 
 export default class Renderer {
   aver: Core;
@@ -31,7 +30,7 @@ export default class Renderer {
   mfs = new MFS();
   isBrowserOpen = false;
   bundle: string | null = null;
-  clientManifest: BundleRendererOptions['clientManifest'] | null = null;
+  clientManifest: any['clientManifest'] | null = null;
   resolve: ((value?: void | PromiseLike<void> | undefined) => void) | null = null;
   readyPromise: Promise<void> = new Promise(resolve => { this.resolve = resolve; });
   cb: RendererCallback | null = null;

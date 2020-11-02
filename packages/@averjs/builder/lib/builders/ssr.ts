@@ -7,14 +7,14 @@ import template from 'lodash/template';
 import { minify } from 'html-minifier';
 import HTMLCodeError from '../errors/HTMLCodeError';
 import { AverConfig } from '@averjs/config';
-import { BundleRenderer } from 'vue-server-renderer';
 import { Request } from 'express';
 import Core from '@averjs/core';
+import { createBundleRenderer } from 'vue-bundle-renderer';
 
 export default class SsrBuilder extends BaseBuilder {
   aver: Core;
   config: AverConfig;
-  renderer: BundleRenderer | null = null;
+  renderer: ReturnType<typeof createBundleRenderer> | null = null;
   readyPromise: Promise<void> | null = null;
   isProd = process.env.NODE_ENV === 'production';
   cacheDir: string;
@@ -32,15 +32,13 @@ export default class SsrBuilder extends BaseBuilder {
     if (this.isProd) {
       const serverBundle = require(path.join(this.distPath, './vue-ssr-server-bundle.json'));
       const clientManifest = require(path.join(this.distPath, './vue-ssr-client-manifest.json'));
-      this.renderer = this.createRenderer(serverBundle, Object.assign({
-        clientManifest: clientManifest
-      }, this.config.createRenderer));
+      this.renderer = this.createRenderer(serverBundle, { ...this.config.createRenderer, clientManifest });
     } else {
       const { default: Renderer} = await import('@averjs/renderer');
       const renderer = new Renderer({}, this.aver);
       await renderer.setup();
       this.readyPromise = renderer.compile((bundle, options) => {
-        this.renderer = this.createRenderer(bundle, Object.assign(options, this.config.createRenderer));
+        this.renderer = this.createRenderer(bundle, { ...options, ...this.config.createRenderer });
       });
     }
   }
@@ -55,7 +53,8 @@ export default class SsrBuilder extends BaseBuilder {
     if (this.config.csrf) Object.assign(context, { csrfToken: req.csrfToken() });
     
     try {
-      const html = await this.renderer?.renderToString(context);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rendererContext = await this.renderer?.renderToString(context as any);
       if(!context.meta) return;
 
       // const {
@@ -71,9 +70,9 @@ export default class SsrBuilder extends BaseBuilder {
         // meta.text(),
         // title.text(),
         // link.text(),
-        context.renderStyles(),
+        rendererContext?.renderStyles(),
         // style.text(),
-        context.renderResourceHints()
+        rendererContext?.renderResourceHints?.()
         // script.text(),
         // noscript.text()
       );
@@ -82,9 +81,9 @@ export default class SsrBuilder extends BaseBuilder {
         // style.text({ pbody: true }),
         // script.text({ pbody: true }),
         // noscript.text({ pbody: true }),
-        html,
+        rendererContext?.html,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
-        context.renderScripts()
+        rendererContext?.renderScripts?.()
         // style.text({ body: true }),
         // script.text({ body: true }),
         // noscript.text({ body: true })

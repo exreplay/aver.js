@@ -6,16 +6,16 @@ import fs from 'fs-extra';
 import serialize from 'serialize-javascript';
 import template from 'lodash/template';
 import { minify } from 'html-minifier';
-import { BundleRenderer } from 'vue-server-renderer';
 import { AverConfig } from '@averjs/config';
 import Core from '@averjs/core';
+import { createBundleRenderer } from 'vue-bundle-renderer';
 
 const requireModule = require('esm')(module);
 
 export default class StaticBuilder extends BaseBuilder {
   aver: Core;
   config: AverConfig;
-  renderer: BundleRenderer | null = null;
+  renderer: ReturnType<typeof createBundleRenderer> | null = null;
   readyPromise: Promise<boolean> | null = null;
   isProd = process.env.NODE_ENV === 'production';
   distPath: string;
@@ -53,7 +53,8 @@ export default class StaticBuilder extends BaseBuilder {
 
       if (this.config.csrf) Object.assign(context, { csrfToken: '' });
     
-      const html = await this.renderer?.renderToString(context);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rendererContext = await this.renderer?.renderToString(context as any);
       if(!context.meta) return;
 
       const {
@@ -65,9 +66,9 @@ export default class StaticBuilder extends BaseBuilder {
         meta?.text(),
         title?.text(),
         link?.text(),
-        context.renderStyles?.(),
+        rendererContext?.renderStyles?.(),
         style?.text(),
-        context.renderResourceHints?.(),
+        rendererContext?.renderResourceHints?.(),
         script?.text(),
         noscript?.text()
       ];
@@ -76,9 +77,9 @@ export default class StaticBuilder extends BaseBuilder {
         style?.text({ pbody: true }),
         script?.text({ pbody: true }),
         noscript?.text({ pbody: true }),
-        html,
+        rendererContext?.html,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
-        context.renderScripts?.(),
+        rendererContext?.renderScripts(),
         style?.text({ body: true }),
         script?.text({ body: true }),
         noscript?.text({ body: true })

@@ -34,7 +34,7 @@ import { composeComponentOptions } from './utils';
         }
       });
 
-      app.mount('#app');
+      app.mount('#app', true);
     }
   
     async initMixin() {

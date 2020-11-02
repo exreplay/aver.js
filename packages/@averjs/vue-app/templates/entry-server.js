@@ -1,9 +1,7 @@
 import { createApp } from './app';
-// import Vue from 'vue';
 import App from '@/App.vue';
 import { composeComponentOptions } from './utils';
 
-// Vue.prototype.$auth = null;
 // <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
 
 export default async context => {
@@ -24,22 +22,7 @@ export default async context => {
     const { app, router, store, userReturns } = await createApp({ isServer: true, context });
     // const meta = app.$meta();
 
-    // try {
-    //   await router.push(context.url);
-    // } catch {
-    //   await new Promise((resolve, reject) => {
-    //     const unregister = router.afterEach((to, from, next) => {
-    //       context.aver.routePath = to.fullPath;
-    //       context.url = to.fullPath;
-    //       context.params = to.params;
-    //       context.query = to.query;
-    //       unregister();
-    //       resolve();
-    //     });
-    //   });
-    // }
-    // context.meta = meta;
-    await router.push(context.url);
+    router.push(context.url);
     context.meta = {};
 
     await router.isReady();
