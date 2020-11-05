@@ -54,7 +54,7 @@ export default class SsrBuilder extends BaseBuilder {
     
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const rendererContext = await this.renderer?.renderToString(context as any);
+      const html = await this.renderer?.renderToString(context as any);
       if(!context.meta) return;
 
       // const {
@@ -70,20 +70,21 @@ export default class SsrBuilder extends BaseBuilder {
         // meta.text(),
         // title.text(),
         // link.text(),
-        rendererContext?.renderStyles(),
+        html?.renderStyles(),
         // style.text(),
-        rendererContext?.renderResourceHints?.()
+        html?.renderResourceHints?.()
         // script.text(),
         // noscript.text()
       );
+    
 
       const BODY = [
         // style.text({ pbody: true }),
         // script.text({ pbody: true }),
         // noscript.text({ pbody: true }),
-        rendererContext?.html,
+        html?.html,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
-        rendererContext?.renderScripts?.()
+        html?.renderScripts?.()
         // style.text({ body: true }),
         // script.text({ body: true }),
         // noscript.text({ body: true })

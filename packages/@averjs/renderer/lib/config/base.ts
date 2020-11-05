@@ -45,6 +45,10 @@ export default class WebpackBaseConfiguration {
   }
 
   plugins() {
+    this.chainConfig
+      .plugin('vue-loader')
+        .use(VueLoaderPlugin);
+
     if (!this.isServer && this.webpackConfig.css?.extract) {
       this.chainConfig
         .plugin('extract-css')
@@ -53,10 +57,6 @@ export default class WebpackBaseConfiguration {
             chunkFilename: !this.isProd ? '_averjs/css/[id].css' : '_averjs/css/[id].[contenthash].css'
           } ]);
     }
-
-    this.chainConfig
-      .plugin('vue-loader')
-        .use(VueLoaderPlugin);
     
     if (!this.isServer && !this.isProd) {
       this.chainConfig
@@ -84,6 +84,8 @@ export default class WebpackBaseConfiguration {
     for (const alias of Object.keys(this.webpackConfig.alias)) {
       this.chainConfig.resolve.alias.set(alias, this.webpackConfig.alias[alias]);
     }
+
+    this.chainConfig.resolve.alias.set('vue$', 'vue/dist/vue.runtime.esm-bundler.js')
   }
 
   rules() {
@@ -94,28 +96,28 @@ export default class WebpackBaseConfiguration {
     this.perfLoader.apply(vueLoaderRule, 'vue');
 
     vueLoaderRule.use('vue-loader')
-          .loader('vue-loader')
-          .options({
-            compilerOptions: {
-              preserveWhitespace: false
-            },
-            transformAssetUrls: {
-              video: 'src',
-              source: 'src',
-              object: 'src',
-              embed: 'src'
-            }
-          });
+      .loader('vue-loader')
+      .options({
+        compilerOptions: {
+          preserveWhitespace: false
+        },
+        transformAssetUrls: {
+          video: 'src',
+          source: 'src',
+          object: 'src',
+          embed: 'src'
+        }
+      });
         
-    this.chainConfig.module
-      .rule('i18n')
-        .resourceQuery(/blockType=i18n/)
-        .type('javascript/auto')
-        .use('i18n')
-          .loader('@intlify/vue-i18n-loader')
-          .options({
-            preCompile: true
-          });
+    // this.chainConfig.module
+    //   .rule('i18n')
+    //     .resourceQuery(/blockType=i18n/)
+    //     .type('javascript/auto')
+    //     .use('i18n')
+    //       .loader('@intlify/vue-i18n-loader')
+    //       .options({
+    //         preCompile: true
+    //       });
         
     this.chainConfig.module
       .rule('eslint')
@@ -247,6 +249,10 @@ export default class WebpackBaseConfiguration {
       .resolve
         .extensions
           .merge([ '.js', '.json', '.vue', '.yaml' ])
+          .end()
+        .mainFields
+          .add('main')
+          .add('module')
           .end()
         .modules
           .add('node_modules')

@@ -1,5 +1,3 @@
-console.log('test');
-
 import './register-component-hooks';
 import { createSSRApp } from 'vue';
 import axios from 'axios';

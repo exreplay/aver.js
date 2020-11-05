@@ -29,6 +29,7 @@ export default class PerformanceLoader {
     return {
       vue: {
         poolConfig: { name: 'vue', poolTimeout },
+        loaders: [ 'vue-loader' ],
         useThread: false
       },
       js: {
@@ -55,6 +56,7 @@ export default class PerformanceLoader {
 
   apply(rule: Rule<Rule | Module>, name: string) {
     const pool = this.pools[name];
+
     if (pool) {
       rule.use('cache-loader')
         .loader('cache-loader')

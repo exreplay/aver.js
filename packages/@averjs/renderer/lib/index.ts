@@ -133,7 +133,7 @@ export default class Renderer {
           jsonStats.warnings.forEach((err: unknown) => console.warn(err));
           if (jsonStats.errors.length) return;
           
-          this.clientManifest = JSON.parse(this.readFile('vue-ssr-client-manifest.json'));
+          this.clientManifest = JSON.parse(this.readFile(clientCompiler.outputFileSystem, 'vue-ssr-client-manifest.json'));
           this.update();
         });
       }
@@ -146,7 +146,7 @@ export default class Renderer {
         jsonStats.warnings.forEach((err: unknown) => console.warn(err));
         if (jsonStats.errors.length) return;
               
-        this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
+        this.bundle = JSON.parse(this.readFile(this.mfs, 'vue-ssr-server-bundle.json'));
         this.update();
       });
 
@@ -219,9 +219,6 @@ export default class Renderer {
     clientCompiler.outputFileSystem = this.mfs as never;
     const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
       publicPath: this.clientConfig.output?.publicPath,
-      noInfo: true,
-      stats: 'none',
-      logLevel: 'error',
       index: false
     });
 
@@ -243,11 +240,12 @@ export default class Renderer {
     return serverCompiler;
   }
 
-  readFile(file: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readFile(fs: any, file: string) {
     if(!this.clientConfig?.output?.path) return;
 
     try {
-      return this.mfs.readFileSync(path.join(this.clientConfig.output.path, file), 'utf-8');
+      return fs.readFileSync(path.join(this.clientConfig.output.path, file), 'utf-8');
     } catch (e) { console.log(e); }
   }
 }

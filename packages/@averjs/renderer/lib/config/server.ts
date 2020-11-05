@@ -19,6 +19,8 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
         .use(webpack.DefinePlugin, [ {
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
           'process.env.VUE_ENV': JSON.stringify('server'),
+          __VUE_OPTIONS_API__: JSON.stringify(true),
+          __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
           PRODUCTION: this.isProd
         } ])
         .end()
