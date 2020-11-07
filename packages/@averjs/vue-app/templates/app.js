@@ -1,3 +1,4 @@
+<% /* eslint-disable no-undef */ %>
 import './register-component-hooks';
 import Vue from 'vue';
 import axios from 'axios';
@@ -7,12 +8,10 @@ import { createRouter } from './router/';
 import { createStore } from './store/';
 import { createI18n } from './i18n';
 import { sync } from 'vuex-router-sync';
-<% if (config.progressbar) { %> 
-import VueProgressBar from 'vue-progressbar';
-<% } %>
-
 <% if (config.progressbar) { %>
-const options = {
+import VueProgressBar from 'vue-progressbar';
+
+Vue.use(VueProgressBar, {
   color: '#003B8E',
   failedColor: '#E0001A',
   thickness: '2px',
@@ -23,10 +22,9 @@ const options = {
   },
   autoRevert: true,
   location: 'top',
-  inverse: false
-};
-
-Vue.use(VueProgressBar, <% typeof config.progressbar === 'object' ? print('Object.assign(options, JSON.parse(\''+JSON.stringify(config.progressbar)+'\'))') : print('options') %>);
+  inverse: false,
+  <%= typeof config.progressbar === 'object' ? `...JSON.parse('${JSON.stringify(config.progressbar)}')` : '' %>
+});
 <% } %>
 
 axios.interceptors.response.use((response) => {
@@ -52,22 +50,17 @@ export async function createApp(ssrContext) {
     context: {},
     render: h => h(App)
   };
-
   
   let userReturns = {};
-  <%
-    const extensions = config.additionalExtensions.join('|');
-    print(`
-  const entries = require.context('./', true, /.\\/[^/]\\/app\\.(${extensions})$/i);
-  const mixinContext = require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i);
-    `);
-  %>
-  const entryMixins = [ entries, mixinContext ];
+  <% const extensions = config.additionalExtensions.join('|'); %>
+  const entries = <%= `require.context('./', true, /.\\/[^/]\\/app\\.(${extensions})$/i);` %>;
+  const mixinContext = <%= `require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i);` %>;
+  const entryMixins = [entries, mixinContext];
 
-  for(const entryMixin of entryMixins) {
-    for(const entry of entryMixin.keys()) {
+  for (const entryMixin of entryMixins) {
+    for (const entry of entryMixin.keys()) {
       const mixin = entryMixin(entry).default;
-      if(typeof mixin === 'function') {
+      if (typeof mixin === 'function') {
         const returns = await mixin({ ...ssrContext, appOptions });
         userReturns = merge(userReturns, returns);
       }
@@ -77,4 +70,4 @@ export async function createApp(ssrContext) {
   const app = new Vue(appOptions);
 
   return { app, router, store, userReturns };
-};
+}
