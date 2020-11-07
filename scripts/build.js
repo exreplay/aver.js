@@ -14,7 +14,7 @@ export default class Build {
   }
 
   async determinePackages() {
-    const { stdout } = await exec('lerna', [ 'list', '--json' ]);
+    const { stdout } = await exec('lerna', ['list', '--json']);
     const packages = JSON.parse(stdout);
     for (const pkg of packages) {
       const pkgJSON = JSON.parse(fs.readFileSync(path.join(pkg.location, 'package.json'), 'utf-8'));

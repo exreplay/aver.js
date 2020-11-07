@@ -1,4 +1,4 @@
 node_modules
 dist
-
-packages/vue-app/lib
+.eslintrc.js
+packages/test
