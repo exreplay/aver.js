@@ -13,7 +13,7 @@ export interface SessionPluginOptions {
 }
 
 const plugin: PluginFunction = function(options: SessionPluginOptions) {
-  if (process.argv.indexOf('build') !== -1) return;
+  if (process.argv.includes('build')) return;
 
   const {
     redisStoreConfig,

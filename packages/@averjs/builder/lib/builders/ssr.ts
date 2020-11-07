@@ -36,7 +36,7 @@ export default class SsrBuilder extends BaseBuilder {
         clientManifest: clientManifest
       }, this.config.createRenderer));
     } else {
-      const { default: Renderer} = await import('@averjs/renderer');
+      const { default: Renderer } = await import('@averjs/renderer');
       const renderer = new Renderer({}, this.aver);
       await renderer.setup();
       this.readyPromise = renderer.compile((bundle, options) => {
@@ -56,7 +56,7 @@ export default class SsrBuilder extends BaseBuilder {
     
     try {
       const html = await this.renderer?.renderToString(context);
-      if(!context.meta) return;
+      if (!context.meta) return;
 
       const {
         title, htmlAttrs, headAttrs, bodyAttrs, link,
@@ -107,7 +107,7 @@ export default class SsrBuilder extends BaseBuilder {
         ? path.resolve(this.distPath, './index.ssr.html')
         : path.resolve(this.cacheDir, './index.template.html');
       const fileToCompile = fs.readFileSync(templatePath, 'utf-8');
-      const compiled = template(fileToCompile, { interpolate: /{{([\s\S]+?)}}/g });
+      const compiled = template(fileToCompile, { interpolate: /{{([\S\s]+?)}}/g });
       const compiledTemplate = compiled({
         HTML_ATTRS,
         HEAD_ATTRS,

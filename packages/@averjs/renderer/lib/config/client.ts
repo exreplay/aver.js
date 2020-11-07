@@ -41,46 +41,46 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     if (fs.existsSync(path.join(this.projectRoot, 'resources/images'))) {
       this.chainConfig
         .plugin('copy')
-          .use(CopyWebpackPlugin, [
-            {
-              patterns: [
-                {
-                  from: path.join(this.projectRoot, 'resources/images'),
-                  to: path.join(this.projectRoot, '../public/images'),
-                  force: true
-                }
-              ]
-            }
-          ]);
+        .use(CopyWebpackPlugin, [
+          {
+            patterns: [
+              {
+                from: path.join(this.projectRoot, 'resources/images'),
+                to: path.join(this.projectRoot, '../public/images'),
+                force: true
+              }
+            ]
+          }
+        ]);
     }
 
     this.chainConfig
       .plugin('html')
-        .use(HTMLPlugin, [ htmlPluginOptions ])
-        .end()
+      .use(HTMLPlugin, [htmlPluginOptions])
+      .end()
       .plugin('define')
-        .use(webpack.DefinePlugin, [ {
-          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-          'process.env.VUE_ENV': JSON.stringify('client'),
-          PRODUCTION: this.isProd,
-          ...this.webpackConfig.process?.env
-        } ])
-        .end()
+      .use(webpack.DefinePlugin, [{
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+        'process.env.VUE_ENV': JSON.stringify('client'),
+        PRODUCTION: this.isProd,
+        ...this.webpackConfig.process?.env
+      }])
+      .end()
       .plugin('vue-ssr-client')
-        .use(VueSSRClientPlugin);
+      .use(VueSSRClientPlugin);
       
     this.chainConfig
       .plugin('friendly-errors')
-        .use(FriendlyErrorsPlugin, [ {
-          showSuccessInfo: false,
-          showCompilingInfo: false,
-          clearConsole: false,
-          logLevel: 'WARNING'
-        } ]);
+      .use(FriendlyErrorsPlugin, [{
+        showSuccessInfo: false,
+        showCompilingInfo: false,
+        clearConsole: false,
+        logLevel: 'WARNING'
+      }]);
   }
 
   serviceWorker() {
-    if(!this.webpackConfig.sw) return;
+    if (!this.webpackConfig.sw) return;
 
     let plugin: GenerateSW | InjectManifest = GenerateSW;
     const swConfig = this.webpackConfig.sw;
@@ -98,17 +98,16 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     delete swConfig.mode;
 
     if (mode === 'GenerateSW' && 'cacheId' in conf) {
-      if(!conf.cacheId) conf.cacheId = 'averjs';
+      if (!conf.cacheId) conf.cacheId = 'averjs';
       conf.inlineWorkboxRuntime = true;
-    }
-    else if (mode === 'InjectManifest' && 'swSrc' in conf) {
+    } else if (mode === 'InjectManifest' && 'swSrc' in conf) {
       plugin = InjectManifest;
       conf.swSrc = path.resolve(process.env.PROJECT_PATH, conf.swSrc);
     }
 
     this.chainConfig
       .plugin('workbox')
-      .use(plugin, [ conf ]);
+      .use(plugin, [conf]);
   }
 
   optimization() {
@@ -119,7 +118,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     const splitChunks: SplitChunksOptions = {
       cacheGroups: {
         commons: {
-          test: /node_modules[\\/](vue|vue-loader|vue-router|vuex|vue-meta|core-js|babel-runtime|es6-promise|axios|webpack|setimmediate|timers-browserify|process|regenerator-runtime|cookie|js-cookie|is-buffer|dotprop)[\\/].*\.js$/,
+          test: /node_modules[/\\](vue|vue-loader|vue-router|vuex|vue-meta|core-js|babel-runtime|es6-promise|axios|webpack|setimmediate|timers-browserify|process|regenerator-runtime|cookie|js-cookie|is-buffer|dotprop)[/\\].*\.js$/,
           chunks: 'all',
           priority: 10,
           name: true
@@ -144,69 +143,69 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig.optimization
       .minimizer('terser')
-        .use(TerserPlugin, [ {
-          sourceMap: true,
-          cache: true,
-          parallel: false,
-          extractComments: {
-            filename: 'LICENSES'
-          } as ExtractCommentOptions,
-          terserOptions: {
-            compress: {
-              // turn off flags with small gains to speed up minification
-              arrows: false,
-              collapse_vars: false, // 0.3kb
-              comparisons: false,
-              computed_props: false,
-              hoist_funs: false,
-              hoist_props: false,
-              hoist_vars: false,
-              inline: false,
-              loops: false,
-              negate_iife: false,
-              properties: false,
-              reduce_funcs: false,
-              reduce_vars: false,
-              switches: false,
-              toplevel: false,
-              typeofs: false,
+      .use(TerserPlugin, [{
+        sourceMap: true,
+        cache: true,
+        parallel: false,
+        extractComments: {
+          filename: 'LICENSES'
+        } as ExtractCommentOptions,
+        terserOptions: {
+          compress: {
+            // turn off flags with small gains to speed up minification
+            arrows: false,
+            collapse_vars: false, // 0.3kb
+            comparisons: false,
+            computed_props: false,
+            hoist_funs: false,
+            hoist_props: false,
+            hoist_vars: false,
+            inline: false,
+            loops: false,
+            negate_iife: false,
+            properties: false,
+            reduce_funcs: false,
+            reduce_vars: false,
+            switches: false,
+            toplevel: false,
+            typeofs: false,
             
-              // a few flags with noticable gains/speed ratio
-              // numbers based on out of the box vendor bundle
-              booleans: true, // 0.7kb
-              if_return: true, // 0.4kb
-              sequences: true, // 0.7kb
-              unused: true, // 2.3kb
+            // a few flags with noticable gains/speed ratio
+            // numbers based on out of the box vendor bundle
+            booleans: true, // 0.7kb
+            if_return: true, // 0.4kb
+            sequences: true, // 0.7kb
+            unused: true, // 2.3kb
             
-              // required features to drop conditional branches
-              conditionals: true,
-              dead_code: true,
-              evaluate: true
-            },
-            mangle: {
-              safari10: true
-            },
-            output: {
-              comments: /^\**!|@preserve|@license|@cc_on/
-            }
+            // required features to drop conditional branches
+            conditionals: true,
+            dead_code: true,
+            evaluate: true
+          },
+          mangle: {
+            safari10: true
+          },
+          output: {
+            comments: /^\**!|@preserve|@license|@cc_on/
           }
-        } ]);
+        }
+      }]);
         
     this.chainConfig.optimization
       .minimizer('optimize-css')
-        .use(OptimizeCssAssetsPlugin, [ {
-          cssProcessorPluginOptions: {
-            preset: [
-              'default',
-              {
-                parser: SafeParser,
-                discardComments: {
-                  removeAll: true
-                }
+      .use(OptimizeCssAssetsPlugin, [{
+        cssProcessorPluginOptions: {
+          preset: [
+            'default',
+            {
+              parser: SafeParser,
+              discardComments: {
+                removeAll: true
               }
-            ]
-          }
-        } ]);
+            }
+          ]
+        }
+      }]);
   }
 
   async config(isStatic: boolean): Promise<RendererClientConfig> {
@@ -217,7 +216,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       //     .add(path.join(this.libRoot, 'vue/entry-client.js'))
       //     .end()
       .output
-        .filename(`_averjs/js/${this.isProd ? '[contenthash].' : '[name].'}js`);
+      .filename(`_averjs/js/${this.isProd ? '[contenthash].' : '[name].'}js`);
         
     if (typeof this.webpackConfig.client === 'function') this.webpackConfig.client(this.chainConfig);
     

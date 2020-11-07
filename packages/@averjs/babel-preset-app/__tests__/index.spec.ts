@@ -6,7 +6,7 @@ function transformFactory(codeToTransform: string, options?: babel.TransformOpti
   const defaultOptions = {
     babelrc: false,
     presets: [
-      [ preset, { buildTarget: 'client', corejs: 2 } ]
+      [preset, { buildTarget: 'client', corejs: 2 }]
     ],
     filename: 'test-entry-file.js'
   };
@@ -17,7 +17,7 @@ function transformFactory(codeToTransform: string, options?: babel.TransformOpti
 test('polyfill detection for core-js', () => {
   let { code } = transformFactory('const a = new Map()', {
     presets: [
-      [ preset, { buildTarget: 'server' } ]
+      [preset, { buildTarget: 'server' }]
     ]
   });
 

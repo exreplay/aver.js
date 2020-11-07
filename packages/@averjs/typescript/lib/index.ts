@@ -25,18 +25,18 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
     transpileOnly: true,
     happyPackMode: true,
     appendTsSuffixTo: [/\.vue$/]
-  }
+  };
 
-  if(typeof tsLoader === 'function') {
+  if (typeof tsLoader === 'function') {
     tsLoaderOptions = {
       ...tsLoaderOptions,
       ...(await tsLoader(tsLoaderOptions))
-    }
+    };
   } else {
     tsLoaderOptions = {
       ...tsLoaderOptions,
       ...tsLoader
-    }
+    };
   }
 
   let forkTsCheckerOptions: ForkTsCheckerWebpackPluginOptions = {
@@ -54,18 +54,18 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
         './src/**/*.ts'
       ]
     }
-  }
+  };
 
-  if(typeof forkTsChecker === 'function') {
+  if (typeof forkTsChecker === 'function') {
     forkTsCheckerOptions = {
       ...forkTsCheckerOptions,
       ...(await forkTsChecker(forkTsCheckerOptions))
-    }
+    };
   } else {
     forkTsCheckerOptions = {
       ...forkTsCheckerOptions,
       ...forkTsChecker
-    }
+    };
   }
 
   const setLoader = (chain: Config, isServer: boolean): void => {
@@ -73,31 +73,31 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
       
     chain.module
       .rule('ts-loader')
-        .test(/\.tsx?$/)
-        .use('cache-loader')
-          .loader('cache-loader')
-          .options({
-            cacheDirectory: path.resolve(process.env.PROJECT_PATH, `../node_modules/.cache/cache-loader/${isServer ? 'server' : 'client'}/${name}`),
-            cacheIdentifier: name
-          })
-          .end()
-        .use('thread-loader')
-          .loader('thread-loader')
-          .options({
-            poolConfig: { name: 'ts', poolTimeout: !isProd ? Infinity : 2000 },
-            loaders: ['ts-loader'],
-            useThread: true
-          })
-          .end()
-        .use('babel-loader')
-          .loader('babel-loader')
-          .end()
-        .use('ts-loader')
-          .loader('ts-loader')
-          .options(tsLoaderOptions);
+      .test(/\.tsx?$/)
+      .use('cache-loader')
+      .loader('cache-loader')
+      .options({
+        cacheDirectory: path.resolve(process.env.PROJECT_PATH, `../node_modules/.cache/cache-loader/${isServer ? 'server' : 'client'}/${name}`),
+        cacheIdentifier: name
+      })
+      .end()
+      .use('thread-loader')
+      .loader('thread-loader')
+      .options({
+        poolConfig: { name: 'ts', poolTimeout: !isProd ? Infinity : 2000 },
+        loaders: ['ts-loader'],
+        useThread: true
+      })
+      .end()
+      .use('babel-loader')
+      .loader('babel-loader')
+      .end()
+      .use('ts-loader')
+      .loader('ts-loader')
+      .options(tsLoaderOptions);
   };
 
-  if(!this.aver.config.webpack.additionalExtensions) this.aver.config.webpack.additionalExtensions = [];
+  if (!this.aver.config.webpack.additionalExtensions) this.aver.config.webpack.additionalExtensions = [];
   this.aver.config.webpack.additionalExtensions.push('ts');
   this.aver.config.webpack.additionalExtensions.push('tsx');
 
@@ -116,14 +116,14 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
       
     chain
       .resolve
-        .extensions
-          .merge(['.ts']);
+      .extensions
+      .merge(['.ts']);
   });
 
   this.aver.tap('renderer:client-config', chain => {
     chain
       .plugin('fork-ts-checker-webpack-plugin')
-        .use(ForkTsChecker, [forkTsCheckerOptions]);
+      .use(ForkTsChecker, [forkTsCheckerOptions]);
   });
 };
 

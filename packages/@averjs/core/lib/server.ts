@@ -48,7 +48,7 @@ export default class Server extends WWW {
           console.log('Clearing server cache');
           Object.keys(require.cache).forEach((id) => {
             // eslint-disable-next-line no-useless-escape
-            if (/[\/\\]api[\/\\]/.test(id)) {
+            if (/[/\\]api[/\\]/.test(id)) {
               delete require.cache[id];
             }
           });
@@ -91,10 +91,10 @@ export default class Server extends WWW {
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));
         
-    this.middlewares.push([ '/dist', serve(this.distDir, true) ]);
-    this.middlewares.push([ '/public', serve('./public', true) ]);
-    this.middlewares.push([ '/static', serve('./static', true) ]);
-    this.middlewares.push([ '/storage', express.static('./storage') ]);
+    this.middlewares.push(['/dist', serve(this.distDir, true)]);
+    this.middlewares.push(['/public', serve('./public', true)]);
+    this.middlewares.push(['/static', serve('./static', true)]);
+    this.middlewares.push(['/storage', express.static('./storage')]);
 
     this.middlewares.push(bodyParser.json());
     this.middlewares.push(bodyParser.urlencoded({ extended: false }));
@@ -117,7 +117,7 @@ export default class Server extends WWW {
 
     for (const middleware of this.middlewares) {
       if (typeof middleware === 'function') this.app.use(middleware);
-      else if (middleware instanceof Array) this.app.use(...middleware);
+      else if (Array.isArray(middleware)) this.app.use(...middleware);
     }
   }
 

@@ -55,7 +55,7 @@ export default class Renderer {
   }
 
   prepareTemplates() {
-    if(!this.config.templates) return;
+    if (!this.config.templates) return;
 
     const templates = [
       ...this.config.templates,
@@ -67,20 +67,20 @@ export default class Renderer {
     if (!this.isProd) {
       const watcher = chokidar.watch(
         // generate a new set of unique paths
-        [ ...new Set(this.config.templates?.map(temp => path.resolve(temp.pluginPath || '', './entries'))) ]
+        [...new Set(this.config.templates?.map(temp => path.resolve(temp.pluginPath || '', './entries')))]
       );
             
       watcher.on('ready', () => {
         watcher.on('all', (event, id) => {
           if (event !== 'addDir' && event !== 'unlinkDir') {
-            if(!this.config.templates) return;
+            if (!this.config.templates) return;
 
             let template = this.config.templates.find(temp => temp.src === id);
 
             if (!template) {
               // Try to find any entry file from same plugin to get the plugin path
               const foundTemplate = this.config.templates.find(temp => !path.relative(path.resolve(temp.pluginPath || '', './entries'), id).startsWith('..'));
-              if(foundTemplate) {
+              if (foundTemplate) {
                 const { dirname = '' } = foundTemplate;
                 const dst = path.relative(dirname, id).replace('entries', dirname);
       
@@ -102,7 +102,7 @@ export default class Renderer {
   writeTemplateFile(templateFile: Templates) {
     const finalResolvedPath = path.resolve(this.cacheDir, templateFile.dst);
     const fileToCompile = fs.readFileSync(templateFile.src, 'utf8');
-    const compiled = template(fileToCompile, { interpolate: /<%=([\s\S]+?)%>/g });
+    const compiled = template(fileToCompile, { interpolate: /<%=([\S\s]+?)%>/g });
     const compiledApp = compiled({
       config: {
         additionalExtensions: this.config.webpack.additionalExtensions,
@@ -127,7 +127,7 @@ export default class Renderer {
       const serverCompiler = this.setupServerCompiler();
       
       // Compile Client
-      if(clientCompiler) {
+      if (clientCompiler) {
         clientCompiler.hooks.done.tap('averjs', stats => {
           const jsonStats = stats.toJson();
           jsonStats.errors.forEach(err => console.error(err));
@@ -160,7 +160,7 @@ export default class Renderer {
     compilers.push(this.serverConfig);
     
     for (const compiler of compilers) {
-      if(!compiler) continue;
+      if (!compiler) continue;
 
       promises.push(new Promise((resolve, reject) => {
         const compile = webpack(compiler);
@@ -206,10 +206,10 @@ export default class Renderer {
   }
 
   setupClientCompiler() {
-    if(!this.clientConfig) return;
+    if (!this.clientConfig) return;
 
-    this.clientConfig.entry.app = [ 'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app as string ];
-    if(this.clientConfig.output) this.clientConfig.output.filename = '[name].js';
+    this.clientConfig.entry.app = ['webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app as string];
+    if (this.clientConfig.output) this.clientConfig.output.filename = '[name].js';
     this.clientConfig.plugins?.push(
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin()
@@ -244,7 +244,7 @@ export default class Renderer {
   }
 
   readFile(file: string) {
-    if(!this.clientConfig?.output?.path) return;
+    if (!this.clientConfig?.output?.path) return;
 
     try {
       return this.mfs.readFileSync(path.join(this.clientConfig.output.path, file), 'utf-8');

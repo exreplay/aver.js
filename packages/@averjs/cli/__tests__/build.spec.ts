@@ -2,7 +2,7 @@ import AverCli from '../lib';
 import Core, { mockBuild } from '../__mocks__/@averjs/core';
 jest.mock('@averjs/core');
 
-const OLD_ARGV = [ ...process.argv ];
+const OLD_ARGV = [...process.argv];
 const OLD_ENV = { ...process.env };
 let outputData = '';
 
@@ -14,7 +14,7 @@ beforeEach(() => {
   console.log = jest.fn(inputs => (outputData = inputs));
   console.error = jest.fn(inputs => (outputData = inputs));
 
-  process.argv = [ ...OLD_ARGV ];
+  process.argv = [...OLD_ARGV];
   process.env = { ...OLD_ENV };
 });
 

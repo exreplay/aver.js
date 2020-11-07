@@ -38,7 +38,7 @@ export default class Core extends Hookable {
 
   async build(args: RendererOptions) {
     await this.plugins.register();
-    const { default: Renderer} = await import('@averjs/renderer');
+    const { default: Renderer } = await import('@averjs/renderer');
     const renderer = new Renderer(args, this);
     await renderer.setup();
     await renderer.compile();

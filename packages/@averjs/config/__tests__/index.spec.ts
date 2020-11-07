@@ -18,7 +18,7 @@ test('should change progressbar option to false', () => {
 test('should concat array with default values', () => {
   const config = getAverjsConfig();
   expect(config.progressbar).toBe(false);
-  expect(config.webpack.additionalExtensions).toEqual([ 'js', 'ts' ]);
+  expect(config.webpack.additionalExtensions).toEqual(['js', 'ts']);
 });
 
 test('should match default snapshot config when no config file is present', () => {

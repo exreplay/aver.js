@@ -88,7 +88,7 @@ export default class Release {
     try {
       await exec('git', ['add', '-A']);
       await exec('git', ['commit', '-m', 'chore: pre release sync']);
-    } catch (err) {} finally {
+    } catch {} finally {
       spinner.succeed();
     }
   }

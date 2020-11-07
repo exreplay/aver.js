@@ -7,6 +7,7 @@ export default class HelpCommand extends Command implements CommandInterface {
   aliases = [
     'h'
   ];
+
   description = 'Shows this help or for a specific command.';
   commands: CommandInterfaceDictionary = {};
 

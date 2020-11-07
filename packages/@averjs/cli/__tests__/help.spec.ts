@@ -1,7 +1,7 @@
 import AverCli from '../lib';
 import TestCommand from '../__fixtures__/TestCommand';
 
-const OLD_ARGV = [ ...process.argv ];
+const OLD_ARGV = [...process.argv];
 let outputData = '';
 
 beforeEach(function() {
@@ -9,7 +9,7 @@ beforeEach(function() {
   console.log = jest.fn(inputs => (outputData = inputs));
   console.error = jest.fn(inputs => (outputData = inputs));
 
-  process.argv = [ ...OLD_ARGV ];
+  process.argv = [...OLD_ARGV];
 });
 
 test('help should have the available commands header set', async() => {
@@ -39,7 +39,7 @@ test('help should always show global commands', async() => {
   expect(outputData).toMatch('Global Commands');
   expect(outputData).toMatch('--version');
 
-  process.argv = [ ...OLD_ARGV ];
+  process.argv = [...OLD_ARGV];
   process.argv.push('help');
 
   cli = new AverCli();

@@ -39,16 +39,16 @@ export default class PostCSS {
   }
 
   loadPlugins(config: AverConfig['webpack']['postcss']) {
-    if(!config?.plugins) return;
-    if(!config.postcssOptions) config.postcssOptions = {};
-    if(!config.postcssOptions?.plugins) config.postcssOptions.plugins = [];
+    if (!config?.plugins) return;
+    if (!config.postcssOptions) config.postcssOptions = {};
+    if (!config.postcssOptions?.plugins) config.postcssOptions.plugins = [];
 
     // ensure postcss-preset-env and cssnano comes last
     const sortedPluginsKeys = Object.keys(config.plugins).sort(a => a === 'postcss-preset-env' ? 1 : -1).sort(a => a === 'cssnano' ? 1 : -1);
     config.postcssOptions.plugins = [
       ...sortedPluginsKeys.map(p => require(p)(config.plugins?.[p])),
       ...config.postcssOptions.plugins
-    ]
+    ];
     delete config.plugins;
   }
 
@@ -56,7 +56,7 @@ export default class PostCSS {
     const options: Parameters<typeof ResolverFactory['createResolver']>[0] = {
       alias: this.config.alias,
       fileSystem: new CachedInputFileSystem(fs, 4000).fileSystem,
-      extensions: [ '.css' ],
+      extensions: ['.css'],
       useSyncFileSystemCalls: true
     };
     const resolver = ResolverFactory.createResolver(options);
@@ -70,7 +70,7 @@ export default class PostCSS {
 
     rule
       .use('postcss')
-        .loader('postcss-loader')
-        .options(config);
+      .loader('postcss-loader')
+      .options(config);
   }
 }

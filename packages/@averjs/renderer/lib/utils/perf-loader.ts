@@ -33,12 +33,12 @@ export default class PerformanceLoader {
       },
       js: {
         poolConfig: { name: 'js', poolTimeout },
-        loaders: [ 'babel-loader' ],
+        loaders: ['babel-loader'],
         useThread: true
       },
       css: {
         poolConfig: { name: 'css', poolTimeout },
-        loaders: [ 'css-loader' ],
+        loaders: ['css-loader'],
         useThread: !this.config.css?.extract
       }
     };

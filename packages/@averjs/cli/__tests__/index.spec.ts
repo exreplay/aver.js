@@ -4,10 +4,10 @@ import TestCommand from '../__fixtures__/TestCommand';
 import FailingCommand from '../__fixtures__/FailingCommand';
 
 let outputData = '';
-const tmpProcessArgv = [ ...process.argv ];
+const tmpProcessArgv = [...process.argv];
 
 function resetArgv() {
-  process.argv = [ ...tmpProcessArgv ];
+  process.argv = [...tmpProcessArgv];
 }
 
 beforeEach(() => {
@@ -95,7 +95,7 @@ test('catch block should be called when comman does not exist', () => {
 
   try {
     cli.run();
-  } catch(err) {
+  } catch (err) {
     expect(err).toBe('failing');
   }
 });

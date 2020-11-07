@@ -2,7 +2,7 @@ import AverCli from '../lib';
 import Init, { mockRun } from '../__mocks__/@averjs/init';
 jest.mock('@averjs/core');
 
-const OLD_ARGV = [ ...process.argv ];
+const OLD_ARGV = [...process.argv];
 let outputData = '';
 
 beforeEach(function() {
@@ -13,7 +13,7 @@ beforeEach(function() {
   console.log = jest.fn(inputs => (outputData = inputs));
   console.error = jest.fn(inputs => (outputData = inputs));
 
-  process.argv = [ ...OLD_ARGV ];
+  process.argv = [...OLD_ARGV];
 });
 
 test('help command should output command description', async() => {
