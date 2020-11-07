@@ -16,6 +16,6 @@ export function defaultAverjsConfig(): AverConfig {
     ...core(),
     ...server(),
     webpack: renderer(),
-    ...vueApp(),
+    ...vueApp()
   };
 }

@@ -10,7 +10,7 @@ export interface MongodbPluginOptions {
 }
 
 const plugin: PluginFunction = function(options: MongodbPluginOptions) {
-  if (process.argv.indexOf('build') !== -1) return;
+  if (process.argv.includes('build')) return;
 
   const {
     mongooseOptions = {},

@@ -37,7 +37,7 @@ const plugin: PluginFunction = function(options: WebsocketPluginOptions) {
 
     io.adapter(redisAdapter({ pubClient: pub, subClient: sub, ...socketIoRedis }));
 
-    if(middleware) await middleware.bind(this, io);
+    if (middleware) await middleware.bind(this, io);
 
     middlewares.push((req, res, next) => {
       req.io = io;

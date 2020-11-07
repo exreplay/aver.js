@@ -43,7 +43,7 @@ function getBrowserEnv() {
 
 function executeNodeScript(scriptPath: string, url: string) {
   const extraArgs = process.argv.slice(2);
-  const child = spawn('node', [ scriptPath, ...extraArgs, url ], {
+  const child = spawn('node', [scriptPath, ...extraArgs, url], {
     stdio: 'inherit'
   });
   child.on('close', (code: number) => {
@@ -80,7 +80,7 @@ function startBrowserProcess(browser: string | undefined, url: string) {
         stdio: 'ignore'
       });
       return true;
-    } catch (err) {
+    } catch {
       // Ignore errors.
     }
   }
@@ -99,7 +99,7 @@ function startBrowserProcess(browser: string | undefined, url: string) {
     const options = { app: browser, wait: false };
     open(url, options).catch(); // Prevent `unhandledRejection` error.
     return true;
-  } catch (err) {
+  } catch {
     return false;
   }
 }

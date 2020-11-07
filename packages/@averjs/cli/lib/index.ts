@@ -44,7 +44,7 @@ export default class Usage {
 
       // Register aliases for command options
       for (const argAlias of command.args || []) {
-        if(argAlias.alias) this.aliases[argAlias.alias] = argAlias.name;
+        if (argAlias.alias) this.aliases[argAlias.alias] = argAlias.name;
       }
     }
   }

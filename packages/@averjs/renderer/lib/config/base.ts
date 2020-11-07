@@ -48,41 +48,41 @@ export default class WebpackBaseConfiguration {
     if (!this.isServer && this.webpackConfig.css?.extract) {
       this.chainConfig
         .plugin('extract-css')
-          .use(ExtractCssPlugin, [ {
-            filename: !this.isProd ? '_averjs/css/[name].css' : '_averjs/css/[name].[contenthash].css',
-            chunkFilename: !this.isProd ? '_averjs/css/[id].css' : '_averjs/css/[id].[contenthash].css'
-          } ]);
+        .use(ExtractCssPlugin, [{
+          filename: !this.isProd ? '_averjs/css/[name].css' : '_averjs/css/[name].[contenthash].css',
+          chunkFilename: !this.isProd ? '_averjs/css/[id].css' : '_averjs/css/[id].[contenthash].css'
+        }]);
     }
 
     this.chainConfig
       .plugin('vue-loader')
-        .use(VueLoaderPlugin);
+      .use(VueLoaderPlugin);
     
     if (!this.isServer && !this.isProd) {
       this.chainConfig
         .plugin('files-changed')
-          .use(FilesChanged);
+        .use(FilesChanged);
     }
 
     this.chainConfig
       .plugin('webpackbar')
-        .use(Webpackbar, [ {
-          name: this.isServer ? 'Server' : 'Client',
-          color: this.isServer ? 'blue' : 'green'
-        } ]);
+      .use(Webpackbar, [{
+        name: this.isServer ? 'Server' : 'Client',
+        color: this.isServer ? 'blue' : 'green'
+      }]);
 
     if (this.isProd) {
       this.chainConfig
         .plugin('hashed-module-ids')
-          .use(webpack.HashedModuleIdsPlugin)
-          .end()
+        .use(webpack.HashedModuleIdsPlugin)
+        .end()
         .plugin('module-concatenation')
-          .use(webpack.optimize.ModuleConcatenationPlugin);
+        .use(webpack.optimize.ModuleConcatenationPlugin);
     }
   }
 
   alias() {
-    if(!this.webpackConfig.alias) return;
+    if (!this.webpackConfig.alias) return;
 
     for (const alias of Object.keys(this.webpackConfig.alias)) {
       this.chainConfig.resolve.alias.set(alias, this.webpackConfig.alias[alias]);
@@ -92,79 +92,79 @@ export default class WebpackBaseConfiguration {
   rules() {
     const vueLoaderRule = this.chainConfig.module
       .rule('vue-loader')
-        .test(/\.vue$/);
+      .test(/\.vue$/);
 
     this.perfLoader.apply(vueLoaderRule, 'vue');
 
     vueLoaderRule.use('vue-loader')
-          .loader('vue-loader')
-          .options({
-            compilerOptions: {
-              preserveWhitespace: false
-            },
-            transformAssetUrls: {
-              video: 'src',
-              source: 'src',
-              object: 'src',
-              embed: 'src'
-            }
-          });
+      .loader('vue-loader')
+      .options({
+        compilerOptions: {
+          preserveWhitespace: false
+        },
+        transformAssetUrls: {
+          video: 'src',
+          source: 'src',
+          object: 'src',
+          embed: 'src'
+        }
+      });
         
     this.chainConfig.module
       .rule('i18n')
-        .resourceQuery(/blockType=i18n/)
-        .type('javascript/auto')
-        .use('i18n')
-          .loader('@kazupon/vue-i18n-loader');
+      .resourceQuery(/blockType=i18n/)
+      .type('javascript/auto')
+      .use('i18n')
+      .loader('@kazupon/vue-i18n-loader');
         
     this.chainConfig.module
       .rule('eslint')
-        .test(/\.(js|vue)$/)
-        .pre()
-        .exclude
-          .add(/node_modules/)
-          .end()
-        .use('eslint')
-          .loader('eslint-loader')
-          .options({
-            cache: true
-          });
+      .test(/\.(js|vue)$/)
+      .pre()
+      .exclude
+      .add(/node_modules/)
+      .end()
+      .use('eslint')
+      .loader('eslint-loader')
+      .options({
+        cache: true
+      });
     
     this.babelLoader.apply(this.chainConfig);
         
     this.chainConfig.module
       .rule('pug')
-        .test(/\.pug$/)
-        .oneOf('vue-template-pug')
-          .resourceQuery(/^\?vue/)
-          .use('pug-plain-loader')
-            .loader('pug-plain-loader')
-            .end()
-          .end()
-        .oneOf('js-pug')
-          .use('raw-loader')
-            .loader('raw-loader')
-            .end()
-          .use('pug-plain-loader')
-            .loader('pug-plain-loader');
+      .test(/\.pug$/)
+      .oneOf('vue-template-pug')
+      .resourceQuery(/^\?vue/)
+      .use('pug-plain-loader')
+      .loader('pug-plain-loader')
+      .end()
+      .end()
+      .oneOf('js-pug')
+      .use('raw-loader')
+      .loader('raw-loader')
+      .end()
+      .use('pug-plain-loader')
+      .loader('pug-plain-loader');
         
     this.chainConfig.module
       .rule('yaml')
-        .test(/\.y(a)?ml$/)
-        .exclude
-          .add(/node_modules/)
-          .end()
-        .use('json-loader')
-          .loader('json-loader')
-          .end()
-        .use('yaml-loader')
-          .loader('yaml-loader');
+      .test(/\.y(a)?ml$/)
+      .exclude
+      .add(/node_modules/)
+      .end()
+      .use('json-loader')
+      .loader('json-loader')
+      .end()
+      .use('yaml-loader')
+      .loader('yaml-loader');
 
     const cssRule = this.chainConfig.module.rule('css-loader').test(/\.css$/);
     this.styleLoader.apply('css', cssRule);
 
     const scssRule = this.chainConfig.module.rule('scss-loader').test(/\.scss$/);
-    this.styleLoader.apply('scss', scssRule, [ {
+    this.styleLoader.apply('scss', scssRule, [{
       name: 'sass-loader',
       options: {
         sourceMap: !this.isProd,
@@ -173,49 +173,49 @@ export default class WebpackBaseConfiguration {
           fiber: require('fibers')
         }
       }
-    } ]);
+    }]);
                     
     this.chainConfig.module
       .rule('fonts')
-        .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/)
-        .use('url-loader')
-          .loader('url-loader')
-          .options({
-            limit: 1000,
-            name: '_averjs/fonts/[name].[hash:7].[ext]',
-            esModule: false
-          });
+      .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/)
+      .use('url-loader')
+      .loader('url-loader')
+      .options({
+        limit: 1000,
+        name: '_averjs/fonts/[name].[hash:7].[ext]',
+        esModule: false
+      });
         
     this.chainConfig.module
       .rule('images')
-        .test(/\.(png|jpe?g|gif|svg)$/)
-        .use('url-loader')
-          .loader('url-loader')
-          .options({
-            limit: 1000,
-            name: '_averjs/img/[name].[hash:7].[ext]',
-            esModule: false
-          });
+      .test(/\.(png|jpe?g|gif|svg)$/)
+      .use('url-loader')
+      .loader('url-loader')
+      .options({
+        limit: 1000,
+        name: '_averjs/img/[name].[hash:7].[ext]',
+        esModule: false
+      });
         
     this.chainConfig.module
       .rule('videos')
-        .test(/\.(webm|mp4)$/)
-        .use('file-loader')
-          .loader('file-loader')
-          .options({
-            name: '_averjs/videos/[name].[hash:7].[ext]',
-            esModule: false
-          });
+      .test(/\.(webm|mp4)$/)
+      .use('file-loader')
+      .loader('file-loader')
+      .options({
+        name: '_averjs/videos/[name].[hash:7].[ext]',
+        esModule: false
+      });
         
     this.chainConfig.module
       .rule('resources')
-        .test(/\.pdf$/)
-        .use('file-loader')
-          .loader('file-loader')
-          .options({
-            name: '_averjs/resources/[name].[hash:7].[ext]',
-            esModule: false
-          });
+      .test(/\.pdf$/)
+      .use('file-loader')
+      .loader('file-loader')
+      .options({
+        name: '_averjs/resources/[name].[hash:7].[ext]',
+        esModule: false
+      });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -224,39 +224,39 @@ export default class WebpackBaseConfiguration {
   async config(isStatic: boolean): Promise<Configuration | void> {
     this.chainConfig
       .output
-        .path(this.distPath)
-        .publicPath(isStatic ? '/' : '/dist/')
-        .end()
+      .path(this.distPath)
+      .publicPath(isStatic ? '/' : '/dist/')
+      .end()
       .node
-        .set('setImmediate', false)
-        .set('dgram', 'empty')
-        .set('fs', 'empty')
-        .set('net', 'empty')
-        .set('tls', 'empty')
-        .set('child_process', 'empty')
-        .end()
+      .set('setImmediate', false)
+      .set('dgram', 'empty')
+      .set('fs', 'empty')
+      .set('net', 'empty')
+      .set('tls', 'empty')
+      .set('child_process', 'empty')
+      .end()
       .devtool(this.isProd ? false : 'cheap-module-eval-source-map')
       .mode(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production' ? process.env.NODE_ENV : 'none')
       .module
-        .noParse(/es6-promise\.js$/)
-        .end()
+      .noParse(/es6-promise\.js$/)
+      .end()
       .resolve
-        .extensions
-          .merge([ '.js', '.json', '.vue', '.yaml' ])
-          .end()
-        .modules
-          .add('node_modules')
-          .end()
-        .end()
+      .extensions
+      .merge(['.js', '.json', '.vue', '.yaml'])
+      .end()
+      .modules
+      .add('node_modules')
+      .end()
+      .end()
       .resolveLoader
-        .modules
-          .add('node_modules')
-          .end()
-        .end()
+      .modules
+      .add('node_modules')
+      .end()
+      .end()
       .performance
-        .maxEntrypointSize(1000 * 1024)
-        .maxAssetSize(300000)
-        .hints(this.isProd ? 'warning' : false);
+      .maxEntrypointSize(1000 * 1024)
+      .maxAssetSize(300000)
+      .hints(this.isProd ? 'warning' : false);
 
     this.rules();
     this.alias();

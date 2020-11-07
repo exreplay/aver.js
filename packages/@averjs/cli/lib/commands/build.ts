@@ -11,6 +11,7 @@ export default class BuildCommand extends Command implements CommandInterface {
       description: 'Generate static files.'
     }
   ];
+
   description = 'Build for production usage.';
 
   async run(argv: ParsedArgs) {

@@ -6,7 +6,7 @@ import Core from './core';
 import { AverConfig } from '@averjs/config';
 
 export type PluginFunction = (this: PluginContainerInterface, ...args: any[]) => void;
-export type Plugin<T = string> = 
+export type Plugin<T = string> =
   T |
   PluginFunction |
   [T, unknown?]
@@ -51,7 +51,7 @@ export default class PluginContainer {
     } else if (typeof plugin === 'function') {
       handler = plugin;
     } else if (Array.isArray(plugin)) {
-      [ src, options ] = plugin;
+      [src, options] = plugin;
     }
 
     if (!handler && src) {
@@ -59,8 +59,8 @@ export default class PluginContainer {
     }
 
     if (typeof handler !== 'function') {
-      if(src) throw new Error(`Plugin '${src}' should export a function. Got '${ typeof handler }'.`);
-      else throw new Error(`Plugins have to be defined as functions. Please check your aver config file.`);
+      if (src) throw new Error(`Plugin '${src}' should export a function. Got '${typeof handler}'.`);
+      else throw new Error('Plugins have to be defined as functions. Please check your aver config file.');
     }
 
     if (!options) {
@@ -87,7 +87,7 @@ export default class PluginContainer {
 
     const requiredModule = requireModule(pluginPath);
 
-    if(requiredModule.default) return requiredModule.default;
+    if (requiredModule.default) return requiredModule.default;
     else return requiredModule;
   }
 
@@ -119,7 +119,7 @@ export default class PluginContainer {
     for (const entry of entries) {
       const dst = path.relative(dirname, entry.path).replace('entries', dirname);
       this.config.templates?.push({ src: entry.path, dst, pluginPath: pluginPathDir, dirname });
-      const foundEntry = Object.entries(entryNames).find(([ , name ]) => entry.path.match(name));
+      const foundEntry = Object.entries(entryNames).find(([, name]) => entry.path.match(name));
       if (foundEntry && foundEntry[0]) this.config.entries?.[foundEntry[0]]?.push('./' + dst);
     }
   }

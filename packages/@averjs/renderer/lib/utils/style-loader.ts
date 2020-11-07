@@ -71,18 +71,18 @@ export default class StyleLoader {
     if (this.config.css?.extract && !this.isServer) {
       rule
         .use('extract-css')
-          .loader(ExtractCssPlugin.loader)
-          .options({ reloadAll: true });
+        .loader(ExtractCssPlugin.loader)
+        .options({ reloadAll: true });
     } else if (!this.config.css?.extract) {
       rule
         .use('vue-style-loader')
-          .loader('vue-style-loader')
-          .options({ sourceMap: !this.isProd });
+        .loader('vue-style-loader')
+        .options({ sourceMap: !this.isProd });
     }
   }
 
   styleResources(rule: Rule<Rule>) {
-    if(!this.config.css?.styleResources) return;
+    if (!this.config.css?.styleResources) return;
 
     const { resources = [], options = { patterns: [] } } = this.config.css.styleResources;
     const finalOptions: StyleResourcesLoaderOptions = { patterns: [] };
@@ -92,37 +92,37 @@ export default class StyleLoader {
     finalOptions.patterns = [
       ...options.patterns as string[],
       ...patterns
-    ]
+    ];
 
     rule
       .use('style-resources-loader')
-        .loader('style-resources-loader')
-        .options(finalOptions);
+      .loader('style-resources-loader')
+      .options(finalOptions);
   }
 
   css(rule: Rule<Rule>) {
     rule
       .use('css-loader')
-        .loader('css-loader')
-        .options({
-          esModule: false,
-          importLoaders: this.importLoaders,
-          sourceMap: !this.isProd
-        });
+      .loader('css-loader')
+      .options({
+        esModule: false,
+        importLoaders: this.importLoaders,
+        sourceMap: !this.isProd
+      });
   }
 
   cssModules(rule: Rule<Rule>) {
     rule
       .use('css-loader')
-        .loader('css-loader')
-        .options({
-          esModule: false,
-          modules: {
-            localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
-            exportOnlyLocals: this.exportOnlyLocals,
-            exportLocalsConvention: 'camelCase'
-          },
-          importLoaders: this.importLoaders
-        });
+      .loader('css-loader')
+      .options({
+        esModule: false,
+        modules: {
+          localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
+          exportOnlyLocals: this.exportOnlyLocals,
+          exportLocalsConvention: 'camelCase'
+        },
+        importLoaders: this.importLoaders
+      });
   }
 }

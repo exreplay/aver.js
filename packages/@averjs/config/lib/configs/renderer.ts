@@ -13,7 +13,7 @@ export interface AverWebpackConfig {
     preset?: PostCSSPresetEnv.pluginOptions;
     sourceMap?: boolean;
     execute?: boolean;
-    postcssOptions?: { 
+    postcssOptions?: {
       plugins?: AcceptedPlugin[];
     } & ProcessOptions;
     plugins?: {
@@ -49,7 +49,7 @@ export interface AverWebpackConfig {
 
 export default (): AverWebpackConfig => ({
   babel: {},
-  additionalExtensions: [ 'js' ],
+  additionalExtensions: ['js'],
   transpileDependencies: [],
   postcss: {},
   runtimeChunk: 'single',

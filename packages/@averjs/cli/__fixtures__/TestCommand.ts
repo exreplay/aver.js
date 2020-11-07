@@ -9,9 +9,11 @@ export default class TestCommand extends Command {
       description: 'Test argument'
     }
   ];
+
   aliases = [
     't'
   ];
+
   description = 'Testcommand for unit tests.';
 
   run() {

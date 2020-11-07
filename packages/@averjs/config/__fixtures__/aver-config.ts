@@ -1,7 +1,7 @@
 export default {
   progressbar: false,
   webpack: {
-    additionalExtensions: [ 'ts' ],
+    additionalExtensions: ['ts'],
     css: {
       extract: true
     }

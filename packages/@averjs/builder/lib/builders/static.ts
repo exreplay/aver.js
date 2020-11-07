@@ -54,7 +54,7 @@ export default class StaticBuilder extends BaseBuilder {
       if (this.config.csrf) Object.assign(context, { csrfToken: '' });
     
       const html = await this.renderer?.renderToString(context);
-      if(!context.meta) return;
+      if (!context.meta) return;
 
       const {
         title, htmlAttrs, bodyAttrs, headAttrs, link,
@@ -98,7 +98,7 @@ export default class StaticBuilder extends BaseBuilder {
       });
   
       const fileToCompile = fs.readFileSync(path.resolve(this.cacheDir, './index.template.html'), 'utf-8');
-      const compiled = template(fileToCompile, { interpolate: /{{([\s\S]+?)}}/g });
+      const compiled = template(fileToCompile, { interpolate: /{{([\S\s]+?)}}/g });
       const compiledTemplate = compiled({
         HTML_ATTRS,
         HEAD_ATTRS,

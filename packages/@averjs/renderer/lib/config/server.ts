@@ -16,14 +16,14 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig
       .plugin('define')
-        .use(webpack.DefinePlugin, [ {
-          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-          'process.env.VUE_ENV': JSON.stringify('server'),
-          PRODUCTION: this.isProd
-        } ])
-        .end()
+      .use(webpack.DefinePlugin, [{
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+        'process.env.VUE_ENV': JSON.stringify('server'),
+        PRODUCTION: this.isProd
+      }])
+      .end()
       .plugin('vue-ssr-server')
-        .use(VueSSRServerPlugin);
+      .use(VueSSRServerPlugin);
   }
 
   async config(isStatic: boolean): Promise<Configuration> {
@@ -35,12 +35,12 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
       //     .add(path.join(this.libRoot, 'vue/entry-server.js'))
       //     .end()
       .output
-        .libraryTarget('commonjs2')
-        .filename('bundle.server.js')
-        .end()
+      .libraryTarget('commonjs2')
+      .filename('bundle.server.js')
+      .end()
       .optimization
-        .splitChunks({})
-        .end()
+      .splitChunks({})
+      .end()
       .externals(nodeExternals({
         allowlist: [
           /es6-promise|\.(?!(?:js|json)$).{1,5}$/i,
