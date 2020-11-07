@@ -11,11 +11,11 @@ export default class Release {
   constructor(test = false) {
     this.test = test;
     this.newVersion = null;
-    this.releaseTypes = [ {
+    this.releaseTypes = [{
       name: 'Let lerna automatically determine a new release version',
       value: 'auto',
       short: 'Automatic release type'
-    }, 'major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease' ];
+    }, 'major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
   }
 
   async run() {
@@ -74,7 +74,7 @@ export default class Release {
     const spinner = ora(`Creating new release branch 'release/${this.newVersion}'.`).start();
 
     try {
-      await exec('git', [ 'checkout', '-b', `release/${this.newVersion}`, branch ]);
+      await exec('git', ['checkout', '-b', `release/${this.newVersion}`, branch]);
       spinner.succeed();
     } catch (err) {
       spinner.fail(err.stderr);
@@ -86,8 +86,8 @@ export default class Release {
     const spinner = ora('Pre release sync').start();
     
     try {
-      await exec('git', [ 'add', '-A' ]);
-      await exec('git', [ 'commit', '-m', 'chore: pre release sync' ]);
+      await exec('git', ['add', '-A']);
+      await exec('git', ['commit', '-m', 'chore: pre release sync']);
     } catch (err) {} finally {
       spinner.succeed();
     }
@@ -112,7 +112,7 @@ export default class Release {
     }
 
     try {
-      await exec('yarn', [ 'lerna', ...lernaArgs ]);
+      await exec('yarn', ['lerna', ...lernaArgs]);
       spinner.succeed();
     } catch (err) {
       spinner.fail(err.stderr);
@@ -121,7 +121,7 @@ export default class Release {
   }
 
   async gitBranch() {
-    const { stdout } = await exec('git', [ 'rev-parse', '--abbrev-ref', 'HEAD' ]);
+    const { stdout } = await exec('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
     return stdout;
   }
 }

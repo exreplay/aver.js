@@ -63,7 +63,7 @@ export default class Server extends WWW {
     await this.registerMiddlewares();
     await this.registerRoutes();
 
-    const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+    const errorHandler: ErrorRequestHandler = (err, req, res) => {
       if (!this.isProd) console.error(err.stack);
       req.error = err.stack;
       res.status(err.status || 500).json(Object.assign({

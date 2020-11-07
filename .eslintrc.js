@@ -1,27 +1,33 @@
 module.exports = {
-  parser: '@typescript-eslint/parser',
-  plugins: [
-    '@typescript-eslint'
-  ],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended'
-  ],
-  rules: {
-    '@typescript-eslint/explicit-module-boundary-types': 'off'
-  },
   overrides: [
     {
       files: [
-        'packages/@averjs/vue-app/templates/**/*.js'
+        '**/*.ts'
       ],
-      parserOptions: {
-        parser: 'babel-eslint',
-        ecmaVersion: 2015
-      },
-      plugins: [],
+      parser: '@typescript-eslint/parser',
+      plugins: [
+        '@typescript-eslint'
+      ],
       extends: [
-        'plugin:lodash-template/recommended-with-script',
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended'
+      ],
+      rules: {
+        '@typescript-eslint/explicit-module-boundary-types': 'off'
+      }
+    },
+    {
+      files: [
+        '**/*.js'
+      ],
+      parser: 'babel-eslint',
+      parserOptions: {
+        ecmaVersion: 2017
+      },
+      env: {
+        es6: true
+      },
+      extends: [
         'standard'
       ],
       rules: {
@@ -34,7 +40,7 @@ module.exports = {
         'prefer-promise-reject-errors': ['error', {
           allowEmptyReject: true
         }],
-
+    
         'no-multi-spaces': ['error', {
           exceptions: {
             ImportDeclaration: true
@@ -51,6 +57,18 @@ module.exports = {
     
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
       }
+    },
+    {
+      files: [
+        'packages/@averjs/vue-app/templates/**/*.js'
+      ],
+      parserOptions: {
+        parser: 'babel-eslint',
+        ecmaVersion: 2015
+      },
+      extends: [
+        'plugin:lodash-template/recommended-with-script',
+      ]
     }
   ]
 };

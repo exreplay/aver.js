@@ -1,11 +1,10 @@
 <template>
-    <img src="../images/logo.png">
+  <img src="../images/logo.png">
 </template>
 
 <script>
-    import Vue              from 'vue';
-    import { Component }    from 'vue-property-decorator';
+  import { Vue, Component } from 'vue-property-decorator';
 	
-	@Component
-    export default class Logo extends Vue {}
+  @Component
+  export default class Logo extends Vue {}
 </script>

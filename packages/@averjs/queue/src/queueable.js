@@ -26,25 +26,21 @@ export default class Queueable {
   }
 
   async dispatch(data) {
-    try {
-      const tmpQueue = Queue.create(this.name, data)
-                .priority(this.priority || 'normal')
-                .attempts(this.attempts || 1)
-                .removeOnComplete(this.removeOnComplete || true);
+    const tmpQueue = Queue.create(this.name, data)
+      .priority(this.priority || 'normal')
+      .attempts(this.attempts || 1)
+      .removeOnComplete(this.removeOnComplete || true);
             
-      if (this.delay) {
-        tmpQueue.delay(this.delay);
-      }
-
-      if (this.backoff) {
-        tmpQueue.backoff(this.backoff);
-      }
-            
-      const job = await tmpQueue.save();
-
-      return job;
-    } catch (err) {
-      throw err;
+    if (this.delay) {
+      tmpQueue.delay(this.delay);
     }
+
+    if (this.backoff) {
+      tmpQueue.backoff(this.backoff);
+    }
+            
+    const job = await tmpQueue.save();
+
+    return job;
   }
 }

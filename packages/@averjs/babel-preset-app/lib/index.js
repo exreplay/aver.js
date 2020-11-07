@@ -26,11 +26,13 @@ module.exports = (_context, options = {}) => {
     corejs = 2
   } = options;
 
-  const targets = buildTarget === 'server' ? { node: 'current' } : {
-    browsers: [
-      'IE >= 9'
-    ]
-  };
+  const targets = buildTarget === 'server'
+    ? { node: 'current' }
+    : {
+      browsers: [
+        'IE >= 9'
+      ]
+    };
 
   let polyfills;
 
@@ -39,12 +41,12 @@ module.exports = (_context, options = {}) => {
       ignoreBrowserslistConfig,
       configPath
     });
-    plugins.push([ require('./polyfillsPlugin'), { polyfills } ]);
+    plugins.push([require('./polyfillsPlugin'), { polyfills }]);
   } else {
     polyfills = [];
   }
 
-  presets.push([ require('@babel/preset-env'), {
+  presets.push([require('@babel/preset-env'), {
     spec,
     loose,
     debug,
@@ -58,25 +60,25 @@ module.exports = (_context, options = {}) => {
     exclude: polyfills.concat(exclude || []),
     shippedProposals,
     forceAllTransforms
-  } ]);
+  }]);
 
   plugins.push(
     require('@babel/plugin-syntax-dynamic-import'),
-    [ require('@babel/plugin-proposal-decorators'), {
+    [require('@babel/plugin-proposal-decorators'), {
       decoratorsBeforeExport,
       legacy: decoratorsLegacy !== false
-    } ],
-    [ require('@babel/plugin-proposal-class-properties'), { loose } ],
-    [ require('@babel/plugin-transform-classes'), { loose } ]
+    }],
+    [require('@babel/plugin-proposal-class-properties'), { loose }],
+    [require('@babel/plugin-transform-classes'), { loose }]
   );
 
-  plugins.push([ require('@babel/plugin-transform-runtime'), {
+  plugins.push([require('@babel/plugin-transform-runtime'), {
     regenerator: useBuiltIns !== 'usage',
     corejs: corejs >= 3 ? false : corejs,
     helpers: useBuiltIns === 'usage',
     useESModules: buildTarget !== 'server',
     absoluteRuntime
-  } ]);
+  }]);
 
   return {
     presets,

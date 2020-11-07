@@ -10,7 +10,7 @@
     "dev": "node -r esm ./scripts/dev --watch",
     "build": "node -r esm ./scripts/dev",
     "release": "node -r esm ./scripts/release",
-    "lint": "eslint --ext .js,.vue .",
+    "lint": "eslint --ext .ts,.js,.vue .",
     "test": "jest && codecov",
     "version": "node -r esm ./scripts/generateChangelog.js && git add CHANGELOG.md"
   },
