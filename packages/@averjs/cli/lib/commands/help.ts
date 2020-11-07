@@ -51,13 +51,15 @@ export default class HelpCommand extends Command implements CommandInterface {
 
   generateCommandLineUsage(command?: CommandInterface) {
     const cmd: Section[] = [];
-    const head = command ? {
-      header: `aver ${command.name}`,
-      content: command.description
-    } : {
-      content: this.getLogo(),
-      raw: true
-    };
+    const head = command
+      ? {
+        header: `aver ${command.name}`,
+        content: command.description
+      }
+      : {
+        content: this.getLogo(),
+        raw: true
+      };
 
     cmd.push(head);
 

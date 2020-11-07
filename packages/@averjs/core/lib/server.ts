@@ -195,11 +195,14 @@ export default class Server extends WWW {
       }
     });
 
-    this.app.get('*', this.isProd ? this.render.bind(this) : (req, res) => {
-      this.builder?.readyPromise?.then(async() => {
-        await this.render(req, res);
-      });
-    });
+    this.app.get('*', this.isProd
+      ? this.render.bind(this)
+      : (req, res) => {
+        this.builder?.readyPromise?.then(async() => {
+          await this.render(req, res);
+        });
+      }
+    );
 
     await this.aver.callHook('server:after-register-routes', { app: this.app, middlewares: this.middlewares, server: this.server });
   }
