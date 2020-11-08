@@ -1,1 +1,5 @@
-export default {};
+export default {
+  i18n: {
+    locale: 'en'
+  }
+};

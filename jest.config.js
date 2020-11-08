@@ -6,6 +6,8 @@ const corePackages = fs.readdirSync(path.resolve(__dirname, './packages/@averjs'
   .map(p => p.name);
 
 module.exports = {
+  preset: 'jest-puppeteer',
+  
   clearMocks: true,
 
   expand: true,
@@ -27,12 +29,12 @@ module.exports = {
   setupFilesAfterEnv: ['./__tests__/utils/setup'],
 
   watchPathIgnorePatterns: [
-    'fixtures'
+    'dist',
+    'node_modules'
   ],
 
-  testEnvironment: 'node',
   moduleFileExtensions: [
-    'js', 'json', 'ts', 'node'
+    'js', 'json', 'ts', 'node', 'vue'
   ],
   transform: {
     '^.+\\.js?$': 'babel-jest',

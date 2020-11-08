@@ -14,6 +14,9 @@ module.exports = {
       env: {
         jest: true
       },
+      globals: {
+        jestPuppeteer: true
+      },
       extends: [
         'standard',
         'plugin:@typescript-eslint/eslint-recommended',
@@ -35,6 +38,9 @@ module.exports = {
       ],
       env: {
         jest: true
+      },
+      globals: {
+        jestPuppeteer: true
       },
       extends: [
         '@averjs'
