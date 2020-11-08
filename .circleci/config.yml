@@ -32,21 +32,21 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/repo
+          at: ~/
       - run: yarn build
   
   lint: 
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/repo
+          at: ~/
       - run: yarn lint
   
   test: 
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/repo
+          at: ~/
       - run: yarn test
 
 workflows:
