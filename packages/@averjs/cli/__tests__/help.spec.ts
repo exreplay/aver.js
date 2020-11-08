@@ -1,5 +1,6 @@
 import AverCli from '../lib';
 import TestCommand from '../__fixtures__/TestCommand';
+import { setProcessArgs } from './utils';
 
 const OLD_ARGV = [...process.argv];
 let outputData = '';
@@ -13,7 +14,7 @@ beforeEach(function() {
 });
 
 test('help should have the available commands header set', async() => {
-  process.argv.push('help');
+  setProcessArgs('help');
 
   const cli = new AverCli();
   await cli.run();
@@ -21,7 +22,7 @@ test('help should have the available commands header set', async() => {
 });
 
 test('help for specific command should list the command options', async() => {
-  process.argv.push('test', '-h');
+  setProcessArgs('test', '-h');
 
   const cli = new AverCli();
   cli.addCommand(new TestCommand());
@@ -31,7 +32,7 @@ test('help for specific command should list the command options', async() => {
 });
 
 test('help should always show global commands', async() => {
-  process.argv.push('test', '-h');
+  setProcessArgs('test', '-h');
 
   let cli = new AverCli();
   cli.addCommand(new TestCommand());
@@ -40,7 +41,7 @@ test('help should always show global commands', async() => {
   expect(outputData).toMatch('--version');
 
   process.argv = [...OLD_ARGV];
-  process.argv.push('help');
+  setProcessArgs('help');
 
   cli = new AverCli();
   await cli.run();

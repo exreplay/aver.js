@@ -2,6 +2,7 @@ import AverCli from '../lib';
 import HelpCommand from '../lib/commands/help';
 import TestCommand from '../__fixtures__/TestCommand';
 import FailingCommand from '../__fixtures__/FailingCommand';
+import { setProcessArgs } from './utils';
 
 let outputData = '';
 const tmpProcessArgv = [...process.argv];
@@ -27,20 +28,20 @@ test('cli should at least have the help command', () => {
 });
 
 test('help getter should identify help arg', () => {
-  process.argv.push('help');
+  setProcessArgs('help');
 
   let cli = new AverCli();
   expect(cli.help).toBeTruthy();
 
   resetArgv();
 
-  process.argv.push('--h');
+  setProcessArgs('--h');
   cli = new AverCli();
   expect(cli.help).toBeTruthy();
 });
 
 test('executedCommand should identify the given command, show help or execute dev when nothing is given', () => {
-  process.argv.push('build');
+  setProcessArgs('build');
 
   let cli = new AverCli();
   expect(cli.executedCommand).toBe('build');
@@ -50,13 +51,13 @@ test('executedCommand should identify the given command, show help or execute de
   cli = new AverCli();
   expect(cli.executedCommand).toBe('dev');
 
-  process.argv.push('--h');
+  setProcessArgs('--h');
   cli = new AverCli();
   expect(cli.executedCommand).toBe('help');
 });
 
 test('global command should be executed', () => {
-  process.argv.push('--v');
+  setProcessArgs('--v');
 
   const cli = new AverCli();
   expect(cli.globalCommand?.name).toBe('version');
@@ -67,7 +68,7 @@ test('global command should be executed', () => {
 });
 
 test('test command should be added correctly and executed', () => {
-  process.argv.push('test');
+  setProcessArgs('test');
 
   const cli = new AverCli();
   cli.addCommand(new TestCommand());
@@ -79,7 +80,7 @@ test('test command should be added correctly and executed', () => {
 });
 
 test('help should be executed correctly', () => {
-  process.argv.push('test', '--h');
+  setProcessArgs('test', '--h');
 
   const cli = new AverCli();
   cli.addCommand(new TestCommand());
@@ -88,7 +89,7 @@ test('help should be executed correctly', () => {
 });
 
 test('catch block should be called when comman does not exist', () => {
-  process.argv.push('fail');
+  setProcessArgs('fail');
 
   const cli = new AverCli();
   cli.addCommand(new FailingCommand());
