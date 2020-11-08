@@ -10,12 +10,12 @@ type AverConfig = ReturnType<typeof app> & ReturnType<typeof core> & ReturnType<
   webpack: ReturnType<typeof renderer>
 }
 
-export function defaultAverjsConfig(): AverConfig {
+export function defaultAverjsConfig(isProd: boolean): AverConfig {
   return {
     ...app(),
     ...core(),
     ...server(),
-    webpack: renderer(),
+    webpack: renderer(isProd),
     ...vueApp()
   };
 }

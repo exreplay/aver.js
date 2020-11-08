@@ -8,19 +8,20 @@ import { Rule } from 'webpack-chain';
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
 
 export default class StyleLoader {
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   isServer: boolean;
   config: AverConfig['webpack'];
   perfLoader: PerformanceLoader;
   postcss: PostCSS | null = null;
   name: string | null = null;
 
-  constructor(isServer: boolean, config: AverConfig['webpack'], perfLoader: PerformanceLoader) {
+  constructor(isServer: boolean, config: AverConfig, perfLoader: PerformanceLoader) {
     this.isServer = isServer;
-    this.config = config;
+    this.config = config.webpack;
+    this.isProd = config.isProd;
     this.perfLoader = perfLoader;
 
-    if (this.config.postcss) this.postcss = new PostCSS(this.config);
+    if (this.config.postcss) this.postcss = new PostCSS(config);
   }
 
   get stylesAreInline() {

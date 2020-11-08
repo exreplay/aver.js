@@ -14,10 +14,11 @@ import { Rule } from 'webpack-chain';
 export default class PostCSS {
   config: AverConfig['webpack'];
   preset: PostCSSPresetEnv.pluginOptions;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
 
-  constructor(config: AverConfig['webpack']) {
-    this.config = cloneDeep(config);
+  constructor(config: AverConfig) {
+    this.config = cloneDeep(config.webpack);
+    this.isProd = config.isProd;
     this.preset = this.config.postcss?.preset || {};
     delete this.config.postcss?.preset;
   }

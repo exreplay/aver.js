@@ -7,6 +7,7 @@ interface InternalConfig {
   cacheDir: string;
   distPath: string;
   distDir: string;
+  isProd: boolean;
   _production: boolean;
 }
 
@@ -18,7 +19,8 @@ export function getAverjsConfig(): AverInternalConfig {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const requireModule = require('esm')(module);
   const globalConfPath = path.resolve(process.env.PROJECT_PATH, `../${defaultFileName}`);
-  const config: AverConfigPartial = defaultAverjsConfig();
+  const isProd = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test';
+  const config: AverConfigPartial = defaultAverjsConfig(isProd);
   let userConfig = {};
   let configFile = null;
 
@@ -41,6 +43,8 @@ export function getAverjsConfig(): AverInternalConfig {
 
   config.distDir = './dist';
   config.distPath = path.resolve(config.rootDir, config.distDir);
+
+  config.isProd = isProd;
 
   return mergeWith(config as AverInternalConfig, userConfig, (objValue, srcValue) => {
     if (Array.isArray(objValue)) {

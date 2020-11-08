@@ -17,7 +17,7 @@ export default class StaticBuilder extends BaseBuilder {
   config: AverConfig;
   renderer: BundleRenderer | null = null;
   readyPromise: Promise<boolean> | null = null;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   distPath: string;
   cacheDir: string;
 
@@ -25,7 +25,7 @@ export default class StaticBuilder extends BaseBuilder {
     super();
     this.aver = aver;
     this.config = aver.config;
-    this.isProd = process.env.NODE_ENV === 'production';
+    this.isProd = aver.config.isProd;
     this.distPath = this.config.distPath;
     this.cacheDir = this.config.cacheDir;
 

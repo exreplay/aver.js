@@ -25,7 +25,7 @@ export default class Renderer {
   aver: Core;
   config: AverConfig;
   options: RendererOptions;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   cacheDir: string;
   distPath: string;
   mfs = new MFS();
@@ -45,6 +45,7 @@ export default class Renderer {
     this.options = options;
     this.cacheDir = aver.config.cacheDir;
     this.distPath = aver.config.distPath;
+    this.isProd = aver.config.isProd;
   }
 
   async setup() {

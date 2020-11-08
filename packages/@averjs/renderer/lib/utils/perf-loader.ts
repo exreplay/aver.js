@@ -17,11 +17,12 @@ interface PoolConfig {
 export default class PerformanceLoader {
   isServer: boolean;
   config: AverConfig['webpack'];
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
 
-  constructor(isServer: boolean, config: AverConfig['webpack']) {
+  constructor(isServer: boolean, config: AverConfig) {
     this.isServer = isServer;
-    this.config = config;
+    this.config = config.webpack;
+    this.isProd = config.isProd;
   }
 
   get pools(): PoolConfig {

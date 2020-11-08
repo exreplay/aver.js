@@ -45,7 +45,7 @@ const plugin: PluginFunction = function(options: SessionPluginOptions) {
       cookie: {
         expires: new Date(Date.now() + (ttl * 1000)),
         maxAge: ttl * 1000,
-        secure: process.env.NODE_ENV === 'production'
+        secure: this.config.isProd
       },
       store
     } as SessionOptions,
@@ -55,7 +55,7 @@ const plugin: PluginFunction = function(options: SessionPluginOptions) {
   this.aver.config.sessionStore = store;
 
   this.aver.tap('server:after-register-middlewares', ({ app, middlewares }) => {
-    if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
+    if (this.config.isProd) app.set('trust proxy', 1);
 
     middlewares.push(session(config));
   });

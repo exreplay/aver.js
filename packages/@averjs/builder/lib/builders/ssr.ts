@@ -16,7 +16,7 @@ export default class SsrBuilder extends BaseBuilder {
   config: AverConfig;
   renderer: BundleRenderer | null = null;
   readyPromise: Promise<void> | null = null;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   cacheDir: string;
   distPath: string;
 
@@ -26,6 +26,7 @@ export default class SsrBuilder extends BaseBuilder {
     this.config = aver.config;
     this.cacheDir = aver.config.cacheDir;
     this.distPath = aver.config.distPath;
+    this.isProd = aver.config.isProd;
   }
 
   async initRenderer() {

@@ -47,14 +47,14 @@ export interface AverWebpackConfig {
   }
 }
 
-export default (): AverWebpackConfig => ({
+export default (isProd: boolean): AverWebpackConfig => ({
   babel: {},
   additionalExtensions: ['js'],
   transpileDependencies: [],
   postcss: {},
   runtimeChunk: 'single',
   css: {
-    extract: process.env.NODE_ENV === 'production',
+    extract: isProd,
     styleResources: {
       resources: [],
       options: {

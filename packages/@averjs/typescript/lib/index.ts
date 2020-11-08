@@ -14,8 +14,6 @@ interface TypescriptPluginOptions {
 }
 
 const plugin: PluginFunction = async function(options: TypescriptPluginOptions) {
-  const isProd = process.env.NODE_ENV === 'production';
-
   const {
     tsLoader,
     forkTsChecker
@@ -84,7 +82,7 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
       .use('thread-loader')
       .loader('thread-loader')
       .options({
-        poolConfig: { name: 'ts', poolTimeout: !isProd ? Infinity : 2000 },
+        poolConfig: { name: 'ts', poolTimeout: !this.config.isProd ? Infinity : 2000 },
         loaders: ['ts-loader'],
         useThread: true
       })

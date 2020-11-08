@@ -126,7 +126,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       }
     };
     
-    if (process.env.NODE_ENV === 'production' && this.webpackConfig.css?.extract) {
+    if (this.isProd && this.webpackConfig.css?.extract) {
       splitChunks.cacheGroups.styles = {
         name: 'styles',
         test: /\.(s?css|vue)$/,

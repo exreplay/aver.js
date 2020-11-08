@@ -18,7 +18,7 @@ export default class WebpackBaseConfiguration {
   isServer: boolean;
   cacheDir: string;
   distPath: string;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   commonRules = [];
 
   perfLoader: PerformanceLoader;
@@ -33,14 +33,13 @@ export default class WebpackBaseConfiguration {
     this.isServer = isServer;
     this.cacheDir = aver.config.cacheDir;
     this.distPath = aver.config.distPath;
-    
-    this.isProd = process.env.NODE_ENV === 'production';
+    this.isProd = aver.config.isProd;
 
     this.commonRules = [];
 
-    this.perfLoader = new PerformanceLoader(this.isServer, this.webpackConfig);
+    this.perfLoader = new PerformanceLoader(this.isServer, aver.config);
     this.perfLoader.warmupLoaders();
-    this.styleLoader = new StyleLoader(this.isServer, this.webpackConfig, this.perfLoader);
+    this.styleLoader = new StyleLoader(this.isServer, aver.config, this.perfLoader);
     this.babelLoader = new BabelLoader(this.isServer, aver.config, this.perfLoader);
   }
 
