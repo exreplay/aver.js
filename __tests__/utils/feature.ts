@@ -1,6 +1,7 @@
 import 'expect-puppeteer';
 import fs from 'fs-extra';
 import path from 'path';
+import consola from 'consola';
 import Aver from '../../packages/@averjs/core/lib';
 
 export let aver: Aver;
@@ -8,6 +9,9 @@ export let aver: Aver;
 export function testFeature(name: string, fn: (() => void)) {
   describe(name, () => {
     beforeAll(async() => {
+      consola.wrapAll();
+      consola.pause();
+
       process.env.PROJECT_PATH = path.resolve(__dirname, `../fixtures/${name}/src`);
       process.env.API_PATH = path.resolve(__dirname, `../fixtures/${name}/api`);
   
