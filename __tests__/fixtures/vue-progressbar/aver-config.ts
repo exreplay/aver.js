@@ -6,7 +6,7 @@ const config: AverConfig = {
   ...defaultConfig(__dirname) as any,
   progressbar: {
     color: '#123',
-    thickness: 5
+    thickness: '5px'
   }
 };
 
