@@ -1,5 +1,7 @@
 import path from 'path';
 
+console.log(__dirname);
+
 export default {
   rootDir: __dirname,
   cacheDir: path.resolve(__dirname, './node_modules/.cache/averjs'),
