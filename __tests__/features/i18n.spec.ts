@@ -1,30 +1,8 @@
-import 'expect-puppeteer';
-import fs from 'fs-extra';
-import path from 'path';
-import Aver from '../../packages/@averjs/core/lib';
+import { testFeature } from '../utils/feature';
 
-let aver: Aver;
-
-describe('i18n', () => {
+testFeature('i18n', () => {
   beforeEach(async() => {
     await page.deleteCookie({ name: 'language', url: 'http://localhost:3000' });
-    await jestPuppeteer.resetPage();
-  });
-
-  beforeAll(async() => {
-    process.env.PROJECT_PATH = path.resolve(__dirname, '../fixtures/i18n/src');
-    process.env.API_PATH = path.resolve(__dirname, '../fixtures/i18n/api');
-
-    aver = new Aver();
-    await aver.build({});
-    
-    aver.config._production = true;
-    await aver.run();
-  });
-
-  afterAll(async() => {
-    await aver?.server?.close();
-    fs.removeSync(aver?.config.distPath);
   });
 
   test('should pick up i18n config from aver-config file, display english translation and display correct current lang', async() => {
