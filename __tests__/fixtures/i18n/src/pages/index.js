@@ -8,5 +8,10 @@ export default [
     path: '/fallback',
     name: 'fallback',
     component: () => import('./Fallback')
+  },
+  {
+    path: '/global',
+    name: 'global',
+    component: () => import('./Global')
   }
 ];

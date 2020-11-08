@@ -7,6 +7,7 @@ let aver: Aver;
 
 describe('i18n', () => {
   beforeEach(async() => {
+    await page.deleteCookie({ name: 'language', url: 'http://localhost:3000' });
     await jestPuppeteer.resetPage();
   });
 
@@ -49,5 +50,12 @@ describe('i18n', () => {
     expect(await page.cookies()).toContainEqual(
       expect.objectContaining({ name: 'language', value: 'de' })
     );
+  });
+
+  test('mixin should add global messages', async() => {
+    await page.goto('http://localhost:3000/global');
+    expect(await page.content()).toContain('<div>global en</div>');
+    await page.click('button');
+    expect(await page.content()).toContain('<div>global de</div>');
   });
 });
