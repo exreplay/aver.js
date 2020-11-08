@@ -25,7 +25,6 @@ export default class Server extends WWW {
   aver: Core;
   config: AverConfig;
   isProd: boolean;
-  distDir: string;
   distPath: string;
   middlewares: ExpressMiddlewares = [];
   builder: SsrBuilder | null = null;
@@ -35,7 +34,6 @@ export default class Server extends WWW {
     super();
     this.aver = aver;
     this.config = aver.config;
-    this.distDir = aver.config.distDir;
     this.distPath = aver.config.distPath;
     this.isProd = aver.config.isProd;
 
