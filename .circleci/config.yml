@@ -14,8 +14,8 @@ jobs:
   install:
     <<: *defaults
     steps:
-      - puppeteer/install
       - checkout
+      - puppeteer/install
       - restore_cache:
           keys:
             - v1-averjs-{{ checksum "yarn.lock" }}
