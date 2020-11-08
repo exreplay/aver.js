@@ -11,6 +11,7 @@ describe('i18n', () => {
   });
 
   beforeAll(async() => {
+    console.log(process.env.NODE_ENV);
     process.env.PROJECT_PATH = path.resolve(__dirname, '../fixtures/i18n/src');
     process.env.API_PATH = path.resolve(__dirname, '../fixtures/i18n/api');
 
