@@ -31,6 +31,7 @@ export default class SsrBuilder extends BaseBuilder {
 
   async initRenderer() {
     if (this.isProd) {
+      console.log(this.distPath);
       const serverBundle = require(path.join(this.distPath, './vue-ssr-server-bundle.json'));
       const clientManifest = require(path.join(this.distPath, './vue-ssr-client-manifest.json'));
       this.renderer = this.createRenderer(serverBundle, Object.assign({
