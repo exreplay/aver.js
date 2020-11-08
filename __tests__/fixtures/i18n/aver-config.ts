@@ -1,11 +1,7 @@
-import path from 'path';
-
-console.log(__dirname);
+import { defaultConfig } from '../../utils/feature';
 
 export default {
-  rootDir: __dirname,
-  cacheDir: path.resolve(__dirname, './node_modules/.cache/averjs'),
-  distPath: path.resolve(__dirname, './dist'),
+  ...defaultConfig(__dirname),
   i18n: {
     locale: 'en'
   }
