@@ -8,6 +8,9 @@ const corePackages = fs.readdirSync(path.resolve(__dirname, './packages/@averjs'
 module.exports = {
   clearMocks: true,
 
+  expand: true,
+  forceExit: true,
+
   coverageDirectory: './coverage/',
   collectCoverage: true,
 
@@ -19,6 +22,12 @@ module.exports = {
   coveragePathIgnorePatterns: [
     '__fixtures__',
     'dist'
+  ],
+
+  setupFilesAfterEnv: ['./__tests__/utils/setup'],
+
+  watchPathIgnorePatterns: [
+    'fixtures'
   ],
 
   testEnvironment: 'node',
@@ -34,7 +43,11 @@ module.exports = {
     '**/__tests__/**/*.spec.ts'
   ],
 
+  transformIgnorePatterns: [
+    'node_modules/(?!(@averjs|averjs))'
+  ],
+
   moduleNameMapper: {
-    [`@averjs/(${corePackages.join('|')})(/?.*)$`]: '<rootDir>/packages/@averjs/$1/$2'
+    [`@averjs/(${corePackages.join('|')})$`]: '<rootDir>/packages/@averjs/$1/lib/index'
   }
 };
