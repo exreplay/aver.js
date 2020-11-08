@@ -5,5 +5,5 @@ export function setProcessArgs(...args: string[]) {
       next,
       ...(next.includes('jest') && args)
     ].filter(_ => _);
-  }, []);
+  }, [] as string[]);
 }

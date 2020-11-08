@@ -23,9 +23,6 @@
     "packages/@averjs/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "**/__tests__/**/*.ts",
-    "**/__mocks__/**/*.ts",
-    "**/__fixtures__/**/*.ts"
+    "node_modules"
   ]
 }
