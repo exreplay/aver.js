@@ -24,11 +24,12 @@ export type ExpressMiddlewares = (Handler | [string, Handler])[];
 export default class Server extends WWW {
   aver: Core;
   config: AverConfig;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   distDir: string;
   distPath: string;
   middlewares: ExpressMiddlewares = [];
   builder: SsrBuilder | null = null;
+  watcher: chokidar.FSWatcher | null = null;
 
   constructor(aver: Core) {
     super();
@@ -36,15 +37,16 @@ export default class Server extends WWW {
     this.config = aver.config;
     this.distDir = aver.config.distDir;
     this.distPath = aver.config.distPath;
+    this.isProd = aver.config.isProd;
 
-    fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) || fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
+    if (process.env.NODE_ENV !== 'test') fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) || fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
 
     if (!this.isProd) {
-      const watcher = chokidar.watch(process.env.API_PATH);
+      this.watcher = chokidar.watch(process.env.API_PATH);
             
-      watcher.on('ready', () => {
+      this.watcher.on('ready', () => {
         console.log('Watching for changes on the server');
-        watcher.on('all', () => {
+        this.watcher?.on('all', () => {
           console.log('Clearing server cache');
           Object.keys(require.cache).forEach((id) => {
             // eslint-disable-next-line no-useless-escape
@@ -55,6 +57,11 @@ export default class Server extends WWW {
         });
       });
     }
+  }
+
+  async close() {
+    await this.watcher?.close();
+    this.server.close();
   }
 
   async setup() {
@@ -87,7 +94,7 @@ export default class Server extends WWW {
       contentSecurityPolicy: false,
       ...this.config.helmet
     }));
-    this.logging();
+    if (process.env.NODE_ENV !== 'test') this.logging();
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));
         

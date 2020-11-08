@@ -11,6 +11,7 @@ import { RendererOptions } from '@averjs/renderer';
 export default class Core extends Hookable {
   config: AverConfig;
   plugins: PluginContainerInterface;
+  server: Server | null = null;
 
   constructor() {
     super();
@@ -21,7 +22,7 @@ export default class Core extends Hookable {
         process.env[k] = envConfig[k];
       }
     } else {
-      console.warn("In order to use dotenv, please create a '.env' file in your project root.");
+      if (process.env.NODE_ENV !== 'test') console.warn("In order to use dotenv, please create a '.env' file in your project root.");
     }
 
     this.config = getAverjsConfig();
@@ -31,9 +32,9 @@ export default class Core extends Hookable {
   async run() {
     await this.plugins.register();
     this.initModuleAliases();
-    const server = new Server(this);
-    await server.setup();
-    server.startServer();
+    this.server = new Server(this);
+    await this.server.setup();
+    this.server.startServer();
   }
 
   async build(args: RendererOptions) {
