@@ -5,7 +5,7 @@ defaults: &defaults
   docker:
     - image: circleci/node:latest
       environment:
-        NODE_ENV: development
+        NODE_ENV: test
 
 jobs:
   install:
