@@ -14,12 +14,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-averjs-{{ checksum "yarn.lock" }}
+            - v1-averjs-{{ checksum "package.json" }}
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: v1-averjs-{{ checksum "yarn.lock" }}
+          key: v1-averjs-{{ checksum "package.json" }}
       - persist_to_workspace:
           root: ~/
           paths:
