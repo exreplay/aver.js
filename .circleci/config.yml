@@ -4,8 +4,6 @@ defaults: &defaults
   working_directory: ~/repo
   docker:
     - image: circleci/node:latest
-      environment:
-        NODE_ENV: test
 
 jobs:
   install:
@@ -48,6 +46,8 @@ jobs:
             fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
       - run: yarn build
       - run: yarn test
+        environment:
+          NODE_ENV: test
 
 workflows:
   version: 2.1
