@@ -25,20 +25,13 @@ jobs:
           paths:
             - repo
   
-  build: 
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run: yarn build
-  
   lint: 
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/
       - run: yarn lint
-  
+
   test: 
     <<: *defaults
     steps:
@@ -61,9 +54,6 @@ workflows:
   test:
     jobs:
       - install
-      - build:
-          requires:
-            - install
       - lint:
           requires:
             - install
