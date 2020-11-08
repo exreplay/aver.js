@@ -98,7 +98,7 @@ export default class Server extends WWW {
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));
         
-    this.middlewares.push(['/dist', serve(this.distDir, true)]);
+    this.middlewares.push(['/dist', serve(this.distPath, true)]);
     this.middlewares.push(['/public', serve('./public', true)]);
     this.middlewares.push(['/static', serve('./static', true)]);
     this.middlewares.push(['/storage', express.static('./storage')]);
