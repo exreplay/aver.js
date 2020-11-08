@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import Aver from '../../packages/@averjs/core/lib';
 
-let aver: Aver | null = null;
+let aver: Aver;
 
 describe('i18n', () => {
   beforeEach(async() => {
@@ -15,10 +15,6 @@ describe('i18n', () => {
     process.env.API_PATH = path.resolve(__dirname, '../fixtures/i18n/api');
 
     aver = new Aver();
-    aver.config.rootDir = path.resolve(__dirname, '../fixtures/i18n');
-    aver.config.cacheDir = path.resolve(aver.config.rootDir, './node_modules/.cache/averjs');
-    aver.config.distPath = path.resolve(aver.config.rootDir, aver.config.distDir);
-
     await aver.build({});
     
     aver.config._production = true;
@@ -27,8 +23,7 @@ describe('i18n', () => {
 
   afterAll(async() => {
     await aver?.server?.close();
-
-    fs.removeSync(path.resolve(__dirname, '../fixtures/i18n/dist'));
+    fs.removeSync(aver?.config.distPath);
   });
 
   test('should pick up i18n config from aver-config file, display english translation and display correct current lang', async() => {
