@@ -1,4 +1,4 @@
-export function setProcessArgs(...args) {
+export function setProcessArgs(...args: string[]) {
   process.argv = process.argv.reduce((prev, next) => {
     return [
       ...prev,
