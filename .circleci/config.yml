@@ -14,6 +14,7 @@ jobs:
   install:
     <<: *defaults
     steps:
+      - puppeteer/install
       - checkout
       - restore_cache:
           keys:
@@ -60,6 +61,6 @@ workflows:
       - lint:
           requires:
             - install
-      - puppeteer/test:
+      - test:
           requires:
             - install
