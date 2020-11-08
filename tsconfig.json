@@ -20,7 +20,8 @@
     "allowJs": true
   },
   "include": [
-    "packages/@averjs/**/*.ts"
+    "packages/@averjs/**/*.ts",
+    "__tests__/**/*.ts"
   ],
   "exclude": [
     "node_modules"
