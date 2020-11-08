@@ -51,3 +51,18 @@ jobs:
       - attach_workspace:
         at: ~/repo
       - run: yarn test
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - install:
+      - build:
+          requires:
+            - install
+      - lint:
+          requires:
+            - install
+      - test:
+          requires:
+            - install
