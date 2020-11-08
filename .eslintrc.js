@@ -33,6 +33,9 @@ module.exports = {
         '**/*.js',
         '**/*.vue'
       ],
+      env: {
+        jest: true
+      },
       extends: [
         '@averjs'
       ]
