@@ -6,25 +6,48 @@ import Aver from '../../packages/@averjs/core/lib';
 
 export let aver: Aver;
 
-export function testFeature(name: string, fn: (() => void)) {
+interface Options {
+  /**
+   * Enable dev mode
+   */
+  dev?: boolean;
+  /**
+   * Every console output is passed to consola and the printing is disabled by default.
+   */
+  showConsoleLogs?: boolean;
+}
+
+export function testFeature(name: string, fn: (() => void), options: Options = {}) {
+  const {
+    dev = false,
+    showConsoleLogs = false
+  } = options;
+
   describe(name, () => {
     beforeAll(async() => {
       consola.wrapAll();
-      consola.pause();
+      if (!showConsoleLogs) consola.pause();
 
       process.env.PROJECT_PATH = path.resolve(__dirname, `../fixtures/${name}/src`);
       process.env.API_PATH = path.resolve(__dirname, `../fixtures/${name}/api`);
   
       aver = new Aver();
-      await aver.build({});
-      
-      aver.config._production = true;
+      if (!dev) {
+        await aver.build({});
+        aver.config._production = true;
+      } else {
+        aver.config.isProd = false;
+      }
       await aver.run();
     });
   
     afterAll(async() => {
       await aver?.server?.close();
       fs.removeSync(aver?.config.distPath);
+      if (!showConsoleLogs) {
+        consola.clear();
+        consola.resume();
+      }
     });
 
     beforeEach(async() => {
