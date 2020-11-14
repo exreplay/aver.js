@@ -42,7 +42,7 @@ export function testFeature(name: string, fn: (() => void), options: Options = {
     });
   
     afterAll(async() => {
-      await aver?.server?.close();
+      await aver?.close();
       fs.removeSync(aver?.config.distPath);
       if (!showConsoleLogs) {
         consola.clear();

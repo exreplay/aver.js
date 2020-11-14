@@ -6,12 +6,13 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 import { getAverjsConfig, AverConfig } from '@averjs/config';
 import PluginContainer, { PluginContainerInterface } from './plugins';
-import { RendererOptions } from '@averjs/renderer';
+import Renderer, { RendererOptions } from '@averjs/renderer';
 
 export default class Core extends Hookable {
   config: AverConfig;
   plugins: PluginContainerInterface;
   server: Server | null = null;
+  renderer: Renderer | null = null;
 
   constructor() {
     super();
@@ -29,6 +30,11 @@ export default class Core extends Hookable {
     this.plugins = new PluginContainer(this);
   }
 
+  async close() {
+    await this.server?.close();
+    await this.renderer?.close();
+  }
+
   async run() {
     await this.plugins.register();
     this.initModuleAliases();
@@ -40,9 +46,9 @@ export default class Core extends Hookable {
   async build(args: RendererOptions) {
     await this.plugins.register();
     const { default: Renderer } = await import('@averjs/renderer');
-    const renderer = new Renderer(args, this);
-    await renderer.setup();
-    await renderer.compile();
+    this.renderer = new Renderer(args, this);
+    await this.renderer.setup();
+    await this.renderer.compile();
   }
 
   initModuleAliases() {

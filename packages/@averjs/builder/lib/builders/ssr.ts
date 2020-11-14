@@ -10,6 +10,7 @@ import { AverConfig } from '@averjs/config';
 import { BundleRenderer } from 'vue-server-renderer';
 import { Request } from 'express';
 import Core from '@averjs/core';
+import Renderer from '@averjs/renderer';
 
 export default class SsrBuilder extends BaseBuilder {
   aver: Core;
@@ -19,6 +20,7 @@ export default class SsrBuilder extends BaseBuilder {
   isProd: boolean;
   cacheDir: string;
   distPath: string;
+  webpackRenderer?: Renderer;
 
   constructor(aver: Core) {
     super();
@@ -27,6 +29,10 @@ export default class SsrBuilder extends BaseBuilder {
     this.cacheDir = aver.config.cacheDir;
     this.distPath = aver.config.distPath;
     this.isProd = aver.config.isProd;
+  }
+
+  async close() {
+    await this.webpackRenderer?.close();
   }
 
   async initRenderer() {
@@ -38,9 +44,9 @@ export default class SsrBuilder extends BaseBuilder {
       }, this.config.createRenderer));
     } else {
       const { default: Renderer } = await import('@averjs/renderer');
-      const renderer = new Renderer({}, this.aver);
-      await renderer.setup();
-      this.readyPromise = renderer.compile((bundle, options) => {
+      this.webpackRenderer = new Renderer({}, this.aver);
+      await this.webpackRenderer.setup();
+      this.readyPromise = this.webpackRenderer.compile((bundle, options) => {
         this.renderer = this.createRenderer(bundle, Object.assign(options, this.config.createRenderer));
       });
     }

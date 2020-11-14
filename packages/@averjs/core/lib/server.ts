@@ -59,6 +59,7 @@ export default class Server extends WWW {
 
   async close() {
     await this.watcher?.close();
+    await this.builder?.close();
     this.server.close();
   }
 

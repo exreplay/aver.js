@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import fs from 'fs-extra';
 import path from 'path';
-import webpack, { Configuration } from 'webpack';
+import webpack, { Compiler, Configuration } from 'webpack';
 import template from 'lodash/template';
 import WebpackClientConfiguration, { RendererClientConfig } from './config/client';
 import WebpackServerConfiguration from './config/server';
@@ -38,6 +38,8 @@ export default class Renderer {
 
   clientConfig: RendererClientConfig | null = null;
   serverConfig: Configuration = {};
+  serverWatcher?: Compiler.Watching;
+  templatesWatcher?: chokidar.FSWatcher;
 
   constructor(options: RendererOptions, aver: Core) {
     this.aver = aver;
@@ -55,6 +57,12 @@ export default class Renderer {
     this.serverConfig = await new WebpackServerConfiguration(this.aver).config(this.options.static || false);
   }
 
+  async close() {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    if (this.serverWatcher) this.serverWatcher.close(() => {});
+    if (this.templatesWatcher) await this.templatesWatcher.close();
+  }
+
   prepareTemplates() {
     if (!this.config.templates) return;
 
@@ -66,13 +74,13 @@ export default class Renderer {
     for (const templateFile of templates) this.writeTemplateFile(templateFile);
 
     if (!this.isProd) {
-      const watcher = chokidar.watch(
+      this.templatesWatcher = chokidar.watch(
         // generate a new set of unique paths
         [...new Set(this.config.templates?.map(temp => path.resolve(temp.pluginPath || '', './entries')))]
       );
             
-      watcher.on('ready', () => {
-        watcher.on('all', (event, id) => {
+      this.templatesWatcher.on('ready', () => {
+        this.templatesWatcher?.on('all', (event, id) => {
           if (event !== 'addDir' && event !== 'unlinkDir') {
             if (!this.config.templates) return;
 
@@ -141,7 +149,7 @@ export default class Renderer {
       }
 
       // Compile server
-      serverCompiler.watch({}, (err, stats) => {
+      this.serverWatcher = serverCompiler.watch({}, (err, stats) => {
         if (err) throw err;
         const jsonStats = stats.toJson();
         jsonStats.errors.forEach(err => console.error(err));
