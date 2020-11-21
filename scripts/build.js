@@ -82,7 +82,7 @@ export default class Build {
       } else {
         const buildSpinner = ora(`Building package ${pkg.pkg.name}`).start();
         const bundle = await rollup(config);
-        bundle.write(config.output);
+        await bundle.write(config.output);
         buildSpinner.succeed();
 
         const extractorConfigPath = path.resolve(

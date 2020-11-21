@@ -27,7 +27,7 @@ export default class WebpackBaseConfiguration {
 
   constructor(isServer: boolean, aver: Core) {
     this.aver = aver;
-    this.webpackConfig = aver.config.webpack;
+    this.webpackConfig = aver.config.webpack || {};
 
     this.chainConfig = new WebpackChain();
     this.isServer = isServer;

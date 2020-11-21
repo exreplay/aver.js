@@ -23,7 +23,8 @@ const plugin: PluginFunction = function(options: SessionPluginOptions) {
     process.env.REDIS_HOST &&
     process.env.REDIS_PASSWORD
   ) {
-    const RedisStore = ConnectRedis(session);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RedisStore = ConnectRedis(session as any);
     const redisClient = new Redis(
       parseInt(process.env.REDIS_PORT),
       process.env.REDIS_HOST,

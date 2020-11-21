@@ -3,9 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import webpack, { Configuration } from 'webpack';
 import template from 'lodash/template';
-import WebpackClientConfiguration, {
-  RendererClientConfig
-} from './config/client';
+import WebpackClientConfiguration from './config/client';
 import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
@@ -47,7 +45,7 @@ export default class Renderer {
 
   cb: RendererCallback | null = null;
 
-  clientConfig: RendererClientConfig | null = null;
+  clientConfig: Configuration = {};
   serverConfig: Configuration = {};
 
   constructor(options: RendererOptions, aver: Core) {
@@ -244,10 +242,12 @@ export default class Renderer {
   setupClientCompiler() {
     if (!this.clientConfig) return;
 
-    this.clientConfig.entry.app = [
-      'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr',
-      this.clientConfig.entry.app as string
-    ];
+    if (this.clientConfig.entry) {
+      (this.clientConfig.entry as webpack.Entry).app = [
+        'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr',
+        (this.clientConfig.entry as webpack.Entry).app as string
+      ];
+    }
     if (this.clientConfig.output)
       this.clientConfig.output.filename = '[name].js';
     this.clientConfig.plugins?.push(

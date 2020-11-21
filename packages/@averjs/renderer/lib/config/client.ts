@@ -19,12 +19,6 @@ import {
 } from 'workbox-webpack-plugin';
 import { SplitChunksOptions } from 'webpack-chain';
 
-export interface RendererClientConfig extends Configuration {
-  entry: {
-    app: string | string[];
-  };
-}
-
 export default class WebpackClientConfiguration extends WebpackBaseConfiguration {
   projectRoot = path.resolve(process.env.PROJECT_PATH, '.');
 
@@ -215,7 +209,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       ]);
   }
 
-  async config(isStatic: boolean): Promise<RendererClientConfig> {
+  async config(isStatic: boolean) {
     await super.config(isStatic);
 
     this.chainConfig.output //     .end() //     .add(path.join(this.libRoot, 'vue/entry-client.js')) // .entry('app')
@@ -226,11 +220,11 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     await this.aver.callHook('renderer:client-config', this.chainConfig);
 
-    const config = Object.assign(this.chainConfig.toConfig(), {
+    const config: Configuration = Object.assign(this.chainConfig.toConfig(), {
       entry: {
         app: path.join(this.cacheDir, 'entry-client.js')
       }
-    });
+    } as Configuration);
 
     return cloneDeep(config);
   }

@@ -30,7 +30,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
       .use(VueSSRServerPlugin);
   }
 
-  async config(isStatic: boolean): Promise<Configuration> {
+  async config(isStatic: boolean) {
     await super.config(isStatic);
 
     this.chainConfig
@@ -60,11 +60,11 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
 
     await this.aver.callHook('renderer:server-config', this.chainConfig);
 
-    const config = Object.assign(this.chainConfig.toConfig(), {
+    const config: Configuration = Object.assign(this.chainConfig.toConfig(), {
       entry: {
         app: path.join(this.cacheDir, 'entry-server.js')
       }
-    });
+    } as Configuration);
 
     return cloneDeep(config);
   }
