@@ -32,8 +32,8 @@
     "minimist": "^1.2.5"
   },
   "devDependencies": {
-    "@types/command-line-usage": "5.0.1",
-    "@types/minimist": "1.2.0"
+    "@types/command-line-usage": "^5.0.1",
+    "@types/minimist": "^1.2.0"
   },
   "aver": {
     "build": true

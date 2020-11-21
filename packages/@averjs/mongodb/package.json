@@ -26,6 +26,6 @@
     "mongoose-data-seed": "^2.1.6"
   },
   "devDependencies": {
-    "@types/mongoose": "5.7.36"
+    "@types/mongoose": "^5.7.36"
   }
 }
