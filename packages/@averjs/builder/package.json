@@ -29,5 +29,10 @@
     "html-minifier": "^4.0.0",
     "lru-cache": "^6.0.0",
     "vue-server-renderer": "^2.6.12"
+  },
+  "devDependencies": {
+    "@types/serialize-javascript": "4.0.0",
+    "@types/html-minifier": "4.0.0",
+    "@types/lru-cache": "5.1.0"
   }
 }
