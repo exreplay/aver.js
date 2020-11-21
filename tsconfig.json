@@ -30,6 +30,7 @@
     "packages/@averjs/*.d.ts"
   ],
   "exclude": [
+    "packages/@averjs/babel-preset-app/lib",
     "node_modules"
   ]
 }
