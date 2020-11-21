@@ -23,8 +23,8 @@ export default class Queueable {
       try {
         const response = await this.handle(job);
         done(null, response);
-      } catch (err) {
-        done(err);
+      } catch (error) {
+        done(error);
       }
     });
   }

@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
@@ -65,26 +64,26 @@ export default class RollupConfig {
 
     plugins.push(
       resolve({
-        only: [
-          /lodash/
-        ]
+        only: [/lodash/]
       })
     );
 
-    plugins.push(typescript({
-      tsconfigOverride: {
-        compilerOptions: {
-          sourceMap: true,
-          declaration: true,
-          declarationMap: true,
-          paths: {}
-        },
-        include: [
-          path.resolve(this.path, './lib'),
-          path.resolve(__dirname, '../packages/@averjs/*.d.ts')
-        ]
-      }
-    }));
+    plugins.push(
+      typescript({
+        tsconfigOverride: {
+          compilerOptions: {
+            sourceMap: true,
+            declaration: true,
+            declarationMap: true,
+            paths: {}
+          },
+          include: [
+            path.resolve(this.path, './lib'),
+            path.resolve(__dirname, '../packages/@averjs/*.d.ts')
+          ]
+        }
+      })
+    );
 
     if (this.releaseType) plugins.push(terser());
 
@@ -92,8 +91,12 @@ export default class RollupConfig {
       license({
         banner: [
           '/*!',
-          ` * ${this.pkg.name} v${this.releaseType ? await getNextVersion(this.releaseType) : '-development'}`,
-          ' * Copyright <%= moment().format(\'YYYY\') %> Florian Weber',
+          ` * ${this.pkg.name} v${
+            this.releaseType
+              ? await getNextVersion(this.releaseType)
+              : '-development'
+          }`,
+          " * Copyright <%= moment().format('YYYY') %> Florian Weber",
           ' * Released under the MIT License.',
           '*/'
         ].join('\n')
@@ -112,7 +115,7 @@ export default class RollupConfig {
       watch: {
         clearScreen: false
       },
-      onwarn: (message) => {
+      onwarn: message => {
         if (/external dependency/.test(message)) return;
         console.error(message);
       }

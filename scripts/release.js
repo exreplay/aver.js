@@ -71,8 +71,8 @@ export default class Release {
               `Successfully created new release in branch 'release/${this.newVersion}'.`
             )
           );
-        } catch (err) {
-          console.error(err);
+        } catch (error) {
+          console.error(error);
         }
       }
     }
@@ -92,8 +92,8 @@ export default class Release {
         branch
       ]);
       spinner.succeed();
-    } catch (err) {
-      spinner.fail(err.stderr);
+    } catch (error) {
+      spinner.fail(error.stderr);
       throw new Error('Script failed');
     }
   }
@@ -128,8 +128,8 @@ export default class Release {
     try {
       await exec('yarn', ['lerna', ...lernaArgs]);
       spinner.succeed();
-    } catch (err) {
-      spinner.fail(err.stderr);
+    } catch (error) {
+      spinner.fail(error.stderr);
       throw new Error('Script failed');
     }
   }

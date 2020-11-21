@@ -2,7 +2,7 @@
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
-  plugins: ['unicorn'],
+  plugins: ['unicorn', 'import'],
   env: {
     jest: true
   },
@@ -12,6 +12,19 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings'
   ],
+  settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts']
+    },
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.json', '.ts', '.d.ts']
+      },
+      typescript: {
+        project: require('path').resolve(__dirname, './tsconfig.eslint.json')
+      }
+    }
+  },
   rules: {
     'prettier/prettier': [
       'error',
@@ -44,10 +57,10 @@ module.exports = {
       },
       plugins: ['@typescript-eslint'],
       extends: [
+        'plugin:import/typescript',
         'plugin:@typescript-eslint/recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:import/typescript',
         'plugin:prettier/recommended',
         'prettier/@typescript-eslint'
       ],
@@ -71,14 +84,14 @@ module.exports = {
       rules: {
         'space-before-function-paren': 'off'
       }
-    },
-    {
-      files: ['packages/@averjs/vue-app/templates/**/*.js'],
-      parserOptions: {
-        parser: 'babel-eslint',
-        ecmaVersion: 2015
-      },
-      extends: ['plugin:lodash-template/recommended-with-script']
     }
+    // {
+    //   files: ['packages/@averjs/vue-app/templates/**/*.js'],
+    //   parserOptions: {
+    //     parser: 'babel-eslint',
+    //     ecmaVersion: 2015
+    //   },
+    //   extends: ['plugin:lodash-template/recommended-with-script']
+    // }
   ]
 };

@@ -4,7 +4,7 @@ import semver from 'semver';
 import execa from 'execa';
 import lernaJson from '../lerna.json';
 
-export const getNextVersion = async(type = null) => {
+export const getNextVersion = async (type = null) => {
   let releaseType = type;
 
   if (releaseType === null) {
@@ -25,7 +25,7 @@ export const getNextVersion = async(type = null) => {
   );
 };
 
-export const exec = async(command, args, options) => {
+export const exec = async (command, args, options) => {
   const {
     stdout: _stdout,
     stderr: _stderr,
