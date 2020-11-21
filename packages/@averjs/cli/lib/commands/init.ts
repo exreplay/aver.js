@@ -6,8 +6,8 @@ export default class InitCommand extends Command implements CommandInterface {
   description =
     'Initialize the project by creating all necessary files in the working directory.';
 
-  async run() {
+  run() {
     const init = new Init();
-    await init.run();
+    init.run();
   }
 }

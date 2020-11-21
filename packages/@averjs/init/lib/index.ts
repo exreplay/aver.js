@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
 import fs from 'fs-extra';
 import ora from 'ora';
@@ -6,7 +7,7 @@ import merge from 'lodash/merge';
 export default class Init {
   appDir = path.resolve(__dirname, '../app');
 
-  async run() {
+  run() {
     this.createSrcDir();
 
     console.log('Copying necessary files...');
@@ -53,21 +54,22 @@ export default class Init {
     `)
     );
 
-    await this.modifyPackageJson();
+    this.modifyPackageJson();
 
     console.log('Project setup successfull!');
   }
 
-  async modifyPackageJson() {
+  modifyPackageJson() {
     const spinner = ora('Modifying package.json').start();
-    const corePackageJSON = await import(
-      path.resolve(this.appDir, './package.json')
-    );
+    const corePackageJSON = require(path.resolve(
+      this.appDir,
+      './package.json'
+    ));
     const packageJSONPath = path.resolve(
       process.env.PROJECT_PATH,
       '../package.json'
     );
-    const packageJSON = await import(packageJSONPath);
+    const packageJSON = require(packageJSONPath);
 
     fs.writeFileSync(
       packageJSONPath,

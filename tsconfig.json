@@ -20,10 +20,7 @@
     "allowJs": true,
     "paths": {
       "@averjs/*": [ "packages/@averjs/*/lib" ]
-    },
-    "types": [
-      "@types/node"
-    ]
+    }
   },
   "include": [
     "packages/@averjs/*/lib",

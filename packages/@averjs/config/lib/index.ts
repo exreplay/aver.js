@@ -14,7 +14,7 @@ interface InternalConfig {
 export type AverConfig = ReturnType<typeof defaultAverjsConfig> &
   InternalConfig & { [index: string]: any };
 
-export async function getAverjsConfig(): Promise<AverConfig> {
+export function getAverjsConfig() {
   const requireModule = esm(module);
 
   const globalConfPath = path.resolve(
@@ -38,7 +38,7 @@ export async function getAverjsConfig(): Promise<AverConfig> {
 
   if (configFile) {
     if (process.env.NODE_ENV === 'test')
-      ({ default: userConfig } = await import(configFile));
+      ({ default: userConfig } = require(configFile));
     else userConfig = requireModule(configFile).default;
   }
 
