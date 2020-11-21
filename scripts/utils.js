@@ -12,13 +12,17 @@ export const getNextVersion = async(type = null) => {
   }
 
   if (releaseType === 'auto') {
-    const { releaseType: _releaseType } = await pify(conventionalRecommendedBump)({
+    const { releaseType: _releaseType } = await pify(
+      conventionalRecommendedBump
+    )({
       preset: 'angular'
     });
     releaseType = _releaseType;
   }
 
-  return semver.valid(releaseType) || semver.inc(lernaJson.version, releaseType);
+  return (
+    semver.valid(releaseType) || semver.inc(lernaJson.version, releaseType)
+  );
 };
 
 export const exec = async(command, args, options) => {

@@ -4,7 +4,10 @@ import { exec } from './utils';
 
 async function generateChangelog() {
   const nextVersion = require('../lerna.json').version;
-  const { stdout } = await exec(require.resolve('lerna-changelog/bin/cli'), ['--next-version', nextVersion]);
+  const { stdout } = await exec(require.resolve('lerna-changelog/bin/cli'), [
+    '--next-version',
+    nextVersion
+  ]);
   return stdout;
 }
 

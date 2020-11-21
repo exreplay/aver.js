@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "packages/@averjs/*/lib",
+    "packages/@averjs/*.d.ts",
+    "**/__tests__/**/*.ts",
+    "**/__fixtures__/**/*.ts",
+    "**/__mocks__/**/*.ts"
+  ]
+}

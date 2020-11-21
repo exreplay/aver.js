@@ -11,11 +11,20 @@ export default class Release {
   constructor(test = false) {
     this.test = test;
     this.newVersion = null;
-    this.releaseTypes = [{
-      name: 'Let lerna automatically determine a new release version',
-      value: 'auto',
-      short: 'Automatic release type'
-    }, 'major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
+    this.releaseTypes = [
+      {
+        name: 'Let lerna automatically determine a new release version',
+        value: 'auto',
+        short: 'Automatic release type'
+      },
+      'major',
+      'premajor',
+      'minor',
+      'preminor',
+      'patch',
+      'prepatch',
+      'prerelease'
+    ];
   }
 
   async run() {
@@ -39,11 +48,11 @@ export default class Release {
     ]);
 
     if (release) {
-      if (await this.gitBranch() !== 'development' && !this.test) {
+      if ((await this.gitBranch()) !== 'development' && !this.test) {
         console.log(
           logSymbols.warning,
           chalk.bold.red(
-            'You are not in the \'development\' branch! Please switch.'
+            "You are not in the 'development' branch! Please switch."
           )
         );
         process.exit(0);
@@ -71,10 +80,17 @@ export default class Release {
 
   async createReleaseBranch() {
     const branch = await this.gitBranch();
-    const spinner = ora(`Creating new release branch 'release/${this.newVersion}'.`).start();
+    const spinner = ora(
+      `Creating new release branch 'release/${this.newVersion}'.`
+    ).start();
 
     try {
-      await exec('git', ['checkout', '-b', `release/${this.newVersion}`, branch]);
+      await exec('git', [
+        'checkout',
+        '-b',
+        `release/${this.newVersion}`,
+        branch
+      ]);
       spinner.succeed();
     } catch (err) {
       spinner.fail(err.stderr);
@@ -84,23 +100,21 @@ export default class Release {
 
   async preReleaseSync() {
     const spinner = ora('Pre release sync').start();
-    
+
     try {
       await exec('git', ['add', '-A']);
       await exec('git', ['commit', '-m', 'chore: pre release sync']);
-    } catch {} finally {
+    } catch {
+    } finally {
       spinner.succeed();
     }
   }
 
   async createNewRelease() {
-    const spinner = ora(`Creating new release '${this.newVersion}' without pushing.`).start();
-    let lernaArgs = [
-      'publish',
-      this.newVersion,
-      '--yes',
-      '--force-publish'
-    ];
+    const spinner = ora(
+      `Creating new release '${this.newVersion}' without pushing.`
+    ).start();
+    let lernaArgs = ['publish', this.newVersion, '--yes', '--force-publish'];
 
     if (this.test) {
       lernaArgs = lernaArgs.concat([

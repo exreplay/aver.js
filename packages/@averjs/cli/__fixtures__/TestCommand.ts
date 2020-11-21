@@ -10,9 +10,7 @@ export default class TestCommand extends Command {
     }
   ];
 
-  aliases = [
-    't'
-  ];
+  aliases = ['t'];
 
   description = 'Testcommand for unit tests.';
 

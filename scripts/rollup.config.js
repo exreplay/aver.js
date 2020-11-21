@@ -10,10 +10,11 @@ import builtins from './builtins';
 import { getNextVersion } from './utils';
 
 export default class RollupConfig {
-  constructor(pkg, releaseType) {
+  constructor(pkg, releaseType, averPackages) {
     this.pkg = pkg;
     this.path = pkg.location;
     this.releaseType = releaseType;
+    this.averPackages = averPackages;
 
     this.options = {
       input: path.join(this.path, 'lib/index.ts'),
@@ -27,7 +28,8 @@ export default class RollupConfig {
     const external = [
       ...builtins,
       ...Object.keys(this.pkg.dependencies || []),
-      ...this.options.external
+      ...this.options.external,
+      ...this.averPackages
     ];
 
     return id => {
@@ -69,11 +71,14 @@ export default class RollupConfig {
       })
     );
 
-    const checkTs = fs.existsSync(path.resolve(this.path, './dist'));
-
     plugins.push(typescript({
-      check: checkTs,
       tsconfigOverride: {
+        compilerOptions: {
+          sourceMap: true,
+          declaration: true,
+          declarationMap: true,
+          paths: {}
+        },
         include: [
           path.resolve(this.path, './lib'),
           path.resolve(__dirname, '../packages/@averjs/*.d.ts')

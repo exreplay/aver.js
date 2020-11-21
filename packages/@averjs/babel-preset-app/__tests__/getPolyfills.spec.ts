@@ -21,14 +21,17 @@ test('getDefaultPolyfills should return the correct polyfills by core-js version
 });
 
 test('getPolyfills should return the correct polyfills by core-js version', () => {
-  let polyfills = getPolyfills(2, {
-    browsers: [
-      'IE >= 9'
-    ]
-  }, getDefaultPolyfills(2), {
-    ignoreBrowserslistConfig: false,
-    configPath: ''
-  });
+  let polyfills = getPolyfills(
+    2,
+    {
+      browsers: ['IE >= 9']
+    },
+    getDefaultPolyfills(2),
+    {
+      ignoreBrowserslistConfig: false,
+      configPath: ''
+    }
+  );
 
   expect(polyfills).toEqual([
     'es6.array.iterator',
@@ -37,14 +40,17 @@ test('getPolyfills should return the correct polyfills by core-js version', () =
     'es7.promise.finally'
   ]);
 
-  polyfills = getPolyfills(3, {
-    browsers: [
-      'IE >= 9'
-    ]
-  }, getDefaultPolyfills(3), {
-    ignoreBrowserslistConfig: false,
-    configPath: ''
-  });
+  polyfills = getPolyfills(
+    3,
+    {
+      browsers: ['IE >= 9']
+    },
+    getDefaultPolyfills(3),
+    {
+      ignoreBrowserslistConfig: false,
+      configPath: ''
+    }
+  );
 
   expect(polyfills).toEqual([
     'es.array.iterator',

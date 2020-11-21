@@ -23,7 +23,7 @@ test('should concat array with default values', () => {
 
 test('should match default snapshot config when no config file is present', () => {
   const processSpy = jest.spyOn(process, 'cwd').mockReturnValue('/');
-  
+
   process.env.PROJECT_PATH = '/aver';
   const config = getAverjsConfig();
   expect(config).toMatchSnapshot();

@@ -16,11 +16,15 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig
       .plugin('define')
-      .use(webpack.DefinePlugin, [{
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-        'process.env.VUE_ENV': JSON.stringify('server'),
-        PRODUCTION: this.isProd
-      }])
+      .use(webpack.DefinePlugin, [
+        {
+          'process.env.NODE_ENV': JSON.stringify(
+            process.env.NODE_ENV || 'development'
+          ),
+          'process.env.VUE_ENV': JSON.stringify('server'),
+          PRODUCTION: this.isProd
+        }
+      ])
       .end()
       .plugin('vue-ssr-server')
       .use(VueSSRServerPlugin);
@@ -34,24 +38,25 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
       // .entry('app')
       //     .add(path.join(this.libRoot, 'vue/entry-server.js'))
       //     .end()
-      .output
-      .libraryTarget('commonjs2')
+      .output.libraryTarget('commonjs2')
       .filename('bundle.server.js')
       .end()
-      .optimization
-      .splitChunks({})
+      .optimization.splitChunks({})
       .end()
-      .externals(nodeExternals({
-        allowlist: [
-          /es6-promise|\.(?!(?:js|json)$).{1,5}$/i,
-          /\.css$/,
-          /\?vue&type=style/,
-          ...this.babelLoader.transpileDeps
-        ],
-        modulesDir: 'node_modules'
-      }));
-        
-    if (typeof this.webpackConfig.server === 'function') this.webpackConfig.server(this.chainConfig);
+      .externals(
+        nodeExternals({
+          allowlist: [
+            /es6-promise|\.(?!(?:js|json)$).{1,5}$/i,
+            /\.css$/,
+            /\?vue&type=style/,
+            ...this.babelLoader.transpileDeps
+          ],
+          modulesDir: 'node_modules'
+        })
+      );
+
+    if (typeof this.webpackConfig?.server === 'function')
+      this.webpackConfig.server(this.chainConfig);
 
     await this.aver.callHook('renderer:server-config', this.chainConfig);
 

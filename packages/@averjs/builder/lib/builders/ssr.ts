@@ -24,23 +24,38 @@ export default class SsrBuilder extends BaseBuilder {
     super();
     this.aver = aver;
     this.config = aver.config;
-    this.cacheDir = aver.config.cacheDir;
-    this.distPath = aver.config.distPath;
+    this.cacheDir = aver.config.cacheDir || '';
+    this.distPath = aver.config.distPath || '';
   }
 
   async initRenderer() {
     if (this.isProd) {
-      const serverBundle = require(path.join(this.distPath, './vue-ssr-server-bundle.json'));
-      const clientManifest = require(path.join(this.distPath, './vue-ssr-client-manifest.json'));
-      this.renderer = this.createRenderer(serverBundle, Object.assign({
-        clientManifest: clientManifest
-      }, this.config.createRenderer));
+      const serverBundle = require(path.join(
+        this.distPath,
+        './vue-ssr-server-bundle.json'
+      ));
+      const clientManifest = require(path.join(
+        this.distPath,
+        './vue-ssr-client-manifest.json'
+      ));
+      this.renderer = this.createRenderer(
+        serverBundle,
+        Object.assign(
+          {
+            clientManifest: clientManifest
+          },
+          this.config.createRenderer
+        )
+      );
     } else {
       const { default: Renderer } = await import('@averjs/renderer');
       const renderer = new Renderer({}, this.aver);
       await renderer.setup();
       this.readyPromise = renderer.compile((bundle, options) => {
-        this.renderer = this.createRenderer(bundle, Object.assign(options, this.config.createRenderer));
+        this.renderer = this.createRenderer(
+          bundle,
+          Object.assign(options, this.config.createRenderer)
+        );
       });
     }
   }
@@ -52,20 +67,29 @@ export default class SsrBuilder extends BaseBuilder {
       req
     };
 
-    if (this.config.csrf) Object.assign(context, { csrfToken: req.csrfToken() });
-    
+    if (this.config.csrf)
+      Object.assign(context, { csrfToken: req.csrfToken() });
+
     try {
       const html = await this.renderer?.renderToString(context);
       if (!context.meta) return;
 
       const {
-        title, htmlAttrs, headAttrs, bodyAttrs, link,
-        style, script, noscript, meta
+        title,
+        htmlAttrs,
+        headAttrs,
+        bodyAttrs,
+        link,
+        style,
+        script,
+        noscript,
+        meta
       } = context.meta.inject();
 
       const HEAD = [];
 
-      if (this.config.csrf) HEAD.push(`<meta name="csrf-token" content="${req.csrfToken()}">`);
+      if (this.config.csrf)
+        HEAD.push(`<meta name="csrf-token" content="${req.csrfToken()}">`);
 
       HEAD.push(
         meta?.text(),
@@ -83,7 +107,9 @@ export default class SsrBuilder extends BaseBuilder {
         script?.text({ pbody: true }),
         noscript?.text({ pbody: true }),
         html,
-        `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
+        `<script>window.__INITIAL_STATE__=${serialize(context.state, {
+          isJSON: true
+        })}</script>`,
         context.renderScripts?.(),
         style?.text({ body: true }),
         script?.text({ body: true }),
@@ -107,7 +133,9 @@ export default class SsrBuilder extends BaseBuilder {
         ? path.resolve(this.distPath, './index.ssr.html')
         : path.resolve(this.cacheDir, './index.template.html');
       const fileToCompile = fs.readFileSync(templatePath, 'utf-8');
-      const compiled = template(fileToCompile, { interpolate: /{{([\S\s]+?)}}/g });
+      const compiled = template(fileToCompile, {
+        interpolate: /{{([\S\s]+?)}}/g
+      });
       const compiledTemplate = compiled({
         HTML_ATTRS,
         HEAD_ATTRS,
@@ -131,13 +159,13 @@ export default class SsrBuilder extends BaseBuilder {
       } else {
         return compiledTemplate;
       }
-    } catch (err) {
-      if (err) {
-        if (err.code === 404) {
+    } catch (error) {
+      if (error) {
+        if (error.code === 404) {
           throw new HTMLCodeError(404, '404 | Page Not Found');
         } else {
           console.error(`error during render : ${req.url}`);
-          console.error(err.stack);
+          console.error(error.stack);
           throw new HTMLCodeError(500, '500 | Internal Server Error');
         }
       }

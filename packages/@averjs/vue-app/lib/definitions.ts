@@ -2,7 +2,7 @@ import { ComponentOptions } from 'vue';
 import VueI18n, { I18nOptions } from 'vue-i18n';
 import VueRouter, { RouterOptions, Route } from 'vue-router';
 import { Store, StoreOptions } from 'vuex';
-import { BuilderContext } from '@averjs/builder/dist/builders/base';
+import { BuilderContext } from '@averjs/builder/lib/builders/base';
 
 export type UserReturns = Record<string, unknown>;
 
@@ -19,8 +19,8 @@ export interface AppEntryContext<T extends any> extends SSRContext {
     store: Store<T>;
     ssrContext: SSRContext;
     context: Record<string, unknown>;
-    render: ComponentOptions<any, any, any, any>['render']
-  }
+    render: ComponentOptions<any, any, any, any>['render'];
+  };
 }
 
 export interface ServerEntryContext extends BuilderContext {
@@ -36,7 +36,7 @@ export interface RouterEntryContext<T extends any> {
   i18n: VueI18n;
   store: Store<T>;
   ssrContext: SSRContext;
-  config: RouterOptions
+  config: RouterOptions;
 }
 
 export interface AsyncDataContext<T extends any> {
@@ -48,12 +48,18 @@ export interface AsyncDataContext<T extends any> {
   isServer: boolean;
 }
 
-export type AppEntry<T = any> = (context: AppEntryContext<T>) => UserReturns | void | Promise<void> | Promise<UserReturns>;
+export type AppEntry<T = any> = (
+  context: AppEntryContext<T>
+) => UserReturns | void | Promise<void> | Promise<UserReturns>;
 export type ServerEntry = (context: ServerEntryContext) => void | Promise<void>;
 export type ClientEntry = (context: ClientEntryContext) => void | Promise<void>;
 export type I18nEntry = (options: I18nOptions) => I18nOptions;
-export type RouterEntry<T extends any> = (context: RouterEntryContext<T>) => RouterOptions;
-export type StoreEntry<T extends any> = (options: StoreOptions<T>) => StoreOptions<T>;
+export type RouterEntry<T extends any> = (
+  context: RouterEntryContext<T>
+) => RouterOptions;
+export type StoreEntry<T extends any> = (
+  options: StoreOptions<T>
+) => StoreOptions<T>;
 
 declare module 'vue/types/vue' {
   interface Vue {
@@ -65,6 +71,7 @@ declare module 'vue/types/vue' {
 }
 
 declare module 'vue/types/options' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ComponentOptions<V extends Vue> {
     asyncData?: <T extends any>(context: AsyncDataContext<T>) => Promise<void>;
   }

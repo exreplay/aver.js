@@ -4,7 +4,10 @@ import InitCommand from './commands/init';
 import BuildCommand from './commands/build';
 import ProductionCommand from './commands/prod';
 import parseArgs, { ParsedArgs } from 'minimist';
-import { CommandInterface, CommandInterfaceDictionary } from './commands/command';
+import {
+  CommandInterface,
+  CommandInterfaceDictionary
+} from './commands/command';
 import './global';
 
 export default class Usage {
@@ -21,9 +24,11 @@ export default class Usage {
   }
 
   get globalCommand() {
-    return this.availableCommands.help.args?.find(option => this.argv[option.name]);
+    return this.availableCommands.help.args?.find(
+      option => this.argv[option.name]
+    );
   }
-  
+
   constructor() {
     this.addCommand(new HelpCommand(this.availableCommands));
     this.addCommand(new DevCommand());
@@ -48,22 +53,25 @@ export default class Usage {
       }
     }
   }
-  
+
   async run() {
     const commandToExecute = this.availableCommands[this.executedCommand];
 
     // If a global option is found, execute it and stop afterwards
     if (this.globalCommand?.command) {
-      this.globalCommand.command.run();
+      await this.globalCommand.command.run();
       return;
     }
 
     try {
       // No matter how help is set, do not run the actual command, instead show default help or for specified command
-      if (this.help) await (this.availableCommands.help as HelpCommand).run(this.executedCommand !== 'help' ? commandToExecute : undefined);
+      if (this.help)
+        await this.availableCommands.help.run(
+          this.executedCommand !== 'help' ? commandToExecute : undefined
+        );
       else await commandToExecute.run(this.argv);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     }
   }
 }

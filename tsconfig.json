@@ -17,15 +17,19 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "@averjs/*": [ "packages/@averjs/*/lib" ]
+    },
+    "types": [
+      "@types/node"
+    ]
   },
   "include": [
-    "packages/@averjs/**/*.ts"
+    "packages/@averjs/*/lib",
+    "packages/@averjs/*.d.ts"
   ],
   "exclude": [
-    "node_modules",
-    "**/__tests__/**/*.ts",
-    "**/__mocks__/**/*.ts",
-    "**/__fixtures__/**/*.ts"
+    "node_modules"
   ]
 }

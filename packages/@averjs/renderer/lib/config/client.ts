@@ -11,13 +11,18 @@ import cloneDeep from 'lodash/cloneDeep';
 import FriendlyErrorsPlugin from '@averjs/friendly-errors-webpack-plugin';
 import Core from '@averjs/core';
 import TerserPlugin, { ExtractCommentOptions } from 'terser-webpack-plugin';
-import { GenerateSW, GenerateSWOptions, InjectManifest, InjectManifestOptions } from 'workbox-webpack-plugin';
+import {
+  GenerateSW,
+  GenerateSWOptions,
+  InjectManifest,
+  InjectManifestOptions
+} from 'workbox-webpack-plugin';
 import { SplitChunksOptions } from 'webpack-chain';
 
 export interface RendererClientConfig extends Configuration {
   entry: {
-    app: string | string[]
-  }
+    app: string | string[];
+  };
 }
 
 export default class WebpackClientConfiguration extends WebpackBaseConfiguration {
@@ -39,19 +44,17 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     if (this.isProd) this.serviceWorker();
 
     if (fs.existsSync(path.join(this.projectRoot, 'resources/images'))) {
-      this.chainConfig
-        .plugin('copy')
-        .use(CopyWebpackPlugin, [
-          {
-            patterns: [
-              {
-                from: path.join(this.projectRoot, 'resources/images'),
-                to: path.join(this.projectRoot, '../public/images'),
-                force: true
-              }
-            ]
-          }
-        ]);
+      this.chainConfig.plugin('copy').use(CopyWebpackPlugin, [
+        {
+          patterns: [
+            {
+              from: path.join(this.projectRoot, 'resources/images'),
+              to: path.join(this.projectRoot, '../public/images'),
+              force: true
+            }
+          ]
+        }
+      ]);
     }
 
     this.chainConfig
@@ -59,39 +62,38 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       .use(HTMLPlugin, [htmlPluginOptions])
       .end()
       .plugin('define')
-      .use(webpack.DefinePlugin, [{
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-        'process.env.VUE_ENV': JSON.stringify('client'),
-        PRODUCTION: this.isProd,
-        ...this.webpackConfig.process?.env
-      }])
+      .use(webpack.DefinePlugin, [
+        {
+          'process.env.NODE_ENV': JSON.stringify(
+            process.env.NODE_ENV || 'development'
+          ),
+          'process.env.VUE_ENV': JSON.stringify('client'),
+          PRODUCTION: this.isProd,
+          ...this.webpackConfig?.process?.env
+        }
+      ])
       .end()
       .plugin('vue-ssr-client')
       .use(VueSSRClientPlugin);
-      
-    this.chainConfig
-      .plugin('friendly-errors')
-      .use(FriendlyErrorsPlugin, [{
+
+    this.chainConfig.plugin('friendly-errors').use(FriendlyErrorsPlugin, [
+      {
         showSuccessInfo: false,
         showCompilingInfo: false,
         clearConsole: false,
         logLevel: 'WARNING'
-      }]);
+      }
+    ]);
   }
 
   serviceWorker() {
-    if (!this.webpackConfig.sw) return;
+    if (!this.webpackConfig?.sw) return;
 
     let plugin: GenerateSW | InjectManifest = GenerateSW;
     const swConfig = this.webpackConfig.sw;
     const mode = swConfig.mode || 'GenerateSW';
     const conf = {
-      exclude: [
-        /\.map$/,
-        /img\/icons\//,
-        /favicon\.ico$/,
-        /manifest\.json$/
-      ],
+      exclude: [/\.map$/, /img\/icons\//, /favicon\.ico$/, /manifest\.json$/],
       ...swConfig
     } as GenerateSWOptions | InjectManifestOptions;
 
@@ -105,9 +107,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       conf.swSrc = path.resolve(process.env.PROJECT_PATH, conf.swSrc);
     }
 
-    this.chainConfig
-      .plugin('workbox')
-      .use(plugin, [conf]);
+    this.chainConfig.plugin('workbox').use(plugin, [conf]);
   }
 
   optimization() {
@@ -125,8 +125,11 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         }
       }
     };
-    
-    if (process.env.NODE_ENV === 'production' && this.webpackConfig.css?.extract) {
+
+    if (
+      process.env.NODE_ENV === 'production' &&
+      this.webpackConfig?.css?.extract
+    ) {
       splitChunks.cacheGroups.styles = {
         name: 'styles',
         test: /\.(s?css|vue)$/,
@@ -136,14 +139,15 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       };
     }
 
-    if (this.webpackConfig.runtimeChunk) this.chainConfig.optimization.runtimeChunk(this.webpackConfig.runtimeChunk);
-    
-    this.chainConfig.optimization
-      .splitChunks(splitChunks);
+    if (this.webpackConfig?.runtimeChunk)
+      this.chainConfig.optimization.runtimeChunk(
+        this.webpackConfig.runtimeChunk
+      );
 
-    this.chainConfig.optimization
-      .minimizer('terser')
-      .use(TerserPlugin, [{
+    this.chainConfig.optimization.splitChunks(splitChunks);
+
+    this.chainConfig.optimization.minimizer('terser').use(TerserPlugin, [
+      {
         sourceMap: true,
         cache: true,
         parallel: false,
@@ -169,14 +173,14 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
             switches: false,
             toplevel: false,
             typeofs: false,
-            
+
             // a few flags with noticable gains/speed ratio
             // numbers based on out of the box vendor bundle
             booleans: true, // 0.7kb
             if_return: true, // 0.4kb
             sequences: true, // 0.7kb
             unused: true, // 2.3kb
-            
+
             // required features to drop conditional branches
             conditionals: true,
             dead_code: true,
@@ -189,37 +193,37 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
             comments: /^\**!|@preserve|@license|@cc_on/
           }
         }
-      }]);
-        
+      }
+    ]);
+
     this.chainConfig.optimization
       .minimizer('optimize-css')
-      .use(OptimizeCssAssetsPlugin, [{
-        cssProcessorPluginOptions: {
-          preset: [
-            'default',
-            {
-              parser: SafeParser,
-              discardComments: {
-                removeAll: true
+      .use(OptimizeCssAssetsPlugin, [
+        {
+          cssProcessorPluginOptions: {
+            preset: [
+              'default',
+              {
+                parser: SafeParser,
+                discardComments: {
+                  removeAll: true
+                }
               }
-            }
-          ]
+            ]
+          }
         }
-      }]);
+      ]);
   }
 
   async config(isStatic: boolean): Promise<RendererClientConfig> {
     await super.config(isStatic);
-        
-    this.chainConfig
-      // .entry('app')
-      //     .add(path.join(this.libRoot, 'vue/entry-client.js'))
-      //     .end()
-      .output
+
+    this.chainConfig.output //     .end() //     .add(path.join(this.libRoot, 'vue/entry-client.js')) // .entry('app')
       .filename(`_averjs/js/${this.isProd ? '[contenthash].' : '[name].'}js`);
-        
-    if (typeof this.webpackConfig.client === 'function') this.webpackConfig.client(this.chainConfig);
-    
+
+    if (typeof this.webpackConfig?.client === 'function')
+      this.webpackConfig.client(this.chainConfig);
+
     await this.aver.callHook('renderer:client-config', this.chainConfig);
 
     const config = Object.assign(this.chainConfig.toConfig(), {

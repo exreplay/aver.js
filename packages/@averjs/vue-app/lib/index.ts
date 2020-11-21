@@ -6,7 +6,7 @@ export interface Templates {
   src: string;
   dst: string;
   pluginPath?: string;
-  dirname?: string
+  dirname?: string;
 }
 
 export default () => {

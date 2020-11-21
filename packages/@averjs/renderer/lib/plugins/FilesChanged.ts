@@ -13,7 +13,7 @@ export default class FilesChanged {
       for (const file of Object.keys(watcher.mtimes)) {
         changedFiles += ` ${chalk.bold.blue(path.basename(file))},`;
       }
-        
+
       console.log(
         logSymbols.info,
         `Files changed:${changedFiles.slice(0, -1)}`

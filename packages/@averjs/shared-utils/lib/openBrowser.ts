@@ -56,14 +56,18 @@ function executeNodeScript(scriptPath: string | undefined, url: string) {
           'The script specified as BROWSER environment variable failed.'
         )
       );
-      console.log(chalk.cyan(scriptPath) + ' exited with code ' + code + '.');
+      console.log(`${chalk.cyan(scriptPath)} exited with code ${code}.`);
       console.log();
     }
   });
   return true;
 }
 
-function startBrowserProcess(browser: string | string[] | undefined, url: string, args: string[]) {
+function startBrowserProcess(
+  browser: string | string[] | undefined,
+  url: string,
+  args: string[]
+) {
   // If we're on OS X, the user hasn't specifically
   // requested a different browser, we can try opening
   // Chrome with AppleScript. This lets us reuse an
@@ -138,15 +142,15 @@ function startBrowserProcess(browser: string | string[] | undefined, url: string
 function openBrowser(url: string) {
   const { action, value, args } = getBrowserEnv();
   switch (action) {
-  case Actions.NONE:
-    // Special case: BROWSER="none" will prevent opening completely.
-    return false;
-  case Actions.SCRIPT:
-    return executeNodeScript(value, url);
-  case Actions.BROWSER:
-    return startBrowserProcess(value, url, args);
-  default:
-    throw new Error('Not implemented.');
+    case Actions.NONE:
+      // Special case: BROWSER="none" will prevent opening completely.
+      return false;
+    case Actions.SCRIPT:
+      return executeNodeScript(value, url);
+    case Actions.BROWSER:
+      return startBrowserProcess(value, url, args);
+    default:
+      throw new Error('Not implemented.');
   }
 }
 

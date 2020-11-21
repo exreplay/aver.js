@@ -6,9 +6,10 @@ export default class DevCommand extends Command implements CommandInterface {
   description = 'Start aver in development mode.';
 
   run() {
-    if (typeof process.env.NODE_ENV === 'undefined') process.env.NODE_ENV = 'development';
+    if (typeof process.env.NODE_ENV === 'undefined')
+      process.env.NODE_ENV = 'development';
 
     const core = new Core();
-    core.run();
+    core.run().catch(error => console.log(error));
   }
 }

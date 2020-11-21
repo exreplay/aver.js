@@ -14,23 +14,24 @@ export default class WWW {
     this.server.listen(this.port);
     this.server.on('error', this.onError.bind(this));
   }
-    
+
   normalizePort(val: string) {
     const port = parseInt(val, 10);
-        
+
     if (isNaN(port)) return val;
     if (port >= 0) return port;
-        
+
     return false;
   }
-    
-  onError(error: Error & { syscall: string; code: string; }) {
+
+  onError(error: Error & { syscall: string; code: string }) {
     if (error.syscall !== 'listen') throw error;
-        
-    const bind = typeof this.port === 'string'
-      ? 'Pipe ' + this.port
-      : 'Port ' + this.port;
-    
+
+    const bind =
+      typeof this.port === 'string'
+        ? 'Pipe ' + this.port
+        : `Port ${this.port.toString()}`;
+
     if (error.code === 'EACCES') {
       console.error(bind + ' requires elevated privileges');
       process.exit(1);

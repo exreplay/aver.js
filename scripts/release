@@ -36,7 +36,9 @@ class ReleaseScript {
     waitingSpinner.start();
 
     this.removeNoHupOut();
-    execa.shellSync('nohup yarn verdaccio -c ./scripts/verdaccio.yaml &> verdaccio &');
+    execa.shellSync(
+      'nohup yarn verdaccio -c ./scripts/verdaccio.yaml &> verdaccio &'
+    );
 
     return new Promise((resolve, reject) => {
       let verdaccioRunning = false;
@@ -49,7 +51,9 @@ class ReleaseScript {
 
         if (verdaccioRunning) {
           clearInterval(interval);
-          waitingSpinner.succeed('Verdaccio is running. Continue with release.');
+          waitingSpinner.succeed(
+            'Verdaccio is running. Continue with release.'
+          );
           setTimeout(resolve, 1000);
         }
       }, 250);
@@ -66,7 +70,9 @@ class ReleaseScript {
     this.removeNoHupOut();
     // Grep all verdaccio processes and kill them. Exclude the grep process
     console.log(logSymbols.info, 'Cleanup verdaccio processes before exit');
-    execa.shellSync('ps -ef | grep -i \'verdaccio\' | grep -v grep | awk \'{print $2}\' | xargs kill -9');
+    execa.shellSync(
+      "ps -ef | grep -i 'verdaccio' | grep -v grep | awk '{print $2}' | xargs kill -9"
+    );
     fs.removeSync(path.resolve(__dirname, './verdaccio'));
     process.exit();
   }
@@ -76,9 +82,11 @@ class ReleaseScript {
   }
 }
 
-(async() => {
+(async () => {
   if (!process.env.GITHUB_AUTH) {
-    console.error('Please provie a GITHUB_AUTH token, otherwise the changelog can not be created. Use export GITHUB_AUTH="token".');
+    console.error(
+      'Please provie a GITHUB_AUTH token, otherwise the changelog can not be created. Use export GITHUB_AUTH="token".'
+    );
     process.exit(1);
   }
 
@@ -95,7 +103,8 @@ class ReleaseScript {
     await inquirer.prompt([
       {
         name: 'exit',
-        message: 'We keep this process up and running so you can have a look at verdaccio to see if everything worked out correctly. Hit enter to exit.',
+        message:
+          'We keep this process up and running so you can have a look at verdaccio to see if everything worked out correctly. Hit enter to exit.',
         type: 'confirm'
       }
     ]);
