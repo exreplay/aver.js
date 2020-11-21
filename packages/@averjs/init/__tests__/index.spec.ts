@@ -31,9 +31,9 @@ afterEach(() => {
   fs.removeSync(pathToDir);
 });
 
-test('run command should finish', async () => {
+test('run command should finish', () => {
   const init = new Init();
-  await init.run();
+  init.run();
   expect(outputData).toMatch('Project setup successfull!');
 });
 
@@ -142,9 +142,9 @@ test('trimLines should remove all whitespaces at the beginning of every line', (
   ).toEqual("import a from 'module';\n\nconst b = { ...a };\n");
 });
 
-test('modifying package.json should not overwrite default values', async () => {
+test('modifying package.json should not overwrite default values', () => {
   const init = new Init();
-  await init.modifyPackageJson();
+  init.modifyPackageJson();
   const pkg = JSON.parse(
     fs
       .readFileSync(path.resolve(pathToDir, './package.json').toString())
