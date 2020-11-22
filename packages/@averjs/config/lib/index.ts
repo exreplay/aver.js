@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
 import mergeWith from 'lodash/mergeWith';
 import { defaultAverjsConfig, defaultFileName } from './configs';
@@ -38,7 +39,7 @@ export function getAverjsConfig() {
 
   if (configFile) {
     if (process.env.NODE_ENV === 'test')
-      ({ default: userConfig } = require(configFile));
+      userConfig = require(configFile).default;
     else userConfig = requireModule(configFile).default;
   }
 
