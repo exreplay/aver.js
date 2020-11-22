@@ -39,8 +39,6 @@ export default class Build {
     );
     const averPackages = packages.map(p => p.name);
 
-    console.log(averPackages);
-
     for (const pkg of packages) {
       const pkgJSON = JSON.parse(
         fs.readFileSync(path.join(pkg.location, 'package.json'), 'utf-8')
