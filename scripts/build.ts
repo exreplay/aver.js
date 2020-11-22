@@ -18,17 +18,28 @@ export default class Build {
   watch: boolean;
   releaseType: ReleaseType;
   packagesToBuild: RollupConfig[] = [];
+  onlyBuild: string[];
 
-  constructor(watch = false, releaseType: ReleaseType = 'auto') {
+  constructor(
+    watch = false,
+    releaseType: ReleaseType = 'auto',
+    onlyBuild: string[] = []
+  ) {
     this.watch = watch;
     this.releaseType = releaseType;
-    this.packagesToBuild = [];
+    this.onlyBuild = onlyBuild;
   }
 
   async determinePackages() {
     const { stdout } = await exec('lerna', ['list', '--json']);
-    const packages = JSON.parse(stdout) as LernaPackage[];
+    const packages = (JSON.parse(stdout) as LernaPackage[]).filter(p =>
+      this.onlyBuild.length > 0
+        ? this.onlyBuild.includes(p.name.replace('@averjs/', ''))
+        : true
+    );
     const averPackages = packages.map(p => p.name);
+
+    console.log(averPackages);
 
     for (const pkg of packages) {
       const pkgJSON = JSON.parse(
