@@ -6,7 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/session.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/session.d.ts",
   "aver": {
     "build": true
   },

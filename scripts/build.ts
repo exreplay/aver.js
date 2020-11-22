@@ -93,16 +93,13 @@ export default class Build {
         const bundle = await rollup(config);
         if (config.output && !Array.isArray(config.output))
           await bundle.write(config.output);
-        buildSpinner.succeed();
 
         const extractorConfigPath = path.resolve(
           pkg.path,
           './api-extractor.json'
         );
         if (fs.existsSync(extractorConfigPath)) {
-          const extractTypesSpinner = ora(
-            `Rollup types for ${pkg.pkg.name}`
-          ).start();
+          buildSpinner.text = `Rollup types for ${pkg.pkg.name}`;
           const extractorConfig = ExtractorConfig.loadFileAndPrepare(
             extractorConfigPath
           );
@@ -110,8 +107,12 @@ export default class Build {
             localBuild: true,
             showVerboseMessages: true
           });
-          extractTypesSpinner.succeed();
+          fs.rmdirSync(path.resolve(pkg.path, './dist/packages'), {
+            recursive: true
+          });
         }
+
+        buildSpinner.succeed(`Built package ${pkg.pkg.name} successfully`);
       }
     }
   }

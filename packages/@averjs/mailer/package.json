@@ -6,7 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/mailer.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/mailer.d.ts",
   "aver": {
     "build": true
   },

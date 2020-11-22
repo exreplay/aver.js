@@ -6,7 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/websocket.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/websocket.d.ts",
   "publishConfig": {
     "access": "public"
   },

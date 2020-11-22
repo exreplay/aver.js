@@ -5,7 +5,7 @@
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "main": "dist/core.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/core.d.ts",
   "publishConfig": {
     "access": "public"
   },
