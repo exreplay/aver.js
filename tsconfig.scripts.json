@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "declaration": false,
+    "outDir": "./scripts/dist",
+    "rootDir": "."
+  },
+  "include": [
+    "scripts/*.ts"
+  ],
+  "exclude": [
+    "packages/@averjs/**/*.ts",
+    "node_modules"
+  ]
+}

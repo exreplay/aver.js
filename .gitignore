@@ -11,3 +11,4 @@ verdaccio
 packages/test
 .changelog
 temp
+scripts-build

@@ -4,11 +4,22 @@ import { rollup, watch } from 'rollup';
 import RollupConfig from './rollup.config';
 import ora from 'ora';
 import logSymbols from 'log-symbols';
-import { exec } from './utils';
+import { exec, ReleaseType } from './utils';
 import { Extractor, ExtractorConfig } from '@microsoft/api-extractor';
 
+export interface LernaPackage {
+  name: string;
+  version: string;
+  private: boolean;
+  location: string;
+}
+
 export default class Build {
-  constructor(watch = false, releaseType = 'auto') {
+  watch: boolean;
+  releaseType: ReleaseType;
+  packagesToBuild: RollupConfig[] = [];
+
+  constructor(watch = false, releaseType: ReleaseType = 'auto') {
     this.watch = watch;
     this.releaseType = releaseType;
     this.packagesToBuild = [];
@@ -16,8 +27,9 @@ export default class Build {
 
   async determinePackages() {
     const { stdout } = await exec('lerna', ['list', '--json']);
-    const packages = JSON.parse(stdout);
+    const packages = JSON.parse(stdout) as LernaPackage[];
     const averPackages = packages.map(p => p.name);
+
     for (const pkg of packages) {
       const pkgJSON = JSON.parse(
         fs.readFileSync(path.join(pkg.location, 'package.json'), 'utf-8')
@@ -72,9 +84,6 @@ export default class Build {
             case 'ERROR':
               return console.log(event.error);
 
-            case 'FATAL':
-              return console.log(event.error);
-
             default:
               return console.log(JSON.stringify(event));
           }
@@ -82,7 +91,8 @@ export default class Build {
       } else {
         const buildSpinner = ora(`Building package ${pkg.pkg.name}`).start();
         const bundle = await rollup(config);
-        await bundle.write(config.output);
+        if (config.output && !Array.isArray(config.output))
+          await bundle.write(config.output);
         buildSpinner.succeed();
 
         const extractorConfigPath = path.resolve(

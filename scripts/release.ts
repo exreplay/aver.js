@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
@@ -7,10 +5,15 @@ import ora from 'ora';
 import Build from './build';
 import { getNextVersion, exec } from './utils';
 
+type Unpack<T> = T extends Promise<infer U> ? U : T;
+
 export default class Release {
+  test: boolean;
+  newVersion: Unpack<ReturnType<typeof getNextVersion>> = null;
+  releaseTypes: inquirer.ListQuestionOptions;
+
   constructor(test = false) {
     this.test = test;
-    this.newVersion = null;
     this.releaseTypes = [
       {
         name: 'Let lerna automatically determine a new release version',
@@ -38,6 +41,8 @@ export default class Release {
     ]);
 
     this.newVersion = await getNextVersion(type);
+
+    if (!this.newVersion) return;
 
     const { release } = await inquirer.prompt([
       {
@@ -79,6 +84,8 @@ export default class Release {
   }
 
   async createReleaseBranch() {
+    if (!this.newVersion) return;
+
     const branch = await this.gitBranch();
     const spinner = ora(
       `Creating new release branch 'release/${this.newVersion}'.`
@@ -111,10 +118,17 @@ export default class Release {
   }
 
   async createNewRelease() {
+    if (!this.newVersion) return;
+
     const spinner = ora(
       `Creating new release '${this.newVersion}' without pushing.`
     ).start();
-    let lernaArgs = ['publish', this.newVersion, '--yes', '--force-publish'];
+    let lernaArgs = [
+      'publish',
+      this.newVersion.toString(),
+      '--yes',
+      '--force-publish'
+    ];
 
     if (this.test) {
       lernaArgs = lernaArgs.concat([

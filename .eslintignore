@@ -2,3 +2,4 @@ node_modules
 dist
 packages/test
 packages/@averjs/vue-app/templates
+scripts-build

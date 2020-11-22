@@ -6,19 +6,42 @@ import copy from 'rollup-plugin-copy';
 import typescript from 'rollup-plugin-typescript2';
 import json from '@rollup/plugin-json';
 import builtins from './builtins';
-import { getNextVersion } from './utils';
+import { getNextVersion, ReleaseType } from './utils';
+import { OutputOptions, RollupOptions } from 'rollup';
+import { FullVersion } from 'package-json';
+
+interface PackageJSON extends FullVersion {
+  location: string;
+  aver?: {
+    build?: boolean;
+    copy: string[];
+    exports: OutputOptions['exports'];
+  };
+}
 
 export default class RollupConfig {
-  constructor(pkg, releaseType, averPackages) {
+  pkg: PackageJSON;
+  path: string;
+  name: string;
+  version: string;
+  releaseType: ReleaseType | null;
+  averPackages: string[];
+  options: RollupOptions;
+
+  constructor(
+    pkg: PackageJSON,
+    releaseType: ReleaseType | null,
+    averPackages: string[]
+  ) {
     this.pkg = pkg;
     this.path = pkg.location;
     this.releaseType = releaseType;
     this.averPackages = averPackages;
+    this.name = pkg.name.replace('@averjs/', '');
+    this.version = pkg.version;
 
     this.options = {
       input: path.join(this.path, 'lib/index.ts'),
-      name: this.pkg.name.replace('@averjs/', ''),
-      version: this.pkg.version,
       external: ['lodash']
     };
   }
@@ -31,25 +54,25 @@ export default class RollupConfig {
       ...this.averPackages
     ];
 
-    return id => {
+    return (id: string) => {
       const pattern = new RegExp(`^(${external.join('|')})($|/)`);
       return pattern.test(id);
     };
   }
 
-  output() {
+  output(): OutputOptions {
     return {
       format: 'cjs',
       preferConst: true,
-      file: path.join(this.path, `dist/${this.options.name}.js`),
-      exports: this.pkg.aver.exports || 'auto'
+      file: path.join(this.path, `dist/${this.name}.js`),
+      exports: this.pkg.aver?.exports || 'auto'
     };
   }
 
   async plugins() {
     const plugins = [];
 
-    if (this.pkg.aver.copy) {
+    if (this.pkg.aver?.copy) {
       plugins.push(
         copy({
           targets: this.pkg.aver.copy.map(file => ({
@@ -70,12 +93,13 @@ export default class RollupConfig {
 
     plugins.push(
       typescript({
+        tsconfig: path.resolve(__dirname, '../tsconfig.build.json'),
+        cacheRoot: path.resolve(__dirname, '../node_modules/.rts2_cache'),
         tsconfigOverride: {
           compilerOptions: {
             sourceMap: true,
             declaration: true,
-            declarationMap: true,
-            paths: {}
+            declarationMap: true
           },
           include: [
             path.resolve(this.path, './lib'),
@@ -93,7 +117,7 @@ export default class RollupConfig {
           '/*!',
           ` * ${this.pkg.name} v${
             this.releaseType
-              ? await getNextVersion(this.releaseType)
+              ? (await getNextVersion(this.releaseType)) || ''
               : '-development'
           }`,
           " * Copyright <%= moment().format('YYYY') %> Florian Weber",
@@ -106,7 +130,7 @@ export default class RollupConfig {
     return plugins;
   }
 
-  async config() {
+  async config(): Promise<RollupOptions> {
     return {
       input: this.options.input,
       output: this.output(),
@@ -116,7 +140,7 @@ export default class RollupConfig {
         clearScreen: false
       },
       onwarn: message => {
-        if (/external dependency/.test(message)) return;
+        if (/external dependency/.test(message.message)) return;
         console.error(message);
       }
     };

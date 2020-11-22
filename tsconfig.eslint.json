@@ -3,8 +3,12 @@
   "include": [
     "packages/@averjs/*/lib",
     "packages/@averjs/*.d.ts",
+    "scripts/*.ts",
     "**/__tests__/**/*.ts",
     "**/__fixtures__/**/*.ts",
     "**/__mocks__/**/*.ts"
+  ],
+  "exclude": [
+    "dist"
   ]
 }
