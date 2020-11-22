@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "include": [
+    ".eslintrc.js",
+    "jest.config.js",
     "packages/@averjs/*/lib",
     "packages/@averjs/*.d.ts",
     "scripts/*.ts",
