@@ -33,7 +33,7 @@
     "@types/optimize-css-assets-webpack-plugin": "5.0.1",
     "@types/postcss-preset-env": "6.7.0",
     "@types/postcss-safe-parser": "4.0.0",
-    "@types/serialize-javascript": "4.0.0",
+    "@types/serialize-javascript": "5.0.0",
     "@types/terser-webpack-plugin": "4.2.0",
     "@types/uuid": "8.3.0",
     "@types/webpack": "4.41.24",
