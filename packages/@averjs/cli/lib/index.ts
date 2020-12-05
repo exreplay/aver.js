@@ -5,6 +5,7 @@ import BuildCommand from './commands/build';
 import ProductionCommand from './commands/prod';
 import parseArgs, { ParsedArgs } from 'minimist';
 import {
+  Args,
   CommandInterface,
   CommandInterfaceDictionary
 } from './commands/command';
@@ -23,7 +24,7 @@ export default class Usage {
     return this.argv._[0] || (!this.help ? 'dev' : 'help');
   }
 
-  get globalCommand() {
+  get globalCommand(): Args | undefined {
     return this.availableCommands.help.args?.find(
       option => this.argv[option.name]
     );
