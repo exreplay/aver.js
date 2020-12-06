@@ -23,6 +23,13 @@ jobs:
           paths:
             - repo
   
+  build-scripts:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+        at: ~/
+      - run: yarn build-scripts
+  
   lint: 
     <<: *defaults
     steps:
@@ -44,8 +51,8 @@ jobs:
             libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 \
             libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates \
             fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
-      - run: yarn build
       - run: yarn build-scripts
+      - run: yarn build
       - run:
           name: Test aver
           command: yarn test
@@ -57,9 +64,12 @@ workflows:
   test:
     jobs:
       - install
+      - build-scripts
       - lint:
           requires:
             - install
+            - build-scripts
       - test:
           requires:
             - install
+            - build-scripts
