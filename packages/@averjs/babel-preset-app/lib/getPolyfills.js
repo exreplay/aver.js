@@ -19,9 +19,15 @@ const defaultPolyfills = {
   }
 };
 
-module.exports.getDefaultPolyfills = (corejs) => defaultPolyfills[corejs].polyfills;
+module.exports.getDefaultPolyfills = corejs =>
+  defaultPolyfills[corejs].polyfills;
 
-module.exports.getPolyfills = (corejs, targets, includes, { ignoreBrowserslistConfig, configPath }) => {
+module.exports.getPolyfills = (
+  corejs,
+  targets,
+  includes,
+  { ignoreBrowserslistConfig, configPath }
+) => {
   const { isPluginRequired } = require('@babel/preset-env');
   const builtInsList = require(defaultPolyfills[corejs].builtIns);
   const getTargets = require('@babel/preset-env/lib/targets-parser').default;
@@ -30,5 +36,7 @@ module.exports.getPolyfills = (corejs, targets, includes, { ignoreBrowserslistCo
     configPath
   });
 
-  return includes.filter(item => isPluginRequired(builtInTargets, builtInsList[item]));
+  return includes.filter(item =>
+    isPluginRequired(builtInTargets, builtInsList[item])
+  );
 };

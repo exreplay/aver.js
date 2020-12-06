@@ -18,7 +18,7 @@ beforeEach(function() {
   process.env = { ...OLD_ENV };
 });
 
-test('help command should output command description', async() => {
+test('help command should output command description', async () => {
   process.argv.push('dev', '--h');
 
   const cli = new AverCli();
@@ -26,7 +26,7 @@ test('help command should output command description', async() => {
   expect(outputData).toMatch('Start aver in development mode.');
 });
 
-test('run should execute core run', async() => {
+test('run should execute core run', async () => {
   process.argv.push('dev');
 
   const cli = new AverCli();
@@ -35,7 +35,7 @@ test('run should execute core run', async() => {
   expect(mockRun.mock.calls.length).toBe(1);
 });
 
-test('run should set NODE_ENV to "development" when not set', async() => {
+test('run should set NODE_ENV to "development" when not set', async () => {
   process.argv.push('dev');
 
   delete process.env.NODE_ENV;

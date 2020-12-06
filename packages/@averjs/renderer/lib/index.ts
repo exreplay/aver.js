@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import webpack, { Configuration } from 'webpack';
 import template from 'lodash/template';
-import WebpackClientConfiguration, { RendererClientConfig } from './config/client';
+import WebpackClientConfiguration from './config/client';
 import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
@@ -19,7 +19,10 @@ export interface RendererOptions extends Partial<ParsedArgs> {
   static?: boolean;
 }
 
-type RendererCallback = (bundle: string, options: BundleRendererOptions) => void;
+type RendererCallback = (
+  bundle: string,
+  options: BundleRendererOptions
+) => void;
 
 export default class Renderer {
   aver: Core;
@@ -32,44 +35,57 @@ export default class Renderer {
   isBrowserOpen = false;
   bundle: string | null = null;
   clientManifest: BundleRendererOptions['clientManifest'] | null = null;
-  resolve: ((value?: void | PromiseLike<void> | undefined) => void) | null = null;
-  readyPromise: Promise<void> = new Promise(resolve => { this.resolve = resolve; });
+  resolve:
+    | ((value?: void | PromiseLike<void> | undefined) => void)
+    | null = null;
+
+  readyPromise: Promise<void> = new Promise(resolve => {
+    this.resolve = resolve;
+  });
+
   cb: RendererCallback | null = null;
 
-  clientConfig: RendererClientConfig | null = null;
+  clientConfig: Configuration = {};
   serverConfig: Configuration = {};
 
   constructor(options: RendererOptions, aver: Core) {
     this.aver = aver;
     this.config = aver.config;
     this.options = options;
-    this.cacheDir = aver.config.cacheDir;
-    this.distPath = aver.config.distPath;
+    this.cacheDir = aver.config.cacheDir || '';
+    this.distPath = aver.config.distPath || '';
   }
 
   async setup() {
     this.prepareTemplates();
 
-    this.clientConfig = await new WebpackClientConfiguration(this.aver).config(this.options.static || false);
-    this.serverConfig = await new WebpackServerConfiguration(this.aver).config(this.options.static || false);
+    this.clientConfig = await new WebpackClientConfiguration(this.aver).config(
+      this.options.static || false
+    );
+    this.serverConfig = await new WebpackServerConfiguration(this.aver).config(
+      this.options.static || false
+    );
   }
 
   prepareTemplates() {
     if (!this.config.templates) return;
 
-    const templates = [
-      ...this.config.templates,
-      ...vueApp()
-    ];
+    const templates = [...this.config.templates, ...vueApp()];
 
     for (const templateFile of templates) this.writeTemplateFile(templateFile);
 
     if (!this.isProd) {
       const watcher = chokidar.watch(
         // generate a new set of unique paths
-        [...new Set(this.config.templates?.map(temp => path.resolve(temp.pluginPath || '', './entries')))]
+        [
+          ...new Set(
+            this.config.templates?.map(temp =>
+              path.resolve(temp.pluginPath || '', './entries')
+            )
+          )
+        ]
       );
-            
+
       watcher.on('ready', () => {
         watcher.on('all', (event, id) => {
           if (event !== 'addDir' && event !== 'unlinkDir') {
@@ -79,20 +95,32 @@ export default class Renderer {
 
             if (!template) {
               // Try to find any entry file from same plugin to get the plugin path
-              const foundTemplate = this.config.templates.find(temp => !path.relative(path.resolve(temp.pluginPath || '', './entries'), id).startsWith('..'));
+              const foundTemplate = this.config.templates.find(
+                temp =>
+                  !path
+                    .relative(
+                      path.resolve(temp.pluginPath || '', './entries'),
+                      id
+                    )
+                    .startsWith('..')
+              );
               if (foundTemplate) {
                 const { dirname = '' } = foundTemplate;
-                const dst = path.relative(dirname, id).replace('entries', dirname);
-      
+                const dst = path
+                  .relative(dirname, id)
+                  .replace('entries', dirname);
+
                 template = { src: id, dst };
-      
+
                 // Push the newly created entry template into the config templates array so we dont have to construct the path again later
                 this.config.templates?.push(template);
               }
             }
-    
-            if (event === 'unlink' && template?.dst) fs.unlinkSync(path.resolve(this.cacheDir, template.dst));
-            else if (event !== 'unlink' && template) this.writeTemplateFile(template);
+
+            if (event === 'unlink' && template?.dst)
+              fs.unlinkSync(path.resolve(this.cacheDir, template.dst));
+            else if (event !== 'unlink' && template)
+              this.writeTemplateFile(template);
           }
         });
       });
@@ -102,10 +130,12 @@ export default class Renderer {
   writeTemplateFile(templateFile: Templates) {
     const finalResolvedPath = path.resolve(this.cacheDir, templateFile.dst);
     const fileToCompile = fs.readFileSync(templateFile.src, 'utf8');
-    const compiled = template(fileToCompile, { interpolate: /<%=([\S\s]+?)%>/g });
+    const compiled = template(fileToCompile, {
+      interpolate: /<%=([\S\s]+?)%>/g
+    });
     const compiledApp = compiled({
       config: {
-        additionalExtensions: this.config.webpack.additionalExtensions,
+        additionalExtensions: this.config.webpack?.additionalExtensions,
         progressbar: this.config.progressbar,
         i18n: this.config.i18n,
         csrf: this.config.csrf,
@@ -115,7 +145,7 @@ export default class Renderer {
 
     fs.outputFileSync(finalResolvedPath, compiledApp);
   }
-    
+
   async compile(cb?: RendererCallback): Promise<void> {
     const promises = [];
     const compilers = [];
@@ -125,7 +155,7 @@ export default class Renderer {
 
       const clientCompiler = this.setupClientCompiler();
       const serverCompiler = this.setupServerCompiler();
-      
+
       // Compile Client
       if (clientCompiler) {
         clientCompiler.hooks.done.tap('averjs', stats => {
@@ -133,8 +163,10 @@ export default class Renderer {
           jsonStats.errors.forEach(err => console.error(err));
           jsonStats.warnings.forEach(err => console.warn(err));
           if (jsonStats.errors.length) return;
-          
-          this.clientManifest = JSON.parse(this.readFile('vue-ssr-client-manifest.json'));
+
+          this.clientManifest = JSON.parse(
+            this.readFile('vue-ssr-client-manifest.json')
+          );
           this.update();
         });
       }
@@ -146,7 +178,7 @@ export default class Renderer {
         jsonStats.errors.forEach(err => console.error(err));
         jsonStats.warnings.forEach(err => console.warn(err));
         if (jsonStats.errors.length) return;
-              
+
         this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
         this.update();
       });
@@ -158,32 +190,34 @@ export default class Renderer {
 
     compilers.push(this.clientConfig);
     compilers.push(this.serverConfig);
-    
+
     for (const compiler of compilers) {
       if (!compiler) continue;
 
-      promises.push(new Promise((resolve, reject) => {
-        const compile = webpack(compiler);
-                
-        compile.run(() => null);
-        compile.hooks.done.tap('load-resource', stats => {
-          const info = stats.toJson();
-    
-          if (stats.hasErrors()) {
-            console.error(info.errors);
-            return reject(info.errors);
-          }
-    
-          resolve(info);
-        });
-      }));
+      promises.push(
+        new Promise((resolve, reject) => {
+          const compile = webpack(compiler);
+
+          compile.run(() => null);
+          compile.hooks.done.tap('load-resource', stats => {
+            const info = stats.toJson();
+
+            if (stats.hasErrors()) {
+              console.error(info.errors);
+              return reject(info.errors);
+            }
+
+            resolve(info);
+          });
+        })
+      );
     }
 
     await Promise.all(promises);
-    
+
     if (this.options.static) {
       const staticBuilder = new StaticBuilder(this.aver);
-      staticBuilder.build();
+      await staticBuilder.build();
     }
   }
 
@@ -191,13 +225,13 @@ export default class Renderer {
     if (this.bundle && this.clientManifest) {
       if (!this.isBrowserOpen) {
         this.isBrowserOpen = true;
-        
+
         let port = process.env.PORT || '3000';
         port = parseInt(port) !== 80 ? `:${port}` : '';
-        
+
         openBrowser(`http://localhost${port}`);
       }
-      
+
       this.resolve?.();
       this.cb?.(this.bundle, {
         clientManifest: this.clientManifest
@@ -208,13 +242,19 @@ export default class Renderer {
   setupClientCompiler() {
     if (!this.clientConfig) return;
 
-    this.clientConfig.entry.app = ['webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', this.clientConfig.entry.app as string];
-    if (this.clientConfig.output) this.clientConfig.output.filename = '[name].js';
+    if (this.clientConfig.entry) {
+      (this.clientConfig.entry as webpack.Entry).app = [
+        'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr',
+        (this.clientConfig.entry as webpack.Entry).app as string
+      ];
+    }
+    if (this.clientConfig.output)
+      this.clientConfig.output.filename = '[name].js';
     this.clientConfig.plugins?.push(
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin()
     );
-    
+
     const clientCompiler = webpack(this.clientConfig);
     clientCompiler.outputFileSystem = this.mfs;
     const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
@@ -227,11 +267,13 @@ export default class Renderer {
 
     this.aver.tap('server:before-register-middlewares', ({ middlewares }) => {
       middlewares.push(devMiddleware);
-    
-      middlewares.push(require('webpack-hot-middleware')(clientCompiler, {
-        log: false,
-        heartbeat: 10000
-      }));
+
+      middlewares.push(
+        require('webpack-hot-middleware')(clientCompiler, {
+          log: false,
+          heartbeat: 10_000
+        })
+      );
     });
 
     return clientCompiler;
@@ -247,7 +289,12 @@ export default class Renderer {
     if (!this.clientConfig?.output?.path) return;
 
     try {
-      return this.mfs.readFileSync(path.join(this.clientConfig.output.path, file), 'utf-8');
-    } catch (e) { console.log(e); }
+      return this.mfs.readFileSync(
+        path.join(this.clientConfig.output.path, file),
+        'utf-8'
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

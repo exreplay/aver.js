@@ -10,13 +10,16 @@ module.exports = ({ types }) => {
         } else if (state.filename !== entryFile) {
           return;
         }
-  
+
         const { polyfills } = state.opts;
         const { createImport } = require('@babel/preset-env/lib/utils');
         // imports are injected in reverse order
-        polyfills.slice().reverse().forEach(p => {
-          createImport(path, p);
-        });
+        polyfills
+          .slice()
+          .reverse()
+          .forEach(p => {
+            createImport(path, p);
+          });
       }
     }
   };

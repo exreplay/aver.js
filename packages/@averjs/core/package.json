@@ -5,7 +5,7 @@
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "main": "dist/core.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/core.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -67,5 +67,17 @@
     "vuex-persistedstate": "^3.1.0",
     "vuex-router-sync": "^5.0.0",
     "xss-filters": "^1.2.7"
+  },
+  "devDependencies": {
+    "@types/klaw-sync": "^6.0.0",
+    "@types/lodash": "^4.14.163",
+    "@types/uuid": "^8.3.0",
+    "@types/morgan": "^1.9.2",
+    "@types/esm": "^3.2.0",
+    "@types/module-alias": "^2.0.0",
+    "@types/csurf": "^1.9.36",
+    "@types/helmet": "^0.0.48",
+    "@types/compression": "^1.7.0",
+    "@types/cookie-parser": "^1.4.2"
   }
 }

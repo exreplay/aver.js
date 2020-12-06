@@ -2,23 +2,24 @@ import * as babel from '@babel/core';
 import preset from '../lib/index';
 import merge from 'lodash/merge';
 
-function transformFactory(codeToTransform: string, options?: babel.TransformOptions) {
+function transformFactory(
+  codeToTransform: string,
+  options?: babel.TransformOptions
+) {
   const defaultOptions = {
     babelrc: false,
-    presets: [
-      [preset, { buildTarget: 'client', corejs: 2 }]
-    ],
+    presets: [[preset, { buildTarget: 'client', corejs: 2 }]],
     filename: 'test-entry-file.js'
   };
 
-  return babel.transformSync(codeToTransform, merge(defaultOptions, options)) || {};
+  return (
+    babel.transformSync(codeToTransform, merge(defaultOptions, options)) || {}
+  );
 }
 
 test('polyfill detection for core-js', () => {
   let { code } = transformFactory('const a = new Map()', {
-    presets: [
-      [preset, { buildTarget: 'server' }]
-    ]
+    presets: [[preset, { buildTarget: 'server' }]]
   });
 
   expect(code).toMatch('runtime-corejs2/core-js/map');
@@ -32,7 +33,7 @@ test('polyfill detection for core-js', () => {
 
 test('dynamic import', () => {
   expect(() => {
-    transformFactory('const test = () => import(\'test.vue\');');
+    transformFactory("const test = () => import('test.vue');");
   }).not.toThrow();
 });
 
@@ -42,12 +43,14 @@ test('rest spread should use assign polyfill', () => {
 });
 
 test('regenerator runtime should be included on client', () => {
-  const { code } = transformFactory(`
+  const { code } = transformFactory(
+    `
     async function test() {
       await Promise.resolve();
     }
     test();
-  `.trim());
+  `.trim()
+  );
 
   expect(code).toMatch('es6.promise');
   expect(code).toMatch('regenerator-runtime/runtime');

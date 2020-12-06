@@ -6,7 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/session.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/session.d.ts",
   "aver": {
     "build": true
   },
@@ -28,8 +28,8 @@
     "uuid": "^8.3.1"
   },
   "devDependencies": {
-    "@types/connect-redis": "0.0.14",
-    "@types/express-session": "1.17.0",
-    "@types/ioredis": "4.17.6"
+    "@types/connect-redis": "^0.0.14",
+    "@types/express-session": "^1.17.0",
+    "@types/ioredis": "^4.17.6"
   }
 }

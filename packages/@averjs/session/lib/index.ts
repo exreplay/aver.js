@@ -15,22 +15,29 @@ export interface SessionPluginOptions {
 const plugin: PluginFunction = function(options: SessionPluginOptions) {
   if (process.argv.includes('build')) return;
 
-  const {
-    redisStoreConfig,
-    expressSessionConfig,
-    ttl = 60 * 60
-  } = options;
+  const { redisStoreConfig, expressSessionConfig, ttl = 60 * 60 } = options;
   let store = null;
 
-  if (process.env.REDIS_PORT && process.env.REDIS_HOST && process.env.REDIS_PASSWORD) {
-    const RedisStore = ConnectRedis(session);
-    const redisClient = new Redis(parseInt(process.env.REDIS_PORT), process.env.REDIS_HOST, {
-      password: process.env.REDIS_PASSWORD
-    });
+  if (
+    process.env.REDIS_PORT &&
+    process.env.REDIS_HOST &&
+    process.env.REDIS_PASSWORD
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RedisStore = ConnectRedis(session as any);
+    const redisClient = new Redis(
+      parseInt(process.env.REDIS_PORT),
+      process.env.REDIS_HOST,
+      {
+        password: process.env.REDIS_PASSWORD
+      }
+    );
+    const date = new Date();
     store = new RedisStore({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       client: redisClient as any,
-      prefix: 'sess-' + new Date().getDate() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getFullYear() + ':',
+      prefix: `sess-${date.getDate()}-${date.getMonth() +
+        1}-${date.getFullYear()}:`,
       ttl,
       ...redisStoreConfig
     });
@@ -43,7 +50,7 @@ const plugin: PluginFunction = function(options: SessionPluginOptions) {
       resave: false,
       saveUninitialized: true,
       cookie: {
-        expires: new Date(Date.now() + (ttl * 1000)),
+        expires: new Date(Date.now() + ttl * 1000),
         maxAge: ttl * 1000,
         secure: process.env.NODE_ENV === 'production'
       },

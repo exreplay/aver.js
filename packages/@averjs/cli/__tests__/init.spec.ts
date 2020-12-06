@@ -16,15 +16,17 @@ beforeEach(function() {
   process.argv = [...OLD_ARGV];
 });
 
-test('help command should output command description', async() => {
+test('help command should output command description', async () => {
   process.argv.push('init', '--h');
 
   const cli = new AverCli();
   await cli.run();
-  expect(outputData).toMatch('Initialize the project by creating all necessary files in the working');
+  expect(outputData).toMatch(
+    'Initialize the project by creating all necessary files in the working'
+  );
 });
 
-test('run should execute core init', async() => {
+test('run should execute core init', async () => {
   process.argv.push('init');
 
   const cli = new AverCli();

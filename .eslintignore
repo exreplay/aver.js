@@ -1,4 +1,5 @@
 node_modules
 dist
-.eslintrc.js
 packages/test
+packages/@averjs/vue-app/templates
+scripts-build
