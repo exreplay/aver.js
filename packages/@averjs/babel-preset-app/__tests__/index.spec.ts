@@ -17,18 +17,18 @@ function transformFactory(
   );
 }
 
-test('polyfill detection for core-js', () => {
+test('polyfill detection for core-js', async () => {
   let { code } = transformFactory('const a = new Map()', {
     presets: [[preset, { buildTarget: 'server' }]]
   });
 
-  expect(code).toMatch('runtime-corejs2/core-js/map');
+  await expect(code).toMatch('runtime-corejs2/core-js/map');
 
   ({ code } = transformFactory('const a = new Map()'.trim()));
 
-  expect(code).toMatch('runtime-corejs2/core-js/map');
-  expect(code).toMatch('es6.promise');
-  expect(code).toMatch('es6.array.iterator');
+  await expect(code).toMatch('runtime-corejs2/core-js/map');
+  await expect(code).toMatch('es6.promise');
+  await expect(code).toMatch('es6.array.iterator');
 });
 
 test('dynamic import', () => {
@@ -37,12 +37,12 @@ test('dynamic import', () => {
   }).not.toThrow();
 });
 
-test('rest spread should use assign polyfill', () => {
+test('rest spread should use assign polyfill', async () => {
   const { code } = transformFactory('const a = { ...b };');
-  expect(code).toMatch('@babel/runtime-corejs2/core-js/object/assign');
+  await expect(code).toMatch('@babel/runtime-corejs2/core-js/object/assign');
 });
 
-test('regenerator runtime should be included on client', () => {
+test('regenerator runtime should be included on client', async () => {
   const { code } = transformFactory(
     `
     async function test() {
@@ -52,17 +52,17 @@ test('regenerator runtime should be included on client', () => {
   `.trim()
   );
 
-  expect(code).toMatch('es6.promise');
-  expect(code).toMatch('regenerator-runtime/runtime');
+  await expect(code).toMatch('es6.promise');
+  await expect(code).toMatch('regenerator-runtime/runtime');
 });
 
-test('decorators should create a _class var', () => {
+test('decorators should create a _class var', async () => {
   const { code } = transformFactory(`
     function test() {}
     @test class decoratedClass {}
   `);
 
-  expect(code).toMatch('var _class;');
+  await expect(code).toMatch('var _class;');
 });
 
 test('class properties should not throw', () => {
