@@ -24,7 +24,7 @@ test('help command should output command description', async () => {
 
   const cli = new AverCli();
   await cli.run();
-  expect(outputData).toMatch('Start aver in development mode.');
+  await expect(outputData).toMatch('Start aver in development mode.');
 });
 
 test('run should execute core run', async () => {

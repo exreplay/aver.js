@@ -85,7 +85,7 @@ test('help should be executed correctly', async () => {
   const cli = new AverCli();
   cli.addCommand(new TestCommand());
   await cli.run();
-  expect(outputData).toMatch('Testcommand for unit tests');
+  await expect(outputData).toMatch('Testcommand for unit tests');
 });
 
 test('catch block should be called when comman does not exist', async () => {

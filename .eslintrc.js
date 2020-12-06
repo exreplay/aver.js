@@ -6,6 +6,9 @@ module.exports = {
   env: {
     jest: true
   },
+  globals: {
+    jestPuppeteer: true
+  },
   extends: [
     'standard',
     'eslint:recommended',
@@ -55,9 +58,6 @@ module.exports = {
         tsconfigRootDir: __dirname,
         project: ['./tsconfig.eslint.json']
       },
-      globals: {
-        jestPuppeteer: true
-      },
       plugins: ['@typescript-eslint'],
       extends: [
         'plugin:import/typescript',
@@ -91,10 +91,10 @@ module.exports = {
       env: {
         jest: true
       },
-      globals: {
-        jestPuppeteer: true
-      },
-      extends: ['@averjs']
+      extends: ['@averjs'],
+      rules: {
+        'vue/script-indent': 'off'
+      }
     },
     {
       files: ['packages/@averjs/vue-app/templates/**/*.js'],

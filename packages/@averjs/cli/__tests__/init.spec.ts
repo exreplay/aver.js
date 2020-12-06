@@ -22,7 +22,7 @@ test('help command should output command description', async () => {
 
   const cli = new AverCli();
   await cli.run();
-  expect(outputData).toMatch(
+  await expect(outputData).toMatch(
     'Initialize the project by creating all necessary files in the working'
   );
 });

@@ -18,7 +18,7 @@ test('help should have the available commands header set', async () => {
 
   const cli = new AverCli();
   await cli.run();
-  expect(outputData).toMatch('Available Commands');
+  await expect(outputData).toMatch('Available Commands');
 });
 
 test('help for specific command should list the command options', async () => {
@@ -27,8 +27,8 @@ test('help for specific command should list the command options', async () => {
   const cli = new AverCli();
   cli.addCommand(new TestCommand());
   await cli.run();
-  expect(outputData).toMatch('Command Options');
-  expect(outputData).toMatch('--test-arg');
+  await expect(outputData).toMatch('Command Options');
+  await expect(outputData).toMatch('--test-arg');
 });
 
 test('help should always show global commands', async () => {
@@ -37,8 +37,8 @@ test('help should always show global commands', async () => {
   let cli = new AverCli();
   cli.addCommand(new TestCommand());
   await cli.run();
-  expect(outputData).toMatch('Global Commands');
-  expect(outputData).toMatch('--version');
+  await expect(outputData).toMatch('Global Commands');
+  await expect(outputData).toMatch('--version');
 
   process.argv = [...OLD_ARGV];
   setProcessArgs('help');
@@ -46,6 +46,6 @@ test('help should always show global commands', async () => {
   cli = new AverCli();
   await cli.run();
 
-  expect(outputData).toMatch('Global Commands');
-  expect(outputData).toMatch('--version');
+  await expect(outputData).toMatch('Global Commands');
+  await expect(outputData).toMatch('--version');
 });

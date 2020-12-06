@@ -6,9 +6,9 @@
 </template>
 
 <script>
-  export default {
-    metaInfo() {
-      return {};
-    }
-  };
+export default {
+  metaInfo() {
+    return {};
+  }
+};
 </script>

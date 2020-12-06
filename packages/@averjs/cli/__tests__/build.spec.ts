@@ -25,7 +25,7 @@ test('help command should output command description', async () => {
   const cli = new AverCli();
   await cli.run();
 
-  expect(outputData).toMatch('Build for production usage.');
+  await expect(outputData).toMatch('Build for production usage.');
 });
 
 test('run should execute renderer', async () => {
