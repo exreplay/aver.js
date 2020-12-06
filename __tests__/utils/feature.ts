@@ -17,20 +17,24 @@ interface Options {
   showConsoleLogs?: boolean;
 }
 
-export function testFeature(name: string, fn: (() => void), options: Options = {}) {
-  const {
-    dev = false,
-    showConsoleLogs = false
-  } = options;
+export function testFeature(
+  name: string,
+  fn: () => void,
+  options: Options = {}
+) {
+  const { dev = false, showConsoleLogs = false } = options;
 
   describe(name, () => {
-    beforeAll(async() => {
+    beforeAll(async () => {
       consola.wrapAll();
       if (!showConsoleLogs) consola.pause();
 
-      process.env.PROJECT_PATH = path.resolve(__dirname, `../fixtures/${name}/src`);
+      process.env.PROJECT_PATH = path.resolve(
+        __dirname,
+        `../fixtures/${name}/src`
+      );
       process.env.API_PATH = path.resolve(__dirname, `../fixtures/${name}/api`);
-  
+
       aver = new Aver();
       if (!dev) {
         await aver.build({});
@@ -40,8 +44,8 @@ export function testFeature(name: string, fn: (() => void), options: Options = {
       }
       await aver.run();
     });
-  
-    afterAll(async() => {
+
+    afterAll(async () => {
       await aver?.close();
       fs.removeSync(aver?.config.distPath);
       if (!showConsoleLogs) {
@@ -50,7 +54,7 @@ export function testFeature(name: string, fn: (() => void), options: Options = {
       }
     });
 
-    beforeEach(async() => {
+    beforeEach(async () => {
       await jestPuppeteer.resetPage();
     });
 

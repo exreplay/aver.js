@@ -39,8 +39,16 @@ export default class WebpackBaseConfiguration {
 
     this.perfLoader = new PerformanceLoader(this.isServer, aver.config);
     this.perfLoader.warmupLoaders();
-    this.styleLoader = new StyleLoader(this.isServer, aver.config, this.perfLoader);
-    this.babelLoader = new BabelLoader(this.isServer, aver.config, this.perfLoader);
+    this.styleLoader = new StyleLoader(
+      this.isServer,
+      aver.config,
+      this.perfLoader
+    );
+    this.babelLoader = new BabelLoader(
+      this.isServer,
+      aver.config,
+      this.perfLoader
+    );
   }
 
   plugins() {

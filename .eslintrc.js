@@ -87,31 +87,22 @@ module.exports = {
       }
     },
     {
-      files: [
-        '**/*.js',
-        '**/*.vue'
-      ],
+      files: ['**/*.js', '**/*.vue'],
       env: {
         jest: true
       },
       globals: {
         jestPuppeteer: true
       },
-      extends: [
-        '@averjs'
-      ]
+      extends: ['@averjs']
     },
     {
-      files: [
-        'packages/@averjs/vue-app/templates/**/*.js'
-      ],
+      files: ['packages/@averjs/vue-app/templates/**/*.js'],
       parserOptions: {
         parser: 'babel-eslint',
         ecmaVersion: 2015
       },
-      extends: [
-        'plugin:lodash-template/recommended-with-script',
-      ]
+      extends: ['plugin:lodash-template/recommended-with-script']
     }
     // {
     //   files: ['packages/@averjs/vue-app/templates/**/*.js'],

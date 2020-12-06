@@ -29,9 +29,4 @@ jest.mock('@averjs/core', () => {
   });
 });
 
-export {
-  mockeCoreRun,
-  mockInitRun,
-  mockeCoreBuild,
-  mockCompile
-};
+export { mockeCoreRun, mockInitRun, mockeCoreBuild, mockCompile };

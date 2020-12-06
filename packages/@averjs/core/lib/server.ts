@@ -42,11 +42,13 @@ export default class Server extends WWW {
     this.distPath = aver.config.distPath;
     this.isProd = aver.config.isProd;
 
-    if (process.env.NODE_ENV !== 'test') fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) || fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
+    if (process.env.NODE_ENV !== 'test')
+      fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) ||
+        fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
 
     if (!this.isProd) {
       this.watcher = chokidar.watch(process.env.API_PATH);
-            
+
       this.watcher.on('ready', () => {
         console.log('Watching for changes on the server');
         this.watcher?.on('all', () => {
@@ -104,14 +106,16 @@ export default class Server extends WWW {
       server: this.server
     });
 
-    this.middlewares.push(helmet({
-      contentSecurityPolicy: false,
-      ...this.config.helmet
-    }));
+    this.middlewares.push(
+      helmet({
+        contentSecurityPolicy: false,
+        ...this.config.helmet
+      })
+    );
     if (process.env.NODE_ENV !== 'test') this.logging();
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));
-        
+
     this.middlewares.push(['/dist', serve(this.distPath, true)]);
     this.middlewares.push(['/public', serve('./public', true)]);
     this.middlewares.push(['/static', serve('./static', true)]);

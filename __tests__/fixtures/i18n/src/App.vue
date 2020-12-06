@@ -4,6 +4,8 @@
 
 <script>
   export default {
-    metaInfo() { return {}; }
+    metaInfo() {
+      return {};
+    }
   };
 </script>

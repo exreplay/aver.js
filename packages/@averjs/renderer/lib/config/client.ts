@@ -119,7 +119,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         }
       }
     };
-    
+
     if (this.isProd && this.webpackConfig.css?.extract) {
       splitChunks.cacheGroups.styles = {
         name: 'styles',

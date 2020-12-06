@@ -23,12 +23,11 @@ interface TypescriptPluginOptions {
         | ForkTsCheckerWebpackPluginOptions);
 }
 
-const plugin: PluginFunction = async function(options: TypescriptPluginOptions) {
-  const {
-    tsLoader,
-    forkTsChecker
-  } = options;
-  
+const plugin: PluginFunction = async function(
+  options: TypescriptPluginOptions
+) {
+  const { tsLoader, forkTsChecker } = options;
+
   let tsLoaderOptions: TSLoaderOptions = {
     transpileOnly: true,
     happyPackMode: true,
@@ -94,7 +93,10 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
       .use('thread-loader')
       .loader('thread-loader')
       .options({
-        poolConfig: { name: 'ts', poolTimeout: !this.config.isProd ? Infinity : 2000 },
+        poolConfig: {
+          name: 'ts',
+          poolTimeout: !this.config.isProd ? Infinity : 2000
+        },
         loaders: ['ts-loader'],
         useThread: true
       })
