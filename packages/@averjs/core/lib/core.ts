@@ -42,7 +42,7 @@ export default class Core extends Hookable {
 
   async run() {
     await this.plugins.register();
-    this.initModuleAliases();
+    await this.initModuleAliases();
     this.server = new Server(this);
     await this.server.setup();
     this.server.startServer();

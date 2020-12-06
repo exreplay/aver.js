@@ -93,6 +93,8 @@ module.exports = {
       },
       extends: ['@averjs'],
       rules: {
+        indent: 'off',
+        'space-before-function-paren': 'off',
         'vue/script-indent': 'off'
       }
     },
@@ -104,13 +106,5 @@ module.exports = {
       },
       extends: ['plugin:lodash-template/recommended-with-script']
     }
-    // {
-    //   files: ['packages/@averjs/vue-app/templates/**/*.js'],
-    //   parserOptions: {
-    //     parser: 'babel-eslint',
-    //     ecmaVersion: 2015
-    //   },
-    //   extends: ['plugin:lodash-template/recommended-with-script']
-    // }
   ]
 };

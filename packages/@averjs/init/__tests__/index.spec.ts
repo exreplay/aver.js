@@ -31,10 +31,10 @@ afterEach(() => {
   fs.removeSync(pathToDir);
 });
 
-test('run command should finish', () => {
+test('run command should finish', async () => {
   const init = new Init();
   init.run();
-  expect(outputData).toMatch('Project setup successfull!');
+  await expect(outputData).toMatch('Project setup successfull!');
 });
 
 test('createSrcDir should copy src directory recursively', () => {
