@@ -19,7 +19,6 @@ Object {
   "i18n": Object {
     "silentTranslationWarn": true,
   },
-  "isProd": true,
   "plugins": Array [],
   "progressbar": true,
   "rootDir": "/",
