@@ -6,7 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/renderer.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/renderer.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -76,5 +76,18 @@
     "webpackbar": "^4.0.0",
     "workbox-webpack-plugin": "^5.1.4",
     "yaml-loader": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/copy-webpack-plugin": "^6.0.0",
+    "@types/cross-spawn": "^6.0.2",
+    "@types/memory-fs": "^0.3.2",
+    "@types/optimize-css-assets-webpack-plugin": "^5.0.1",
+    "@types/postcss-preset-env": "^6.7.0",
+    "@types/postcss-safe-parser": "^4.0.0",
+    "@types/terser-webpack-plugin": "^4.2.0",
+    "@types/webpack": "^4.41.24",
+    "@types/webpack-node-externals": "^2.5.0",
+    "@types/webpackbar": "^4.0.0",
+    "@types/workbox-webpack-plugin": "^5.1.5"
   }
 }

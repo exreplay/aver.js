@@ -1,7 +1,7 @@
 import path from 'path';
 import ForkTsChecker from 'fork-ts-checker-webpack-plugin';
 import Config from 'webpack-chain';
-import { PluginFunction } from '@averjs/core/dist/plugins';
+import { PluginFunction } from '@averjs/core/lib/plugins';
 import { ForkTsCheckerWebpackPluginOptions } from 'fork-ts-checker-webpack-plugin/lib/ForkTsCheckerWebpackPluginOptions';
 import { LoaderOptions } from 'ts-loader/dist/interfaces';
 import IgnoreNotFoundExportPlugin from './IgnoreNotFoundExportPlugin';
@@ -9,8 +9,18 @@ import IgnoreNotFoundExportPlugin from './IgnoreNotFoundExportPlugin';
 export type TSLoaderOptions = Partial<LoaderOptions>;
 
 interface TypescriptPluginOptions {
-  tsLoader: TSLoaderOptions | ((options?: TSLoaderOptions) => Promise<TSLoaderOptions> | TSLoaderOptions);
-  forkTsChecker: ForkTsCheckerWebpackPluginOptions | ((options?: ForkTsCheckerWebpackPluginOptions) => Promise<ForkTsCheckerWebpackPluginOptions> | ForkTsCheckerWebpackPluginOptions);
+  tsLoader:
+    | TSLoaderOptions
+    | ((
+        options?: TSLoaderOptions
+      ) => Promise<TSLoaderOptions> | TSLoaderOptions);
+  forkTsChecker:
+    | ForkTsCheckerWebpackPluginOptions
+    | ((
+        options?: ForkTsCheckerWebpackPluginOptions
+      ) =>
+        | Promise<ForkTsCheckerWebpackPluginOptions>
+        | ForkTsCheckerWebpackPluginOptions);
 }
 
 const plugin: PluginFunction = async function(options: TypescriptPluginOptions) {
@@ -47,10 +57,7 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
     formatter: 'codeframe',
     async: false,
     eslint: {
-      files: [
-        './src/**/*.vue',
-        './src/**/*.ts'
-      ]
+      files: ['./src/**/*.vue', './src/**/*.ts']
     }
   };
 
@@ -68,14 +75,19 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
 
   const setLoader = (chain: Config, isServer: boolean): void => {
     const name = 'ts';
-      
+
     chain.module
       .rule('ts-loader')
       .test(/\.tsx?$/)
       .use('cache-loader')
       .loader('cache-loader')
       .options({
-        cacheDirectory: path.resolve(process.env.PROJECT_PATH, `../node_modules/.cache/cache-loader/${isServer ? 'server' : 'client'}/${name}`),
+        cacheDirectory: path.resolve(
+          process.env.PROJECT_PATH,
+          `../node_modules/.cache/cache-loader/${
+            isServer ? 'server' : 'client'
+          }/${name}`
+        ),
         cacheIdentifier: name
       })
       .end()
@@ -95,9 +107,13 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
       .options(tsLoaderOptions);
   };
 
-  if (!this.aver.config.webpack.additionalExtensions) this.aver.config.webpack.additionalExtensions = [];
-  this.aver.config.webpack.additionalExtensions.push('ts');
-  this.aver.config.webpack.additionalExtensions.push('tsx');
+  if (this.aver.config.webpack) {
+    if (!this.aver.config.webpack.additionalExtensions)
+      this.aver.config.webpack.additionalExtensions = [];
+
+    this.aver.config.webpack.additionalExtensions.push('ts');
+    this.aver.config.webpack.additionalExtensions.push('tsx');
+  }
 
   this.aver.tap('renderer:client-config', chain => {
     setLoader(chain, false);
@@ -108,14 +124,9 @@ const plugin: PluginFunction = async function(options: TypescriptPluginOptions) 
   });
 
   this.aver.tap('renderer:base-config', chain => {
-    chain
-      .plugin('IgnoreNotFoundExportPlugin')
-      .use(IgnoreNotFoundExportPlugin);
-      
-    chain
-      .resolve
-      .extensions
-      .merge(['.ts']);
+    chain.plugin('IgnoreNotFoundExportPlugin').use(IgnoreNotFoundExportPlugin);
+
+    chain.resolve.extensions.merge(['.ts']);
   });
 
   this.aver.tap('renderer:client-config', chain => {

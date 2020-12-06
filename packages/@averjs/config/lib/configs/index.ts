@@ -6,9 +6,12 @@ import vueApp from './vue-app';
 
 export const defaultFileName = 'aver-config';
 
-type AverConfig = ReturnType<typeof app> & ReturnType<typeof core> & ReturnType<typeof server> & ReturnType<typeof vueApp> & {
-  webpack: ReturnType<typeof renderer>
-}
+type AverConfig = ReturnType<typeof app> &
+  ReturnType<typeof core> &
+  ReturnType<typeof server> &
+  ReturnType<typeof vueApp> & {
+    webpack?: ReturnType<typeof renderer>;
+  };
 
 export function defaultAverjsConfig(isProd: boolean): AverConfig {
   return {

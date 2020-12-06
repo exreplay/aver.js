@@ -1,5 +1,9 @@
 import LRU from 'lru-cache';
-import { createBundleRenderer, BundleRendererOptions } from 'vue-server-renderer';
+import {
+  createBundleRenderer,
+  BundleRendererOptions,
+  BundleRenderer
+} from 'vue-server-renderer';
 import { VueMetaPlugin } from 'vue-meta';
 import { Request } from 'express';
 
@@ -16,7 +20,10 @@ export interface BuilderContext {
 }
 
 export default class BaseBuilder {
-  createRenderer(bundle: string, options: BundleRendererOptions) {
+  createRenderer(
+    bundle: string,
+    options: BundleRendererOptions
+  ): BundleRenderer {
     const bundleOptions = {
       cache: new LRU({
         max: 1000,
@@ -24,7 +31,7 @@ export default class BaseBuilder {
       }),
       runInNewContext: false
     };
-  
+
     return createBundleRenderer(bundle, Object.assign(options, bundleOptions));
   }
 }

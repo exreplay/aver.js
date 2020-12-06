@@ -19,7 +19,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-test('help command should output command description', async() => {
+test('help command should output command description', async () => {
   setProcessArgs('prod', '--h');
 
   const cli = new AverCli();
@@ -27,7 +27,7 @@ test('help command should output command description', async() => {
   expect(outputData).toMatch('Start aver in production mode.');
 });
 
-test('run should execute core run', async() => {
+test('run should execute core run', async () => {
   setProcessArgs('prod');
 
   const cli = new AverCli();
@@ -36,11 +36,11 @@ test('run should execute core run', async() => {
   expect(mockeCoreRun.mock.calls.length).toBe(1);
 });
 
-test('run should set NODE_ENV to "production" when not set', async() => {
+test('run should set NODE_ENV to "production" when not set', async () => {
   setProcessArgs('prod');
 
   delete process.env.NODE_ENV;
-  
+
   const cli = new AverCli();
   await cli.run();
 

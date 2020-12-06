@@ -18,7 +18,9 @@ export default class Core extends Hookable {
     super();
 
     if (fs.existsSync(path.resolve(process.env.PROJECT_PATH, '../.env'))) {
-      const envConfig = dotenv.parse(fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../.env')));
+      const envConfig = dotenv.parse(
+        fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../.env'))
+      );
       for (const k in envConfig) {
         process.env[k] = envConfig[k];
       }
@@ -51,8 +53,8 @@ export default class Core extends Hookable {
     await this.renderer.compile();
   }
 
-  initModuleAliases() {
-    const ModuleAlias = require('module-alias');
+  async initModuleAliases() {
+    const { default: ModuleAlias } = await import('module-alias');
     const aliases = {
       '@models': `${process.env.API_PATH}/models`,
       '@errors': `${process.env.API_PATH}/errors`,
@@ -63,7 +65,8 @@ export default class Core extends Hookable {
       '@routes': `${process.env.API_PATH}/routes`
     };
 
-    if (typeof this.config.aliases !== 'undefined') Object.assign(aliases, this.config.aliases);
+    if (typeof this.config.aliases !== 'undefined')
+      Object.assign(aliases, this.config.aliases);
 
     ModuleAlias.addAliases(aliases);
   }

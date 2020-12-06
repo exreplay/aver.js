@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare namespace Express {
   export interface Request {
-     id?: string;
-     error?: string;
+    id?: string;
+    error?: string;
   }
 }

@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import express, { Handler, Request, Response, ErrorRequestHandler } from 'express';
+import express, {
+  Handler,
+  Request,
+  Response,
+  ErrorRequestHandler
+} from 'express';
 import compression from 'compression';
 import path from 'path';
 import fs from 'fs';
@@ -8,7 +13,7 @@ import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import bodyParser from 'body-parser';
-import rfs from 'rotating-file-stream';
+import * as rfs from 'rotating-file-stream';
 import { v4 as uuidv4 } from 'uuid';
 import chokidar from 'chokidar';
 import indexOf from 'lodash/indexOf';
@@ -46,7 +51,7 @@ export default class Server extends WWW {
         console.log('Watching for changes on the server');
         this.watcher?.on('all', () => {
           console.log('Clearing server cache');
-          Object.keys(require.cache).forEach((id) => {
+          Object.keys(require.cache).forEach(id => {
             // eslint-disable-next-line no-useless-escape
             if (/[/\\]api[/\\]/.test(id)) {
               delete require.cache[id];
@@ -72,22 +77,32 @@ export default class Server extends WWW {
     const errorHandler: ErrorRequestHandler = (err, req, res) => {
       if (!this.isProd) console.error(err.stack);
       req.error = err.stack;
-      res.status(err.status || 500).json(Object.assign({
-        success: false,
-        errorId: req.id,
-        msg: err.message
-      }, (err.data) ? { data: err.data } : {}));
+      res.status(err.status || 500).json(
+        Object.assign(
+          {
+            success: false,
+            errorId: req.id,
+            msg: err.message
+          },
+          err.data ? { data: err.data } : {}
+        )
+      );
     };
 
     this.app.use(errorHandler);
   }
-    
-  async registerMiddlewares() {
-    const serve = (path: string, cache: boolean) => express.static(path, {
-      maxAge: cache && this.isProd ? '1y' : 0
-    });
 
-    await this.aver.callHook('server:before-register-middlewares', { app: this.app, middlewares: this.middlewares, server: this.server });
+  async registerMiddlewares() {
+    const serve = (path: string, cache: boolean) =>
+      express.static(path, {
+        maxAge: cache && this.isProd ? '1y' : 0
+      });
+
+    await this.aver.callHook('server:before-register-middlewares', {
+      app: this.app,
+      middlewares: this.middlewares,
+      server: this.server
+    });
 
     this.middlewares.push(helmet({
       contentSecurityPolicy: false,
@@ -119,7 +134,11 @@ export default class Server extends WWW {
       });
     }
 
-    await this.aver.callHook('server:after-register-middlewares', { app: this.app, middlewares: this.middlewares, server: this.server });
+    await this.aver.callHook('server:after-register-middlewares', {
+      app: this.app,
+      middlewares: this.middlewares,
+      server: this.server
+    });
 
     for (const middleware of this.middlewares) {
       if (typeof middleware === 'function') this.app.use(middleware);
@@ -147,25 +166,35 @@ export default class Server extends WWW {
     logger.token('error', (req: Request) => req.error);
 
     this.middlewares.push((req, res, next) => {
-      req.id = (new Date().getTime()) + '-' + uuidv4();
+      req.id = `${new Date().getTime()}-${uuidv4()}`;
       next();
     });
 
-    this.middlewares.push(logger(':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"\\n:error', {
-      skip: function(req, res) {
-        return res.statusCode < 400;
-      },
-      stream: errorLogStream
-    }));
+    this.middlewares.push(
+      logger(
+        ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"\\n:error',
+        {
+          skip: function(req, res) {
+            return res.statusCode < 400;
+          },
+          stream: errorLogStream
+        }
+      )
+    );
 
-    this.middlewares.push(logger(':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
-      skip: function(req, res) {
-        return res.statusCode > 400;
-      },
-      stream: accessLogStream
-    }));
+    this.middlewares.push(
+      logger(
+        ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"',
+        {
+          skip: function(req, res) {
+            return res.statusCode > 400;
+          },
+          stream: accessLogStream
+        }
+      )
+    );
   }
-    
+
   async registerRoutes() {
     const routesPath = path.resolve(process.env.API_PATH, './routes');
 
@@ -175,7 +204,11 @@ export default class Server extends WWW {
       });
     }
 
-    await this.aver.callHook('server:before-register-routes', { app: this.app, middlewares: this.middlewares, server: this.server });
+    await this.aver.callHook('server:before-register-routes', {
+      app: this.app,
+      middlewares: this.middlewares,
+      server: this.server
+    });
 
     this.app.get('/favicon.ico', function(req, res) {
       res.sendStatus(204);
@@ -183,48 +216,60 @@ export default class Server extends WWW {
 
     this.app.get('/service-worker.js', (req, res, next) => {
       try {
-        const sw = fs.readFileSync(path.resolve(this.distPath, './service-worker.js'));
+        const sw = fs.readFileSync(
+          path.resolve(this.distPath, './service-worker.js')
+        );
         res.set({ 'Content-Type': 'application/javascript; charset=UTF-8' });
         res.send(sw);
-      } catch (err) {
-        next(err);
+      } catch (error) {
+        next(error);
       }
     });
 
     this.app.get('/robots.txt', (req, res, next) => {
       try {
-        const sw = fs.readFileSync(path.resolve(process.env.PROJECT_PATH, '../robots.txt'));
+        const sw = fs.readFileSync(
+          path.resolve(process.env.PROJECT_PATH, '../robots.txt')
+        );
         res.set({ 'Content-Type': 'text/plain; charset=UTF-8' });
         res.send(sw);
-      } catch (err) {
-        next(err);
+      } catch (error) {
+        next(error);
       }
     });
 
-    this.app.get('*', this.isProd
-      ? this.render.bind(this)
-      : (req, res) => {
-        this.builder?.readyPromise?.then(async() => {
-          await this.render(req, res);
-        });
-      }
+    this.app.get(
+      '*',
+      this.isProd
+        ? this.render.bind(this)
+        : (req, res) => {
+            this.builder?.readyPromise
+              ?.then(async () => {
+                await this.render(req, res);
+              })
+              .catch(error => console.log(error));
+          }
     );
 
-    await this.aver.callHook('server:after-register-routes', { app: this.app, middlewares: this.middlewares, server: this.server });
+    await this.aver.callHook('server:after-register-routes', {
+      app: this.app,
+      middlewares: this.middlewares,
+      server: this.server
+    });
   }
-    
+
   async render(req: Request, res: Response) {
     const s = Date.now();
 
     try {
       const html = await this.builder?.build(req);
-            
+
       res.setHeader('Content-Type', 'text/html');
       res.send(html);
 
       if (!this.isProd) console.log(`whole request: ${Date.now() - s}ms`);
-    } catch (err) {
-      res.status(err.code || 500).send(err.message);
+    } catch (error) {
+      res.status(error.code || 500).send(error.message);
     }
   }
 }

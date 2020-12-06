@@ -19,7 +19,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-test('help command should output command description', async() => {
+test('help command should output command description', async () => {
   setProcessArgs('build', '--h');
 
   const cli = new AverCli();
@@ -28,7 +28,7 @@ test('help command should output command description', async() => {
   expect(outputData).toMatch('Build for production usage.');
 });
 
-test('run should execute renderer', async() => {
+test('run should execute renderer', async () => {
   setProcessArgs('build');
 
   const cli = new AverCli();
@@ -37,7 +37,7 @@ test('run should execute renderer', async() => {
   expect(mockeCoreBuild.mock.calls.length).toBe(1);
 });
 
-test('run should set NODE_ENV to "production" when not set', async() => {
+test('run should set NODE_ENV to "production" when not set', async () => {
   setProcessArgs('build');
 
   delete process.env.NODE_ENV;
@@ -48,7 +48,7 @@ test('run should set NODE_ENV to "production" when not set', async() => {
   expect(process.env.NODE_ENV).toBe('production');
 });
 
-test('static should be passed to renderer constructor', async() => {
+test('static should be passed to renderer constructor', async () => {
   setProcessArgs('build', '--static');
 
   const cli = new AverCli();

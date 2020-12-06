@@ -1,6 +1,7 @@
 import Core from './core';
 import path from 'path';
 import './global';
+export * from './plugins';
 
 /**
  * Remove in next major version, where a index.js file in root directory is not needed anymore.

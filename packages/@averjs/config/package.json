@@ -6,7 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/config.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/config.d.ts",
   "publishConfig": {
     "access": "public"
   },

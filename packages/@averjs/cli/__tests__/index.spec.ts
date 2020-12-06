@@ -62,12 +62,12 @@ test('global command should be executed', () => {
   const cli = new AverCli();
   expect(cli.globalCommand?.name).toBe('version');
 
-  expect(() => {
-    cli.run();
+  expect(async () => {
+    await cli.run();
   }).not.toThrow();
 });
 
-test('test command should be added correctly and executed', () => {
+test('test command should be added correctly and executed', async () => {
   setProcessArgs('test');
 
   const cli = new AverCli();
@@ -75,28 +75,28 @@ test('test command should be added correctly and executed', () => {
   expect(cli.availableCommands.test).toBeInstanceOf(TestCommand);
   expect(cli.aliases).toEqual(expect.objectContaining({ t: 'test' }));
 
-  cli.run();
+  await cli.run();
   expect(outputData).toBe('run executed');
 });
 
-test('help should be executed correctly', () => {
+test('help should be executed correctly', async () => {
   setProcessArgs('test', '--h');
 
   const cli = new AverCli();
   cli.addCommand(new TestCommand());
-  cli.run();
+  await cli.run();
   expect(outputData).toMatch('Testcommand for unit tests');
 });
 
-test('catch block should be called when comman does not exist', () => {
+test('catch block should be called when comman does not exist', async () => {
   setProcessArgs('fail');
 
   const cli = new AverCli();
   cli.addCommand(new FailingCommand());
 
   try {
-    cli.run();
-  } catch (err) {
-    expect(err).toBe('failing');
+    await cli.run();
+  } catch (error) {
+    expect(error).toBe('failing');
   }
 });

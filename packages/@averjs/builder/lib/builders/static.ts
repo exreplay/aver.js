@@ -33,15 +33,28 @@ export default class StaticBuilder extends BaseBuilder {
   }
 
   initRenderer() {
-    const serverBundle = require(path.join(this.distPath, './vue-ssr-server-bundle.json'));
-    const clientManifest = require(path.join(this.distPath, './vue-ssr-client-manifest.json'));
-    this.renderer = this.createRenderer(serverBundle, Object.assign({
-      clientManifest: clientManifest
-    }, this.config.createRenderer));
+    const serverBundle = require(path.join(
+      this.distPath,
+      './vue-ssr-server-bundle.json'
+    ));
+    const clientManifest = require(path.join(
+      this.distPath,
+      './vue-ssr-client-manifest.json'
+    ));
+    this.renderer = this.createRenderer(
+      serverBundle,
+      Object.assign(
+        {
+          clientManifest: clientManifest
+        },
+        this.config.createRenderer
+      )
+    );
   }
-  
+
   async build() {
-    const routes = requireModule(path.join(process.env.PROJECT_PATH, './pages')).default;
+    const routes = requireModule(path.join(process.env.PROJECT_PATH, './pages'))
+      .default;
     for (const route of routes) {
       const context: BuilderContext = {
         title: process.env.APP_NAME,
@@ -52,13 +65,20 @@ export default class StaticBuilder extends BaseBuilder {
       };
 
       if (this.config.csrf) Object.assign(context, { csrfToken: '' });
-    
+
       const html = await this.renderer?.renderToString(context);
       if (!context.meta) return;
 
       const {
-        title, htmlAttrs, bodyAttrs, headAttrs, link,
-        style, script, noscript, meta
+        title,
+        htmlAttrs,
+        bodyAttrs,
+        headAttrs,
+        link,
+        style,
+        script,
+        noscript,
+        meta
       } = context.meta.inject();
 
       const HEAD = [
@@ -77,13 +97,15 @@ export default class StaticBuilder extends BaseBuilder {
         script?.text({ pbody: true }),
         noscript?.text({ pbody: true }),
         html,
-        `<script>window.__INITIAL_STATE__=${serialize(context.state, { isJSON: true })}</script>`,
+        `<script>window.__INITIAL_STATE__=${serialize(context.state, {
+          isJSON: true
+        })}</script>`,
         context.renderScripts?.(),
         style?.text({ body: true }),
         script?.text({ body: true }),
         noscript?.text({ body: true })
       ];
-      
+
       const HEAD_ATTRS = headAttrs?.text();
       const HTML_ATTRS = htmlAttrs?.text(true);
       const BODY_ATTRS = bodyAttrs?.text();
@@ -96,9 +118,14 @@ export default class StaticBuilder extends BaseBuilder {
         BODY_ATTRS,
         BODY
       });
-  
-      const fileToCompile = fs.readFileSync(path.resolve(this.cacheDir, './index.template.html'), 'utf-8');
-      const compiled = template(fileToCompile, { interpolate: /{{([\S\s]+?)}}/g });
+
+      const fileToCompile = fs.readFileSync(
+        path.resolve(this.cacheDir, './index.template.html'),
+        'utf-8'
+      );
+      const compiled = template(fileToCompile, {
+        interpolate: /{{([\S\s]+?)}}/g
+      });
       const compiledTemplate = compiled({
         HTML_ATTRS,
         HEAD_ATTRS,
@@ -106,20 +133,23 @@ export default class StaticBuilder extends BaseBuilder {
         BODY_ATTRS,
         BODY: BODY.join('')
       });
-  
+
       const indexPath = path.join(this.distPath, route.path);
       if (!fs.existsSync(indexPath)) fs.mkdirpSync(indexPath);
-      fs.writeFileSync(path.join(indexPath, 'index.html'), minify(compiledTemplate, {
-        collapseBooleanAttributes: true,
-        decodeEntities: true,
-        minifyCSS: true,
-        minifyJS: true,
-        processConditionalComments: true,
-        removeEmptyAttributes: true,
-        removeRedundantAttributes: true,
-        trimCustomFragments: true,
-        useShortDoctype: true
-      }));
+      fs.writeFileSync(
+        path.join(indexPath, 'index.html'),
+        minify(compiledTemplate, {
+          collapseBooleanAttributes: true,
+          decodeEntities: true,
+          minifyCSS: true,
+          minifyJS: true,
+          processConditionalComments: true,
+          removeEmptyAttributes: true,
+          removeRedundantAttributes: true,
+          trimCustomFragments: true,
+          useShortDoctype: true
+        })
+      );
     }
 
     fs.removeSync(path.join(this.distPath, 'vue-ssr-server-bundle.json'));

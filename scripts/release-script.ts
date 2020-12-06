@@ -1,16 +1,17 @@
-#!/usr/bin/env node
-const fs = require('fs-extra');
-const path = require('path');
-const ora = require('ora');
-const logSymbols = require('log-symbols');
-const execa = require('execa');
-const Release = require('./release.js').default;
-const inquirer = require('inquirer');
+import fs from 'fs-extra';
+import path from 'path';
+import ora from 'ora';
+import logSymbols from 'log-symbols';
+import execa from 'execa';
+import Release from './release';
+import inquirer from 'inquirer';
 
 const OUT_FILE = './verdaccio';
 
 class ReleaseScript {
-  constructor(test) {
+  test: boolean;
+
+  constructor(test: boolean) {
     this.test = test;
 
     if (this.test) {
@@ -23,8 +24,8 @@ class ReleaseScript {
       if (this.test) await this.setupVerdaccio();
       const release = new Release(this.test);
       await release.run();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     } finally {
       if (this.test) this.removeNoHupOut();
     }
@@ -36,9 +37,12 @@ class ReleaseScript {
     waitingSpinner.start();
 
     this.removeNoHupOut();
-    execa.shellSync('nohup yarn verdaccio -c ./scripts/verdaccio.yaml &> verdaccio &');
+    execa.sync(
+      'nohup yarn verdaccio -c ./scripts/verdaccio.yaml &> verdaccio &',
+      { shell: true }
+    );
 
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       let verdaccioRunning = false;
 
       const interval = setInterval(() => {
@@ -49,7 +53,9 @@ class ReleaseScript {
 
         if (verdaccioRunning) {
           clearInterval(interval);
-          waitingSpinner.succeed('Verdaccio is running. Continue with release.');
+          waitingSpinner.succeed(
+            'Verdaccio is running. Continue with release.'
+          );
           setTimeout(resolve, 1000);
         }
       }, 250);
@@ -66,7 +72,10 @@ class ReleaseScript {
     this.removeNoHupOut();
     // Grep all verdaccio processes and kill them. Exclude the grep process
     console.log(logSymbols.info, 'Cleanup verdaccio processes before exit');
-    execa.shellSync('ps -ef | grep -i \'verdaccio\' | grep -v grep | awk \'{print $2}\' | xargs kill -9');
+    execa.sync(
+      "ps -ef | grep -i 'verdaccio' | grep -v grep | awk '{print $2}' | xargs kill -9",
+      { shell: true }
+    );
     fs.removeSync(path.resolve(__dirname, './verdaccio'));
     process.exit();
   }
@@ -76,9 +85,11 @@ class ReleaseScript {
   }
 }
 
-(async() => {
+(async () => {
   if (!process.env.GITHUB_AUTH) {
-    console.error('Please provie a GITHUB_AUTH token, otherwise the changelog can not be created. Use export GITHUB_AUTH="token".');
+    console.error(
+      'Please provie a GITHUB_AUTH token, otherwise the changelog can not be created. Use export GITHUB_AUTH="token".'
+    );
     process.exit(1);
   }
 
@@ -95,7 +106,8 @@ class ReleaseScript {
     await inquirer.prompt([
       {
         name: 'exit',
-        message: 'We keep this process up and running so you can have a look at verdaccio to see if everything worked out correctly. Hit enter to exit.',
+        message:
+          'We keep this process up and running so you can have a look at verdaccio to see if everything worked out correctly. Hit enter to exit.',
         type: 'confirm'
       }
     ]);

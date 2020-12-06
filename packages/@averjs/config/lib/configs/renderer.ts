@@ -1,6 +1,9 @@
 import path from 'path';
 import Config from 'webpack-chain';
-import { GenerateSWOptions, InjectManifestOptions } from 'workbox-webpack-plugin';
+import {
+  GenerateSWOptions,
+  InjectManifestOptions
+} from 'workbox-webpack-plugin';
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
 import { ProcessOptions, AcceptedPlugin } from 'postcss';
 import PostCSSPresetEnv from 'postcss-preset-env';
@@ -18,16 +21,16 @@ export interface AverWebpackConfig {
     } & ProcessOptions;
     plugins?: {
       [index: string]: any;
-    }
+    };
   };
-  runtimeChunk?: boolean | 'single' | 'multiple' | Config.RuntimeChunk,
+  runtimeChunk?: boolean | 'single' | 'multiple' | Config.RuntimeChunk;
   css?: {
-    extract?: boolean,
+    extract?: boolean;
     styleResources?: {
-      resources?: string[],
-      options?: StyleResourcesLoaderOptions
-    }
-  },
+      resources?: string[];
+      options?: StyleResourcesLoaderOptions;
+    };
+  };
   alias?: {
     [index: string]: string;
     '@': string;
@@ -37,14 +40,14 @@ export interface AverWebpackConfig {
     '@mixins': string;
     '@pages': string;
     '@vuex': string;
-  },
+  };
   base?: false | ((chain: Config) => void);
   client?: false | ((chain: Config) => void);
   server?: false | ((chain: Config) => void);
   sw?: false | GenerateSWOptions | InjectManifestOptions;
   process?: {
-    env?: Record<string, any>
-  }
+    env?: Record<string, any>;
+  };
 }
 
 export default (isProd: boolean): AverWebpackConfig => ({

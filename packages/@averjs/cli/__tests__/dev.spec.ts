@@ -19,7 +19,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-test('help command should output command description', async() => {
+test('help command should output command description', async () => {
   setProcessArgs('dev', '--h');
 
   const cli = new AverCli();
@@ -27,7 +27,7 @@ test('help command should output command description', async() => {
   expect(outputData).toMatch('Start aver in development mode.');
 });
 
-test('run should execute core run', async() => {
+test('run should execute core run', async () => {
   setProcessArgs('dev');
 
   const cli = new AverCli();
@@ -36,7 +36,7 @@ test('run should execute core run', async() => {
   expect(mockeCoreRun.mock.calls.length).toBe(1);
 });
 
-test('run should set NODE_ENV to "development" when not set', async() => {
+test('run should set NODE_ENV to "development" when not set', async () => {
   setProcessArgs('dev');
 
   delete process.env.NODE_ENV;

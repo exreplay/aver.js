@@ -17,15 +17,17 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-test('help command should output command description', async() => {
+test('help command should output command description', async () => {
   setProcessArgs('init', '--h');
 
   const cli = new AverCli();
   await cli.run();
-  expect(outputData).toMatch('Initialize the project by creating all necessary files in the working');
+  expect(outputData).toMatch(
+    'Initialize the project by creating all necessary files in the working'
+  );
 });
 
-test('run should execute core init', async() => {
+test('run should execute core init', async () => {
   setProcessArgs('init');
 
   const cli = new AverCli();

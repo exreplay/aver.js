@@ -8,11 +8,11 @@ import BabelLoader from '../utils/babel-loader';
 import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
 import Core from '@averjs/core';
-import { AverConfig } from '@averjs/config';
+import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
 
 export default class WebpackBaseConfiguration {
   aver: Core;
-  webpackConfig: AverConfig['webpack'];
+  webpackConfig: AverWebpackConfig;
 
   chainConfig = new WebpackChain();
   isServer: boolean;
@@ -27,7 +27,7 @@ export default class WebpackBaseConfiguration {
 
   constructor(isServer: boolean, aver: Core) {
     this.aver = aver;
-    this.webpackConfig = aver.config.webpack;
+    this.webpackConfig = aver.config.webpack || {};
 
     this.chainConfig = new WebpackChain();
     this.isServer = isServer;
@@ -44,31 +44,31 @@ export default class WebpackBaseConfiguration {
   }
 
   plugins() {
-    if (!this.isServer && this.webpackConfig.css?.extract) {
-      this.chainConfig
-        .plugin('extract-css')
-        .use(ExtractCssPlugin, [{
-          filename: !this.isProd ? '_averjs/css/[name].css' : '_averjs/css/[name].[contenthash].css',
-          chunkFilename: !this.isProd ? '_averjs/css/[id].css' : '_averjs/css/[id].[contenthash].css'
-        }]);
+    if (!this.isServer && this.webpackConfig?.css?.extract) {
+      this.chainConfig.plugin('extract-css').use(ExtractCssPlugin, [
+        {
+          filename: !this.isProd
+            ? '_averjs/css/[name].css'
+            : '_averjs/css/[name].[contenthash].css',
+          chunkFilename: !this.isProd
+            ? '_averjs/css/[id].css'
+            : '_averjs/css/[id].[contenthash].css'
+        }
+      ]);
     }
 
-    this.chainConfig
-      .plugin('vue-loader')
-      .use(VueLoaderPlugin);
-    
+    this.chainConfig.plugin('vue-loader').use(VueLoaderPlugin);
+
     if (!this.isServer && !this.isProd) {
-      this.chainConfig
-        .plugin('files-changed')
-        .use(FilesChanged);
+      this.chainConfig.plugin('files-changed').use(FilesChanged);
     }
 
-    this.chainConfig
-      .plugin('webpackbar')
-      .use(Webpackbar, [{
+    this.chainConfig.plugin('webpackbar').use(Webpackbar, [
+      {
         name: this.isServer ? 'Server' : 'Client',
         color: this.isServer ? 'blue' : 'green'
-      }]);
+      }
+    ]);
 
     if (this.isProd) {
       this.chainConfig
@@ -81,10 +81,13 @@ export default class WebpackBaseConfiguration {
   }
 
   alias() {
-    if (!this.webpackConfig.alias) return;
+    if (!this.webpackConfig?.alias) return;
 
     for (const alias of Object.keys(this.webpackConfig.alias)) {
-      this.chainConfig.resolve.alias.set(alias, this.webpackConfig.alias[alias]);
+      this.chainConfig.resolve.alias.set(
+        alias,
+        this.webpackConfig.alias[alias]
+      );
     }
   }
 
@@ -95,7 +98,8 @@ export default class WebpackBaseConfiguration {
 
     this.perfLoader.apply(vueLoaderRule, 'vue');
 
-    vueLoaderRule.use('vue-loader')
+    vueLoaderRule
+      .use('vue-loader')
       .loader('vue-loader')
       .options({
         compilerOptions: {
@@ -108,29 +112,28 @@ export default class WebpackBaseConfiguration {
           embed: 'src'
         }
       });
-        
+
     this.chainConfig.module
       .rule('i18n')
       .resourceQuery(/blockType=i18n/)
       .type('javascript/auto')
       .use('i18n')
       .loader('@kazupon/vue-i18n-loader');
-        
+
     this.chainConfig.module
       .rule('eslint')
       .test(/\.(js|vue)$/)
       .pre()
-      .exclude
-      .add(/node_modules/)
+      .exclude.add(/node_modules/)
       .end()
       .use('eslint')
       .loader('eslint-loader')
       .options({
         cache: true
       });
-    
+
     this.babelLoader.apply(this.chainConfig);
-        
+
     this.chainConfig.module
       .rule('pug')
       .test(/\.pug$/)
@@ -146,12 +149,11 @@ export default class WebpackBaseConfiguration {
       .end()
       .use('pug-plain-loader')
       .loader('pug-plain-loader');
-        
+
     this.chainConfig.module
       .rule('yaml')
       .test(/\.y(a)?ml$/)
-      .exclude
-      .add(/node_modules/)
+      .exclude.add(/node_modules/)
       .end()
       .use('json-loader')
       .loader('json-loader')
@@ -162,18 +164,22 @@ export default class WebpackBaseConfiguration {
     const cssRule = this.chainConfig.module.rule('css-loader').test(/\.css$/);
     this.styleLoader.apply('css', cssRule);
 
-    const scssRule = this.chainConfig.module.rule('scss-loader').test(/\.scss$/);
-    this.styleLoader.apply('scss', scssRule, [{
-      name: 'sass-loader',
-      options: {
-        sourceMap: !this.isProd,
-        implementation: require('sass'),
-        sassOptions: {
-          fiber: require('fibers')
+    const scssRule = this.chainConfig.module
+      .rule('scss-loader')
+      .test(/\.scss$/);
+    this.styleLoader.apply('scss', scssRule, [
+      {
+        name: 'sass-loader',
+        options: {
+          sourceMap: !this.isProd,
+          implementation: require('sass'),
+          sassOptions: {
+            fiber: require('fibers')
+          }
         }
       }
-    }]);
-                    
+    ]);
+
     this.chainConfig.module
       .rule('fonts')
       .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/)
@@ -184,7 +190,7 @@ export default class WebpackBaseConfiguration {
         name: '_averjs/fonts/[name].[hash:7].[ext]',
         esModule: false
       });
-        
+
     this.chainConfig.module
       .rule('images')
       .test(/\.(png|jpe?g|gif|svg)$/)
@@ -195,7 +201,7 @@ export default class WebpackBaseConfiguration {
         name: '_averjs/img/[name].[hash:7].[ext]',
         esModule: false
       });
-        
+
     this.chainConfig.module
       .rule('videos')
       .test(/\.(webm|mp4)$/)
@@ -205,7 +211,7 @@ export default class WebpackBaseConfiguration {
         name: '_averjs/videos/[name].[hash:7].[ext]',
         esModule: false
       });
-        
+
     this.chainConfig.module
       .rule('resources')
       .test(/\.pdf$/)
@@ -221,13 +227,11 @@ export default class WebpackBaseConfiguration {
   optimization() {}
 
   async config(isStatic: boolean): Promise<Configuration | void> {
-    this.chainConfig
-      .output
+    this.chainConfig.output
       .path(this.distPath)
       .publicPath(isStatic ? '/' : '/dist/')
       .end()
-      .node
-      .set('setImmediate', false)
+      .node.set('setImmediate', false)
       .set('dgram', 'empty')
       .set('fs', 'empty')
       .set('net', 'empty')
@@ -235,26 +239,24 @@ export default class WebpackBaseConfiguration {
       .set('child_process', 'empty')
       .end()
       .devtool(this.isProd ? false : 'cheap-module-eval-source-map')
-      .mode(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production' ? process.env.NODE_ENV : 'none')
-      .module
-      .noParse(/es6-promise\.js$/)
+      .mode(
+        process.env.NODE_ENV === 'development' ||
+          process.env.NODE_ENV === 'production'
+          ? process.env.NODE_ENV
+          : 'none'
+      )
+      .module.noParse(/es6-promise\.js$/)
       .end()
-      .resolve
-      .extensions
-      .merge(['.js', '.json', '.vue', '.yaml'])
+      .resolve.extensions.merge(['.js', '.json', '.vue', '.yaml'])
       .end()
-      .modules
-      .add('node_modules')
-      .end()
-      .end()
-      .resolveLoader
-      .modules
-      .add('node_modules')
+      .modules.add('node_modules')
       .end()
       .end()
-      .performance
-      .maxEntrypointSize(1000 * 1024)
-      .maxAssetSize(300000)
+      .resolveLoader.modules.add('node_modules')
+      .end()
+      .end()
+      .performance.maxEntrypointSize(1000 * 1024)
+      .maxAssetSize(300_000)
       .hints(this.isProd ? 'warning' : false);
 
     this.rules();
@@ -262,7 +264,8 @@ export default class WebpackBaseConfiguration {
     this.optimization();
     this.plugins();
 
-    if (typeof this.webpackConfig.base === 'function') this.webpackConfig.base(this.chainConfig);
+    if (typeof this.webpackConfig?.base === 'function')
+      this.webpackConfig.base(this.chainConfig);
 
     await this.aver.callHook('renderer:base-config', this.chainConfig);
   }

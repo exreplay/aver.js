@@ -13,7 +13,7 @@ beforeEach(function() {
   process.argv = [...OLD_ARGV];
 });
 
-test('help should have the available commands header set', async() => {
+test('help should have the available commands header set', async () => {
   setProcessArgs('help');
 
   const cli = new AverCli();
@@ -21,7 +21,7 @@ test('help should have the available commands header set', async() => {
   expect(outputData).toMatch('Available Commands');
 });
 
-test('help for specific command should list the command options', async() => {
+test('help for specific command should list the command options', async () => {
   setProcessArgs('test', '-h');
 
   const cli = new AverCli();
@@ -31,7 +31,7 @@ test('help for specific command should list the command options', async() => {
   expect(outputData).toMatch('--test-arg');
 });
 
-test('help should always show global commands', async() => {
+test('help should always show global commands', async () => {
   setProcessArgs('test', '-h');
 
   let cli = new AverCli();

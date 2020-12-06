@@ -6,7 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/cli.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/cli.d.ts",
   "bin": {
     "aver": "./bin/aver.js"
   },
@@ -30,6 +30,10 @@
     "@averjs/init": "2.3.4",
     "command-line-usage": "^6.1.0",
     "minimist": "^1.2.5"
+  },
+  "devDependencies": {
+    "@types/command-line-usage": "^5.0.1",
+    "@types/minimist": "^1.2.0"
   },
   "aver": {
     "build": true

@@ -6,7 +6,7 @@
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/mailer.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/mailer.d.ts",
   "aver": {
     "build": true
   },
@@ -27,7 +27,7 @@
     "pug": "^3.0.0"
   },
   "devDependencies": {
-    "@types/email-templates": "7.1.0",
-    "@types/nodemailer": "6.4.0"
+    "@types/email-templates": "^7.1.0",
+    "@types/nodemailer": "^6.4.0"
   }
 }

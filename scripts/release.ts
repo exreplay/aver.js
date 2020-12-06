@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
@@ -7,15 +5,29 @@ import ora from 'ora';
 import Build from './build';
 import { getNextVersion, exec } from './utils';
 
+type Unpack<T> = T extends Promise<infer U> ? U : T;
+
 export default class Release {
+  test: boolean;
+  newVersion: Unpack<ReturnType<typeof getNextVersion>> = null;
+  releaseTypes: inquirer.ListQuestionOptions;
+
   constructor(test = false) {
     this.test = test;
-    this.newVersion = null;
-    this.releaseTypes = [{
-      name: 'Let lerna automatically determine a new release version',
-      value: 'auto',
-      short: 'Automatic release type'
-    }, 'major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
+    this.releaseTypes = [
+      {
+        name: 'Let lerna automatically determine a new release version',
+        value: 'auto',
+        short: 'Automatic release type'
+      },
+      'major',
+      'premajor',
+      'minor',
+      'preminor',
+      'patch',
+      'prepatch',
+      'prerelease'
+    ];
   }
 
   async run() {
@@ -30,6 +42,8 @@ export default class Release {
 
     this.newVersion = await getNextVersion(type);
 
+    if (!this.newVersion) return;
+
     const { release } = await inquirer.prompt([
       {
         name: 'release',
@@ -39,11 +53,11 @@ export default class Release {
     ]);
 
     if (release) {
-      if (await this.gitBranch() !== 'development' && !this.test) {
+      if ((await this.gitBranch()) !== 'development' && !this.test) {
         console.log(
           logSymbols.warning,
           chalk.bold.red(
-            'You are not in the \'development\' branch! Please switch.'
+            "You are not in the 'development' branch! Please switch."
           )
         );
         process.exit(0);
@@ -62,42 +76,56 @@ export default class Release {
               `Successfully created new release in branch 'release/${this.newVersion}'.`
             )
           );
-        } catch (err) {
-          console.error(err);
+        } catch (error) {
+          console.error(error);
         }
       }
     }
   }
 
   async createReleaseBranch() {
+    if (!this.newVersion) return;
+
     const branch = await this.gitBranch();
-    const spinner = ora(`Creating new release branch 'release/${this.newVersion}'.`).start();
+    const spinner = ora(
+      `Creating new release branch 'release/${this.newVersion}'.`
+    ).start();
 
     try {
-      await exec('git', ['checkout', '-b', `release/${this.newVersion}`, branch]);
+      await exec('git', [
+        'checkout',
+        '-b',
+        `release/${this.newVersion}`,
+        branch
+      ]);
       spinner.succeed();
-    } catch (err) {
-      spinner.fail(err.stderr);
+    } catch (error) {
+      spinner.fail(error.stderr);
       throw new Error('Script failed');
     }
   }
 
   async preReleaseSync() {
     const spinner = ora('Pre release sync').start();
-    
+
     try {
       await exec('git', ['add', '-A']);
       await exec('git', ['commit', '-m', 'chore: pre release sync']);
-    } catch {} finally {
+    } catch {
+    } finally {
       spinner.succeed();
     }
   }
 
   async createNewRelease() {
-    const spinner = ora(`Creating new release '${this.newVersion}' without pushing.`).start();
+    if (!this.newVersion) return;
+
+    const spinner = ora(
+      `Creating new release '${this.newVersion}' without pushing.`
+    ).start();
     let lernaArgs = [
       'publish',
-      this.newVersion,
+      this.newVersion.toString(),
       '--yes',
       '--force-publish'
     ];
@@ -114,8 +142,8 @@ export default class Release {
     try {
       await exec('yarn', ['lerna', ...lernaArgs]);
       spinner.succeed();
-    } catch (err) {
-      spinner.fail(err.stderr);
+    } catch (error) {
+      spinner.fail(error.stderr);
       throw new Error('Script failed');
     }
   }
