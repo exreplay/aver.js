@@ -64,7 +64,9 @@ workflows:
   test:
     jobs:
       - install
-      - build_scripts
+      - build_scripts:
+          requires:
+            - install
       - lint:
           requires:
             - install
