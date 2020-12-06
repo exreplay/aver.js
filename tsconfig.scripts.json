@@ -3,6 +3,7 @@
   "compilerOptions": {
     "module": "CommonJS",
     "declaration": false,
+    "sourceMap": true,
     "outDir": "./scripts/dist",
     "rootDir": "."
   },
