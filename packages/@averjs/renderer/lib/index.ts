@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import fs from 'fs-extra';
 import path from 'path';
-import webpack, { Compiler, Configuration } from 'webpack';
+import webpack, { Configuration } from 'webpack';
 import template from 'lodash/template';
 import WebpackClientConfiguration from './config/client';
 import WebpackServerConfiguration from './config/server';
@@ -14,7 +14,6 @@ import { AverConfig } from '@averjs/config';
 import Core from '@averjs/core';
 import { BundleRendererOptions } from 'vue-server-renderer';
 import { ParsedArgs } from 'minimist';
-import server from '@averjs/config/lib/configs/server';
 
 export interface RendererOptions extends Partial<ParsedArgs> {
   static?: boolean;
