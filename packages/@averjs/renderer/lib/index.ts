@@ -14,6 +14,7 @@ import { AverConfig } from '@averjs/config';
 import Core from '@averjs/core';
 import { BundleRendererOptions } from 'vue-server-renderer';
 import { ParsedArgs } from 'minimist';
+import server from '@averjs/config/lib/configs/server';
 
 export interface RendererOptions extends Partial<ParsedArgs> {
   static?: boolean;
@@ -47,8 +48,6 @@ export default class Renderer {
 
   clientConfig: Configuration = {};
   serverConfig: Configuration = {};
-  serverWatcher?: Compiler.Watching;
-  templatesWatcher?: chokidar.FSWatcher;
 
   constructor(options: RendererOptions, aver: Core) {
     this.aver = aver;
@@ -70,12 +69,6 @@ export default class Renderer {
     );
   }
 
-  async close() {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    if (this.serverWatcher) this.serverWatcher.close(() => {});
-    if (this.templatesWatcher) await this.templatesWatcher.close();
-  }
-
   prepareTemplates() {
     if (!this.config.templates) return;
 
@@ -84,7 +77,7 @@ export default class Renderer {
     for (const templateFile of templates) this.writeTemplateFile(templateFile);
 
     if (!this.isProd) {
-      this.templatesWatcher = chokidar.watch(
+      const watcher = chokidar.watch(
         // generate a new set of unique paths
         [
           ...new Set(
@@ -94,9 +87,12 @@ export default class Renderer {
           )
         ]
       );
+      this.aver.watchers.push(async () => {
+        await watcher.close();
+      });
 
-      this.templatesWatcher.on('ready', () => {
-        this.templatesWatcher?.on('all', (event, id) => {
+      watcher.on('ready', () => {
+        watcher.on('all', (event, id) => {
           if (event !== 'addDir' && event !== 'unlinkDir') {
             if (!this.config.templates) return;
 
@@ -181,7 +177,7 @@ export default class Renderer {
       }
 
       // Compile server
-      this.serverWatcher = serverCompiler.watch({}, (err, stats) => {
+      const serverWatcher = serverCompiler.watch({}, (err, stats) => {
         if (err) throw err;
         const jsonStats = stats.toJson();
         jsonStats.errors.forEach(err => console.error(err));
@@ -190,6 +186,10 @@ export default class Renderer {
 
         this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
         this.update();
+      });
+
+      this.aver.watchers.push(async () => {
+        await new Promise(resolve => serverWatcher.close(resolve));
       });
 
       return this.readyPromise;

@@ -1,18 +1,24 @@
 import express from 'express';
 import http from 'http';
+import Core from './core';
 
 export default class WWW {
+  aver: Core;
   app = express();
   port = this.normalizePort(process.env.PORT || '3000');
   server = http.createServer(this.app);
 
-  constructor() {
+  constructor(aver: Core) {
+    this.aver = aver;
     this.app.set('port', this.port);
   }
 
   startServer() {
     this.server.listen(this.port);
     this.server.on('error', this.onError.bind(this));
+    this.aver.watchers.push(() => {
+      this.server.close();
+    });
   }
 
   normalizePort(val: string) {

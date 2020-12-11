@@ -8,11 +8,14 @@ import { getAverjsConfig, AverConfig } from '@averjs/config';
 import PluginContainer, { PluginContainerInterface } from './plugins';
 import Renderer, { RendererOptions } from '@averjs/renderer';
 
+export type Watcher = () => Promise<void> | void;
+
 export default class Core extends Hookable {
   config: AverConfig;
   plugins: PluginContainerInterface;
   server: Server | null = null;
   renderer: Renderer | null = null;
+  watchers: Watcher[] = [];
 
   constructor() {
     super();
@@ -36,8 +39,7 @@ export default class Core extends Hookable {
   }
 
   async close() {
-    await this.server?.close();
-    await this.renderer?.close();
+    for (const close of this.watchers) await close();
   }
 
   async run() {

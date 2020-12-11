@@ -27,7 +27,6 @@ const requireModule = require('esm')(module);
 export type ExpressMiddlewares = (Handler | [string, Handler])[];
 
 export default class Server extends WWW {
-  aver: Core;
   config: AverConfig;
   isProd: boolean;
   distPath: string;
@@ -36,8 +35,7 @@ export default class Server extends WWW {
   watcher: chokidar.FSWatcher | null = null;
 
   constructor(aver: Core) {
-    super();
-    this.aver = aver;
+    super(aver);
     this.config = aver.config;
     this.distPath = aver.config.distPath;
     this.isProd = aver.config.isProd;
@@ -48,6 +46,9 @@ export default class Server extends WWW {
 
     if (!this.isProd) {
       this.watcher = chokidar.watch(process.env.API_PATH);
+      this.aver.watchers.push(async () => {
+        await this.watcher?.close();
+      });
 
       this.watcher.on('ready', () => {
         console.log('Watching for changes on the server');
@@ -62,12 +63,6 @@ export default class Server extends WWW {
         });
       });
     }
-  }
-
-  async close() {
-    await this.watcher?.close();
-    await this.builder?.close();
-    this.server.close();
   }
 
   async setup() {
