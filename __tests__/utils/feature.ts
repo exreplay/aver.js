@@ -65,5 +65,6 @@ export function testFeature(
 export const defaultConfig = (dir: string) => ({
   rootDir: dir,
   cacheDir: path.resolve(dir, './node_modules/.cache/averjs'),
-  distPath: path.resolve(dir, './dist')
+  distPath: path.resolve(dir, './dist'),
+  openBrowser: false
 });
