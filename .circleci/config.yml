@@ -23,18 +23,12 @@ jobs:
           paths:
             - repo
   
-  build_scripts:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run: yarn build-scripts
-  
   build:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/
+      - run: yarn build-scripts
       - run: yarn build
   
   lint: 
@@ -71,9 +65,6 @@ workflows:
     jobs:
       - install
       - build:
-          requires:
-            - install
-      - build_scripts:
           requires:
             - install
       - lint:
