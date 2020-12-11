@@ -11,6 +11,8 @@ const corePackages = fs
 module.exports = {
   preset: 'jest-puppeteer',
 
+  testSequencer: './testSequencer.js',
+
   clearMocks: true,
 
   expand: true,

@@ -47,7 +47,6 @@ export function testFeature(
 
     afterAll(async () => {
       await aver?.close();
-      await jestPuppeteer.resetBrowser();
       fs.removeSync(aver?.config.distPath);
       if (!showConsoleLogs) {
         consola.clear();
@@ -57,6 +56,7 @@ export function testFeature(
 
     beforeEach(async () => {
       await jestPuppeteer.resetPage();
+      await jestPuppeteer.resetBrowser();
     });
 
     fn();
