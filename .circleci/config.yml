@@ -30,6 +30,13 @@ jobs:
           at: ~/
       - run: yarn build-scripts
   
+  build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run: yarn build
+  
   lint: 
     <<: *defaults
     steps:
@@ -51,13 +58,12 @@ jobs:
             libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 \
             libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates \
             fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
-      - run: yarn build-scripts
-      - run: yarn build
       - run:
           name: Test aver
           command: yarn test
           environment:
             NODE_ENV: test
+            CIRCLE_CI: true
 
 workflows:
   version: 2.1
