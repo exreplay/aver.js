@@ -232,7 +232,7 @@ export default class Renderer {
 
   update() {
     if (this.bundle && this.clientManifest) {
-      if (!this.isBrowserOpen) {
+      if (!this.isBrowserOpen && this.config.openBrowser) {
         this.isBrowserOpen = true;
 
         let port = process.env.PORT || '3000';

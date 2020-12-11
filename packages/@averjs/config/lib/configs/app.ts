@@ -2,6 +2,7 @@ import { I18nOptions } from 'vue-i18n';
 
 export interface AverAppConfig {
   i18n?: I18nOptions;
+  openBrowser?: boolean;
   progressbar?:
     | {
         color?: string;
@@ -25,5 +26,6 @@ export default (): AverAppConfig => ({
   i18n: {
     silentTranslationWarn: true
   },
+  openBrowser: true,
   progressbar: true
 });
