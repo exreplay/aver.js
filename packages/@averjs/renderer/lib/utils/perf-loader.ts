@@ -47,7 +47,7 @@ export default class PerformanceLoader {
   }
 
   warmupLoaders() {
-    if (!this.isProd) {
+    if (!this.isProd && !process.env.CIRCLE_CI) {
       for (const key of Object.keys(this.pools)) {
         const pool = this.pools[key];
         if (pool.loaders) warmup(pool.poolConfig, pool.loaders);
@@ -72,7 +72,7 @@ export default class PerformanceLoader {
         })
         .end();
 
-      if (pool.useThread) {
+      if (pool.useThread && !process.env.CIRCLE_CI) {
         rule
           .use('thread-loader')
           .loader('thread-loader')
