@@ -1,10 +1,10 @@
-import express from 'express';
+import express, { Express } from 'express';
 import http from 'http';
 import Core from './core';
 
 export default class WWW {
   aver: Core;
-  app = express();
+  app: Express = express();
   port = this.normalizePort(process.env.PORT || '3000');
   server = http.createServer(this.app);
 
