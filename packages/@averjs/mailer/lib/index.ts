@@ -12,7 +12,20 @@ export interface MailerOptions {
 }
 
 function establishConnection(nodemailerConfig: SMTPTransport.Options) {
-  const defaultConfig = {
+  const transporter = nodemailer.createTransport(nodemailerConfig);
+
+  transporter.verify(err => {
+    if (err) console.error(err);
+    else console.log('Successfully established connection with nodemailer!');
+  });
+
+  return transporter;
+}
+
+export function mergeOptions(options?: MailerOptions) {
+  const { emailTemplatesConfig = {}, nodemailerConfig = {} } = options || {};
+
+  const defaultNodemailerConfig = {
     pool: true,
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
@@ -24,16 +37,28 @@ function establishConnection(nodemailerConfig: SMTPTransport.Options) {
     }
   };
 
-  const transporter = nodemailer.createTransport(
-    merge({}, defaultConfig, nodemailerConfig)
-  );
+  const defaultEmailTemplatesConfig = {
+    views: {
+      root: path.resolve(process.env.API_PATH, './mail/templates')
+    },
+    send: true,
+    juice: true,
+    juiceResources: {
+      preserveImportant: true,
+      webResources: {
+        relativeTo: path.resolve(process.env.API_PATH, '../public/')
+      }
+    }
+  } as EmailConfig;
 
-  transporter.verify(err => {
-    if (err) console.log(err);
-    else console.log('Successfully established connection with nodemailer!');
-  });
-
-  return transporter;
+  return {
+    nodemailerConfig: merge({}, defaultNodemailerConfig, nodemailerConfig),
+    emailTemplatesConfig: merge(
+      {},
+      defaultEmailTemplatesConfig,
+      emailTemplatesConfig
+    )
+  };
 }
 
 const plugin: PluginFunction = function(options: MailerOptions) {
@@ -49,27 +74,12 @@ const plugin: PluginFunction = function(options: MailerOptions) {
     return;
   }
 
-  const { emailTemplatesConfig = {}, nodemailerConfig = {} } = options;
+  const { emailTemplatesConfig, nodemailerConfig } = mergeOptions(options);
   const transporter = establishConnection(nodemailerConfig);
 
-  const defaultEmailTemplatesConfig = {
-    views: {
-      root: path.resolve(process.env.API_PATH, './mail/templates')
-    },
-    send: true,
-    transport: transporter,
-    juice: true,
-    juiceResources: {
-      preserveImportant: true,
-      webResources: {
-        relativeTo: path.resolve(process.env.API_PATH, '../public/')
-      }
-    }
-  } as EmailConfig;
+  emailTemplatesConfig.transport = transporter;
 
-  const mailer = new Email(
-    merge({}, defaultEmailTemplatesConfig, emailTemplatesConfig)
-  );
+  const mailer = new Email(emailTemplatesConfig);
 
   this.aver.tap('server:after-register-middlewares', ({ middlewares }) => {
     middlewares.push((req, res, next) => {
