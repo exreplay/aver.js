@@ -73,7 +73,6 @@ export default class SsrBuilder extends BaseBuilder {
 
     try {
       const html = await this.renderer?.renderToString(context);
-      if (!context.meta) return;
 
       const {
         title,
@@ -85,7 +84,7 @@ export default class SsrBuilder extends BaseBuilder {
         script,
         noscript,
         meta
-      } = context.meta.inject();
+      } = context.meta?.inject() || {};
 
       const HEAD = [];
 
