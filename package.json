@@ -39,7 +39,7 @@
     "eslint-plugin-standard": "4.0.2",
     "eslint-plugin-vue": "7.1.0",
     "esm": "3.2.25",
-    "execa": "4.1.0",
+    "execa": "5.0.0",
     "inquirer": "7.3.3",
     "jest": "26.6.1",
     "lerna": "3.22.1",
