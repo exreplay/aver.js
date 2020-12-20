@@ -62,6 +62,8 @@ export function mergeOptions(options?: MailerOptions) {
 }
 
 const plugin: PluginFunction = function(options: MailerOptions) {
+  if (process.argv.includes('build')) return;
+
   if (
     !process.env.SMTP_HOST ||
     !process.env.SMTP_PORT ||

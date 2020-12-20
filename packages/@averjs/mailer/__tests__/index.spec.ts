@@ -48,6 +48,13 @@ describe('mailer plugin', () => {
     jest.clearAllMocks();
   });
 
+  it('should not run when build process arg is set', () => {
+    process.argv.push('build');
+    const result = mailer.call(averThis);
+    expect(result).toBeUndefined();
+    process.argv = process.argv.filter(a => a !== 'build');
+  });
+
   it('should log warning when env variables are not defined', () => {
     mailer.call(averThis);
     expect(warnOutputData).toBe(
