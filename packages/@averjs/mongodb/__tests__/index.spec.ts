@@ -91,7 +91,7 @@ describe('mongodb plugin', () => {
     const once = (event: string, fn: () => void) => {
       fn();
     };
-    let options: ConnectionOptions;
+    let options: ConnectionOptions = {};
 
     mongoose.connect = jest.fn(
       (connectionString: string, connectionOptions: ConnectionOptions) => {
@@ -155,17 +155,21 @@ describe('mongodb plugin', () => {
     mongodb.call({} as never, { requireModels: false });
 
     expect(
-      Object.keys(require.cache).filter(f =>
-        f.includes('__fixtures__/models/test.ts')
+      Object.keys(require.cache).filter(
+        f =>
+          f.includes('__fixtures__/models/model.ts') ||
+          f.includes('__fixtures__/models/model2.ts')
       ).length
     ).toBe(0);
 
     mongodb.call({} as never, { requireModels: true });
 
     expect(
-      Object.keys(require.cache).filter(f =>
-        f.includes('__fixtures__/models/test.ts')
+      Object.keys(require.cache).filter(
+        f =>
+          f.includes('__fixtures__/models/model.ts') ||
+          f.includes('__fixtures__/models/model2.ts')
       ).length
-    ).toBe(1);
+    ).toBe(2);
   });
 });
