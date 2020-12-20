@@ -1,12 +1,25 @@
+import { Request, Response, NextFunction } from 'express';
 import mailer, { mergeOptions } from '../lib';
 import Email from 'email-templates';
 
 jest.mock('nodemailer');
 
-const hooks = [];
-const averThis = {
+type PartialRequest = Partial<Request & { mailer: typeof Email }>;
+type Handler = (
+  req: PartialRequest,
+  res: Partial<Response>,
+  next: NextFunction
+) => void;
+
+interface HookPayload {
+  middlewares: Handler[];
+}
+
+const hooks: ((payload: HookPayload) => void)[] = [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const averThis: any = {
   aver: {
-    tap: (hook: string, fn: () => void) => {
+    tap: (hook: string, fn: (payload: HookPayload) => void) => {
       hooks.push(fn);
     }
   }
@@ -26,11 +39,11 @@ describe('mailer plugin', () => {
   });
 
   afterEach(() => {
-    delete process.env.API_PATH;
-    delete process.env.SMTP_HOST;
-    delete process.env.SMTP_PORT;
-    delete process.env.SMTP_USER;
-    delete process.env.SMTP_PASSWORD;
+    process.env.API_PATH = '';
+    process.env.SMTP_HOST = '';
+    process.env.SMTP_PORT = '';
+    process.env.SMTP_USER = '';
+    process.env.SMTP_PASSWORD = '';
 
     jest.clearAllMocks();
   });
@@ -79,11 +92,11 @@ describe('mailer plugin', () => {
     mailer.call(averThis);
     expect(hooks.length).toBe(1);
 
-    const middlewares = [];
+    const middlewares: Handler[] = [];
     hooks[0]({ middlewares });
     expect(middlewares.length).toBe(1);
 
-    const req: { mailer?: typeof Email } = {};
+    const req: PartialRequest = {};
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     middlewares[0](req, {}, () => {});
     expect(req.mailer).toBeInstanceOf(Email);
