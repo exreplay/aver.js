@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <vue-progress-bar />
+    <span v-hidden></span>
   </div>
 </template>
 
