@@ -55,6 +55,10 @@ export function testFeature(
     afterAll(async () => {
       await aver?.close();
       fs.removeSync(aver?.config.distPath);
+
+      const client = await page.target().createCDPSession();
+      await client.send('Network.clearBrowserCookies');
+
       if (!showConsoleLogs) {
         consola.clear();
         consola.resume();
