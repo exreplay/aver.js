@@ -35,14 +35,21 @@ export function testFeature(
       );
       process.env.API_PATH = path.resolve(__dirname, `../fixtures/${name}/api`);
 
-      aver = new Aver();
-      if (!dev) {
-        await aver.build({});
-        aver.config._production = true;
-      } else {
-        aver.config.isProd = false;
+      try {
+        aver = new Aver();
+        if (!dev) {
+          await aver.build({});
+          aver.config._production = true;
+        } else {
+          aver.config.isProd = false;
+        }
+
+        await aver.run();
+      } catch (error) {
+        consola.clear();
+        consola.resume();
+        console.log(error);
       }
-      await aver.run();
     });
 
     afterAll(async () => {

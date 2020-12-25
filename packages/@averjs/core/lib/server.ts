@@ -199,7 +199,9 @@ export default class Server extends WWW {
 
     if (fs.existsSync(routesPath)) {
       this.app.use((req, res, next) => {
-        requireModule(routesPath)(req, res, next);
+        if (process.env.NODE_ENV === 'test')
+          require(routesPath)(req, res, next);
+        else requireModule(routesPath)(req, res, next);
       });
     }
 

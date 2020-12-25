@@ -188,7 +188,11 @@ export default class Renderer {
       });
 
       this.aver.watchers.push(async () => {
-        await new Promise(resolve => serverWatcher.close(resolve));
+        await new Promise(resolve =>
+          serverWatcher.close(() => {
+            resolve(true);
+          })
+        );
       });
 
       return this.readyPromise;

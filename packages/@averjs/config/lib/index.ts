@@ -45,6 +45,8 @@ export function getAverjsConfig() {
     else userConfig = requireModule(configFile).default;
   }
 
+  config.isProd = isProd;
+
   config.rootDir = process.cwd();
 
   config.cacheDir = path.resolve(

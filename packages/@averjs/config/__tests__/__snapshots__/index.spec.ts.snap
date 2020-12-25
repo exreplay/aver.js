@@ -19,6 +19,7 @@ Object {
   "i18n": Object {
     "silentTranslationWarn": true,
   },
+  "isProd": true,
   "openBrowser": true,
   "plugins": Array [],
   "progressbar": true,
