@@ -53,11 +53,22 @@ jobs:
             libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates \
             fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
       - run:
-          name: Test aver
-          command: yarn test
+          name: Install JUnit coverage reporter
+          command: yarn add --dev jest-junit
+      - run:
+          name: Run tests with JUnit as reporter
+          command: jest --ci --runInBand --reporters=default --reporters=jest-junit
           environment:
+            JEST_JUNIT_OUTPUT_DIR: ./reports/junit/
             NODE_ENV: test
             CIRCLE_CI: true
+      - run:
+          name: Run code coverage
+          command: codecov
+      - store_test_results:
+          path: ./reports/junit/
+      - store_artifacts:
+          path: ./reports/junit
 
 workflows:
   version: 2.1
