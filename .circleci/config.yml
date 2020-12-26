@@ -57,14 +57,14 @@ jobs:
           command: yarn add --dev jest-junit -W
       - run:
           name: Run tests with JUnit as reporter
-          command: jest --ci --runInBand --reporters=default --reporters=jest-junit
+          command: yarn jest --ci --runInBand --reporters=default --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT_DIR: ./reports/junit/
             NODE_ENV: test
             CIRCLE_CI: true
       - run:
           name: Run code coverage
-          command: codecov
+          command: yarn codecov
       - store_test_results:
           path: ./reports/junit/
       - store_artifacts:
