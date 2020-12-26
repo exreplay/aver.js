@@ -7,7 +7,7 @@ import express, {
 } from 'express';
 import compression from 'compression';
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs-extra';
 import helmet from 'helmet';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -32,7 +32,6 @@ export default class Server extends WWW {
   distPath: string;
   middlewares: ExpressMiddlewares = [];
   builder: SsrBuilder | null = null;
-  watcher: chokidar.FSWatcher | null = null;
 
   constructor(aver: Core) {
     super(aver);
@@ -45,14 +44,14 @@ export default class Server extends WWW {
         fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
 
     if (!this.isProd) {
-      this.watcher = chokidar.watch(process.env.API_PATH);
+      const watcher = chokidar.watch(process.env.API_PATH);
       this.aver.watchers.push(async () => {
-        await this.watcher?.close();
+        await watcher.close();
       });
 
-      this.watcher.on('ready', () => {
+      watcher.on('ready', () => {
         console.log('Watching for changes on the server');
-        this.watcher?.on('all', () => {
+        watcher.on('all', () => {
           console.log('Clearing server cache');
           Object.keys(require.cache).forEach(id => {
             // eslint-disable-next-line no-useless-escape
@@ -107,7 +106,7 @@ export default class Server extends WWW {
         ...this.config.helmet
       })
     );
-    if (process.env.NODE_ENV !== 'test') this.logging();
+    this.logging();
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));
 
@@ -147,7 +146,7 @@ export default class Server extends WWW {
 
   logging() {
     const logDirectory = path.join(process.env.PROJECT_PATH, '../storage/log');
-    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+    fs.existsSync(logDirectory) || fs.mkdirpSync(logDirectory);
 
     const accessLogStream = rfs.createStream('access.log', {
       interval: '1d',
