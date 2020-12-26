@@ -54,7 +54,7 @@ jobs:
             fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
       - run:
           name: Install JUnit coverage reporter
-          command: yarn add --dev jest-junit
+          command: yarn add --dev jest-junit -W
       - run:
           name: Run tests with JUnit as reporter
           command: jest --ci --runInBand --reporters=default --reporters=jest-junit
