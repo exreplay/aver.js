@@ -12,7 +12,6 @@ testFeature(
 
     test('should responde with a 404 correctly', async () => {
       const response = await page.goto('http://localhost:3000/404');
-      console.log(response?.headers());
       expect(response?.status()).toBe(404);
     });
   },
