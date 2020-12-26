@@ -26,6 +26,7 @@ export function testFeature(
 
   describe(name, () => {
     beforeAll(async () => {
+      consola.clear();
       consola.wrapAll();
       if (!showConsoleLogs) consola.pause();
 
@@ -46,7 +47,6 @@ export function testFeature(
 
         await aver.run();
       } catch (error) {
-        consola.clear();
         consola.resume();
         console.log(error);
       }
