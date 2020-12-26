@@ -54,7 +54,10 @@ export function testFeature(
 
     afterAll(async () => {
       await aver?.close();
+      // remove dist folder
       fs.removeSync(aver?.config.distPath);
+      // remove storage folder
+      fs.removeSync(path.resolve(process.env.PROJECT_PATH, '../storage'));
 
       const client = await page.target().createCDPSession();
       await client.send('Network.clearBrowserCookies');
