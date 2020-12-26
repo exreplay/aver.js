@@ -8,10 +8,10 @@ interface AvailableCommands extends ParsedArgs {
 
 export default class CLI {
   argv: AvailableCommands = parseArgs(process.argv.slice(2));
+  avercli: AverCli;
 
-  run() {
-    const avercli = new AverCli();
-    avercli.addCommand(new TypescriptInitCommand());
-    avercli.run().catch(error => console.log(error));
+  constructor() {
+    this.avercli = new AverCli();
+    this.avercli.addCommand(new TypescriptInitCommand());
   }
 }

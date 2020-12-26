@@ -16,10 +16,6 @@ export default class TypescriptInitCommand implements CommandInterface {
     return resolve(process.env.PROJECT_PATH, '../tsconfig.server.json');
   }
 
-  get eslintrcPath() {
-    return resolve(process.env.PROJECT_PATH, '../.eslintrc.js');
-  }
-
   async run() {
     const tsConfigSpinner = ora('Copying tsconfig.json').start();
     if (!existsSync(this.tsConfigPath)) {

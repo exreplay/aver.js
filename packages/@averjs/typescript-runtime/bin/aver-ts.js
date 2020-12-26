@@ -13,4 +13,4 @@ t.register({
 
 const RuntimeCli = require('../dist/typescript-runtime');
 const cli = new RuntimeCli();
-cli.run();
+cli.avercli.run().catch(error => console.log(error));
