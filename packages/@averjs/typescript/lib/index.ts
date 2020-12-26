@@ -5,6 +5,7 @@ import { PluginFunction } from '@averjs/core/lib/plugins';
 import { ForkTsCheckerWebpackPluginOptions } from 'fork-ts-checker-webpack-plugin/lib/ForkTsCheckerWebpackPluginOptions';
 import { LoaderOptions } from 'ts-loader/dist/interfaces';
 import IgnoreNotFoundExportPlugin from './IgnoreNotFoundExportPlugin';
+import merge from 'lodash/merge';
 
 export type TSLoaderOptions = Partial<LoaderOptions>;
 
@@ -23,10 +24,13 @@ interface TypescriptPluginOptions {
         | ForkTsCheckerWebpackPluginOptions);
 }
 
-const plugin: PluginFunction = async function(
-  options: TypescriptPluginOptions
-) {
-  const { tsLoader, forkTsChecker } = options;
+export async function mergeOptions(
+  options?: TypescriptPluginOptions
+): Promise<{
+  tsLoaderOptions: TSLoaderOptions;
+  forkTsCheckerOptions: ForkTsCheckerWebpackPluginOptions;
+}> {
+  const { tsLoader, forkTsChecker } = options || {};
 
   let tsLoaderOptions: TSLoaderOptions = {
     transpileOnly: true,
@@ -35,15 +39,9 @@ const plugin: PluginFunction = async function(
   };
 
   if (typeof tsLoader === 'function') {
-    tsLoaderOptions = {
-      ...tsLoaderOptions,
-      ...(await tsLoader(tsLoaderOptions))
-    };
+    tsLoaderOptions = merge(tsLoaderOptions, await tsLoader(tsLoaderOptions));
   } else {
-    tsLoaderOptions = {
-      ...tsLoaderOptions,
-      ...tsLoader
-    };
+    tsLoaderOptions = merge(tsLoaderOptions, tsLoader);
   }
 
   let forkTsCheckerOptions: ForkTsCheckerWebpackPluginOptions = {
@@ -61,16 +59,24 @@ const plugin: PluginFunction = async function(
   };
 
   if (typeof forkTsChecker === 'function') {
-    forkTsCheckerOptions = {
-      ...forkTsCheckerOptions,
-      ...(await forkTsChecker(forkTsCheckerOptions))
-    };
+    forkTsCheckerOptions = merge(
+      forkTsCheckerOptions,
+      await forkTsChecker(forkTsCheckerOptions)
+    );
   } else {
-    forkTsCheckerOptions = {
-      ...forkTsCheckerOptions,
-      ...forkTsChecker
-    };
+    forkTsCheckerOptions = merge(forkTsCheckerOptions, forkTsChecker);
   }
+
+  return {
+    tsLoaderOptions,
+    forkTsCheckerOptions
+  };
+}
+
+const plugin: PluginFunction = async function(
+  options?: TypescriptPluginOptions
+) {
+  const { tsLoaderOptions, forkTsCheckerOptions } = await mergeOptions(options);
 
   const setLoader = (chain: Config, isServer: boolean): void => {
     const name = 'ts';
