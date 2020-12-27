@@ -15,5 +15,5 @@ testFeature(
       expect(response?.status()).toBe(404);
     });
   },
-  { dev: true, showConsoleLogs: true }
+  { dev: true }
 );
