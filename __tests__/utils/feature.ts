@@ -27,7 +27,7 @@ interface Options {
 
 export function testFeature(
   name: string,
-  fn: () => void,
+  fn: (currentDir: string) => void,
   options: Options = {}
 ) {
   const {
@@ -38,15 +38,13 @@ export function testFeature(
   } = options;
 
   describe(name, () => {
+    const currentDir = path.resolve(__dirname, `../fixtures/${name}`);
+
     beforeAll(async () => {
       consola.wrapAll();
       if (!showConsoleLogs) consola.pause();
-
-      process.env.PROJECT_PATH = path.resolve(
-        __dirname,
-        `../fixtures/${name}/src`
-      );
-      process.env.API_PATH = path.resolve(__dirname, `../fixtures/${name}/api`);
+      process.env.PROJECT_PATH = path.resolve(currentDir, `./src`);
+      process.env.API_PATH = path.resolve(currentDir, `./api`);
 
       try {
         aver = new Aver();
@@ -86,7 +84,7 @@ export function testFeature(
       await jestPuppeteer.resetBrowser();
     });
 
-    fn();
+    fn(currentDir);
   });
 }
 
