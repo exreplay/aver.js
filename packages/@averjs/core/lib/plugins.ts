@@ -143,9 +143,8 @@ export default class PluginContainer {
     };
 
     for (const entry of entries) {
-      const dst = path
-        .relative(dirname, entry.path)
-        .replace('entries', dirname);
+      const [, entryFile] = entry.path.split('entries');
+      const dst = path.join(dirname, entryFile);
       this.config.templates?.push({
         src: entry.path,
         dst,
@@ -163,10 +162,6 @@ export default class PluginContainer {
   private normalizePluginPath(pluginPath: string) {
     if (fs.lstatSync(pluginPath).isDirectory()) return pluginPath;
     else return path.dirname(pluginPath);
-  }
-
-  private relativeCacheDirPath(filePath: string) {
-    return path.relative(path.resolve(process.cwd(), this.cacheDir), filePath);
   }
 
   private resolvePath(plugin: string) {
