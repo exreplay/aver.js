@@ -15,6 +15,14 @@ interface Options {
    * Every console output is passed to consola and the printing is disabled by default.
    */
   showConsoleLogs?: boolean;
+  /**
+   * Prevent the dist folder to be removed after every test run
+   */
+  keepDist?: boolean;
+  /**
+   * Prevent the log folder to be removed after every test run
+   */
+  keepLogs?: boolean;
 }
 
 export function testFeature(
@@ -22,11 +30,15 @@ export function testFeature(
   fn: () => void,
   options: Options = {}
 ) {
-  const { dev = false, showConsoleLogs = false } = options;
+  const {
+    dev = false,
+    showConsoleLogs = false,
+    keepLogs = false,
+    keepDist = false
+  } = options;
 
   describe(name, () => {
     beforeAll(async () => {
-      consola.clear();
       consola.wrapAll();
       if (!showConsoleLogs) consola.pause();
 
@@ -55,9 +67,10 @@ export function testFeature(
     afterAll(async () => {
       await aver?.close();
       // remove dist folder
-      fs.removeSync(aver?.config.distPath);
+      if (!keepDist) fs.removeSync(aver?.config.distPath);
       // remove storage folder
-      fs.removeSync(path.resolve(process.env.PROJECT_PATH, '../storage'));
+      if (!keepLogs)
+        fs.removeSync(path.resolve(process.env.PROJECT_PATH, '../storage'));
 
       const client = await page.target().createCDPSession();
       await client.send('Network.clearBrowserCookies');
