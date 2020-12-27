@@ -39,7 +39,9 @@ export default class Core extends Hookable {
   }
 
   async close() {
+    await this.callHook('before-close', this.watchers);
     for (const close of this.watchers) await close();
+    await this.callHook('after-close');
   }
 
   async run() {

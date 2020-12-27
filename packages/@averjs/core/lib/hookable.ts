@@ -3,6 +3,7 @@ import { Express } from 'express';
 import { ExpressMiddlewares } from './server';
 import { Server } from 'http';
 import { BuilderContext } from '@averjs/builder/lib/builders/base';
+import { Watcher } from './core';
 
 interface RegisterMiddlewaresContext {
   app: Express;
@@ -43,6 +44,8 @@ interface TappableHooks {
   'renderer:base-config': (chain: Config) => Promise<void> | void;
   'renderer:client-config': (chain: Config) => Promise<void> | void;
   'renderer:server-config': (chain: Config) => Promise<void> | void;
+  'before-close': (watchers: Watcher[]) => Promise<void> | void;
+  'after-close': () => Promise<void> | void;
 }
 
 type Hooks = { [K in keyof TappableHooks]: TappableHooks[K][] };
