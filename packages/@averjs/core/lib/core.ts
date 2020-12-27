@@ -56,6 +56,7 @@ export default class Core extends Hookable {
     this.renderer = new Renderer(args, this);
     await this.renderer.setup();
     await this.renderer.compile();
+    this.hooks = {} as never;
   }
 
   async initModuleAliases() {
