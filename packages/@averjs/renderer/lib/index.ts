@@ -157,23 +157,21 @@ export default class Renderer {
     if (!this.isProd) {
       this.cb = cb || null;
 
-      const clientCompiler = this.setupClientCompiler();
+      const clientCompiler = await this.setupClientCompiler();
       const serverCompiler = this.setupServerCompiler();
 
       // Compile Client
-      if (clientCompiler) {
-        clientCompiler.hooks.done.tap('averjs', stats => {
-          const jsonStats = stats.toJson();
-          jsonStats.errors.forEach(err => console.error(err));
-          jsonStats.warnings.forEach(err => console.warn(err));
-          if (jsonStats.errors.length) return;
+      clientCompiler.hooks.done.tap('averjs', stats => {
+        const jsonStats = stats.toJson();
+        jsonStats.errors.forEach(err => console.error(err));
+        jsonStats.warnings.forEach(err => console.warn(err));
+        if (jsonStats.errors.length) return;
 
-          this.clientManifest = JSON.parse(
-            this.readFile('vue-ssr-client-manifest.json')
-          );
-          this.update();
-        });
-      }
+        this.clientManifest = JSON.parse(
+          this.readFile('vue-ssr-client-manifest.json')
+        );
+        this.update();
+      });
 
       // Compile server
       const serverWatcher = serverCompiler.watch({}, (err, stats) => {
@@ -251,9 +249,7 @@ export default class Renderer {
     }
   }
 
-  setupClientCompiler() {
-    if (!this.clientConfig) return;
-
+  async setupClientCompiler() {
     if (this.clientConfig.entry) {
       (this.clientConfig.entry as webpack.Entry).app = [
         'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr',
@@ -269,23 +265,34 @@ export default class Renderer {
 
     const clientCompiler = webpack(this.clientConfig);
     clientCompiler.outputFileSystem = this.mfs;
-    const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
-      publicPath: this.clientConfig.output?.publicPath,
-      noInfo: true,
-      stats: 'none',
-      logLevel: 'error',
-      index: false
+    const devMiddleware = (await import('webpack-dev-middleware')).default(
+      clientCompiler as never,
+      {
+        publicPath: this.clientConfig.output?.publicPath,
+        stats: 'none',
+        logLevel: 'error',
+        index: false
+      }
+    );
+    const hotMiddleware = (await import('webpack-hot-middleware')).default(
+      clientCompiler as never,
+      {
+        log: false,
+        heartbeat: 10_000
+      }
+    );
+
+    this.aver.watchers.push(() => {
+      devMiddleware.close();
+    });
+
+    this.aver.watchers.push(() => {
+      hotMiddleware.close();
     });
 
     this.aver.tap('server:before-register-middlewares', ({ middlewares }) => {
       middlewares.push(devMiddleware);
-
-      middlewares.push(
-        require('webpack-hot-middleware')(clientCompiler, {
-          log: false,
-          heartbeat: 10_000
-        })
-      );
+      middlewares.push(hotMiddleware);
     });
 
     return clientCompiler;
