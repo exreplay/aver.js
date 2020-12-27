@@ -16,8 +16,13 @@ export default class WWW {
   startServer() {
     this.server.listen(this.port);
     this.server.on('error', this.onError.bind(this));
-    this.aver.watchers.push(() => {
-      this.server.close();
+    this.aver.watchers.push(async () => {
+      await new Promise((resolve, reject) => {
+        this.server.close(err => {
+          if (err) reject(err);
+          resolve(true);
+        });
+      });
     });
   }
 
@@ -25,18 +30,13 @@ export default class WWW {
     const port = parseInt(val, 10);
 
     if (isNaN(port)) return val;
-    if (port >= 0) return port;
-
-    return false;
+    else return port.toString();
   }
 
   onError(error: Error & { syscall: string; code: string }) {
     if (error.syscall !== 'listen') throw error;
 
-    const bind =
-      typeof this.port === 'string'
-        ? 'Pipe ' + this.port
-        : `Port ${this.port.toString()}`;
+    const bind = 'Pipe ' + this.port;
 
     if (error.code === 'EACCES') {
       console.error(bind + ' requires elevated privileges');
