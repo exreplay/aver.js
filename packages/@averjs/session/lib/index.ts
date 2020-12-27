@@ -1,6 +1,6 @@
-import session, { SessionOptions } from 'express-session';
+import session, { SessionOptions, Store } from 'express-session';
 import Redis from 'ioredis';
-import ConnectRedis, { RedisStoreOptions } from 'connect-redis';
+import ConnectRedis, { RedisStoreOptions, RedisStore } from 'connect-redis';
 import { v4 as uuidv4 } from 'uuid';
 import merge from 'lodash/merge';
 import { PluginFunction } from '@averjs/core/lib/plugins';
@@ -12,12 +12,44 @@ export interface SessionPluginOptions {
   ttl?: number;
 }
 
-const plugin: PluginFunction = function(options: SessionPluginOptions) {
-  if (process.argv.includes('build')) return;
+export function mergeRedisStoreConfig(
+  ttl: number,
+  client: InstanceType<typeof Redis>,
+  redisStoreConfig?: RedisStoreOptions
+) {
+  const date = new Date();
+  const defaultConfig: RedisStoreOptions = {
+    client: client as never,
+    prefix: `sess-${date.getDate()}-${date.getMonth() +
+      1}-${date.getFullYear()}:`,
+    ttl
+  };
+  return merge(defaultConfig, redisStoreConfig);
+}
 
-  const { redisStoreConfig, expressSessionConfig, ttl = 60 * 60 } = options;
-  let store = null;
+export function mergeExpressSessionConfig(
+  isProd: boolean,
+  ttl: number,
+  expressSessionConfig?: SessionOptions,
+  store?: RedisStore
+) {
+  const defaultConfig: SessionOptions = {
+    secret: process.env.REDIS_SECRET || uuidv4(),
+    genid: () => uuidv4(),
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      expires: new Date(Date.now() + ttl * 1000),
+      maxAge: ttl * 1000,
+      secure: isProd
+    },
+    store: store as Store
+  };
 
+  return merge(defaultConfig, expressSessionConfig);
+}
+
+export function createRedisStore(ttl: number, config?: RedisStoreOptions) {
   if (
     process.env.REDIS_PORT &&
     process.env.REDIS_HOST &&
@@ -32,31 +64,22 @@ const plugin: PluginFunction = function(options: SessionPluginOptions) {
         password: process.env.REDIS_PASSWORD
       }
     );
-    const date = new Date();
-    store = new RedisStore({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      client: redisClient as any,
-      prefix: `sess-${date.getDate()}-${date.getMonth() +
-        1}-${date.getFullYear()}:`,
-      ttl,
-      ...redisStoreConfig
-    });
+    return new RedisStore(mergeRedisStoreConfig(ttl, redisClient, config));
   }
+}
 
-  const config = merge(
-    {
-      secret: process.env.REDIS_SECRET || uuidv4(),
-      genid: () => uuidv4(),
-      resave: false,
-      saveUninitialized: true,
-      cookie: {
-        expires: new Date(Date.now() + ttl * 1000),
-        maxAge: ttl * 1000,
-        secure: this.config.isProd
-      },
-      store
-    } as SessionOptions,
-    expressSessionConfig
+const plugin: PluginFunction = function(options?: SessionPluginOptions) {
+  if (process.argv.includes('build')) return;
+
+  const { redisStoreConfig, expressSessionConfig, ttl = 60 * 60 } =
+    options || {};
+  const store: RedisStore | undefined = createRedisStore(ttl, redisStoreConfig);
+
+  const config = mergeExpressSessionConfig(
+    this.config.isProd,
+    ttl,
+    expressSessionConfig,
+    store
   );
 
   this.aver.config.sessionStore = store;
