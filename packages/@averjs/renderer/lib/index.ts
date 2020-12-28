@@ -14,6 +14,8 @@ import { AverConfig } from '@averjs/config';
 import Core from '@averjs/core';
 import { BundleRendererOptions } from 'vue-server-renderer';
 import { ParsedArgs } from 'minimist';
+import WebpackDevMiddleware from 'webpack-dev-middleware';
+import WebpackHotMiddleware from 'webpack-hot-middleware';
 
 export interface RendererOptions extends Partial<ParsedArgs> {
   static?: boolean;
@@ -157,7 +159,7 @@ export default class Renderer {
     if (!this.isProd) {
       this.cb = cb || null;
 
-      const clientCompiler = await this.setupClientCompiler();
+      const clientCompiler = this.setupClientCompiler();
       const serverCompiler = this.setupServerCompiler();
 
       // Compile Client
@@ -249,10 +251,17 @@ export default class Renderer {
     }
   }
 
-  async setupClientCompiler() {
+  setupClientCompiler() {
     if (this.clientConfig.entry) {
+      const searchparams = new URLSearchParams();
+
+      searchparams.append('reload', 'true');
+      searchparams.append('name', 'client');
+      searchparams.append('timeout', '30000');
+      searchparams.append('path', '/__webpack_hmr/client');
+
       (this.clientConfig.entry as webpack.Entry).app = [
-        'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr',
+        `webpack-hot-middleware/client?${searchparams.toString()}`,
         (this.clientConfig.entry as webpack.Entry).app as string
       ];
     }
@@ -265,22 +274,17 @@ export default class Renderer {
 
     const clientCompiler = webpack(this.clientConfig);
     clientCompiler.outputFileSystem = this.mfs;
-    const devMiddleware = (await import('webpack-dev-middleware')).default(
-      clientCompiler as never,
-      {
-        publicPath: this.clientConfig.output?.publicPath,
-        stats: 'none',
-        logLevel: 'error',
-        index: false
-      }
-    );
-    const hotMiddleware = (await import('webpack-hot-middleware')).default(
-      clientCompiler as never,
-      {
-        log: false,
-        heartbeat: 10_000
-      }
-    );
+    const devMiddleware = WebpackDevMiddleware(clientCompiler as never, {
+      publicPath: this.clientConfig.output?.publicPath,
+      stats: 'none',
+      logLevel: 'error',
+      index: false
+    });
+    const hotMiddleware = WebpackHotMiddleware(clientCompiler as never, {
+      log: false,
+      heartbeat: 10_000,
+      path: '/__webpack_hmr/client'
+    });
 
     this.aver.watchers.push(() => {
       devMiddleware.close();
