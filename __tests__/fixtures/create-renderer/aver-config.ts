@@ -1,4 +1,3 @@
-import { defaultConfig } from '../../utils/feature';
 import { AverConfig } from '@averjs/config';
 
 type NodeStyle =
@@ -8,7 +7,6 @@ type NodeStyle =
   | undefined;
 
 const config: Partial<AverConfig> = {
-  ...defaultConfig(__dirname),
   createRenderer: {
     directives: {
       hidden(node) {

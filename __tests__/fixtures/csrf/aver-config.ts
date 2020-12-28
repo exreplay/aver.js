@@ -1,5 +1,1 @@
-import { defaultConfig } from '../../utils/feature';
-
-export default {
-  ...defaultConfig(__dirname)
-};
+export default {};

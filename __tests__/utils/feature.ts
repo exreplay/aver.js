@@ -48,6 +48,15 @@ export function testFeature(
 
       try {
         aver = new Aver();
+
+        aver.config.openBrowser = false;
+        aver.config.rootDir = currentDir;
+        aver.config.cacheDir = path.resolve(
+          currentDir,
+          './node_modules/.cache/averjs'
+        );
+        aver.config.distPath = path.resolve(currentDir, './dist');
+
         if (!dev) {
           await aver.build({});
           aver.config._production = true;
@@ -87,10 +96,3 @@ export function testFeature(
     fn(currentDir);
   });
 }
-
-export const defaultConfig = (dir: string) => ({
-  rootDir: dir,
-  cacheDir: path.resolve(dir, './node_modules/.cache/averjs'),
-  distPath: path.resolve(dir, './dist'),
-  openBrowser: false
-});

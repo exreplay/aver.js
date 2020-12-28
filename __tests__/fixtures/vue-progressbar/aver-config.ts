@@ -1,9 +1,6 @@
 import { AverConfig } from '@averjs/config';
-import { defaultConfig } from '../../utils/feature';
 
-const config: AverConfig = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...(defaultConfig(__dirname) as any),
+const config: Partial<AverConfig> = {
   progressbar: {
     color: '#123',
     thickness: '5px'
