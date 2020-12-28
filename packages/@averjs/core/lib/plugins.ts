@@ -143,7 +143,7 @@ export default class PluginContainer {
     };
 
     for (const entry of entries) {
-      const [, entryFile] = entry.path.split('entries');
+      const [, entryFile] = entry.path.split('/entries/');
       const dst = path.join(dirname, entryFile);
       this.config.templates?.push({
         src: entry.path,
