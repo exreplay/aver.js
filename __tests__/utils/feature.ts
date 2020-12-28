@@ -12,6 +12,10 @@ interface Options {
    */
   dev?: boolean;
   /**
+   * Enable static build
+   */
+  static?: boolean;
+  /**
    * Every console output is passed to consola and the printing is disabled by default.
    */
   showConsoleLogs?: boolean;
@@ -32,6 +36,7 @@ export function testFeature(
 ) {
   const {
     dev = false,
+    static: staticMode = false,
     showConsoleLogs = false,
     keepLogs = false,
     keepDist = false
@@ -58,7 +63,7 @@ export function testFeature(
         aver.config.distPath = path.resolve(currentDir, aver.config.distDir);
 
         if (!dev) {
-          await aver.build({});
+          await aver.build({ static: staticMode });
           aver.config._production = true;
         } else {
           aver.config.isProd = false;

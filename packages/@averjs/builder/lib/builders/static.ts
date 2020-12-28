@@ -53,8 +53,12 @@ export default class StaticBuilder extends BaseBuilder {
   }
 
   async build() {
-    const routes = requireModule(path.join(process.env.PROJECT_PATH, './pages'))
-      .default;
+    const pagesPath = path.join(process.env.PROJECT_PATH, './pages');
+    const routes =
+      process.env.NODE_ENV === 'test'
+        ? require(pagesPath).default
+        : requireModule(pagesPath).default;
+
     for (const route of routes) {
       const context: BuilderContext = {
         title: process.env.APP_NAME,
@@ -67,7 +71,6 @@ export default class StaticBuilder extends BaseBuilder {
       if (this.config.csrf) Object.assign(context, { csrfToken: '' });
 
       const html = await this.renderer?.renderToString(context);
-      if (!context.meta) return;
 
       const {
         title,
@@ -79,7 +82,7 @@ export default class StaticBuilder extends BaseBuilder {
         script,
         noscript,
         meta
-      } = context.meta.inject();
+      } = context.meta?.inject() || {};
 
       const HEAD = [
         meta?.text(),
