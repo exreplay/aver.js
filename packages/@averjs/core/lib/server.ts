@@ -200,7 +200,8 @@ export default class Server extends WWW {
       this.app.use((req, res, next) => {
         if (process.env.NODE_ENV === 'test')
           require(routesPath)(req, res, next);
-        else requireModule(routesPath)(req, res, next);
+        /* istanbul ignore next */ else
+          requireModule(routesPath)(req, res, next);
       });
     }
 
