@@ -55,7 +55,7 @@ export function testFeature(
           currentDir,
           './node_modules/.cache/averjs'
         );
-        aver.config.distPath = path.resolve(currentDir, './dist');
+        aver.config.distPath = path.resolve(currentDir, aver.config.distDir);
 
         if (!dev) {
           await aver.build({});
