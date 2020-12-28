@@ -38,5 +38,5 @@ testFeature(
       ).toContain('<title>meta route</title>');
     });
   },
-  { static: true, showConsoleLogs: true }
+  { static: true }
 );
