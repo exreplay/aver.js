@@ -93,8 +93,10 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     delete swConfig.mode;
 
+    if (mode === 'GenerateSW' && !(conf as GenerateSWOptions).cacheId)
+      (conf as GenerateSWOptions).cacheId = 'averjs';
+
     if (mode === 'GenerateSW' && 'cacheId' in conf) {
-      if (!conf.cacheId) conf.cacheId = 'averjs';
       conf.inlineWorkboxRuntime = true;
     } else if (mode === 'InjectManifest' && 'swSrc' in conf) {
       plugin = InjectManifest;
