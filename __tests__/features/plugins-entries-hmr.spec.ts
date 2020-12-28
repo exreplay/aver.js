@@ -102,5 +102,5 @@ testFeature(
       );
     });
   },
-  { dev: true, showConsoleLogs: true }
+  { dev: true }
 );
