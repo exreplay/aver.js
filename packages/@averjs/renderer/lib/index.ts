@@ -77,60 +77,66 @@ export default class Renderer {
 
     for (const templateFile of templates) this.writeTemplateFile(templateFile);
 
-    if (!this.isProd) {
-      const watcher = chokidar.watch(
-        // generate a new set of unique paths
-        [
-          ...new Set(
-            this.config.templates?.map(temp =>
-              path.resolve(temp.pluginPath || '', './entries')
-            )
-          )
-        ]
+    if (!this.isProd) this.initTemplatesWatcher();
+  }
+
+  initTemplatesWatcher() {
+    const watcher = chokidar.watch(this.templatePathsToWatch());
+    this.aver.watchers.push(async () => {
+      await watcher.close();
+    });
+
+    watcher.on('ready', () => {
+      watcher.on('all', (event, id) => {
+        if (event !== 'addDir' && event !== 'unlinkDir') {
+          this.updateTemplateFile(this.config.templates || [], event, id);
+        }
+      });
+    });
+
+    return watcher;
+  }
+
+  templatePathsToWatch() {
+    return [
+      ...new Set(
+        this.config.templates?.map(temp =>
+          path.resolve(temp.pluginPath || '', './entries')
+        )
+      )
+    ];
+  }
+
+  updateTemplateFile(
+    templates: Templates[],
+    event: 'add' | 'change' | 'unlink',
+    id: string
+  ) {
+    let template = templates.find(temp => temp.src === id);
+
+    if (!template) {
+      // Try to find any entry file from same plugin to get the plugin path
+      const foundTemplate = templates.find(
+        temp =>
+          !path
+            .relative(path.resolve(temp.pluginPath || '', './entries'), id)
+            .startsWith('..')
       );
-      this.aver.watchers.push(async () => {
-        await watcher.close();
-      });
+      if (foundTemplate) {
+        const { dirname = '' } = foundTemplate;
+        const [, entryFile] = id.split('/entries/');
+        const dst = path.join(dirname, entryFile);
 
-      watcher.on('ready', () => {
-        watcher.on('all', (event, id) => {
-          if (event !== 'addDir' && event !== 'unlinkDir') {
-            if (!this.config.templates) return;
+        template = { src: id, dst };
 
-            let template = this.config.templates.find(temp => temp.src === id);
-
-            if (!template) {
-              // Try to find any entry file from same plugin to get the plugin path
-              const foundTemplate = this.config.templates.find(
-                temp =>
-                  !path
-                    .relative(
-                      path.resolve(temp.pluginPath || '', './entries'),
-                      id
-                    )
-                    .startsWith('..')
-              );
-              if (foundTemplate) {
-                const { dirname = '' } = foundTemplate;
-                const dst = path
-                  .relative(dirname, id)
-                  .replace('entries', dirname);
-
-                template = { src: id, dst };
-
-                // Push the newly created entry template into the config templates array so we dont have to construct the path again later
-                this.config.templates?.push(template);
-              }
-            }
-
-            if (event === 'unlink' && template?.dst)
-              fs.unlinkSync(path.resolve(this.cacheDir, template.dst));
-            else if (event !== 'unlink' && template)
-              this.writeTemplateFile(template);
-          }
-        });
-      });
+        // Push the newly created entry template into the config templates array so we dont have to construct the path again later
+        templates?.push(template);
+      }
     }
+
+    if (event === 'unlink' && template?.dst)
+      fs.unlinkSync(path.resolve(this.cacheDir, template.dst));
+    else if (event !== 'unlink' && template) this.writeTemplateFile(template);
   }
 
   writeTemplateFile(templateFile: Templates) {

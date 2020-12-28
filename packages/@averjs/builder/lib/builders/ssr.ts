@@ -10,11 +10,13 @@ import { AverConfig } from '@averjs/config';
 import { BundleRenderer } from 'vue-server-renderer';
 import { Request } from 'express';
 import Core from '@averjs/core';
+import Renderer from '@averjs/renderer/lib';
 
 export default class SsrBuilder extends BaseBuilder {
   aver: Core;
   config: AverConfig;
   renderer: BundleRenderer | null = null;
+  averRenderer: Renderer | null = null;
   readyPromise: Promise<void> | null = null;
   isProd: boolean;
   cacheDir: string;
@@ -50,9 +52,9 @@ export default class SsrBuilder extends BaseBuilder {
       );
     } else {
       const { default: Renderer } = await import('@averjs/renderer');
-      const renderer = new Renderer({}, this.aver);
-      await renderer.setup();
-      this.readyPromise = renderer.compile((bundle, options) => {
+      this.averRenderer = new Renderer({}, this.aver);
+      await this.averRenderer.setup();
+      this.readyPromise = this.averRenderer.compile((bundle, options) => {
         this.renderer = this.createRenderer(
           bundle,
           Object.assign(options, this.config.createRenderer)
