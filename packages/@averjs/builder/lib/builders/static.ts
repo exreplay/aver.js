@@ -57,7 +57,7 @@ export default class StaticBuilder extends BaseBuilder {
     const routes =
       process.env.NODE_ENV === 'test'
         ? require(pagesPath).default
-        : requireModule(pagesPath).default;
+        : /* istanbul ignore next */ requireModule(pagesPath).default;
 
     for (const route of routes) {
       const context: BuilderContext = {

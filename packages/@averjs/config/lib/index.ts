@@ -42,7 +42,8 @@ export function getAverjsConfig() {
   if (configFile) {
     if (process.env.NODE_ENV === 'test')
       userConfig = require(configFile).default;
-    else userConfig = requireModule(configFile).default;
+    /* istanbul ignore next */ else
+      userConfig = requireModule(configFile).default;
   }
 
   config.isProd = isProd;
