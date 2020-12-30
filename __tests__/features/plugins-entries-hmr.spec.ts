@@ -62,8 +62,6 @@ testFeature(
        * should remove the entry inside cache
        */
 
-      fs.unlinkSync(clientEntryPath);
-
       aver.server?.builder?.averRenderer?.updateTemplateFile(
         aver.config.templates || [],
         'unlink',
@@ -90,7 +88,7 @@ testFeature(
         appEntry
       );
 
-      // expect(fs.existsSync(appEntryCache)).toBeTruthy();
+      expect(fs.existsSync(appEntryCache)).toBeTruthy();
 
       expect(aver.config.templates).toEqual(
         expect.arrayContaining([
