@@ -248,9 +248,12 @@ export default class WebpackBaseConfiguration {
       .end()
       .devtool(this.isProd ? false : 'cheap-module-eval-source-map')
       .mode(
-        process.env.NODE_ENV === 'development' ||
-          process.env.NODE_ENV === 'production'
-          ? process.env.NODE_ENV
+        process.env.NODE_ENV === 'development'
+          ? 'development'
+          : process.env.NODE_ENV === 'production'
+          ? 'production'
+          : process.env.NODE_ENV === 'test'
+          ? 'production'
           : 'none'
       )
       .module.noParse(/es6-promise\.js$/)

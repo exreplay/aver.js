@@ -216,16 +216,16 @@ export default class Renderer {
         new Promise((resolve, reject) => {
           const compile = webpack(compiler);
 
-          compile.run(() => null);
-          compile.hooks.done.tap('load-resource', stats => {
-            const info = stats.toJson();
+          compile.run((err, stats) => {
+            if (err) reject(err);
 
             if (stats.hasErrors()) {
-              console.error(info.errors);
-              return reject(info.errors);
+              const error = new Error('Build error');
+              error.stack = stats.toString('errors-only');
+              reject(error);
             }
 
-            resolve(info);
+            resolve(stats.toJson());
           });
         })
       );

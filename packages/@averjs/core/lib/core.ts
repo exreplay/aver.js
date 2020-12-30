@@ -51,7 +51,7 @@ export default class Core extends Hookable {
     await this.initModuleAliases();
     this.server = new Server(this);
     await this.server.setup();
-    this.server.startServer();
+    await this.server.startServer();
   }
 
   async build(args: RendererOptions) {

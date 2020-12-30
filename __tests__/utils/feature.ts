@@ -3,8 +3,11 @@ import fs from 'fs-extra';
 import path from 'path';
 import consola from 'consola';
 import Aver from '../../packages/@averjs/core/lib';
+import { AverConfig } from '@averjs/config/lib';
+import mergeWith from 'lodash/mergeWith';
 
 export let aver: Aver;
+let currentDir: string;
 
 interface Options {
   /**
@@ -29,10 +32,27 @@ interface Options {
   keepLogs?: boolean;
 }
 
+export async function rebuild(config?: Partial<AverConfig>) {
+  try {
+    await aver.close();
+    if (config)
+      aver.config = mergeWith(aver.config, config, (obj, src) => {
+        if (Array.isArray(obj)) return src;
+      });
+    fs.removeSync(path.resolve(aver.config.rootDir, './node_modules/.cache'));
+    fs.removeSync(path.resolve(process.cwd(), './node_modules/.cache'));
+    await aver.build({});
+    await aver.run();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function testFeature(
   name: string,
   fn: (currentDir: string) => void,
-  options: Options = {}
+  options?: Options,
+  beforeFn?: (currentDir: string) => void
 ) {
   const {
     dev = false,
@@ -40,10 +60,12 @@ export function testFeature(
     showConsoleLogs = false,
     keepLogs = false,
     keepDist = false
-  } = options;
+  } = options || {};
 
   describe(name, () => {
-    const currentDir = path.resolve(__dirname, `../fixtures/${name}`);
+    currentDir = path.resolve(__dirname, `../fixtures/${name}`);
+
+    beforeFn?.(currentDir);
 
     beforeAll(async () => {
       consola.wrapAll();
@@ -77,9 +99,9 @@ export function testFeature(
     });
 
     afterAll(async () => {
-      await aver?.close();
+      await aver.close();
       // remove dist folder
-      if (!keepDist) fs.removeSync(aver?.config.distPath);
+      if (!keepDist) fs.removeSync(aver.config.distPath);
       // remove storage folder
       if (!keepLogs)
         fs.removeSync(path.resolve(process.env.PROJECT_PATH, '../storage'));
@@ -93,7 +115,7 @@ export function testFeature(
       }
     });
 
-    beforeEach(async () => {
+    afterEach(async () => {
       await jestPuppeteer.resetPage();
       await jestPuppeteer.resetBrowser();
     });
