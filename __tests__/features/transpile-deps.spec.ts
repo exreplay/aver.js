@@ -50,7 +50,7 @@ testFeature(
       );
     });
   },
-  { showConsoleLogs: true, keepDist: true },
+  {},
   currentDir => {
     beforeAll(() => {
       fs.copySync(
