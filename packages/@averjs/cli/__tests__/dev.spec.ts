@@ -46,3 +46,14 @@ test('run should set NODE_ENV to "development" when not set', async () => {
 
   expect(process.env.NODE_ENV).toBe('development');
 });
+
+test('run should log error when fails', async () => {
+  setProcessArgs('dev');
+
+  delete process.env.NODE_ENV;
+
+  const cli = new AverCli();
+  await cli.run();
+
+  expect(process.env.NODE_ENV).toBe('development');
+});

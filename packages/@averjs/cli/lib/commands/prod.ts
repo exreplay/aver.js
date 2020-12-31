@@ -6,12 +6,12 @@ export default class ProductionCommand extends Command
   name = 'prod';
   description = 'Start aver in production mode.';
 
-  run() {
+  async run() {
     if (typeof process.env.NODE_ENV === 'undefined')
       process.env.NODE_ENV = 'production';
 
     const core = new Core();
     core.config._production = true;
-    core.run().catch(error => console.log(error));
+    await core.run();
   }
 }
