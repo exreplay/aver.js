@@ -49,6 +49,17 @@ testFeature(
         '<div id="app"><span>test</span><span>another test</span></div>'
       );
     });
+
+    test('should throw error when the package is missing in the transpileDependencies array', async () => {
+      await rebuild({
+        webpack: {
+          transpileDependencies: []
+        }
+      });
+
+      const response = await page.goto('http://localhost:3000');
+      expect(response?.status()).toBe(500);
+    });
   },
   {},
   currentDir => {
