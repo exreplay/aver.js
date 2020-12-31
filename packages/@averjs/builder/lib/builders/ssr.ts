@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import BaseBuilder, { BuilderContext } from './base';
 import path from 'path';
 import fs from 'fs';
@@ -33,14 +32,18 @@ export default class SsrBuilder extends BaseBuilder {
 
   async initRenderer() {
     if (this.isProd) {
-      const serverBundle = require(path.join(
+      const serverPath = path.join(
         this.distPath,
         './vue-ssr-server-bundle.json'
-      ));
-      const clientManifest = require(path.join(
+      );
+      const clientPath = path.join(
         this.distPath,
         './vue-ssr-client-manifest.json'
-      ));
+      );
+
+      const serverBundle = JSON.parse(fs.readFileSync(serverPath, 'utf-8'));
+      const clientManifest = JSON.parse(fs.readFileSync(clientPath, 'utf-8'));
+
       this.renderer = this.createRenderer(
         serverBundle,
         Object.assign(
