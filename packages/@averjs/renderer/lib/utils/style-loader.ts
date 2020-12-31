@@ -73,9 +73,11 @@ export default class StyleLoader {
   }
 
   applyStyle(rule: Rule<Rule>, module = false) {
+    if (this.config?.css?.extract) this.extract(rule);
+
     this.perfLoader.apply(rule, this.name || '');
 
-    this.extract(rule);
+    if (!this.config?.css?.extract) this.extract(rule);
 
     if (module) this.cssModules(rule);
     else this.css(rule);
