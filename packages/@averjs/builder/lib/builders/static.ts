@@ -33,14 +33,15 @@ export default class StaticBuilder extends BaseBuilder {
   }
 
   initRenderer() {
-    const serverBundle = require(path.join(
-      this.distPath,
-      './vue-ssr-server-bundle.json'
-    ));
-    const clientManifest = require(path.join(
+    const serverPath = path.join(this.distPath, './vue-ssr-server-bundle.json');
+    const clientPath = path.join(
       this.distPath,
       './vue-ssr-client-manifest.json'
-    ));
+    );
+
+    const serverBundle = JSON.parse(fs.readFileSync(serverPath, 'utf-8'));
+    const clientManifest = JSON.parse(fs.readFileSync(clientPath, 'utf-8'));
+
     this.renderer = this.createRenderer(
       serverBundle,
       Object.assign(

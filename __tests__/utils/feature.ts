@@ -87,7 +87,7 @@ export function testFeature(
           aver.config.isProd = false;
         }
 
-        await aver.run();
+        if (!staticMode) await aver.run();
       } catch (error) {
         consola.resume();
         console.log(error);
