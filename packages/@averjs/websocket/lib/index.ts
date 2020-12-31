@@ -15,7 +15,9 @@ export interface WebsocketPluginOptions {
   ) => void | Promise<void>;
 }
 
-export function mergeOptions(serverOptions?: Server.ServerOptions) {
+export function mergeOptions(
+  serverOptions?: Server.ServerOptions
+): Server.ServerOptions {
   const defaultServerOptions = {
     pingTimeout: 60_000
   };

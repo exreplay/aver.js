@@ -292,12 +292,12 @@ export default class Renderer {
       path: '/__webpack_hmr/client'
     });
 
-    this.aver.watchers.push(() => {
-      devMiddleware.close();
-    });
-
-    this.aver.watchers.push(() => {
-      hotMiddleware.close();
+    this.aver.watchers.push(async () => {
+      await new Promise(resolve => {
+        devMiddleware.close(() => {
+          resolve(true);
+        });
+      });
     });
 
     this.aver.tap('server:before-register-middlewares', ({ middlewares }) => {

@@ -9,7 +9,7 @@
     "build-scripts": "rm -Rf scripts-build && tsc --project tsconfig.scripts.json && mv scripts/dist/scripts scripts-build && rm -Rf scripts/dist",
     "rm-dist": "find ./packages/@averjs -name 'dist' -maxdepth 2 -exec rm -Rf {} \\;",
     "dev": "node ./scripts-build/dev --watch",
-    "build": "yarn rm-dist && node ./scripts-build/dev",
+    "build": "node ./scripts-build/dev",
     "release": "node ./scripts-build/release-script",
     "lint": "eslint --ext .js,.ts,.vue .",
     "test": "jest --runInBand && codecov",

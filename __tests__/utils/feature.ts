@@ -33,19 +33,15 @@ interface Options {
 }
 
 export async function rebuild(config?: Partial<AverConfig>) {
-  try {
-    await aver.close();
-    if (config)
-      aver.config = mergeWith(aver.config, config, (obj, src) => {
-        if (Array.isArray(obj)) return src;
-      });
-    fs.removeSync(path.resolve(aver.config.rootDir, './node_modules/.cache'));
-    fs.removeSync(path.resolve(process.cwd(), './node_modules/.cache'));
-    await aver.build({});
-    await aver.run();
-  } catch (error) {
-    console.log(error);
-  }
+  await aver.close();
+  if (config)
+    aver.config = mergeWith(aver.config, config, (obj, src) => {
+      if (Array.isArray(obj)) return src;
+    });
+  fs.removeSync(path.resolve(aver.config.rootDir, './node_modules/.cache'));
+  fs.removeSync(path.resolve(process.cwd(), './node_modules/.cache'));
+  await aver.build({});
+  await aver.run();
 }
 
 export function testFeature(
