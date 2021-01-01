@@ -28,9 +28,10 @@ export default class Core extends Hookable {
         process.env[k] = envConfig[k];
       }
     } else {
-      console.warn(
-        "In order to use dotenv, please create a '.env' file in your project root."
-      );
+      if (process.env.NODE_ENV !== 'test')
+        console.warn(
+          "In order to use dotenv, please create a '.env' file in your project root."
+        );
     }
 
     this.config = getAverjsConfig();
