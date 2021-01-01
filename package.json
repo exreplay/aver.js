@@ -52,6 +52,7 @@
     "ora": "5.1.0",
     "package-json": "^6.5.0",
     "pify": "5.0.0",
+    "precss": "^4.0.0",
     "puppeteer": "^5.5.0",
     "rollup": "2.32.1",
     "rollup-plugin-babel": "4.4.0",
