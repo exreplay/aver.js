@@ -32,14 +32,14 @@ export interface AverWebpackConfig {
     };
   };
   alias?: {
-    [index: string]: string;
-    '@': string;
-    '@@': string;
-    '@components': string;
-    '@resources': string;
-    '@mixins': string;
-    '@pages': string;
-    '@vuex': string;
+    [index: string]: string | undefined;
+    '@'?: string;
+    '@@'?: string;
+    '@components'?: string;
+    '@resources'?: string;
+    '@mixins'?: string;
+    '@pages'?: string;
+    '@vuex'?: string;
   };
   base?: false | ((chain: Config) => void);
   client?: false | ((chain: Config) => void);
