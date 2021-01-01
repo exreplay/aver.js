@@ -31,16 +31,20 @@ export interface AverWebpackConfig {
       options?: StyleResourcesLoaderOptions;
     };
   };
-  alias?: {
-    [index: string]: string | undefined;
-    '@'?: string;
-    '@@'?: string;
-    '@components'?: string;
-    '@resources'?: string;
-    '@mixins'?: string;
-    '@pages'?: string;
-    '@vuex'?: string;
-  };
+  alias?:
+    | {
+        [index: string]: string;
+      }
+    | {
+        [index: string]: string;
+        '@': string;
+        '@@': string;
+        '@components': string;
+        '@resources': string;
+        '@mixins': string;
+        '@pages': string;
+        '@vuex': string;
+      };
   base?: false | ((chain: Config) => void);
   client?: false | ((chain: Config) => void);
   server?: false | ((chain: Config) => void);
