@@ -39,9 +39,8 @@ export default class Server extends WWW {
     this.distPath = aver.config.distPath;
     this.isProd = aver.config.isProd;
 
-    if (process.env.NODE_ENV !== 'test')
-      fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) ||
-        fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
+    fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) ||
+      fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
 
     if (!this.isProd) {
       const watcher = chokidar.watch(process.env.API_PATH);
