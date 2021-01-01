@@ -32,7 +32,7 @@ export function getAverjsConfig() {
     configFile = require.resolve(globalConfPath);
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'MODULE_NOT_FOUND')
-      throw error;
+      /* istanbul ignore next */ throw error;
     else
       console.log(
         'Could not find aver-config file. Proceeding with default config...'

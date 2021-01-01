@@ -2,7 +2,7 @@ import 'expect-puppeteer';
 import fs from 'fs-extra';
 import path from 'path';
 import consola from 'consola';
-import Aver from '../../packages/@averjs/core/lib';
+import Aver from '@averjs/core/lib';
 import { AverConfig } from '@averjs/config/lib';
 import mergeWith from 'lodash/mergeWith';
 
