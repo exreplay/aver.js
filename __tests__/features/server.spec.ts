@@ -1,8 +1,23 @@
 import { aver, testFeature } from '../utils/feature';
+import fs from 'fs';
+import path from 'path';
 
 testFeature(
-  'www',
-  () => {
+  'server',
+  currentDir => {
+    test('should respond to robots.txt with the file content', async () => {
+      let response = await page.goto('http://localhost:3000/robots.txt');
+      expect(response?.status()).toBe(500);
+
+      const robotsPath = path.resolve(currentDir, './robots.txt');
+      fs.writeFileSync(robotsPath, 'hello robots', 'utf-8');
+
+      response = await page.goto('http://localhost:3000/robots.txt');
+      expect(await response?.text()).toBe('hello robots');
+
+      fs.unlinkSync(robotsPath);
+    });
+
     test('should throw correct error messages', () => {
       try {
         aver.server?.onError({
