@@ -86,7 +86,7 @@ testFeature(
       expect(aver.server?.normalizePort('abcd')).toBe('abcd');
     });
   },
-  { showConsoleLogs: true },
+  {},
   () => {
     let exit: NodeJS.Process['exit'];
 

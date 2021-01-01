@@ -66,11 +66,11 @@ export default class Build {
       logSymbols.info,
       'Building packages with aver.build set to true in package.json'
     );
-    const watchSpinner = ora();
-    for (const pkg of this.packagesToBuild) {
-      const config = await pkg.config();
+    if (this.watch) {
+      const watchSpinner = ora();
+      for (const pkg of this.packagesToBuild) {
+        const config = await pkg.config();
 
-      if (this.watch) {
         const bundle = watch(config);
         bundle.on('event', event => {
           switch (event.code) {
@@ -97,31 +97,40 @@ export default class Build {
               return console.log(JSON.stringify(event));
           }
         });
-      } else {
+      }
+    } else {
+      for (const pkg of this.packagesToBuild) {
+        const config = await pkg.config();
+
         const buildSpinner = ora(`Building package ${pkg.pkg.name}`).start();
-        const bundle = await rollup(config);
-        if (config.output && !Array.isArray(config.output))
-          await bundle.write(config.output);
+        try {
+          const bundle = await rollup(config);
+          if (config.output && !Array.isArray(config.output))
+            await bundle.write(config.output);
 
-        const extractorConfigPath = path.resolve(
-          pkg.path,
-          './api-extractor.json'
-        );
-        if (fs.existsSync(extractorConfigPath)) {
-          buildSpinner.text = `Rollup types for ${pkg.pkg.name}`;
-          const extractorConfig = ExtractorConfig.loadFileAndPrepare(
-            extractorConfigPath
+          const extractorConfigPath = path.resolve(
+            pkg.path,
+            './api-extractor.json'
           );
-          Extractor.invoke(extractorConfig, {
-            localBuild: true,
-            showVerboseMessages: true
-          });
-          fs.rmdirSync(path.resolve(pkg.path, './dist/packages'), {
-            recursive: true
-          });
-        }
+          if (fs.existsSync(extractorConfigPath)) {
+            buildSpinner.text = `Rollup types for ${pkg.pkg.name}`;
+            const extractorConfig = ExtractorConfig.loadFileAndPrepare(
+              extractorConfigPath
+            );
+            Extractor.invoke(extractorConfig, {
+              localBuild: true,
+              showVerboseMessages: true
+            });
+            fs.rmdirSync(path.resolve(pkg.path, './dist/packages'), {
+              recursive: true
+            });
+          }
 
-        buildSpinner.succeed(`Built package ${pkg.pkg.name} successfully`);
+          buildSpinner.succeed(`Built package ${pkg.pkg.name} successfully`);
+        } catch (error) {
+          buildSpinner.fail();
+          throw error;
+        }
       }
     }
   }
