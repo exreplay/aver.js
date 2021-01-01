@@ -71,9 +71,7 @@ export default class Renderer {
   }
 
   prepareTemplates() {
-    if (!this.config.templates) return;
-
-    const templates = [...this.config.templates, ...vueApp()];
+    const templates = [...(this.config.templates || []), ...vueApp()];
 
     for (const templateFile of templates) this.writeTemplateFile(templateFile);
 
@@ -171,8 +169,11 @@ export default class Renderer {
       // Compile Client
       clientCompiler.hooks.done.tap('averjs', stats => {
         const jsonStats = stats.toJson();
+        /* istanbul ignore next */
         jsonStats.errors.forEach(err => console.error(err));
+        /* istanbul ignore next */
         jsonStats.warnings.forEach(err => console.warn(err));
+        /* istanbul ignore next */
         if (jsonStats.errors.length) return;
 
         this.clientManifest = JSON.parse(
@@ -183,10 +184,14 @@ export default class Renderer {
 
       // Compile server
       const serverWatcher = serverCompiler.watch({}, (err, stats) => {
+        /* istanbul ignore next */
         if (err) throw err;
         const jsonStats = stats.toJson();
+        /* istanbul ignore next */
         jsonStats.errors.forEach(err => console.error(err));
+        /* istanbul ignore next */
         jsonStats.warnings.forEach(err => console.warn(err));
+        /* istanbul ignore next */
         if (jsonStats.errors.length) return;
 
         this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
@@ -241,19 +246,23 @@ export default class Renderer {
 
   update() {
     if (this.bundle && this.clientManifest) {
-      if (!this.isBrowserOpen && this.config.openBrowser) {
-        this.isBrowserOpen = true;
-
-        let port = process.env.PORT || '3000';
-        port = parseInt(port) !== 80 ? `:${port}` : '';
-
-        openBrowser(`http://localhost${port}`);
-      }
+      this.openBrowser();
 
       this.resolve?.();
       this.cb?.(this.bundle, {
         clientManifest: this.clientManifest
       });
+    }
+  }
+
+  openBrowser() {
+    if (!this.isBrowserOpen && this.config.openBrowser) {
+      this.isBrowserOpen = true;
+
+      let port = process.env.PORT || '3000';
+      port = parseInt(port) !== 80 ? `:${port}` : '';
+
+      openBrowser(`http://localhost${port}`);
     }
   }
 
