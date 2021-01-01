@@ -1,16 +1,60 @@
 import { aver, testFeature } from '../utils/feature';
+import fs from 'fs';
+import path from 'path';
 import { mocked } from 'ts-jest/utils';
+import chalk from 'chalk';
+import logSymbols from 'log-symbols';
+import consola from 'consola';
 
 jest.mock('@averjs/shared-utils');
 
+let outputData = '';
+let log: Console['log'];
+
+beforeAll(() => {
+  log = console.log;
+  console.log = jest.fn((...inputs) => (outputData += inputs.join('')));
+});
+
+afterAll(() => {
+  console.log = log;
+});
+
 testFeature(
   'dev',
-  () => {
+  currentDir => {
     test('should compile correctly and responde with a 200', async () => {
       await page.goto('http://localhost:3000');
       expect(await page.content()).toContain(
         '<div id="app"><div>dev is working</div><div class="__cov-progress" style="background-color: rgb(0, 59, 142); opacity: 0; top: 0px; left: 0px; width: 0%; height: 2px; transition: opacity 0.6s ease 0s; position: fixed;"></div></div>'
       );
+    });
+
+    test('files changed plugin should log changed files', async () => {
+      consola.restoreAll();
+
+      const homePath = path.resolve(currentDir, './src/pages/Home.vue');
+      const homeContent = fs.readFileSync(homePath, 'utf-8');
+      fs.writeFileSync(
+        homePath,
+        `<template>
+  <div>dev is updating</div>
+</template>
+
+<script>
+export default {};
+</script>`,
+        'utf-8'
+      );
+      fs.writeFileSync(homePath, homeContent, 'utf-8');
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      expect(outputData).toContain(
+        `${logSymbols.info}Files changed: ${chalk.bold.blue('Home.vue')}`
+      );
+
+      consola.wrapAll();
     });
 
     test('should responde with a 404 correctly', async () => {
