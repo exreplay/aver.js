@@ -29,10 +29,15 @@ testFeature('additional-extensions', currentDir => {
       path.resolve(currentDir, './node_modules/.cache/averjs/i18n.js'),
       'utf-8'
     );
+    const storeContent = fs.readFileSync(
+      path.resolve(currentDir, './node_modules/.cache/averjs/store/index.js'),
+      'utf-8'
+    );
 
     expect(appContent).toContain('(js|ts)');
     expect(clientContent).toContain('(js|ts)');
     expect(entryServerContent).toContain('(js|ts)');
     expect(i18nContent).toContain('(js|ts)');
+    expect(storeContent).toContain('(js|ts)');
   });
 });
