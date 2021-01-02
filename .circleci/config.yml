@@ -60,6 +60,7 @@ jobs:
           command: yarn jest --ci --runInBand --reporters=default --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT_DIR: ./reports/junit/
+            NODE_OPTIONS: --max_old_space_size=4096
             NODE_ENV: test
             CIRCLE_CI: true
       - run:
