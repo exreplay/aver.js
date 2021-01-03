@@ -4,14 +4,14 @@ import Hookable from './hookable';
 import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
-import { getAverjsConfig, AverConfig } from '@averjs/config';
+import { getAverjsConfig, InternalAverConfig } from '@averjs/config';
 import PluginContainer, { PluginContainerInterface } from './plugins';
 import Renderer, { RendererOptions } from '@averjs/renderer';
 
 export type Watcher = () => Promise<void> | void;
 
 export default class Core extends Hookable {
-  config: AverConfig;
+  config: InternalAverConfig;
   plugins: PluginContainerInterface;
   server: Server | null = null;
   renderer: Renderer | null = null;
@@ -41,7 +41,7 @@ export default class Core extends Hookable {
     await this.callHook('before-close', this.watchers);
     for (const close of this.watchers) await close();
     this.watchers = [];
-    this.hooks = {} as never;
+    this.hooks = {};
     await this.callHook('after-close');
   }
 
@@ -59,7 +59,7 @@ export default class Core extends Hookable {
     this.renderer = new Renderer(args, this);
     await this.renderer.setup();
     await this.renderer.compile();
-    this.hooks = {} as never;
+    this.hooks = {};
   }
 
   async initModuleAliases() {

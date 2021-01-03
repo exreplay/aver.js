@@ -1,7 +1,7 @@
 import { AverConfig } from '@averjs/config';
 import { buildPlugin, plugin } from './mockedPlugins';
 
-const config: Partial<AverConfig> = {
+const config: AverConfig = {
   plugins: [
     'plugins/plugin/index.js',
     'aver-test-plugin',

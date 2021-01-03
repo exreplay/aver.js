@@ -10,7 +10,7 @@ import { openBrowser } from '@averjs/shared-utils';
 import { StaticBuilder } from '@averjs/builder';
 import vueApp, { Templates } from '@averjs/vue-app';
 import chokidar from 'chokidar';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 import Core from '@averjs/core';
 import { BundleRendererOptions } from 'vue-server-renderer';
 import { ParsedArgs } from 'minimist';
@@ -28,7 +28,7 @@ type RendererCallback = (
 
 export default class Renderer {
   aver: Core;
-  config: AverConfig;
+  config: InternalAverConfig;
   options: RendererOptions;
   isProd: boolean;
   cacheDir: string;

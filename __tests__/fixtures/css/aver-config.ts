@@ -12,4 +12,4 @@ export default {
       extract: false
     }
   }
-} as Partial<AverConfig>;
+} as AverConfig;

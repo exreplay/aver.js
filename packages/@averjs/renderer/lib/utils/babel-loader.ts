@@ -1,6 +1,6 @@
 import merge from 'lodash/merge';
 import { isPureObject } from '@averjs/shared-utils';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 import PerformanceLoader from './perf-loader';
 import Config from 'webpack-chain';
 import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
@@ -15,7 +15,7 @@ export default class BabelLoader {
 
   constructor(
     isServer: boolean,
-    config: AverConfig,
+    config: InternalAverConfig,
     perfLoader: PerformanceLoader
   ) {
     this.config = config.webpack || {};

@@ -48,10 +48,12 @@ interface TappableHooks {
   'after-close': () => Promise<void> | void;
 }
 
-type Hooks = { [K in keyof TappableHooks]: TappableHooks[K][] };
+type Hooks = {
+  [K in keyof TappableHooks]?: TappableHooks[K][];
+};
 
 export default class Hookable {
-  hooks: Hooks = {} as never;
+  hooks: Hooks = {};
 
   constructor() {
     this.tap = this.tap.bind(this);
@@ -62,7 +64,7 @@ export default class Hookable {
     if (!name || typeof fn !== 'function') return;
 
     if (!this.hooks[name]) this.hooks[name] = [];
-    this.hooks[name].push(fn as never);
+    (this.hooks[name] as TappableHooks[K][]).push(fn);
   }
 
   async callHook<
@@ -71,7 +73,7 @@ export default class Hookable {
   >(name: K, ...args: A) {
     if (!this.hooks[name]) return;
 
-    for (const hook of this.hooks[name]) {
+    for (const hook of this.hooks[name] as TappableHooks[K][]) {
       await (hook as (...args: unknown[]) => Promise<void>)(...args);
     }
   }

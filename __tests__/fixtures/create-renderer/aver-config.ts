@@ -6,7 +6,7 @@ type NodeStyle =
   | string
   | undefined;
 
-const config: Partial<AverConfig> = {
+const config: AverConfig = {
   createRenderer: {
     directives: {
       hidden(node) {

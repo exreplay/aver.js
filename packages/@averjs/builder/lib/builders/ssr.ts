@@ -5,7 +5,7 @@ import serialize from 'serialize-javascript';
 import template from 'lodash/template';
 import { minify } from 'html-minifier';
 import HTMLCodeError from '../errors/HTMLCodeError';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 import { BundleRenderer } from 'vue-server-renderer';
 import { Request } from 'express';
 import Core from '@averjs/core';
@@ -13,7 +13,7 @@ import Renderer from '@averjs/renderer/lib';
 
 export default class SsrBuilder extends BaseBuilder {
   aver: Core;
-  config: AverConfig;
+  config: InternalAverConfig;
   renderer: BundleRenderer | null = null;
   averRenderer: Renderer | null = null;
   readyPromise: Promise<void> | null = null;

@@ -32,7 +32,7 @@ interface Options {
   keepLogs?: boolean;
 }
 
-export async function rebuild(config?: Partial<AverConfig>) {
+export async function rebuild(config?: AverConfig) {
   await aver.close();
   if (config)
     aver.config = mergeWith(aver.config, config, (obj, src) => {

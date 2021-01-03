@@ -2,7 +2,7 @@ import path from 'path';
 import { warmup } from 'thread-loader';
 import { Module, Rule } from 'webpack-chain';
 import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
-import { AverConfig } from '@averjs/config/lib';
+import { InternalAverConfig } from '@averjs/config/lib';
 
 interface PoolConfig {
   [index: string]: {
@@ -20,7 +20,7 @@ export default class PerformanceLoader {
   config: AverWebpackConfig;
   isProd = process.env.NODE_ENV === 'production';
 
-  constructor(isServer: boolean, config: AverConfig) {
+  constructor(isServer: boolean, config: InternalAverConfig) {
     this.isServer = isServer;
     this.config = config.webpack || {};
     this.isProd = config.isProd;

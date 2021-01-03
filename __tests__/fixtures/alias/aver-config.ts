@@ -7,4 +7,4 @@ export default {
       '@test': path.resolve(process.env.PROJECT_PATH, './test')
     }
   }
-} as Partial<AverConfig>;
+} as AverConfig;

@@ -1,6 +1,6 @@
 import { AverConfig } from '@averjs/config';
 
-const config: Partial<AverConfig> = {
+const config: AverConfig = {
   webpack: {
     transpileDependencies: ['package-to-transpile']
   }

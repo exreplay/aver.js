@@ -4,4 +4,4 @@ export default {
   webpack: {
     additionalExtensions: ['ts']
   }
-} as Partial<AverConfig>;
+} as AverConfig;

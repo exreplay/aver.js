@@ -4,7 +4,7 @@ const client = jest.fn();
 const server = jest.fn();
 const base = jest.fn();
 
-const config: Partial<AverConfig> = {
+const config: AverConfig = {
   plugins: [
     function() {
       this.aver.tap('after-close', () => {

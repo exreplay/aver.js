@@ -1,6 +1,6 @@
 import { AverConfig } from '@averjs/config/lib';
 
-const config: Partial<AverConfig> = {
+const config: AverConfig = {
   webpack: {
     css: {
       extract: false

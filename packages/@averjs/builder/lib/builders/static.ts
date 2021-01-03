@@ -7,14 +7,14 @@ import serialize from 'serialize-javascript';
 import template from 'lodash/template';
 import { minify } from 'html-minifier';
 import { BundleRenderer } from 'vue-server-renderer';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 import Core from '@averjs/core';
 
 const requireModule = require('esm')(module);
 
 export default class StaticBuilder extends BaseBuilder {
   aver: Core;
-  config: AverConfig;
+  config: InternalAverConfig;
   renderer: BundleRenderer | null = null;
   readyPromise: Promise<boolean> | null = null;
   isProd: boolean;

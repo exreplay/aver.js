@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import klawSync, { Item } from 'klaw-sync';
 import Core from './core';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 
 export type PluginFunction = (
   this: PluginContainerInterface,
@@ -15,7 +15,7 @@ const requireModule = require('esm')(module);
 
 export default class PluginContainer {
   aver: Core;
-  config: AverConfig;
+  config: InternalAverConfig;
   private cacheDir: string;
 
   constructor(aver: Core) {

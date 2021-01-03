@@ -12,8 +12,15 @@ interface InternalConfig {
   _production: boolean;
 }
 
-export type AverConfig = ReturnType<typeof defaultAverjsConfig> &
+type Config = ReturnType<typeof defaultAverjsConfig> &
   InternalConfig & { [index: string]: any };
+
+/**
+ * @internal
+ */
+export type InternalAverConfig = Config;
+
+export type AverConfig = Partial<Config>;
 
 export function getAverjsConfig() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -24,7 +31,7 @@ export function getAverjsConfig() {
   );
   const isProd =
     process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test';
-  const config = defaultAverjsConfig(isProd) as AverConfig;
+  const config = defaultAverjsConfig(isProd) as InternalAverConfig;
   let userConfig = {};
   let configFile = null;
 

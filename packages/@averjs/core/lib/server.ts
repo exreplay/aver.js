@@ -20,14 +20,14 @@ import indexOf from 'lodash/indexOf';
 import WWW from './www';
 import { SsrBuilder } from '@averjs/builder';
 import Core from './core';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 
 const requireModule = require('esm')(module);
 
 export type ExpressMiddlewares = (Handler | [string, Handler])[];
 
 export default class Server extends WWW {
-  config: AverConfig;
+  config: InternalAverConfig;
   isProd: boolean;
   distPath: string;
   middlewares: ExpressMiddlewares = [];

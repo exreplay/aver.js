@@ -1,6 +1,6 @@
 import { AverConfig } from '@averjs/config';
 
-const config: Partial<AverConfig> = {
+const config: AverConfig = {
   progressbar: {
     color: '#123',
     thickness: '5px'
