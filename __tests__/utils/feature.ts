@@ -109,6 +109,7 @@ export function testFeature(
         consola.clear();
         consola.resume();
       }
+      consola.restoreAll();
     });
 
     afterEach(async () => {
