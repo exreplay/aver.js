@@ -114,7 +114,7 @@ testFeature(
       expect(content).toContain('"data":{"test":"some data"}');
     });
   },
-  { showConsoleLogs: true, keepDist: true },
+  {},
   () => {
     let exit: NodeJS.Process['exit'];
 
