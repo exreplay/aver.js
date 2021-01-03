@@ -69,19 +69,18 @@ export default class Server extends WWW {
     await this.registerMiddlewares();
     await this.registerRoutes();
 
-    const errorHandler: ErrorRequestHandler = (err, req, res) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+      /* istanbul ignore next */
       if (!this.isProd) console.error(err.stack);
+
       req.error = err.stack;
-      res.status(err.status || 500).json(
-        Object.assign(
-          {
-            success: false,
-            errorId: req.id,
-            msg: err.message
-          },
-          err.data ? { data: err.data } : {}
-        )
-      );
+      res.status(err.status || 500).json({
+        success: false,
+        errorId: req.id,
+        msg: err.message,
+        ...(err.data ? { data: err.data } : {})
+      });
     };
 
     this.app.use(errorHandler);
@@ -127,7 +126,10 @@ export default class Server extends WWW {
     const middlewaresPath = path.resolve(process.env.API_PATH, './middlewares');
     if (fs.existsSync(middlewaresPath)) {
       this.middlewares.push((req, res, next) => {
-        requireModule(middlewaresPath)(req, res, next);
+        if (process.env.NODE_ENV === 'test')
+          require(middlewaresPath)(req, res, next);
+        /* istanbul ignore next */ else
+          requireModule(middlewaresPath)(req, res, next);
       });
     }
 
@@ -162,7 +164,7 @@ export default class Server extends WWW {
     logger.token('id', (req: Request) => req.id);
     logger.token('error', (req: Request) => req.error);
 
-    this.middlewares.push((req, res, next) => {
+    this.middlewares.push((req, _res, next) => {
       req.id = `${new Date().getTime()}-${uuidv4()}`;
       next();
     });
@@ -171,7 +173,7 @@ export default class Server extends WWW {
       logger(
         ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"\\n:error',
         {
-          skip: function(req, res) {
+          skip: function(_req, res) {
             return res.statusCode < 400;
           },
           stream: errorLogStream
@@ -183,7 +185,7 @@ export default class Server extends WWW {
       logger(
         ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"',
         {
-          skip: function(req, res) {
+          skip: function(_req, res) {
             return res.statusCode > 400;
           },
           stream: accessLogStream
@@ -210,11 +212,11 @@ export default class Server extends WWW {
       server: this.server
     });
 
-    this.app.get('/favicon.ico', function(req, res) {
+    this.app.get('/favicon.ico', function(_req, res) {
       res.sendStatus(204);
     });
 
-    this.app.get('/service-worker.js', (req, res, next) => {
+    this.app.get('/service-worker.js', (_req, res, next) => {
       try {
         const sw = fs.readFileSync(
           path.resolve(this.distPath, './service-worker.js')
@@ -226,7 +228,7 @@ export default class Server extends WWW {
       }
     });
 
-    this.app.get('/robots.txt', (req, res, next) => {
+    this.app.get('/robots.txt', (_req, res, next) => {
       try {
         const sw = fs.readFileSync(
           path.resolve(process.env.PROJECT_PATH, '../robots.txt')
