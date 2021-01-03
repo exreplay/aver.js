@@ -2,6 +2,7 @@
   <div id="app">
     <span>{{ test }}</span>
     <span>{{ anotherTest }}</span>
+    <test />
   </div>
 </template>
 
@@ -10,6 +11,9 @@ import test from 'package-to-transpile';
 import anotherTest from './test';
 
 export default {
+  components: {
+    Test: () => import('../Test.vue')
+  },
   metaInfo() {
     return {};
   },

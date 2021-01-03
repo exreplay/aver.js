@@ -25,7 +25,7 @@ export default class BabelLoader {
   }
 
   get transpileDeps() {
-    if (!this.config?.transpileDependencies) return [];
+    if (!this.config.transpileDependencies) return [];
 
     return this.config.transpileDependencies
       .map(dep => {
