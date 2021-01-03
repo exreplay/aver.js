@@ -11,6 +11,11 @@ testFeature(
       fs.unlinkSync(robotsPath);
     });
 
+    test('favicon should always respond with a 204', async () => {
+      await page.goto('http://localhost:3000');
+      expect(await page.content()).toContain('<div id="app">204</div>');
+    });
+
     test('should respond to robots.txt with the file content', async () => {
       let response = await page.goto('http://localhost:3000/robots.txt');
       expect(response?.status()).toBe(500);
@@ -85,8 +90,31 @@ testFeature(
       expect(aver.server?.normalizePort('1234')).toBe('1234');
       expect(aver.server?.normalizePort('abcd')).toBe('abcd');
     });
+
+    test('should require middlewares index.js file', async () => {
+      const response = await page.goto('http://localhost:3000/middlewares');
+      expect(response?.status()).toBe(200);
+      expect(await response?.text()).toBe('test');
+    });
+
+    test('should use error middleware and print json with details', async () => {
+      let response = await page.goto('http://localhost:3000/error');
+      let content = await page.content();
+      expect(response?.status()).toBe(500);
+      expect(content).toContain('"success":false');
+      expect(content).toContain('"errorId":"');
+      expect(content).toContain('"msg":"something went wrong"');
+
+      response = await page.goto('http://localhost:3000/individual-error');
+      content = await page.content();
+      expect(response?.status()).toBe(500);
+      expect(content).toContain('"success":false');
+      expect(content).toContain('"errorId":"');
+      expect(content).toContain('"msg":"something went wrong"');
+      expect(content).toContain('"data":{"test":"some data"}');
+    });
   },
-  {},
+  { showConsoleLogs: true, keepDist: true },
   () => {
     let exit: NodeJS.Process['exit'];
 
