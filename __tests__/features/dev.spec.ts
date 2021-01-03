@@ -23,6 +23,15 @@ afterAll(() => {
 testFeature(
   'dev',
   currentDir => {
+    test('should hot reload routes file', () => {
+      const cache = {
+        '/api/test': {} as never,
+        test: {} as never
+      };
+      aver.server?.clearServerCache(cache);
+      expect(cache).toEqual({ test: {} });
+    });
+
     test('should compile correctly and responde with a 200', async () => {
       await page.goto('http://localhost:3000');
       expect(await page.content()).toContain(

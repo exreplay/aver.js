@@ -50,16 +50,23 @@ export default class Server extends WWW {
 
       watcher.on('ready', () => {
         console.log('Watching for changes on the server');
-        watcher.on('all', () => {
-          console.log('Clearing server cache');
-          Object.keys(require.cache).forEach(id => {
-            // eslint-disable-next-line no-useless-escape
-            if (/[/\\]api[/\\]/.test(id)) {
-              delete require.cache[id];
-            }
-          });
-        });
+        watcher.on(
+          'all',
+          /* istanbul ignore next */ () => {
+            this.clearServerCache(require.cache);
+          }
+        );
       });
+    }
+  }
+
+  clearServerCache(cache: NodeJS.Dict<NodeModule>) {
+    console.log('Clearing server cache');
+    for (const id of Object.keys(cache)) {
+      // eslint-disable-next-line no-useless-escape
+      if (/[/\\]api[/\\]/.test(id)) {
+        delete cache[id];
+      }
     }
   }
 
