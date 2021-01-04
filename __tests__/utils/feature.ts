@@ -5,6 +5,7 @@ import consola from 'consola';
 import Aver from '@averjs/core/lib';
 import { AverConfig } from '@averjs/config/lib';
 import mergeWith from 'lodash/mergeWith';
+import { RendererOptions } from '@averjs/renderer/lib';
 
 export let aver: Aver;
 let currentDir: string;
@@ -36,7 +37,10 @@ interface Options {
   config?: AverConfig;
 }
 
-export async function rebuild(config?: AverConfig) {
+export async function rebuild(
+  config?: AverConfig,
+  renderOptions?: RendererOptions
+) {
   await aver.close();
   if (config)
     aver.config = mergeWith(aver.config, config, (obj, src) => {
@@ -44,8 +48,8 @@ export async function rebuild(config?: AverConfig) {
     });
   fs.removeSync(path.resolve(aver.config.rootDir, './node_modules/.cache'));
   fs.removeSync(path.resolve(process.cwd(), './node_modules/.cache'));
-  await aver.build({});
-  await aver.run();
+  await aver.build(renderOptions || {});
+  if (!renderOptions?.static) await aver.run();
 }
 
 export function testFeature(
