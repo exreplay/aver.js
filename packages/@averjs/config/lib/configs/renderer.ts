@@ -7,9 +7,22 @@ import {
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
 import { ProcessOptions, AcceptedPlugin } from 'postcss';
 import PostCSSPresetEnv from 'postcss-preset-env';
+import { Options as BabelPresetOptions } from '@babel/preset-env';
+
+type BabelOptions = Partial<
+  BabelPresetOptions & {
+    polyfills: string[];
+    buildTarget: 'client' | 'server';
+    decoratorsBeforeExport: boolean;
+    decoratorsLegacy: boolean;
+    absoluteRuntime: boolean | string;
+  }
+>;
 
 export interface AverWebpackConfig {
-  babel?: any;
+  babel?:
+    | BabelOptions
+    | ((payload: { isServer: boolean }, config: BabelOptions) => void);
   additionalExtensions?: string[];
   transpileDependencies?: (string | RegExp)[];
   postcss?: {
