@@ -9,7 +9,7 @@ import { ProcessOptions, AcceptedPlugin } from 'postcss';
 import PostCSSPresetEnv from 'postcss-preset-env';
 import { Options as BabelPresetOptions } from '@babel/preset-env';
 
-type BabelOptions = Partial<
+export type BabelOptions = Partial<
   BabelPresetOptions & {
     polyfills: string[];
     buildTarget: 'client' | 'server';

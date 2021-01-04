@@ -46,6 +46,7 @@ export default class Renderer {
   });
 
   cb: RendererCallback | null = null;
+  templates: Templates[];
 
   clientConfig: Configuration = {};
   serverConfig: Configuration = {};
@@ -57,6 +58,7 @@ export default class Renderer {
     this.cacheDir = aver.config.cacheDir;
     this.distPath = aver.config.distPath;
     this.isProd = aver.config.isProd;
+    this.templates = aver.config.templates || [];
   }
 
   async setup() {
@@ -71,7 +73,7 @@ export default class Renderer {
   }
 
   prepareTemplates() {
-    const templates = [...(this.config.templates || []), ...vueApp()];
+    const templates = [...this.templates, ...vueApp()];
 
     for (const templateFile of templates) this.writeTemplateFile(templateFile);
 
@@ -87,7 +89,7 @@ export default class Renderer {
     watcher.on('ready', () => {
       watcher.on('all', (event, id) => {
         if (event !== 'addDir' && event !== 'unlinkDir') {
-          this.updateTemplateFile(this.config.templates || [], event, id);
+          this.updateTemplateFile(this.templates, event, id);
         }
       });
     });
@@ -98,7 +100,7 @@ export default class Renderer {
   templatePathsToWatch() {
     return [
       ...new Set(
-        this.config.templates?.map(temp =>
+        this.templates.map(temp =>
           path.resolve(temp.pluginPath || '', './entries')
         )
       )
@@ -128,7 +130,7 @@ export default class Renderer {
         template = { src: id, dst };
 
         // Push the newly created entry template into the config templates array so we dont have to construct the path again later
-        templates?.push(template);
+        templates.push(template);
       }
     }
 
@@ -222,12 +224,13 @@ export default class Renderer {
           const compile = webpack(compiler);
 
           compile.run((err, stats) => {
-            if (err) reject(err);
+            /* istanbul ignore next */
+            if (err) return reject(err);
 
             if (stats.hasErrors()) {
               const error = new Error('Build error');
               error.stack = stats.toString('errors-only');
-              reject(error);
+              return reject(error);
             }
 
             resolve(stats.toJson());
@@ -267,19 +270,18 @@ export default class Renderer {
   }
 
   setupClientCompiler() {
-    if (this.clientConfig.entry) {
-      const searchparams = new URLSearchParams();
+    const searchparams = new URLSearchParams();
 
-      searchparams.append('reload', 'true');
-      searchparams.append('name', 'client');
-      searchparams.append('timeout', '30000');
-      searchparams.append('path', '/__webpack_hmr/client');
+    searchparams.append('reload', 'true');
+    searchparams.append('name', 'client');
+    searchparams.append('timeout', '30000');
+    searchparams.append('path', '/__webpack_hmr/client');
 
-      (this.clientConfig.entry as webpack.Entry).app = [
-        `webpack-hot-middleware/client?${searchparams.toString()}`,
-        (this.clientConfig.entry as webpack.Entry).app as string
-      ];
-    }
+    (this.clientConfig.entry as webpack.Entry).app = [
+      `webpack-hot-middleware/client?${searchparams.toString()}`,
+      (this.clientConfig.entry as webpack.Entry).app as string
+    ];
+
     if (this.clientConfig.output)
       this.clientConfig.output.filename = '[name].js';
     this.clientConfig.plugins?.push(
@@ -324,11 +326,9 @@ export default class Renderer {
   }
 
   readFile(file: string) {
-    if (!this.clientConfig?.output?.path) return;
-
     try {
       return this.mfs.readFileSync(
-        path.join(this.clientConfig.output.path, file),
+        path.join(this.clientConfig.output?.path || '', file),
         'utf-8'
       );
     } catch (error) {

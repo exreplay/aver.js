@@ -30,6 +30,10 @@ interface Options {
    * Prevent the log folder to be removed after every test run
    */
   keepLogs?: boolean;
+  /**
+   * Pass an initial aver config
+   */
+  config?: AverConfig;
 }
 
 export async function rebuild(config?: AverConfig) {
@@ -55,7 +59,8 @@ export function testFeature(
     static: staticMode = false,
     showConsoleLogs = false,
     keepLogs = false,
-    keepDist = false
+    keepDist = false,
+    config = {}
   } = options || {};
 
   describe(name, () => {
@@ -79,6 +84,10 @@ export function testFeature(
           './node_modules/.cache/averjs'
         );
         aver.config.distPath = path.resolve(currentDir, aver.config.distDir);
+
+        aver.config = mergeWith(aver.config, config, (obj, src) => {
+          if (Array.isArray(obj)) return src;
+        });
 
         if (!dev) {
           await aver.build({ static: staticMode });

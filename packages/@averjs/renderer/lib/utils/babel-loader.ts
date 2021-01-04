@@ -3,7 +3,10 @@ import { isPureObject } from '@averjs/shared-utils';
 import { InternalAverConfig } from '@averjs/config';
 import PerformanceLoader from './perf-loader';
 import Config from 'webpack-chain';
-import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
+import {
+  AverWebpackConfig,
+  BabelOptions
+} from '@averjs/config/lib/configs/renderer';
 
 type ExcludesFalse = <T>(x: T | false) => x is T;
 
@@ -43,7 +46,7 @@ export default class BabelLoader {
   presetConfig() {
     let config = {
       buildTarget: this.isServer ? 'server' : 'client'
-    };
+    } as BabelOptions;
 
     if (typeof this.config?.babel === 'function') {
       this.config.babel({ isServer: this.isServer }, config);
