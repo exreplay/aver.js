@@ -108,6 +108,7 @@ export default class PluginContainer {
       return require.resolve(plugin);
     } catch (error) {
       if (error.code !== 'MODULE_NOT_FOUND') {
+        /* istanbul ignore next */
         throw error;
       }
     }
