@@ -89,12 +89,10 @@ export default class WebpackBaseConfiguration {
   }
 
   alias() {
-    if (!this.webpackConfig?.alias) return;
-
-    for (const alias of Object.keys(this.webpackConfig.alias)) {
+    for (const alias of Object.keys(this.webpackConfig.alias || {})) {
       this.chainConfig.resolve.alias.set(
         alias,
-        this.webpackConfig.alias[alias]
+        this.webpackConfig.alias?.[alias] || ''
       );
     }
   }

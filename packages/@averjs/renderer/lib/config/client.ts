@@ -37,13 +37,13 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     if (this.isProd) this.serviceWorker();
 
-    if (fs.existsSync(path.join(this.projectRoot, 'resources/images'))) {
+    if (fs.existsSync(path.resolve(this.projectRoot, './resources/images'))) {
       this.chainConfig.plugin('copy').use(CopyWebpackPlugin, [
         {
           patterns: [
             {
-              from: path.join(this.projectRoot, 'resources/images'),
-              to: path.join(this.projectRoot, '../public/images'),
+              from: path.resolve(this.projectRoot, './resources/images'),
+              to: path.resolve(this.projectRoot, '../public/images'),
               force: true
             }
           ]
