@@ -24,12 +24,12 @@
   "dependencies": {
     "connect-redis": "^5.0.0",
     "express-session": "^1.17.1",
-    "ioredis": "^4.19.1",
-    "uuid": "^8.3.1"
+    "ioredis": "^4.19.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/connect-redis": "^0.0.14",
-    "@types/express-session": "^1.17.0",
-    "@types/ioredis": "^4.17.6"
+    "@types/connect-redis": "^0.0.16",
+    "@types/express-session": "^1.17.3",
+    "@types/ioredis": "^4.17.10"
   }
 }
