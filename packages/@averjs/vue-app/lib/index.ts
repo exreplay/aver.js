@@ -1,6 +1,6 @@
 import klawSync from 'klaw-sync';
 import path from 'path';
-export * from './definitions';
+export * from './global';
 
 export interface Templates {
   src: string;
