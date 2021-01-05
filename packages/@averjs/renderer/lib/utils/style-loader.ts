@@ -30,11 +30,11 @@ export default class StyleLoader {
   }
 
   get stylesAreInline() {
-    return this.postcss || !this.config?.css?.extract;
+    return this.postcss || !this.config.css?.extract;
   }
 
   get exportOnlyLocals() {
-    return this.isServer && this.config?.css?.extract;
+    return this.isServer && this.config.css?.extract;
   }
 
   get importLoaders() {
@@ -73,11 +73,11 @@ export default class StyleLoader {
   }
 
   applyStyle(rule: Rule<Rule>, module = false) {
-    if (this.config?.css?.extract) this.extract(rule);
+    if (this.config.css?.extract) this.extract(rule);
 
     this.perfLoader.apply(rule, this.name || '');
 
-    if (!this.config?.css?.extract) this.extract(rule);
+    if (!this.config.css?.extract) this.extract(rule);
 
     if (module) this.cssModules(rule);
     else this.css(rule);
@@ -86,12 +86,12 @@ export default class StyleLoader {
   }
 
   extract(rule: Rule<Rule>) {
-    if (this.config?.css?.extract && !this.isServer) {
+    if (this.config.css?.extract && !this.isServer) {
       rule
         .use('extract-css')
         .loader(ExtractCssPlugin.loader)
         .options({ reloadAll: true });
-    } else if (!this.config?.css?.extract) {
+    } else if (!this.config.css?.extract) {
       rule
         .use('vue-style-loader')
         .loader('vue-style-loader')
@@ -100,12 +100,12 @@ export default class StyleLoader {
   }
 
   styleResources(rule: Rule<Rule>) {
-    if (!this.config?.css?.styleResources) return;
+    if (!this.config.css?.styleResources) return;
 
     const {
       resources = [],
       options = { patterns: [] }
-    } = this.config?.css.styleResources;
+    } = this.config.css.styleResources;
     const finalOptions: StyleResourcesLoaderOptions = { patterns: [] };
     if (this.name === 'css') return;
 
