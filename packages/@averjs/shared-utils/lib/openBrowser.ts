@@ -58,7 +58,7 @@ function executeNodeScript(scriptPath: string | undefined, url: string) {
           'The script specified as BROWSER environment variable failed.'
         )
       );
-      console.log(`${chalk.cyan(scriptPath)} exited with code ${code}.`);
+      console.log(`${chalk.cyan(scriptPath)} exited with code ${code || ''}.`);
       console.log();
     }
   });
