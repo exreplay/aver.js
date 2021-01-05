@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import Email from 'email-templates';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/* concat start */
 declare global {
   namespace Express {
     export interface Request {
@@ -18,3 +18,4 @@ declare global {
     }
   }
 }
+/* concat end */

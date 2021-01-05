@@ -4,7 +4,6 @@ import path from 'path';
 import merge from 'lodash/merge';
 import { PluginFunction } from '@averjs/core/lib/plugins';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import './global';
 
 export interface MailerOptions {
   emailTemplatesConfig: EmailConfig;
