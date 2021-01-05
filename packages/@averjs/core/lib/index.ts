@@ -1,6 +1,5 @@
 import Core from './core';
 import path from 'path';
-import './global';
 export * from './plugins';
 
 /**
