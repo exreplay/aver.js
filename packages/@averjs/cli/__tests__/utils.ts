@@ -1,5 +1,3 @@
 export function setProcessArgs(...args: string[]) {
-  process.argv = process.argv.reduce((prev, next) => {
-    return [...prev, next, ...(next.includes('jest') && args)].filter(_ => _);
-  }, [] as string[]);
+  process.argv = [process.argv[0], 'aver', ...args];
 }

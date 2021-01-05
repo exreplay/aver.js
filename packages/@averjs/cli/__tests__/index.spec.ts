@@ -47,11 +47,14 @@ test('executedCommand should identify the given command, show help or execute de
   expect(cli.executedCommand).toBe('build');
 
   resetArgv();
+  setProcessArgs();
 
   cli = new AverCli();
   expect(cli.executedCommand).toBe('dev');
 
+  resetArgv();
   setProcessArgs('--h');
+
   cli = new AverCli();
   expect(cli.executedCommand).toBe('help');
 });

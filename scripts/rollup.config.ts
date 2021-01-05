@@ -50,7 +50,9 @@ export default class RollupConfig {
     const external = [
       ...builtins,
       ...Object.keys(this.pkg.dependencies || []),
-      ...this.options.external,
+      ...(Array.isArray(this.options.external)
+        ? this.options.external
+        : [this.options.external]),
       ...this.averPackages
     ];
 
