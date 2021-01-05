@@ -34,7 +34,7 @@
     "babel-loader": "^8.2.2",
     "cache-loader": "^4.1.0",
     "chalk": "^4.1.0",
-    "copy-webpack-plugin": "^6.4.1",
+    "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^5.0.1",
     "enhanced-resolve": "^5.4.1",
     "eslint": "^7.17.0",
