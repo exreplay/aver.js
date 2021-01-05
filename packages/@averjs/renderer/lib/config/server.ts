@@ -1,12 +1,30 @@
 import webpack, { Configuration } from 'webpack';
 import WebpackBaseConfiguration from './base';
 import path from 'path';
-import nodeExternals from 'webpack-node-externals';
+import nodeExternals, { Options } from 'webpack-node-externals';
 import VueSSRServerPlugin from 'vue-server-renderer/server-plugin';
 import cloneDeep from 'lodash/cloneDeep';
 import Core from '@averjs/core';
 
 export default class WebpackServerConfiguration extends WebpackBaseConfiguration {
+  get nodeExternalsOptions() {
+    const options = { ...(this.webpackConfig.nodeExternals || {}) };
+    const allowList = options.allowlist;
+    delete options.allowlist;
+
+    return {
+      allowlist: [
+        /es6-promise|\.(?!(?:js|json)$).{1,5}$/i,
+        /\.css$/,
+        /\?vue&type=style/,
+        ...this.babelLoader.transpileDeps,
+        ...(Array.isArray(allowList) ? allowList : [allowList])
+      ],
+      modulesDir: 'node_modules',
+      ...options
+    } as Options;
+  }
+
   constructor(aver: Core) {
     super(true, aver);
   }
@@ -43,17 +61,7 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
       .end()
       .optimization.splitChunks({})
       .end()
-      .externals(
-        nodeExternals({
-          allowlist: [
-            /es6-promise|\.(?!(?:js|json)$).{1,5}$/i,
-            /\.css$/,
-            /\?vue&type=style/,
-            ...this.babelLoader.transpileDeps
-          ],
-          modulesDir: 'node_modules'
-        })
-      );
+      .externals(nodeExternals(this.nodeExternalsOptions));
 
     if (typeof this.webpackConfig?.server === 'function')
       this.webpackConfig.server(this.chainConfig);
