@@ -35,7 +35,6 @@ testFeature(
     });
   },
   {
-    showConsoleLogs: true,
     config: {
       webpack: {
         nodeExternals: {
