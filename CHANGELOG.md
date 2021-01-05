@@ -1,3 +1,18 @@
+## 2.4.2 (2021-01-05)
+
+#### :bug: Bug Fix
+* `@averjs/core`
+  * [#309](https://github.com/exreplay/aver.js/pull/309) fix: fixed global types for core package ([@exreplay](https://github.com/exreplay))
+* `@averjs/vue-app`
+  * [#308](https://github.com/exreplay/aver.js/pull/308) fix: fixed global types for vue-app ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* [#307](https://github.com/exreplay/aver.js/pull/307) chore(deps): update dependency rollup to v2.36.0 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.4.1 (2021-01-05)
 
 #### :bug: Bug Fix
