@@ -8,7 +8,7 @@ import { StyleResourcesLoaderOptions } from 'style-resources-loader';
 import { ProcessOptions, AcceptedPlugin } from 'postcss';
 import PostCSSPresetEnv from 'postcss-preset-env';
 import { Options as BabelPresetOptions } from '@babel/preset-env';
-import WebpackNodeExternals from 'webpack-node-externals';
+import { Options as NodeExternalsOptions } from 'webpack-node-externals';
 
 export type BabelOptions = Partial<
   BabelPresetOptions & {
@@ -26,7 +26,7 @@ export interface AverWebpackConfig {
     | ((payload: { isServer: boolean }, config: BabelOptions) => void);
   additionalExtensions?: string[];
   transpileDependencies?: (string | RegExp)[];
-  nodeExternals?: WebpackNodeExternals.Options;
+  nodeExternals?: NodeExternalsOptions;
   postcss?: {
     preset?: PostCSSPresetEnv.pluginOptions;
     sourceMap?: boolean;
