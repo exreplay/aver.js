@@ -28,12 +28,12 @@
   "dependencies": {
     "@averjs/core": "2.3.4",
     "@averjs/init": "2.3.4",
-    "command-line-usage": "^6.1.0",
+    "command-line-usage": "^6.1.1",
     "minimist": "^1.2.5"
   },
   "devDependencies": {
     "@types/command-line-usage": "^5.0.1",
-    "@types/minimist": "^1.2.0"
+    "@types/minimist": "^1.2.1"
   },
   "aver": {
     "build": true
