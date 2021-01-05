@@ -3,7 +3,7 @@ import session, {
   mergeExpressSessionConfig,
   createRedisStore
 } from '../lib';
-import Redis from 'ioredis';
+import Redis, { RedisOptions } from 'ioredis';
 import { Handler } from 'express';
 
 interface HookPayload {
@@ -73,9 +73,15 @@ describe('session plugin', () => {
 
     store = createRedisStore(60);
     if (store && 'options' in store.client) {
-      expect(store.client.options.port).toBe(parseInt(process.env.REDIS_PORT));
-      expect(store.client.options.host).toBe(process.env.REDIS_HOST);
-      expect(store.client.options.password).toBe(process.env.REDIS_PASSWORD);
+      expect((store.client.options as RedisOptions).port).toBe(
+        parseInt(process.env.REDIS_PORT)
+      );
+      expect((store.client.options as RedisOptions).host).toBe(
+        process.env.REDIS_HOST
+      );
+      expect((store.client.options as RedisOptions).password).toBe(
+        process.env.REDIS_PASSWORD
+      );
     }
   });
 
