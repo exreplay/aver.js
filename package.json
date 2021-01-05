@@ -13,7 +13,7 @@
     "release": "node ./scripts-build/release-script",
     "lint": "eslint --ext .js,.ts,.vue .",
     "test": "jest --runInBand && codecov",
-    "version": "node ./scripts-build/generateChangelog.ts && git add CHANGELOG.md"
+    "version": "node ./scripts-build/generateChangelog.js && git add CHANGELOG.md"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.12.1",
