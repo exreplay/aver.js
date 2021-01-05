@@ -3,5 +3,6 @@
   "mainEntryPointFilePath": "./dist/packages/@averjs/<unscopedPackageName>/lib/index.d.ts",
   "dtsRollup": {
     "publicTrimmedFilePath": "./dist/<unscopedPackageName>.d.ts"
+
   }
 }

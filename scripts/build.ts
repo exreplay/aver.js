@@ -124,6 +124,8 @@ export default class Build {
             fs.rmdirSync(path.resolve(pkg.path, './dist/packages'), {
               recursive: true
             });
+
+            this.appendGlobalTypes(pkg.path, pkg.pkg.types);
           }
 
           buildSpinner.succeed(`Built package ${pkg.pkg.name} successfully`);
@@ -132,6 +134,20 @@ export default class Build {
           throw error;
         }
       }
+    }
+  }
+
+  appendGlobalTypes(pkgPath: string, dtsFile = '') {
+    const globalPath = path.resolve(pkgPath, './lib/global.ts');
+    const dtsPath = path.resolve(pkgPath, dtsFile);
+
+    if (fs.existsSync(globalPath)) {
+      const globalTypes = fs.readFileSync(globalPath, 'utf-8');
+      const content = /\/\* concat start \*\/(?<content>(.|\n)*?)\/\* concat end \*\//.exec(
+        globalTypes
+      )?.groups?.content;
+      const dtsContent = fs.readFileSync(dtsPath, 'utf-8');
+      fs.writeFileSync(dtsPath, `${dtsContent}${content || ''}`, 'utf-8');
     }
   }
 }

@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { Server } from 'socket.io';
+/* concat start */
+import { Server as SocketIoServer } from 'socket.io';
 
 declare global {
   namespace Express {
     interface Request {
-      io: Server;
+      io: SocketIoServer;
     }
   }
 }
+/* concat end */
 
 export {};
