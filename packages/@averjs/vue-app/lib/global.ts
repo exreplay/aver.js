@@ -61,6 +61,7 @@ export type StoreEntry<T extends any> = (
   options: StoreOptions<T>
 ) => StoreOptions<T>;
 
+/* concat start */
 declare module 'vue/types/vue' {
   interface Vue {
     $locale: {
@@ -76,3 +77,4 @@ declare module 'vue/types/options' {
     asyncData?: <T extends any>(context: AsyncDataContext<T>) => Promise<void>;
   }
 }
+/* concat end */
