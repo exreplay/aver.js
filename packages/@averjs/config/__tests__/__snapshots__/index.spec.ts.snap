@@ -19,6 +19,7 @@ Object {
   "i18n": Object {
     "silentTranslationWarn": true,
   },
+  "isProd": true,
   "openBrowser": true,
   "plugins": Array [],
   "progressbar": true,
@@ -42,7 +43,7 @@ Object {
     "base": false,
     "client": false,
     "css": Object {
-      "extract": false,
+      "extract": true,
       "styleResources": Object {
         "options": Object {
           "patterns": Array [],

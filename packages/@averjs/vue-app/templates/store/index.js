@@ -49,7 +49,7 @@ export function createStore(ssrContext) {
     }
   }
 
-  if (ignoredGlobalStores.length > 0 && process.env.NODE_ENV === 'development') {
+  if (ignoredGlobalStores.length > 0 && (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test')) {
     // eslint-disable-next-line no-return-assign
     const ignoreGlobalStoresList = ignoredGlobalStores.reduce((prev, cur) => prev += `, '${cur}'`, '').substring(1);
 
@@ -123,7 +123,7 @@ The following files have been ignored:${ignoreGlobalStoresList}.
       paths: persistent,
       storage: {
         getItem: key => {
-          if (ssrContext.isServer) return ssrContext.context.cookies[key];
+          if (ssrContext.isServer) return ssrContext.context.req.cookies[key];
           return Cookies.get(key);
         },
         setItem: (key, value) => Cookies.set(key, value, { expires: 3, secure: process.env.NODE_ENV === 'production' }),

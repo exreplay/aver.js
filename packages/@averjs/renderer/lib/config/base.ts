@@ -18,7 +18,7 @@ export default class WebpackBaseConfiguration {
   isServer: boolean;
   cacheDir: string;
   distPath: string;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   commonRules = [];
 
   perfLoader: PerformanceLoader;
@@ -31,18 +31,17 @@ export default class WebpackBaseConfiguration {
 
     this.chainConfig = new WebpackChain();
     this.isServer = isServer;
-    this.cacheDir = aver.config.cacheDir || '';
-    this.distPath = aver.config.distPath || '';
-
-    this.isProd = process.env.NODE_ENV === 'production';
+    this.cacheDir = aver.config.cacheDir;
+    this.distPath = aver.config.distPath;
+    this.isProd = aver.config.isProd;
 
     this.commonRules = [];
 
-    this.perfLoader = new PerformanceLoader(this.isServer, this.webpackConfig);
+    this.perfLoader = new PerformanceLoader(this.isServer, aver.config);
     this.perfLoader.warmupLoaders();
     this.styleLoader = new StyleLoader(
       this.isServer,
-      this.webpackConfig,
+      aver.config,
       this.perfLoader
     );
     this.babelLoader = new BabelLoader(
@@ -90,12 +89,10 @@ export default class WebpackBaseConfiguration {
   }
 
   alias() {
-    if (!this.webpackConfig?.alias) return;
-
-    for (const alias of Object.keys(this.webpackConfig.alias)) {
+    for (const alias of Object.keys(this.webpackConfig.alias || {})) {
       this.chainConfig.resolve.alias.set(
         alias,
-        this.webpackConfig.alias[alias]
+        this.webpackConfig.alias?.[alias] || ''
       );
     }
   }
@@ -249,9 +246,12 @@ export default class WebpackBaseConfiguration {
       .end()
       .devtool(this.isProd ? false : 'cheap-module-eval-source-map')
       .mode(
-        process.env.NODE_ENV === 'development' ||
-          process.env.NODE_ENV === 'production'
-          ? process.env.NODE_ENV
+        process.env.NODE_ENV === 'development'
+          ? 'development'
+          : process.env.NODE_ENV === 'production'
+          ? 'production'
+          : process.env.NODE_ENV === 'test'
+          ? 'production'
           : 'none'
       )
       .module.noParse(/es6-promise\.js$/)

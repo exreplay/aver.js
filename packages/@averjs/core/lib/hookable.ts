@@ -3,6 +3,7 @@ import { Express } from 'express';
 import { ExpressMiddlewares } from './server';
 import { Server } from 'http';
 import { BuilderContext } from '@averjs/builder/lib/builders/base';
+import { Watcher } from './core';
 
 interface RegisterMiddlewaresContext {
   app: Express;
@@ -43,12 +44,16 @@ interface TappableHooks {
   'renderer:base-config': (chain: Config) => Promise<void> | void;
   'renderer:client-config': (chain: Config) => Promise<void> | void;
   'renderer:server-config': (chain: Config) => Promise<void> | void;
+  'before-close': (watchers: Watcher[]) => Promise<void> | void;
+  'after-close': () => Promise<void> | void;
 }
 
-type Hooks = { [K in keyof TappableHooks]: TappableHooks[K][] };
+type Hooks = {
+  [K in keyof TappableHooks]?: TappableHooks[K][];
+};
 
 export default class Hookable {
-  hooks: Hooks = {} as never;
+  hooks: Hooks = {};
 
   constructor() {
     this.tap = this.tap.bind(this);
@@ -59,7 +64,7 @@ export default class Hookable {
     if (!name || typeof fn !== 'function') return;
 
     if (!this.hooks[name]) this.hooks[name] = [];
-    this.hooks[name].push(fn as never);
+    (this.hooks[name] as TappableHooks[K][]).push(fn);
   }
 
   async callHook<
@@ -68,7 +73,7 @@ export default class Hookable {
   >(name: K, ...args: A) {
     if (!this.hooks[name]) return;
 
-    for (const hook of this.hooks[name]) {
+    for (const hook of this.hooks[name] as TappableHooks[K][]) {
       await (hook as (...args: unknown[]) => Promise<void>)(...args);
     }
   }

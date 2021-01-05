@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import klawSync, { Item } from 'klaw-sync';
 import Core from './core';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 
 export type PluginFunction = (
   this: PluginContainerInterface,
@@ -15,7 +15,7 @@ const requireModule = require('esm')(module);
 
 export default class PluginContainer {
   aver: Core;
-  config: AverConfig;
+  config: InternalAverConfig;
   private cacheDir: string;
 
   constructor(aver: Core) {
@@ -108,6 +108,7 @@ export default class PluginContainer {
       return require.resolve(plugin);
     } catch (error) {
       if (error.code !== 'MODULE_NOT_FOUND') {
+        /* istanbul ignore next */
         throw error;
       }
     }
@@ -143,9 +144,8 @@ export default class PluginContainer {
     };
 
     for (const entry of entries) {
-      const dst = path
-        .relative(dirname, entry.path)
-        .replace('entries', dirname);
+      const [, entryFile] = entry.path.split('/entries/');
+      const dst = path.join(dirname, entryFile);
       this.config.templates?.push({
         src: entry.path,
         dst,
@@ -163,10 +163,6 @@ export default class PluginContainer {
   private normalizePluginPath(pluginPath: string) {
     if (fs.lstatSync(pluginPath).isDirectory()) return pluginPath;
     else return path.dirname(pluginPath);
-  }
-
-  private relativeCacheDirPath(filePath: string) {
-    return path.relative(path.resolve(process.cwd(), this.cacheDir), filePath);
   }
 
   private resolvePath(plugin: string) {

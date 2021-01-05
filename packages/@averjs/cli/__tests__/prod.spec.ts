@@ -1,15 +1,12 @@
+import { mockeCoreRun } from './mocks';
 import AverCli from '../lib';
-import Core, { mockRun } from '../__mocks__/@averjs/core';
-jest.mock('@averjs/core');
+import { setProcessArgs } from './utils';
 
 const OLD_ARGV = [...process.argv];
 const OLD_ENV = { ...process.env };
 let outputData = '';
 
 beforeEach(function() {
-  Core.mockClear();
-  mockRun.mockClear();
-
   outputData = '';
   console.log = jest.fn(inputs => (outputData = inputs));
   console.error = jest.fn(inputs => (outputData = inputs));
@@ -18,25 +15,29 @@ beforeEach(function() {
   process.env = { ...OLD_ENV };
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 test('help command should output command description', async () => {
-  process.argv.push('prod', '--h');
+  setProcessArgs('prod', '--h');
 
   const cli = new AverCli();
   await cli.run();
-  expect(outputData).toMatch('Start aver in production mode.');
+  await expect(outputData).toMatch('Start aver in production mode.');
 });
 
 test('run should execute core run', async () => {
-  process.argv.push('prod');
+  setProcessArgs('prod');
 
   const cli = new AverCli();
   await cli.run();
 
-  expect(mockRun.mock.calls.length).toBe(1);
+  expect(mockeCoreRun.mock.calls.length).toBe(1);
 });
 
 test('run should set NODE_ENV to "production" when not set', async () => {
-  process.argv.push('prod');
+  setProcessArgs('prod');
 
   delete process.env.NODE_ENV;
 

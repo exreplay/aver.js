@@ -2,6 +2,7 @@ import path from 'path';
 import { warmup } from 'thread-loader';
 import { Module, Rule } from 'webpack-chain';
 import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
+import { InternalAverConfig } from '@averjs/config/lib';
 
 interface PoolConfig {
   [index: string]: {
@@ -19,9 +20,10 @@ export default class PerformanceLoader {
   config: AverWebpackConfig;
   isProd = process.env.NODE_ENV === 'production';
 
-  constructor(isServer: boolean, config: AverWebpackConfig) {
+  constructor(isServer: boolean, config: InternalAverConfig) {
     this.isServer = isServer;
-    this.config = config;
+    this.config = config.webpack || {};
+    this.isProd = config.isProd;
   }
 
   get pools(): PoolConfig {
@@ -45,7 +47,7 @@ export default class PerformanceLoader {
   }
 
   warmupLoaders() {
-    if (!this.isProd) {
+    if (!this.isProd && !process.env.CIRCLE_CI) {
       for (const key of Object.keys(this.pools)) {
         const pool = this.pools[key];
         if (pool.loaders) warmup(pool.poolConfig, pool.loaders);
@@ -70,7 +72,7 @@ export default class PerformanceLoader {
         })
         .end();
 
-      if (pool.useThread) {
+      if (pool.useThread && !process.env.CIRCLE_CI) {
         rule
           .use('thread-loader')
           .loader('thread-loader')

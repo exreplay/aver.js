@@ -6,6 +6,9 @@ module.exports = {
   env: {
     jest: true
   },
+  globals: {
+    jestPuppeteer: true
+  },
   extends: [
     'standard',
     'eslint:recommended',
@@ -85,18 +88,23 @@ module.exports = {
     },
     {
       files: ['**/*.js', '**/*.vue'],
-      extends: ['@averjs', 'plugin:prettier/recommended'],
+      env: {
+        jest: true
+      },
+      extends: ['@averjs'],
       rules: {
-        'space-before-function-paren': 'off'
+        indent: 'off',
+        'space-before-function-paren': 'off',
+        'vue/script-indent': 'off'
       }
+    },
+    {
+      files: ['packages/@averjs/vue-app/templates/**/*.js'],
+      parserOptions: {
+        parser: 'babel-eslint',
+        ecmaVersion: 2015
+      },
+      extends: ['plugin:lodash-template/recommended-with-script']
     }
-    // {
-    //   files: ['packages/@averjs/vue-app/templates/**/*.js'],
-    //   parserOptions: {
-    //     parser: 'babel-eslint',
-    //     ecmaVersion: 2015
-    //   },
-    //   extends: ['plugin:lodash-template/recommended-with-script']
-    // }
   ]
 };

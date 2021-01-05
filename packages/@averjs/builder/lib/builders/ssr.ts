@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import BaseBuilder, { BuilderContext } from './base';
 import path from 'path';
 import fs from 'fs';
@@ -6,17 +5,19 @@ import serialize from 'serialize-javascript';
 import template from 'lodash/template';
 import { minify } from 'html-minifier';
 import HTMLCodeError from '../errors/HTMLCodeError';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 import { BundleRenderer } from 'vue-server-renderer';
 import { Request } from 'express';
 import Core from '@averjs/core';
+import Renderer from '@averjs/renderer/lib';
 
 export default class SsrBuilder extends BaseBuilder {
   aver: Core;
-  config: AverConfig;
+  config: InternalAverConfig;
   renderer: BundleRenderer | null = null;
+  averRenderer: Renderer | null = null;
   readyPromise: Promise<void> | null = null;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   cacheDir: string;
   distPath: string;
 
@@ -24,20 +25,25 @@ export default class SsrBuilder extends BaseBuilder {
     super();
     this.aver = aver;
     this.config = aver.config;
-    this.cacheDir = aver.config.cacheDir || '';
-    this.distPath = aver.config.distPath || '';
+    this.cacheDir = aver.config.cacheDir;
+    this.distPath = aver.config.distPath;
+    this.isProd = aver.config.isProd;
   }
 
   async initRenderer() {
     if (this.isProd) {
-      const serverBundle = require(path.join(
+      const serverPath = path.join(
         this.distPath,
         './vue-ssr-server-bundle.json'
-      ));
-      const clientManifest = require(path.join(
+      );
+      const clientPath = path.join(
         this.distPath,
         './vue-ssr-client-manifest.json'
-      ));
+      );
+
+      const serverBundle = JSON.parse(fs.readFileSync(serverPath, 'utf-8'));
+      const clientManifest = JSON.parse(fs.readFileSync(clientPath, 'utf-8'));
+
       this.renderer = this.createRenderer(
         serverBundle,
         Object.assign(
@@ -49,9 +55,9 @@ export default class SsrBuilder extends BaseBuilder {
       );
     } else {
       const { default: Renderer } = await import('@averjs/renderer');
-      const renderer = new Renderer({}, this.aver);
-      await renderer.setup();
-      this.readyPromise = renderer.compile((bundle, options) => {
+      this.averRenderer = new Renderer({}, this.aver);
+      await this.averRenderer.setup();
+      this.readyPromise = this.averRenderer.compile((bundle, options) => {
         this.renderer = this.createRenderer(
           bundle,
           Object.assign(options, this.config.createRenderer)
@@ -72,7 +78,6 @@ export default class SsrBuilder extends BaseBuilder {
 
     try {
       const html = await this.renderer?.renderToString(context);
-      if (!context.meta) return;
 
       const {
         title,
@@ -84,7 +89,7 @@ export default class SsrBuilder extends BaseBuilder {
         script,
         noscript,
         meta
-      } = context.meta.inject();
+      } = context.meta?.inject() || {};
 
       const HEAD = [];
 

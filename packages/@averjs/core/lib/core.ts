@@ -4,13 +4,18 @@ import Hookable from './hookable';
 import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
-import { getAverjsConfig, AverConfig } from '@averjs/config';
+import { getAverjsConfig, InternalAverConfig } from '@averjs/config';
 import PluginContainer, { PluginContainerInterface } from './plugins';
-import { RendererOptions } from '@averjs/renderer';
+import Renderer, { RendererOptions } from '@averjs/renderer';
+
+export type Watcher = () => Promise<void> | void;
 
 export default class Core extends Hookable {
-  config: AverConfig;
+  config: InternalAverConfig;
   plugins: PluginContainerInterface;
+  server: Server | null = null;
+  renderer: Renderer | null = null;
+  watchers: Watcher[] = [];
 
   constructor() {
     super();
@@ -32,20 +37,29 @@ export default class Core extends Hookable {
     this.plugins = new PluginContainer(this);
   }
 
+  async close() {
+    await this.callHook('before-close', this.watchers);
+    for (const close of this.watchers) await close();
+    this.watchers = [];
+    this.hooks = {};
+    await this.callHook('after-close');
+  }
+
   async run() {
     await this.plugins.register();
     await this.initModuleAliases();
-    const server = new Server(this);
-    await server.setup();
-    server.startServer();
+    this.server = new Server(this);
+    await this.server.setup();
+    await this.server.startServer();
   }
 
   async build(args: RendererOptions) {
     await this.plugins.register();
     const { default: Renderer } = await import('@averjs/renderer');
-    const renderer = new Renderer(args, this);
-    await renderer.setup();
-    await renderer.compile();
+    this.renderer = new Renderer(args, this);
+    await this.renderer.setup();
+    await this.renderer.compile();
+    this.hooks = {};
   }
 
   async initModuleAliases() {

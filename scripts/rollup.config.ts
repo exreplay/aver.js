@@ -95,6 +95,7 @@ export default class RollupConfig {
       typescript({
         tsconfig: path.resolve(__dirname, '../tsconfig.build.json'),
         cacheRoot: path.resolve(__dirname, '../node_modules/.rts2_cache'),
+        abortOnError: true,
         tsconfigOverride: {
           compilerOptions: {
             sourceMap: true,

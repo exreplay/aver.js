@@ -1,15 +1,12 @@
+import { mockeCoreBuild } from './mocks';
 import AverCli from '../lib';
-import Core, { mockBuild } from '../__mocks__/@averjs/core';
-jest.mock('@averjs/core');
+import { setProcessArgs } from './utils';
 
 const OLD_ARGV = [...process.argv];
 const OLD_ENV = { ...process.env };
 let outputData = '';
 
 beforeEach(() => {
-  Core.mockClear();
-  mockBuild.mockClear();
-
   outputData = '';
   console.log = jest.fn(inputs => (outputData = inputs));
   console.error = jest.fn(inputs => (outputData = inputs));
@@ -18,26 +15,30 @@ beforeEach(() => {
   process.env = { ...OLD_ENV };
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 test('help command should output command description', async () => {
-  process.argv.push('build', '--h');
+  setProcessArgs('build', '--h');
 
   const cli = new AverCli();
   await cli.run();
 
-  expect(outputData).toMatch('Build for production usage.');
+  await expect(outputData).toMatch('Build for production usage.');
 });
 
 test('run should execute renderer', async () => {
-  process.argv.push('build');
+  setProcessArgs('build');
 
   const cli = new AverCli();
   await cli.run();
 
-  expect(mockBuild.mock.calls.length).toBe(1);
+  expect(mockeCoreBuild.mock.calls.length).toBe(1);
 });
 
 test('run should set NODE_ENV to "production" when not set', async () => {
-  process.argv.push('build');
+  setProcessArgs('build');
 
   delete process.env.NODE_ENV;
 
@@ -48,10 +49,10 @@ test('run should set NODE_ENV to "production" when not set', async () => {
 });
 
 test('static should be passed to renderer constructor', async () => {
-  process.argv.push('build', '--static');
+  setProcessArgs('build', '--static');
 
   const cli = new AverCli();
   await cli.run();
 
-  expect(mockBuild.mock.calls[0][0].static).toBeTruthy();
+  expect(mockeCoreBuild.mock.calls[0][0].static).toBeTruthy();
 });

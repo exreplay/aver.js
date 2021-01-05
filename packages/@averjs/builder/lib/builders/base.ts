@@ -11,8 +11,8 @@ export interface BuilderContext {
   title: string | undefined;
   url: string;
   req: Partial<Request>;
-  csrfToken?: string;
   meta?: VueMetaPlugin;
+  csrfToken?: string;
   state?: Record<string, unknown>;
   renderStyles?: () => string;
   renderResourceHints?: () => string;

@@ -7,17 +7,17 @@ import serialize from 'serialize-javascript';
 import template from 'lodash/template';
 import { minify } from 'html-minifier';
 import { BundleRenderer } from 'vue-server-renderer';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 import Core from '@averjs/core';
 
 const requireModule = require('esm')(module);
 
 export default class StaticBuilder extends BaseBuilder {
   aver: Core;
-  config: AverConfig;
+  config: InternalAverConfig;
   renderer: BundleRenderer | null = null;
   readyPromise: Promise<boolean> | null = null;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   distPath: string;
   cacheDir: string;
 
@@ -25,22 +25,23 @@ export default class StaticBuilder extends BaseBuilder {
     super();
     this.aver = aver;
     this.config = aver.config;
-    this.isProd = process.env.NODE_ENV === 'production';
-    this.distPath = this.config.distPath || '';
-    this.cacheDir = this.config.cacheDir || '';
+    this.isProd = aver.config.isProd;
+    this.distPath = this.config.distPath;
+    this.cacheDir = this.config.cacheDir;
 
     this.initRenderer();
   }
 
   initRenderer() {
-    const serverBundle = require(path.join(
-      this.distPath,
-      './vue-ssr-server-bundle.json'
-    ));
-    const clientManifest = require(path.join(
+    const serverPath = path.join(this.distPath, './vue-ssr-server-bundle.json');
+    const clientPath = path.join(
       this.distPath,
       './vue-ssr-client-manifest.json'
-    ));
+    );
+
+    const serverBundle = JSON.parse(fs.readFileSync(serverPath, 'utf-8'));
+    const clientManifest = JSON.parse(fs.readFileSync(clientPath, 'utf-8'));
+
     this.renderer = this.createRenderer(
       serverBundle,
       Object.assign(
@@ -53,8 +54,12 @@ export default class StaticBuilder extends BaseBuilder {
   }
 
   async build() {
-    const routes = requireModule(path.join(process.env.PROJECT_PATH, './pages'))
-      .default;
+    const pagesPath = path.join(process.env.PROJECT_PATH, './pages');
+    const routes =
+      process.env.NODE_ENV === 'test'
+        ? require(pagesPath).default
+        : /* istanbul ignore next */ requireModule(pagesPath).default;
+
     for (const route of routes) {
       const context: BuilderContext = {
         title: process.env.APP_NAME,
@@ -67,7 +72,6 @@ export default class StaticBuilder extends BaseBuilder {
       if (this.config.csrf) Object.assign(context, { csrfToken: '' });
 
       const html = await this.renderer?.renderToString(context);
-      if (!context.meta) return;
 
       const {
         title,
@@ -79,7 +83,7 @@ export default class StaticBuilder extends BaseBuilder {
         script,
         noscript,
         meta
-      } = context.meta.inject();
+      } = context.meta?.inject() || {};
 
       const HEAD = [
         meta?.text(),

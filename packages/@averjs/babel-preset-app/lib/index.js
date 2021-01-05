@@ -3,7 +3,7 @@
 
 const { getPolyfills, getDefaultPolyfills } = require('./getPolyfills');
 
-module.exports = (_context, options = {}) => {
+module.exports = (api, options = {}) => {
   const presets = [];
   const plugins = [];
   const {

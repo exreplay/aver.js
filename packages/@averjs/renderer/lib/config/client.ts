@@ -37,13 +37,13 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     if (this.isProd) this.serviceWorker();
 
-    if (fs.existsSync(path.join(this.projectRoot, 'resources/images'))) {
+    if (fs.existsSync(path.resolve(this.projectRoot, './resources/images'))) {
       this.chainConfig.plugin('copy').use(CopyWebpackPlugin, [
         {
           patterns: [
             {
-              from: path.join(this.projectRoot, 'resources/images'),
-              to: path.join(this.projectRoot, '../public/images'),
+              from: path.resolve(this.projectRoot, './resources/images'),
+              to: path.resolve(this.projectRoot, '../public/images'),
               force: true
             }
           ]
@@ -93,8 +93,10 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     delete swConfig.mode;
 
+    if (mode === 'GenerateSW' && !(conf as GenerateSWOptions).cacheId)
+      (conf as GenerateSWOptions).cacheId = 'averjs';
+
     if (mode === 'GenerateSW' && 'cacheId' in conf) {
-      if (!conf.cacheId) conf.cacheId = 'averjs';
       conf.inlineWorkboxRuntime = true;
     } else if (mode === 'InjectManifest' && 'swSrc' in conf) {
       plugin = InjectManifest;
@@ -120,10 +122,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       }
     };
 
-    if (
-      process.env.NODE_ENV === 'production' &&
-      this.webpackConfig?.css?.extract
-    ) {
+    if (this.isProd && this.webpackConfig.css?.extract) {
       splitChunks.cacheGroups.styles = {
         name: 'styles',
         test: /\.(s?css|vue)$/,

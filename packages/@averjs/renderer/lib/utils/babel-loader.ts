@@ -1,9 +1,12 @@
 import merge from 'lodash/merge';
 import { isPureObject } from '@averjs/shared-utils';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 import PerformanceLoader from './perf-loader';
 import Config from 'webpack-chain';
-import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
+import {
+  AverWebpackConfig,
+  BabelOptions
+} from '@averjs/config/lib/configs/renderer';
 
 type ExcludesFalse = <T>(x: T | false) => x is T;
 
@@ -15,7 +18,7 @@ export default class BabelLoader {
 
   constructor(
     isServer: boolean,
-    config: AverConfig,
+    config: InternalAverConfig,
     perfLoader: PerformanceLoader
   ) {
     this.config = config.webpack || {};
@@ -25,7 +28,7 @@ export default class BabelLoader {
   }
 
   get transpileDeps() {
-    if (!this.config?.transpileDependencies) return [];
+    if (!this.config.transpileDependencies) return [];
 
     return this.config.transpileDependencies
       .map(dep => {
@@ -43,7 +46,7 @@ export default class BabelLoader {
   presetConfig() {
     let config = {
       buildTarget: this.isServer ? 'server' : 'client'
-    };
+    } as BabelOptions;
 
     if (typeof this.config?.babel === 'function') {
       this.config.babel({ isServer: this.isServer }, config);

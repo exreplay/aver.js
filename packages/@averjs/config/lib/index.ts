@@ -2,35 +2,44 @@
 import path from 'path';
 import mergeWith from 'lodash/mergeWith';
 import { defaultAverjsConfig, defaultFileName } from './configs';
-import esm from 'esm';
 
 interface InternalConfig {
-  rootDir?: string;
-  cacheDir?: string;
-  distPath?: string;
-  distDir?: string;
-  _production?: boolean;
+  rootDir: string;
+  cacheDir: string;
+  distPath: string;
+  distDir: string;
+  isProd: boolean;
+  _production: boolean;
 }
 
-export type AverConfig = ReturnType<typeof defaultAverjsConfig> &
+type Config = ReturnType<typeof defaultAverjsConfig> &
   InternalConfig & { [index: string]: any };
 
-export function getAverjsConfig() {
-  const requireModule = esm(module);
+/**
+ * @internal
+ */
+export type InternalAverConfig = Config;
 
+export type AverConfig = Partial<Config>;
+
+export function getAverjsConfig() {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const requireModule = require('esm')(module);
   const globalConfPath = path.resolve(
     process.env.PROJECT_PATH,
     `../${defaultFileName}`
   );
-  const config: AverConfig = defaultAverjsConfig();
-  let userConfig: AverConfig = {};
+  const isProd =
+    process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test';
+  const config = defaultAverjsConfig(isProd) as InternalAverConfig;
+  let userConfig = {};
   let configFile = null;
 
   try {
     configFile = require.resolve(globalConfPath);
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'MODULE_NOT_FOUND')
-      throw error;
+      /* istanbul ignore next */ throw error;
     else
       console.log(
         'Could not find aver-config file. Proceeding with default config...'
@@ -40,8 +49,11 @@ export function getAverjsConfig() {
   if (configFile) {
     if (process.env.NODE_ENV === 'test')
       userConfig = require(configFile).default;
-    else userConfig = requireModule(configFile).default;
+    /* istanbul ignore next */ else
+      userConfig = requireModule(configFile).default;
   }
+
+  config.isProd = isProd;
 
   config.rootDir = process.cwd();
 

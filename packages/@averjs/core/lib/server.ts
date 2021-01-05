@@ -7,7 +7,7 @@ import express, {
 } from 'express';
 import compression from 'compression';
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs-extra';
 import helmet from 'helmet';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -20,46 +20,53 @@ import indexOf from 'lodash/indexOf';
 import WWW from './www';
 import { SsrBuilder } from '@averjs/builder';
 import Core from './core';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 
 const requireModule = require('esm')(module);
 
 export type ExpressMiddlewares = (Handler | [string, Handler])[];
 
 export default class Server extends WWW {
-  aver: Core;
-  config: AverConfig;
-  isProd = process.env.NODE_ENV === 'production';
-  distDir: string;
+  config: InternalAverConfig;
+  isProd: boolean;
   distPath: string;
   middlewares: ExpressMiddlewares = [];
   builder: SsrBuilder | null = null;
 
   constructor(aver: Core) {
-    super();
-    this.aver = aver;
+    super(aver);
     this.config = aver.config;
-    this.distDir = aver.config.distDir || '';
-    this.distPath = aver.config.distPath || '';
+    this.distPath = aver.config.distPath;
+    this.isProd = aver.config.isProd;
 
     fs.existsSync(path.join(process.env.PROJECT_PATH, '../storage')) ||
       fs.mkdirSync(path.join(process.env.PROJECT_PATH, '../storage'));
 
     if (!this.isProd) {
       const watcher = chokidar.watch(process.env.API_PATH);
+      this.aver.watchers.push(async () => {
+        await watcher.close();
+      });
 
       watcher.on('ready', () => {
         console.log('Watching for changes on the server');
-        watcher.on('all', () => {
-          console.log('Clearing server cache');
-          Object.keys(require.cache).forEach(id => {
-            // eslint-disable-next-line no-useless-escape
-            if (/[/\\]api[/\\]/.test(id)) {
-              delete require.cache[id];
-            }
-          });
-        });
+        watcher.on(
+          'all',
+          /* istanbul ignore next */ () => {
+            this.clearServerCache(require.cache);
+          }
+        );
       });
+    }
+  }
+
+  clearServerCache(cache: NodeJS.Dict<NodeModule>) {
+    console.log('Clearing server cache');
+    for (const id of Object.keys(cache)) {
+      // eslint-disable-next-line no-useless-escape
+      if (/[/\\]api[/\\]/.test(id)) {
+        delete cache[id];
+      }
     }
   }
 
@@ -69,19 +76,18 @@ export default class Server extends WWW {
     await this.registerMiddlewares();
     await this.registerRoutes();
 
-    const errorHandler: ErrorRequestHandler = (err, req, res) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+      /* istanbul ignore next */
       if (!this.isProd) console.error(err.stack);
+
       req.error = err.stack;
-      res.status(err.status || 500).json(
-        Object.assign(
-          {
-            success: false,
-            errorId: req.id,
-            msg: err.message
-          },
-          err.data ? { data: err.data } : {}
-        )
-      );
+      res.status(err.status || 500).json({
+        success: false,
+        errorId: req.id,
+        msg: err.message,
+        ...(err.data ? { data: err.data } : {})
+      });
     };
 
     this.app.use(errorHandler);
@@ -109,7 +115,7 @@ export default class Server extends WWW {
     this.middlewares.push(cookieParser());
     this.middlewares.push(compression({ threshold: 0 }));
 
-    this.middlewares.push(['/dist', serve(this.distDir, true)]);
+    this.middlewares.push(['/dist', serve(this.distPath, true)]);
     this.middlewares.push(['/public', serve('./public', true)]);
     this.middlewares.push(['/static', serve('./static', true)]);
     this.middlewares.push(['/storage', express.static('./storage')]);
@@ -127,7 +133,10 @@ export default class Server extends WWW {
     const middlewaresPath = path.resolve(process.env.API_PATH, './middlewares');
     if (fs.existsSync(middlewaresPath)) {
       this.middlewares.push((req, res, next) => {
-        requireModule(middlewaresPath)(req, res, next);
+        if (process.env.NODE_ENV === 'test')
+          require(middlewaresPath)(req, res, next);
+        /* istanbul ignore next */ else
+          requireModule(middlewaresPath)(req, res, next);
       });
     }
 
@@ -145,7 +154,7 @@ export default class Server extends WWW {
 
   logging() {
     const logDirectory = path.join(process.env.PROJECT_PATH, '../storage/log');
-    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+    fs.existsSync(logDirectory) || fs.mkdirpSync(logDirectory);
 
     const accessLogStream = rfs.createStream('access.log', {
       interval: '1d',
@@ -162,7 +171,7 @@ export default class Server extends WWW {
     logger.token('id', (req: Request) => req.id);
     logger.token('error', (req: Request) => req.error);
 
-    this.middlewares.push((req, res, next) => {
+    this.middlewares.push((req, _res, next) => {
       req.id = `${new Date().getTime()}-${uuidv4()}`;
       next();
     });
@@ -171,7 +180,7 @@ export default class Server extends WWW {
       logger(
         ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"\\n:error',
         {
-          skip: function(req, res) {
+          skip: function(_req, res) {
             return res.statusCode < 400;
           },
           stream: errorLogStream
@@ -183,7 +192,7 @@ export default class Server extends WWW {
       logger(
         ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"',
         {
-          skip: function(req, res) {
+          skip: function(_req, res) {
             return res.statusCode > 400;
           },
           stream: accessLogStream
@@ -197,7 +206,10 @@ export default class Server extends WWW {
 
     if (fs.existsSync(routesPath)) {
       this.app.use((req, res, next) => {
-        requireModule(routesPath)(req, res, next);
+        if (process.env.NODE_ENV === 'test')
+          require(routesPath)(req, res, next);
+        /* istanbul ignore next */ else
+          requireModule(routesPath)(req, res, next);
       });
     }
 
@@ -207,11 +219,11 @@ export default class Server extends WWW {
       server: this.server
     });
 
-    this.app.get('/favicon.ico', function(req, res) {
+    this.app.get('/favicon.ico', function(_req, res) {
       res.sendStatus(204);
     });
 
-    this.app.get('/service-worker.js', (req, res, next) => {
+    this.app.get('/service-worker.js', (_req, res, next) => {
       try {
         const sw = fs.readFileSync(
           path.resolve(this.distPath, './service-worker.js')
@@ -223,7 +235,7 @@ export default class Server extends WWW {
       }
     });
 
-    this.app.get('/robots.txt', (req, res, next) => {
+    this.app.get('/robots.txt', (_req, res, next) => {
       try {
         const sw = fs.readFileSync(
           path.resolve(process.env.PROJECT_PATH, '../robots.txt')

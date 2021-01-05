@@ -7,5 +7,6 @@ import parseArgs from 'minimist';
     await new Build(args.watch, undefined, args._).run();
   } catch (error) {
     console.log(error);
+    process.exit(1);
   }
 })();

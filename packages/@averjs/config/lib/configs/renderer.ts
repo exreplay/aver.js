@@ -7,9 +7,22 @@ import {
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
 import { ProcessOptions, AcceptedPlugin } from 'postcss';
 import PostCSSPresetEnv from 'postcss-preset-env';
+import { Options as BabelPresetOptions } from '@babel/preset-env';
+
+export type BabelOptions = Partial<
+  BabelPresetOptions & {
+    polyfills: string[];
+    buildTarget: 'client' | 'server';
+    decoratorsBeforeExport: boolean;
+    decoratorsLegacy: boolean;
+    absoluteRuntime: boolean | string;
+  }
+>;
 
 export interface AverWebpackConfig {
-  babel?: any;
+  babel?:
+    | BabelOptions
+    | ((payload: { isServer: boolean }, config: BabelOptions) => void);
   additionalExtensions?: string[];
   transpileDependencies?: (string | RegExp)[];
   postcss?: {
@@ -31,16 +44,20 @@ export interface AverWebpackConfig {
       options?: StyleResourcesLoaderOptions;
     };
   };
-  alias?: {
-    [index: string]: string;
-    '@': string;
-    '@@': string;
-    '@components': string;
-    '@resources': string;
-    '@mixins': string;
-    '@pages': string;
-    '@vuex': string;
-  };
+  alias?:
+    | {
+        [index: string]: string;
+      }
+    | {
+        [index: string]: string;
+        '@': string;
+        '@@': string;
+        '@components': string;
+        '@resources': string;
+        '@mixins': string;
+        '@pages': string;
+        '@vuex': string;
+      };
   base?: false | ((chain: Config) => void);
   client?: false | ((chain: Config) => void);
   server?: false | ((chain: Config) => void);
@@ -50,14 +67,14 @@ export interface AverWebpackConfig {
   };
 }
 
-export default (): AverWebpackConfig => ({
+export default (isProd: boolean): AverWebpackConfig => ({
   babel: {},
   additionalExtensions: ['js'],
   transpileDependencies: [],
   postcss: {},
   runtimeChunk: 'single',
   css: {
-    extract: process.env.NODE_ENV === 'production',
+    extract: isProd,
     styleResources: {
       resources: [],
       options: {
