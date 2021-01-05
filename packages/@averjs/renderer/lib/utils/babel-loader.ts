@@ -43,7 +43,7 @@ export default class BabelLoader {
       .filter((Boolean as unknown) as ExcludesFalse);
   }
 
-  presetConfig() {
+  presetConfig(): BabelOptions {
     let config = {
       buildTarget: this.isServer ? 'server' : 'client'
     } as BabelOptions;

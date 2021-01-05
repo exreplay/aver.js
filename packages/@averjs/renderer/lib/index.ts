@@ -48,6 +48,8 @@ export default class Renderer {
   cb: RendererCallback | null = null;
   templates: Templates[];
 
+  webpackClientConfig: WebpackClientConfiguration;
+  webpackServerConfig: WebpackServerConfiguration;
   clientConfig: Configuration = {};
   serverConfig: Configuration = {};
 
@@ -59,15 +61,17 @@ export default class Renderer {
     this.distPath = aver.config.distPath;
     this.isProd = aver.config.isProd;
     this.templates = aver.config.templates || [];
+    this.webpackClientConfig = new WebpackClientConfiguration(this.aver);
+    this.webpackServerConfig = new WebpackServerConfiguration(this.aver);
   }
 
   async setup() {
     this.prepareTemplates();
 
-    this.clientConfig = await new WebpackClientConfiguration(this.aver).config(
+    this.clientConfig = await this.webpackClientConfig.config(
       this.options.static || false
     );
-    this.serverConfig = await new WebpackServerConfiguration(this.aver).config(
+    this.serverConfig = await this.webpackServerConfig.config(
       this.options.static || false
     );
   }

@@ -51,6 +51,7 @@ Object {
         "resources": Array [],
       },
     },
+    "nodeExternals": Object {},
     "postcss": Object {},
     "process": Object {
       "env": Object {},
