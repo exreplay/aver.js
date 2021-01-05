@@ -1,3 +1,13 @@
+## 2.4.1 (2021-01-05)
+
+#### :bug: Bug Fix
+* `@averjs/mailer`, `@averjs/websocket`
+  * [#306](https://github.com/exreplay/aver.js/pull/306) fix: concat missing global types ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.4.0 (2021-01-05)
 
 #### :rocket: New Features
