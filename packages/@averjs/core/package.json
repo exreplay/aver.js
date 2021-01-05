@@ -1,6 +1,6 @@
 {
   "name": "@averjs/core",
-  "version": "2.3.4",
+  "version": "2.4.0",
   "description": "the averjs core",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -24,9 +24,9 @@
     "build": true
   },
   "dependencies": {
-    "@averjs/builder": "2.3.4",
-    "@averjs/cli": "2.3.4",
-    "@averjs/config": "2.3.4",
+    "@averjs/builder": "2.4.0",
+    "@averjs/cli": "2.4.0",
+    "@averjs/config": "2.4.0",
     "@averjs/vuex-decorators": "^3.3.0",
     "@babel/runtime": "^7.12.5",
     "@babel/runtime-corejs2": "^7.12.5",
@@ -69,15 +69,15 @@
     "xss-filters": "^1.2.7"
   },
   "devDependencies": {
+    "@types/compression": "^1.7.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/csurf": "^1.11.0",
+    "@types/esm": "^3.2.0",
+    "@types/helmet": "^0.0.48",
     "@types/klaw-sync": "^6.0.0",
     "@types/lodash": "^4.14.167",
-    "@types/uuid": "^8.3.0",
-    "@types/morgan": "^1.9.2",
-    "@types/esm": "^3.2.0",
     "@types/module-alias": "^2.0.0",
-    "@types/csurf": "^1.11.0",
-    "@types/helmet": "^0.0.48",
-    "@types/compression": "^1.7.0",
-    "@types/cookie-parser": "^1.4.2"
+    "@types/morgan": "^1.9.2",
+    "@types/uuid": "^8.3.0"
   }
 }

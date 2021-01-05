@@ -1,3 +1,42 @@
+## 2.4.0 (2021-01-05)
+
+#### :rocket: New Features
+* `@averjs/config`, `@averjs/renderer`
+  * [#305](https://github.com/exreplay/aver.js/pull/305) feat: added node externals config parameter ([@exreplay](https://github.com/exreplay))
+  * [#300](https://github.com/exreplay/aver.js/pull/300) feat: added config param for open browser ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/babel-preset-app`, `@averjs/builder`, `@averjs/cli`, `@averjs/config`, `@averjs/core`, `@averjs/init`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/typescript-runtime`, `@averjs/typescript`, `@averjs/vue-app`, `@averjs/websocket`
+  * [#291](https://github.com/exreplay/aver.js/pull/291) refactor: better typescript support and linting ([@exreplay](https://github.com/exreplay))
+* `@averjs/shared-utils`
+  * [#290](https://github.com/exreplay/aver.js/pull/290) refactor: update open browser script ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/shared-utils`
+  * [#274](https://github.com/exreplay/aver.js/pull/274) chore(deps): lock file maintenance ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#275](https://github.com/exreplay/aver.js/pull/275) chore(deps): update dependency css-loader to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/cli`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/typescript-runtime`, `@averjs/typescript`, `@averjs/websocket`
+  * [#285](https://github.com/exreplay/aver.js/pull/285) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* Other
+  * [#304](https://github.com/exreplay/aver.js/pull/304) chore(deps): update dependency @types/pify to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#298](https://github.com/exreplay/aver.js/pull/298) chore(deps): update dependency execa to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#297](https://github.com/exreplay/aver.js/pull/297) chore(deps): update dependency eslint-config-prettier to v7 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#295](https://github.com/exreplay/aver.js/pull/295) chore(deps): update dependency @types/serialize-javascript to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#281](https://github.com/exreplay/aver.js/pull/281) chore(deps): update dependency eslint-config-standard to v16 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/mailer`
+  * [#293](https://github.com/exreplay/aver.js/pull/293) chore(deps): update dependency email-templates to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/typescript`
+  * [#287](https://github.com/exreplay/aver.js/pull/287) chore(deps): update dependency fork-ts-checker-webpack-plugin to v6 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/builder`, `@averjs/cli`, `@averjs/config`, `@averjs/core`, `@averjs/init`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/typescript-runtime`, `@averjs/typescript`, `@averjs/vue-app`, `@averjs/websocket`
+  * [#289](https://github.com/exreplay/aver.js/pull/289) chore: add feature e2e tests and improve overall testing ([@exreplay](https://github.com/exreplay))
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/init`, `@averjs/queue`, `@averjs/vue-app`
+  * [#288](https://github.com/exreplay/aver.js/pull/288) chore: updated linting for the whole project ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.3.4 (2020-10-29)
 
 #### :house: Internal
