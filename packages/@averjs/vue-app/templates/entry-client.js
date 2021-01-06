@@ -30,8 +30,8 @@ import { composeComponentOptions } from './utils';
           try {
             await Promise.all(asyncDataHooks.map(hook => hook({ store, route: { to, from }, isServer: false })));
             next();
-          } catch (err) {
-            next(err);
+          } catch (error) {
+            next(error);
           }
         });
         
@@ -78,8 +78,8 @@ import { composeComponentOptions } from './utils';
                 isServer: false
               });
               next();
-            } catch (err) {
-              next(err);
+            } catch (error) {
+              next(error);
             }
           } else {
             next();

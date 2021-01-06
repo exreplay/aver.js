@@ -89,7 +89,7 @@ export default async context => {
     };
         
     return app;
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    throw error;
   }
 };

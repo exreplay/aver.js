@@ -15,19 +15,6 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings'
   ],
-  settings: {
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts']
-    },
-    'import/resolver': {
-      node: {
-        extensions: ['.js', '.json', '.ts', '.d.ts']
-      },
-      typescript: {
-        project: require('path').resolve(__dirname, './tsconfig.eslint.json')
-      }
-    }
-  },
   rules: {
     'prettier/prettier': [
       'error',
@@ -57,6 +44,22 @@ module.exports = {
         sourceType: 'module',
         tsconfigRootDir: __dirname,
         project: ['./tsconfig.eslint.json']
+      },
+      settings: {
+        'import/parsers': {
+          '@typescript-eslint/parser': ['.ts']
+        },
+        'import/resolver': {
+          node: {
+            extensions: ['.js', '.json', '.ts', '.d.ts']
+          },
+          typescript: {
+            project: require('path').resolve(
+              __dirname,
+              './tsconfig.eslint.json'
+            )
+          }
+        }
       },
       plugins: ['@typescript-eslint'],
       extends: [
@@ -104,7 +107,11 @@ module.exports = {
         parser: 'babel-eslint',
         ecmaVersion: 2015
       },
-      extends: ['plugin:lodash-template/recommended-with-script']
+      processor: 'lodash-template/script',
+      extends: ['@averjs', 'plugin:lodash-template/recommended-with-script'],
+      rules: {
+        'prettier/prettier': 'off'
+      }
     }
   ]
 };
