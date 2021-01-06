@@ -1,3 +1,13 @@
+## 2.4.4 (2021-01-06)
+
+#### :bug: Bug Fix
+* `@averjs/babel-preset-app`
+  * [#312](https://github.com/exreplay/aver.js/pull/312) fix: use corejs getter instead of options ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.4.3 (2021-01-06)
 
 #### :nail_care: Code Refactoring
