@@ -81,7 +81,7 @@ class BabelPresetApp extends Polyfills {
         modules: this.modules,
         targets: this.targets,
         useBuiltIns: this.useBuiltIns,
-        corejs: this.options.corejs,
+        corejs: this.corejs,
         ignoreBrowserslistConfig: this.ignoreBrowserslistConfig,
         configPath: this.options.configPath,
         include: this.options.include,
