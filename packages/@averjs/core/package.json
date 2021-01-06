@@ -32,7 +32,7 @@
     "@babel/runtime-corejs2": "^7.12.5",
     "axios": "^0.21.0",
     "body-parser": "^1.19.0",
-    "chokidar": "^3.4.3",
+    "chokidar": "^3.5.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "core-js": "^2.6.5",
