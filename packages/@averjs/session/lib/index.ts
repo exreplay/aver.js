@@ -3,7 +3,7 @@ import Redis from 'ioredis';
 import ConnectRedis, { RedisStoreOptions, RedisStore } from 'connect-redis';
 import { v4 as uuidv4 } from 'uuid';
 import merge from 'lodash/merge';
-import { PluginFunction } from '@averjs/core/lib/plugins';
+import { PluginFunction } from '@averjs/core';
 import './global';
 
 export interface SessionPluginOptions {

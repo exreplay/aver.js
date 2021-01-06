@@ -2,6 +2,7 @@
 import path from 'path';
 import mergeWith from 'lodash/mergeWith';
 import { defaultAverjsConfig, defaultFileName } from './configs';
+export { AverWebpackConfig } from './configs/renderer';
 
 interface InternalConfig {
   rootDir: string;
@@ -15,9 +16,6 @@ interface InternalConfig {
 type Config = ReturnType<typeof defaultAverjsConfig> &
   InternalConfig & { [index: string]: any };
 
-/**
- * @internal
- */
 export type InternalAverConfig = Config;
 
 export type AverConfig = Partial<Config>;

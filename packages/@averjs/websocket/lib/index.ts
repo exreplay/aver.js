@@ -1,10 +1,7 @@
 import redisAdapter from 'socket.io-redis';
 import redis from 'redis';
 import Server from 'socket.io';
-import {
-  PluginContainerInterface,
-  PluginFunction
-} from '@averjs/core/lib/plugins';
+import { PluginContainerInterface, PluginFunction } from '@averjs/core';
 
 export interface WebsocketPluginOptions {
   socketIoRedis?: redisAdapter.SocketIORedisOptions;

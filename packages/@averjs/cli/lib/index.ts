@@ -11,6 +11,8 @@ import {
 } from './commands/command';
 import './global';
 
+export { CommandInterface };
+
 export default class Usage {
   argv: ParsedArgs;
   aliases: { [arg: string]: string } = {};

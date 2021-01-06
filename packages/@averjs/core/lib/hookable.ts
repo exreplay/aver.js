@@ -2,7 +2,7 @@ import Config from 'webpack-chain';
 import { Express } from 'express';
 import { ExpressMiddlewares } from './server';
 import { Server } from 'http';
-import { BuilderContext } from '@averjs/builder/lib/builders/base';
+import { BuilderContext } from '@averjs/builder';
 import { Watcher } from './core';
 
 interface RegisterMiddlewaresContext {

@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { existsSync } from 'fs';
 import { copy } from 'fs-extra';
-import { CommandInterface } from '@averjs/cli/lib/commands/command';
+import { CommandInterface } from '@averjs/cli';
 import ora from 'ora';
 
 export default class TypescriptInitCommand implements CommandInterface {
