@@ -1,7 +1,7 @@
 import { connect, connection, set, ConnectionOptions } from 'mongoose';
 import path from 'path';
 import fs from 'fs';
-import { PluginFunction } from '@averjs/core/lib/plugins';
+import { PluginFunction } from '@averjs/core';
 import './global';
 
 export interface MongodbPluginOptions {

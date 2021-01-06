@@ -8,7 +8,7 @@ import BabelLoader from '../utils/babel-loader';
 import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
 import Core from '@averjs/core';
-import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
+import { AverWebpackConfig } from '@averjs/config';
 
 export default class WebpackBaseConfiguration {
   aver: Core;

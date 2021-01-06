@@ -1,5 +1,5 @@
 import { Templates } from '@averjs/vue-app';
-import { Plugin } from '@averjs/core/lib/plugins';
+import { Plugin } from '@averjs/core';
 
 export interface AverCoreConfig {
   buildPlugins?: Plugin[];

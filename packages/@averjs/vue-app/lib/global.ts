@@ -2,7 +2,7 @@ import { ComponentOptions } from 'vue';
 import VueI18n, { I18nOptions } from 'vue-i18n';
 import VueRouter, { RouterOptions, Route } from 'vue-router';
 import { Store, StoreOptions } from 'vuex';
-import { BuilderContext } from '@averjs/builder/lib/builders/base';
+import { BuilderContext } from '@averjs/builder';
 
 export type UserReturns = Record<string, unknown>;
 

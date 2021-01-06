@@ -1,7 +1,7 @@
 import path from 'path';
 import ForkTsChecker from 'fork-ts-checker-webpack-plugin';
 import Config from 'webpack-chain';
-import { PluginFunction } from '@averjs/core/lib/plugins';
+import { PluginFunction } from '@averjs/core';
 import { ForkTsCheckerWebpackPluginOptions } from 'fork-ts-checker-webpack-plugin/lib/ForkTsCheckerWebpackPluginOptions';
 import { LoaderOptions } from 'ts-loader/dist/interfaces';
 import IgnoreNotFoundExportPlugin from './IgnoreNotFoundExportPlugin';

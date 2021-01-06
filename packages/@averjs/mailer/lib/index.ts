@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import Email, { EmailConfig } from 'email-templates';
 import path from 'path';
 import merge from 'lodash/merge';
-import { PluginFunction } from '@averjs/core/lib/plugins';
+import { PluginFunction } from '@averjs/core';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 export interface MailerOptions {

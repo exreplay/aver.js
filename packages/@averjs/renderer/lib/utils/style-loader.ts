@@ -5,8 +5,7 @@ import PostCSS from './postcss';
 import PerformanceLoader from './perf-loader';
 import { Rule } from 'webpack-chain';
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
-import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
-import { InternalAverConfig } from '@averjs/config/lib';
+import { AverWebpackConfig, InternalAverConfig } from '@averjs/config';
 
 export default class StyleLoader {
   isProd: boolean;

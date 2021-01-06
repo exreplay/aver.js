@@ -1,8 +1,7 @@
 import path from 'path';
 import { warmup } from 'thread-loader';
 import { Module, Rule } from 'webpack-chain';
-import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
-import { InternalAverConfig } from '@averjs/config/lib';
+import { AverWebpackConfig, InternalAverConfig } from '@averjs/config';
 
 interface Pool {
   poolConfig: {

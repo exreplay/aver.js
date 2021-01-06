@@ -6,8 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { CachedInputFileSystem, ResolverFactory } from 'enhanced-resolve';
 import PostCSSPresetEnv from 'postcss-preset-env';
 import { Rule } from 'webpack-chain';
-import { InternalAverConfig } from '@averjs/config/lib';
-import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
+import { InternalAverConfig, AverWebpackConfig } from '@averjs/config';
 
 export default class PostCSS {
   config: AverWebpackConfig;
