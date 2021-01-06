@@ -1,3 +1,17 @@
+## 2.4.3 (2021-01-06)
+
+#### :nail_care: Code Refactoring
+* `@averjs/babel-preset-app`, `@averjs/config`, `@averjs/renderer`, `@averjs/session`
+  * [#311](https://github.com/exreplay/aver.js/pull/311) refactor: rewrite babel-preset-app to typescript ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/core`, `@averjs/typescript`
+  * [#310](https://github.com/exreplay/aver.js/pull/310) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.4.2 (2021-01-05)
 
 #### :bug: Bug Fix
