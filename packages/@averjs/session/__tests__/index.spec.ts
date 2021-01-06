@@ -6,6 +6,8 @@ import session, {
 import Redis, { RedisOptions } from 'ioredis';
 import { Handler } from 'express';
 
+jest.mock('ioredis');
+
 interface HookPayload {
   app: {
     set: (id: string, value: unknown) => void;
@@ -37,8 +39,6 @@ describe('session plugin', () => {
     process.env.REDIS_HOST = '';
     process.env.REDIS_PORT = '';
     process.env.REDIS_PASSWORD = '';
-
-    jest.clearAllMocks();
 
     jest.clearAllMocks();
   });

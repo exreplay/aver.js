@@ -22,11 +22,11 @@ test('polyfill detection for core-js', async () => {
     presets: [[preset, { buildTarget: 'server' }]]
   });
 
-  await expect(code).toMatch('runtime-corejs2/core-js/map');
+  await expect(code).toMatch('core-js/modules/es6.map.js');
 
   ({ code } = transformFactory('const a = new Map()'.trim()));
 
-  await expect(code).toMatch('runtime-corejs2/core-js/map');
+  await expect(code).toMatch('core-js/modules/es6.map.js');
   await expect(code).toMatch('es6.promise');
   await expect(code).toMatch('es6.array.iterator');
 });
@@ -39,7 +39,7 @@ test('dynamic import', () => {
 
 test('rest spread should use assign polyfill', async () => {
   const { code } = transformFactory('const a = { ...b };');
-  await expect(code).toMatch('@babel/runtime-corejs2/core-js/object/assign');
+  await expect(code).toMatch('core-js/modules/es6.object.assign.js');
 });
 
 test('regenerator runtime should be included on client', async () => {
