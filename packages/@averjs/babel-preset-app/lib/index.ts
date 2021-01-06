@@ -39,52 +39,33 @@ class BabelPresetApp extends Polyfills {
       : this.options.corejs || 2;
   }
 
+  get loose() {
+    return this.options.loose || true;
+  }
+
+  get debug() {
+    return this.options.debug || false;
+  }
+
+  get useBuiltIns() {
+    return this.options.useBuiltIns || 'usage';
+  }
+
+  get modules() {
+    return this.options.modules || false;
+  }
+
+  get ignoreBrowserslistConfig() {
+    return this.options.ignoreBrowserslistConfig || false;
+  }
+
+  get decoratorsLegacy() {
+    return this.options.decoratorsLegacy || true;
+  }
+
   constructor(options: BabelOptions) {
     super();
-
-    const {
-      polyfills: userPolyfills,
-      buildTarget,
-      loose = true,
-      debug = false,
-      useBuiltIns = 'usage',
-      modules = false,
-      spec,
-      ignoreBrowserslistConfig = false,
-      configPath,
-      include,
-      exclude,
-      shippedProposals,
-      forceAllTransforms,
-      decoratorsBeforeExport,
-      decoratorsLegacy = true,
-      absoluteRuntime,
-      corejs = 2,
-      bugfixes,
-      targets
-    } = options;
-
-    this.options = {
-      polyfills: userPolyfills,
-      buildTarget,
-      loose,
-      debug,
-      useBuiltIns,
-      modules,
-      spec,
-      ignoreBrowserslistConfig,
-      configPath,
-      include,
-      exclude,
-      shippedProposals,
-      forceAllTransforms,
-      decoratorsBeforeExport,
-      decoratorsLegacy,
-      absoluteRuntime,
-      corejs,
-      bugfixes,
-      targets
-    };
+    this.options = options;
   }
 
   presets(polyfills: Required<BabelOptions>['polyfills']) {
@@ -95,13 +76,13 @@ class BabelPresetApp extends Polyfills {
       PresetEnv,
       {
         spec: this.options.spec,
-        loose: this.options.loose,
-        debug: this.options.debug,
-        modules: this.options.modules,
-        targets: this.options.targets,
-        useBuiltIns: this.options.useBuiltIns,
+        loose: this.loose,
+        debug: this.debug,
+        modules: this.modules,
+        targets: this.targets,
+        useBuiltIns: this.useBuiltIns,
         corejs: this.options.corejs,
-        ignoreBrowserslistConfig: this.options.ignoreBrowserslistConfig,
+        ignoreBrowserslistConfig: this.ignoreBrowserslistConfig,
         configPath: this.options.configPath,
         include: this.options.include,
         exclude: polyfills.concat(
@@ -126,23 +107,20 @@ class BabelPresetApp extends Polyfills {
       PluginProposalDecorators,
       {
         decoratorsBeforeExport: this.options.decoratorsBeforeExport,
-        legacy: this.options.decoratorsLegacy !== false
+        legacy: this.decoratorsLegacy !== false
       }
     ]);
 
-    plugins.push([
-      PluginProposalClassProperties,
-      { loose: this.options.loose }
-    ]);
-    plugins.push([PluginTransformClasses, { loose: this.options.loose }]);
+    plugins.push([PluginProposalClassProperties, { loose: this.loose }]);
+    plugins.push([PluginTransformClasses, { loose: this.loose }]);
 
     plugins.push([
       PluginTransformRuntime,
       {
-        regenerator: this.options.useBuiltIns !== 'usage',
+        regenerator: this.useBuiltIns !== 'usage',
         // polyfills are injected by preset-env & polyfillsPlugin, so no need to add them again
         corejs: false,
-        helpers: this.options.useBuiltIns === 'usage',
+        helpers: this.useBuiltIns === 'usage',
         useESModules: this.options.buildTarget !== 'server',
         absoluteRuntime: this.options.absoluteRuntime
       }
@@ -154,16 +132,13 @@ class BabelPresetApp extends Polyfills {
   polyfills(plugins: BabelPlugin[]) {
     let polyfills: BabelOptions['polyfills'] = [];
 
-    if (
-      this.options.useBuiltIns === 'usage' &&
-      this.options.buildTarget === 'client'
-    ) {
+    if (this.useBuiltIns === 'usage' && this.options.buildTarget === 'client') {
       polyfills = this.getPolyfills(
         this.corejs,
         this.targets,
         this.options.polyfills || this.getDefaultPolyfills(this.corejs),
         {
-          ignoreBrowserslistConfig: this.options.ignoreBrowserslistConfig,
+          ignoreBrowserslistConfig: this.ignoreBrowserslistConfig,
           configPath: this.options.configPath
         }
       );
