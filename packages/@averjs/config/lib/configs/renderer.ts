@@ -7,18 +7,8 @@ import {
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
 import { ProcessOptions, AcceptedPlugin } from 'postcss';
 import PostCSSPresetEnv from 'postcss-preset-env';
-import { Options as BabelPresetOptions } from '@babel/preset-env';
 import { Options as NodeExternalsOptions } from 'webpack-node-externals';
-
-export type BabelOptions = Partial<
-  BabelPresetOptions & {
-    polyfills: string[];
-    buildTarget: 'client' | 'server';
-    decoratorsBeforeExport: boolean;
-    decoratorsLegacy: boolean;
-    absoluteRuntime: boolean | string;
-  }
->;
+import { BabelOptions } from '@averjs/babel-preset-app';
 
 export interface AverWebpackConfig {
   babel?:
@@ -35,6 +25,7 @@ export interface AverWebpackConfig {
       plugins?: AcceptedPlugin[];
     } & ProcessOptions;
     plugins?: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [index: string]: any;
     };
   };

@@ -35,7 +35,7 @@ module.exports = {
     '^.+\\.js?$': 'babel-jest',
     '^.+\\.ts?$': 'ts-jest'
   },
-  testMatch: ['**/__tests__/**/*.spec.js', '**/__tests__/**/*.spec.ts'],
+  testMatch: ['**/__tests__/**/*.spec.ts'],
 
   transformIgnorePatterns: ['node_modules/(?!(@averjs|averjs))'],
 

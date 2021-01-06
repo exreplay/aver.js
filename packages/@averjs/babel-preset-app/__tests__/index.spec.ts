@@ -4,11 +4,14 @@ import merge from 'lodash/merge';
 
 function transformFactory(
   codeToTransform: string,
-  options?: babel.TransformOptions
+  options?: babel.TransformOptions,
+  noCorejs = false
 ) {
   const defaultOptions = {
     babelrc: false,
-    presets: [[preset, { buildTarget: 'client', corejs: 2 }]],
+    presets: [
+      [preset, { buildTarget: 'client', ...(noCorejs ? {} : { corejs: 2 }) }]
+    ],
     filename: 'test-entry-file.js'
   };
 
@@ -22,11 +25,11 @@ test('polyfill detection for core-js', async () => {
     presets: [[preset, { buildTarget: 'server' }]]
   });
 
-  await expect(code).toMatch('runtime-corejs2/core-js/map');
+  await expect(code).toMatch('var a = new Map();');
 
   ({ code } = transformFactory('const a = new Map()'.trim()));
 
-  await expect(code).toMatch('runtime-corejs2/core-js/map');
+  await expect(code).toMatch('core-js/modules/es6.map.js');
   await expect(code).toMatch('es6.promise');
   await expect(code).toMatch('es6.array.iterator');
 });
@@ -39,7 +42,7 @@ test('dynamic import', () => {
 
 test('rest spread should use assign polyfill', async () => {
   const { code } = transformFactory('const a = { ...b };');
-  await expect(code).toMatch('@babel/runtime-corejs2/core-js/object/assign');
+  await expect(code).toMatch('core-js/modules/es6.object.assign.js');
 });
 
 test('regenerator runtime should be included on client', async () => {
@@ -49,7 +52,10 @@ test('regenerator runtime should be included on client', async () => {
       await Promise.resolve();
     }
     test();
-  `.trim()
+  `.trim(),
+    {
+      presets: [[preset, { buildTarget: 'client', corejs: { version: 2 } }]]
+    }
   );
 
   await expect(code).toMatch('es6.promise');
@@ -57,10 +63,14 @@ test('regenerator runtime should be included on client', async () => {
 });
 
 test('decorators should create a _class var', async () => {
-  const { code } = transformFactory(`
+  const { code } = transformFactory(
+    `
     function test() {}
     @test class decoratedClass {}
-  `);
+  `,
+    {},
+    true
+  );
 
   await expect(code).toMatch('var _class;');
 });

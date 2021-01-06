@@ -1,7 +1,8 @@
-import { getPolyfills, getDefaultPolyfills } from '../lib/getPolyfills';
+import PolyfillsClass from '../lib/polyfills';
+const polyfillsClass = new PolyfillsClass();
 
 test('getDefaultPolyfills should return the correct polyfills by core-js version', () => {
-  let polyfills = getDefaultPolyfills(2);
+  let polyfills = polyfillsClass.getDefaultPolyfills(2);
 
   expect(polyfills).toEqual([
     'es6.array.iterator',
@@ -10,7 +11,7 @@ test('getDefaultPolyfills should return the correct polyfills by core-js version
     'es7.promise.finally'
   ]);
 
-  polyfills = getDefaultPolyfills(3);
+  polyfills = polyfillsClass.getDefaultPolyfills(3);
 
   expect(polyfills).toEqual([
     'es.array.iterator',
@@ -21,12 +22,12 @@ test('getDefaultPolyfills should return the correct polyfills by core-js version
 });
 
 test('getPolyfills should return the correct polyfills by core-js version', () => {
-  let polyfills = getPolyfills(
+  let polyfills = polyfillsClass.getPolyfills(
     2,
     {
       browsers: ['IE >= 9']
     },
-    getDefaultPolyfills(2),
+    polyfillsClass.getDefaultPolyfills(2),
     {
       ignoreBrowserslistConfig: false,
       configPath: ''
@@ -40,12 +41,12 @@ test('getPolyfills should return the correct polyfills by core-js version', () =
     'es7.promise.finally'
   ]);
 
-  polyfills = getPolyfills(
+  polyfills = polyfillsClass.getPolyfills(
     3,
     {
       browsers: ['IE >= 9']
     },
-    getDefaultPolyfills(3),
+    polyfillsClass.getDefaultPolyfills(3),
     {
       ignoreBrowserslistConfig: false,
       configPath: ''

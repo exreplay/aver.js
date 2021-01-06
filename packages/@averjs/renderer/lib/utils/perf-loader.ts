@@ -4,17 +4,19 @@ import { Module, Rule } from 'webpack-chain';
 import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
 import { InternalAverConfig } from '@averjs/config/lib';
 
-interface PoolConfig {
-  [index: string]: {
-    poolConfig: {
-      name: string;
-      poolTimeout: number;
-    };
-    loaders?: string[];
-    useThread: boolean;
+interface Pool {
+  poolConfig: {
+    name: string;
+    poolTimeout: number;
   };
+  loaders?: string[];
+  useThread: boolean;
+}
+interface PoolConfig {
+  [index: string]: Pool;
 }
 
+// TODO: add test for thread loader
 export default class PerformanceLoader {
   isServer: boolean;
   config: AverWebpackConfig;
@@ -46,13 +48,19 @@ export default class PerformanceLoader {
     };
   }
 
+  /* istanbul ignore next */
   warmupLoaders() {
-    if (!this.isProd && !process.env.CIRCLE_CI) {
+    if (!this.isProd && process.env.NODE_ENV !== 'test') {
       for (const key of Object.keys(this.pools)) {
         const pool = this.pools[key];
-        if (pool.loaders) warmup(pool.poolConfig, pool.loaders);
+        if (pool.loaders) this.warmup(pool.poolConfig, pool.loaders);
       }
     }
+  }
+
+  /* istanbul ignore next */
+  warmup(config: Pool['poolConfig'], loaders: Pool['loaders']) {
+    warmup(config, loaders);
   }
 
   apply(rule: Rule<Rule | Module>, name: string) {
@@ -72,7 +80,8 @@ export default class PerformanceLoader {
         })
         .end();
 
-      if (pool.useThread && !process.env.CIRCLE_CI) {
+      /* istanbul ignore if */
+      if (pool.useThread && process.env.NODE_ENV !== 'test') {
         rule
           .use('thread-loader')
           .loader('thread-loader')

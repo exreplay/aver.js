@@ -1,6 +1,10 @@
+import { PluginObj } from '@babel/core';
+import { BabelOptions } from '.';
+
 // add polyfill imports to the first file encountered.
-module.exports = ({ types }) => {
-  let entryFile;
+export default function(): PluginObj {
+  let entryFile: string | undefined;
+
   return {
     name: 'inject-polyfills',
     visitor: {
@@ -11,11 +15,12 @@ module.exports = ({ types }) => {
           return;
         }
 
-        const { polyfills } = state.opts;
+        const { polyfills } = state.opts as BabelOptions;
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const { createImport } = require('@babel/preset-env/lib/utils');
         // imports are injected in reverse order
         polyfills
-          .slice()
+          ?.slice()
           .reverse()
           .forEach(p => {
             createImport(path, p);
@@ -23,4 +28,4 @@ module.exports = ({ types }) => {
       }
     }
   };
-};
+}

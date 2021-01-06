@@ -3,10 +3,8 @@ import { isPureObject } from '@averjs/shared-utils';
 import { InternalAverConfig } from '@averjs/config';
 import PerformanceLoader from './perf-loader';
 import Config from 'webpack-chain';
-import {
-  AverWebpackConfig,
-  BabelOptions
-} from '@averjs/config/lib/configs/renderer';
+import { AverWebpackConfig } from '@averjs/config/lib/configs/renderer';
+import { BabelOptions } from '@averjs/babel-preset-app';
 
 type ExcludesFalse = <T>(x: T | false) => x is T;
 
