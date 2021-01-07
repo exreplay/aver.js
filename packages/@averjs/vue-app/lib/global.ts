@@ -14,6 +14,7 @@ export interface SSRContext {
 export interface AppEntryContext<T extends any> extends SSRContext {
   test: string;
   appOptions: {
+    [index: string]: any;
     i18n: VueI18n;
     router: VueRouter;
     store: Store<T>;
