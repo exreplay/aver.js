@@ -8,6 +8,7 @@ import { VueMetaPlugin } from 'vue-meta';
 import { Request } from 'express';
 
 export interface BuilderContext {
+  [index: string]: any;
   title: string | undefined;
   url: string;
   req: Partial<Request>;
