@@ -1,3 +1,21 @@
+## 2.4.6 (2021-01-07)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#316](https://github.com/exreplay/aver.js/pull/316) fix: fixed app entry regex ([@exreplay](https://github.com/exreplay))
+
+#### :nail_care: Code Refactoring
+* `@averjs/builder`, `@averjs/vue-app`
+  * [#317](https://github.com/exreplay/aver.js/pull/317) refactor: updated typings in vue-app ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/renderer`, `@averjs/shared-utils`, `@averjs/websocket`
+  * [#315](https://github.com/exreplay/aver.js/pull/315) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.4.4 (2021-01-06)
 
 #### :bug: Bug Fix
