@@ -53,7 +53,7 @@ export async function createApp(ssrContext) {
   
   let userReturns = {};
   <% const extensions = config.additionalExtensions.join('|'); %>
-  const entries = <%= `require.context('./', true, /.\\/[^/]\\/app\\.(${extensions})$/i);` %>;
+  const entries = <%= `require.context('./', true, /.\\/[^/]+\\/app\\.(${extensions})$/i);` %>;
   const mixinContext = <%= `require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i);` %>;
   const entryMixins = [entries, mixinContext];
 
