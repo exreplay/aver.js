@@ -11,21 +11,26 @@
     "importHelpers": true,
     "sourceMap": true,
     "declaration": true,
+    "rootDir": ".",
     "baseUrl": ".",
     "strict": true,
     "removeComments": false,
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "allowJs": true
+    "allowJs": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@averjs/*": [ "packages/@averjs/*/lib" ]
+    }
   },
   "include": [
-    "packages/@averjs/**/*.ts"
+    "packages/@averjs/*/lib",
+    "packages/@averjs/*.d.ts",
+    "scripts/*.ts",
+    "__tests__/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "**/__tests__/**/*.ts",
-    "**/__mocks__/**/*.ts",
-    "**/__fixtures__/**/*.ts"
+    "node_modules"
   ]
 }

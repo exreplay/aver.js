@@ -1,4 +1,5 @@
-import { createI18n as createVueI18n } from 'vue-i18n'
+<% /* eslint-disable no-undef */ %>
+import { createI18n as createVueI18n } from 'vue-i18n';
 import * as Cookies from 'js-cookie';
 import merge from 'lodash/merge';
 
@@ -9,12 +10,11 @@ export function createI18n({ app, ssrContext: { isServer, context } }) {
     fallbackLocale: 'de'
   };
 
-  <% if(typeof config.i18n !== 'undefined') print('i18nConfig = Object.assign(i18nConfig, JSON.parse(\''+JSON.stringify(config.i18n)+'\'));') %>
+  <% if (typeof config.i18n !== 'undefined') print('i18nConfig = Object.assign(i18nConfig, JSON.parse(\'' + JSON.stringify(config.i18n) + '\'));') %>
 
-  const mixinContext = <%
-    const extensions = config.additionalExtensions.join('|');
-    print(`require.context('@/', false, /^\\.\\/i18n\\.(${extensions})$/i);`);
-  %>
+  <% const extensions = config.additionalExtensions.join('|'); %>
+  const mixinContext = <%= `require.context('@/', false, /^\\.\\/i18n\\.(${extensions})$/i)` %>;
+  
   for (const r of mixinContext.keys()) {
     const mixin = mixinContext(r).default;
     if (typeof mixin !== 'undefined') {
@@ -36,7 +36,7 @@ export function createI18n({ app, ssrContext: { isServer, context } }) {
     current: () => {
       return i18n.locale;
     }
-  })
+  });
 
   return i18n;
 }

@@ -1,12 +1,14 @@
-import Command, { CommandInterfaceDictionary, CommandInterface } from './command';
+import Command, {
+  CommandInterfaceDictionary,
+  CommandInterface
+} from './command';
 import commandLineUsage, { Section } from 'command-line-usage';
 import VersionCommand from './version';
 
 export default class HelpCommand extends Command implements CommandInterface {
   name = 'help';
-  aliases = [
-    'h'
-  ];
+  aliases = ['h'];
+
   description = 'Shows this help or for a specific command.';
   commands: CommandInterfaceDictionary = {};
 
@@ -17,15 +19,13 @@ export default class HelpCommand extends Command implements CommandInterface {
   }
 
   addArg(command: CommandInterface) {
-    this.args.push(
-      {
-        name: command.name,
-        alias: command.alias || '',
-        type: command.type,
-        description: command.description,
-        command
-      }
-    );
+    this.args.push({
+      name: command.name,
+      alias: command.alias || '',
+      type: command.type,
+      description: command.description,
+      command
+    });
   }
 
   getLogo() {
@@ -50,13 +50,15 @@ export default class HelpCommand extends Command implements CommandInterface {
 
   generateCommandLineUsage(command?: CommandInterface) {
     const cmd: Section[] = [];
-    const head = command ? {
-      header: `aver ${command.name}`,
-      content: command.description
-    } : {
-      content: this.getLogo(),
-      raw: true
-    };
+    const head = command
+      ? {
+          header: `aver ${command.name}`,
+          content: command.description
+        }
+      : {
+          content: this.getLogo(),
+          raw: true
+        };
 
     cmd.push(head);
 

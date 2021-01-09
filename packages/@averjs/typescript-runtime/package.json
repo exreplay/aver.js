@@ -1,12 +1,12 @@
 {
   "name": "@averjs/typescript-runtime",
-  "version": "2.3.4",
+  "version": "2.4.6",
   "description": "typescript runtime with ts-node for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/typescript-runtime.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/typescript-runtime.d.ts",
   "bin": {
     "aver-ts": "./bin/aver-ts.js"
   },
@@ -30,6 +30,6 @@
     "build": true
   },
   "dependencies": {
-    "ts-node": "^9.0.0"
+    "ts-node": "^9.1.1"
   }
 }

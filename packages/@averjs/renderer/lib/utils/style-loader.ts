@@ -3,24 +3,29 @@ import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
 import map from 'lodash/map';
 import PostCSS from './postcss';
 import PerformanceLoader from './perf-loader';
-import { AverConfig } from '@averjs/config';
 import { Rule } from 'webpack-chain';
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
+import { AverWebpackConfig, InternalAverConfig } from '@averjs/config';
 
 export default class StyleLoader {
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   isServer: boolean;
-  config: AverConfig['webpack'];
+  config: AverWebpackConfig;
   perfLoader: PerformanceLoader;
   postcss: PostCSS | null = null;
   name: string | null = null;
 
-  constructor(isServer: boolean, config: AverConfig['webpack'], perfLoader: PerformanceLoader) {
+  constructor(
+    isServer: boolean,
+    config: InternalAverConfig,
+    perfLoader: PerformanceLoader
+  ) {
     this.isServer = isServer;
-    this.config = config;
+    this.config = config.webpack || {};
+    this.isProd = config.isProd;
     this.perfLoader = perfLoader;
 
-    if (this.config.postcss) this.postcss = new PostCSS(this.config);
+    if (this.config.postcss) this.postcss = new PostCSS(config);
   }
 
   get stylesAreInline() {
@@ -38,7 +43,11 @@ export default class StyleLoader {
     return cnt;
   }
 
-  async apply(name: string, rule: Rule, loaders: { name: string, options: any }[] = []) {
+  apply(
+    name: string,
+    rule: Rule,
+    loaders: { name: string; options: any }[] = []
+  ) {
     this.name = name;
 
     const moduleRule = rule.oneOf(`${name}-module`).resourceQuery(/module/);
@@ -48,19 +57,27 @@ export default class StyleLoader {
     this.applyStyle(plainRule);
 
     for (const loader of loaders) {
-      moduleRule.use(loader.name).loader(loader.name).options(loader.options);
-      plainRule.use(loader.name).loader(loader.name).options(loader.options);
+      moduleRule
+        .use(loader.name)
+        .loader(loader.name)
+        .options(loader.options);
+      plainRule
+        .use(loader.name)
+        .loader(loader.name)
+        .options(loader.options);
     }
-    
+
     this.styleResources(moduleRule);
     this.styleResources(plainRule);
   }
 
   applyStyle(rule: Rule<Rule>, module = false) {
+    if (this.config.css?.extract) this.extract(rule);
+
     this.perfLoader.apply(rule, this.name || '');
 
-    this.extract(rule);
-        
+    if (!this.config.css?.extract) this.extract(rule);
+
     if (module) this.cssModules(rule);
     else this.css(rule);
 
@@ -71,58 +88,62 @@ export default class StyleLoader {
     if (this.config.css?.extract && !this.isServer) {
       rule
         .use('extract-css')
-          .loader(ExtractCssPlugin.loader)
-          .options({ reloadAll: true });
+        .loader(ExtractCssPlugin.loader)
+        .options({ reloadAll: true });
     } else if (!this.config.css?.extract) {
       rule
         .use('vue-style-loader')
-          .loader('vue-style-loader')
-          .options({ sourceMap: !this.isProd });
+        .loader('vue-style-loader')
+        .options({ sourceMap: !this.isProd });
     }
   }
 
   styleResources(rule: Rule<Rule>) {
-    if(!this.config.css?.styleResources) return;
+    if (!this.config.css?.styleResources) return;
 
-    const { resources = [], options = { patterns: [] } } = this.config.css.styleResources;
+    const {
+      resources = [],
+      options = { patterns: [] }
+    } = this.config.css.styleResources;
     const finalOptions: StyleResourcesLoaderOptions = { patterns: [] };
     if (this.name === 'css') return;
-    
-    const patterns = map(resources, resource => path.resolve(process.cwd(), resource));
-    finalOptions.patterns = [
-      ...options.patterns as string[],
-      ...patterns
-    ]
+
+    const patterns = map(resources, resource =>
+      path.resolve(process.cwd(), resource)
+    );
+    finalOptions.patterns = [...(options.patterns as string[]), ...patterns];
 
     rule
       .use('style-resources-loader')
-        .loader('style-resources-loader')
-        .options(finalOptions);
+      .loader('style-resources-loader')
+      .options(finalOptions);
   }
 
   css(rule: Rule<Rule>) {
     rule
       .use('css-loader')
-        .loader('css-loader')
-        .options({
-          esModule: false,
-          importLoaders: this.importLoaders,
-          sourceMap: !this.isProd
-        });
+      .loader('css-loader')
+      .options({
+        esModule: false,
+        importLoaders: this.importLoaders,
+        sourceMap: !this.isProd
+      });
   }
 
   cssModules(rule: Rule<Rule>) {
     rule
       .use('css-loader')
-        .loader('css-loader')
-        .options({
-          esModule: false,
-          modules: {
-            localIdentName: `_${this.isProd ? '[hash:base64]' : '[path][name]---[local]'}`,
-            exportOnlyLocals: this.exportOnlyLocals,
-            exportLocalsConvention: 'camelCase'
-          },
-          importLoaders: this.importLoaders
-        });
+      .loader('css-loader')
+      .options({
+        esModule: false,
+        modules: {
+          localIdentName: `_${
+            this.isProd ? '[hash:base64]' : '[path][name]---[local]'
+          }`,
+          exportOnlyLocals: this.exportOnlyLocals,
+          exportLocalsConvention: 'camelCase'
+        },
+        importLoaders: this.importLoaders
+      });
   }
 }

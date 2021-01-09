@@ -1,7 +1,8 @@
 import AverCli from '../lib';
 import TestCommand from '../__fixtures__/TestCommand';
+import { setProcessArgs } from './utils';
 
-const OLD_ARGV = [ ...process.argv ];
+const OLD_ARGV = [...process.argv];
 let outputData = '';
 
 beforeEach(function() {
@@ -9,42 +10,42 @@ beforeEach(function() {
   console.log = jest.fn(inputs => (outputData = inputs));
   console.error = jest.fn(inputs => (outputData = inputs));
 
-  process.argv = [ ...OLD_ARGV ];
+  process.argv = [...OLD_ARGV];
 });
 
-test('help should have the available commands header set', async() => {
-  process.argv.push('help');
+test('help should have the available commands header set', async () => {
+  setProcessArgs('help');
 
   const cli = new AverCli();
   await cli.run();
-  expect(outputData).toMatch('Available Commands');
+  await expect(outputData).toMatch('Available Commands');
 });
 
-test('help for specific command should list the command options', async() => {
-  process.argv.push('test', '-h');
+test('help for specific command should list the command options', async () => {
+  setProcessArgs('test', '-h');
 
   const cli = new AverCli();
   cli.addCommand(new TestCommand());
   await cli.run();
-  expect(outputData).toMatch('Command Options');
-  expect(outputData).toMatch('--test-arg');
+  await expect(outputData).toMatch('Command Options');
+  await expect(outputData).toMatch('--test-arg');
 });
 
-test('help should always show global commands', async() => {
-  process.argv.push('test', '-h');
+test('help should always show global commands', async () => {
+  setProcessArgs('test', '-h');
 
   let cli = new AverCli();
   cli.addCommand(new TestCommand());
   await cli.run();
-  expect(outputData).toMatch('Global Commands');
-  expect(outputData).toMatch('--version');
+  await expect(outputData).toMatch('Global Commands');
+  await expect(outputData).toMatch('--version');
 
-  process.argv = [ ...OLD_ARGV ];
-  process.argv.push('help');
+  process.argv = [...OLD_ARGV];
+  setProcessArgs('help');
 
   cli = new AverCli();
   await cli.run();
 
-  expect(outputData).toMatch('Global Commands');
-  expect(outputData).toMatch('--version');
+  await expect(outputData).toMatch('Global Commands');
+  await expect(outputData).toMatch('--version');
 });

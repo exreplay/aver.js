@@ -3,29 +3,33 @@ import path from 'path';
 import fs from 'fs';
 import klawSync, { Item } from 'klaw-sync';
 import Core from './core';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 
-export type PluginFunction = (this: PluginContainerInterface, ...args: any[]) => void;
-export type Plugin<T = string> = 
-  T |
-  PluginFunction |
-  [T, unknown?]
+export type PluginFunction = (
+  this: PluginContainerInterface,
+  ...args: any[]
+) => void;
+export type Plugin<T = string> = T | PluginFunction | [T, unknown?];
 
 const requireModule = require('esm')(module);
 
 export default class PluginContainer {
   aver: Core;
-  config: AverConfig;
+  config: InternalAverConfig;
   private cacheDir: string;
 
   constructor(aver: Core) {
     this.aver = aver;
     this.config = aver.config;
-    this.cacheDir = aver.config.cacheDir;
+    this.cacheDir = aver.config.cacheDir || '';
   }
 
   async register() {
-    if (this.config.buildPlugins && Array.isArray(this.config.buildPlugins) && !this.config._production) {
+    if (
+      this.config.buildPlugins &&
+      Array.isArray(this.config.buildPlugins) &&
+      !this.config._production
+    ) {
       await this.sequence(this.config.buildPlugins);
     }
 
@@ -51,7 +55,7 @@ export default class PluginContainer {
     } else if (typeof plugin === 'function') {
       handler = plugin;
     } else if (Array.isArray(plugin)) {
-      [ src, options ] = plugin;
+      [src, options] = plugin;
     }
 
     if (!handler && src) {
@@ -59,8 +63,14 @@ export default class PluginContainer {
     }
 
     if (typeof handler !== 'function') {
-      if(src) throw new Error(`Plugin '${src}' should export a function. Got '${ typeof handler }'.`);
-      else throw new Error(`Plugins have to be defined as functions. Please check your aver config file.`);
+      if (src)
+        throw new Error(
+          `Plugin '${src}' should export a function. Got '${typeof handler}'.`
+        );
+      else
+        throw new Error(
+          'Plugins have to be defined as functions. Please check your aver config file.'
+        );
     }
 
     if (!options) {
@@ -80,23 +90,26 @@ export default class PluginContainer {
     }
 
     if (!pluginPath) {
-      throw new Error(`Could not resolve plugin '${src}'. Please make sure either the package is installed or the file exists.`);
+      throw new Error(
+        `Could not resolve plugin '${src}'. Please make sure either the package is installed or the file exists.`
+      );
     }
 
     this.resolveEntryFiles(pluginPath);
 
     const requiredModule = requireModule(pluginPath);
 
-    if(requiredModule.default) return requiredModule.default;
+    if (requiredModule.default) return requiredModule.default;
     else return requiredModule;
   }
 
   private resolveModule(plugin: string) {
     try {
       return require.resolve(plugin);
-    } catch (err) {
-      if (err.code !== 'MODULE_NOT_FOUND') {
-        throw err;
+    } catch (error) {
+      if (error.code !== 'MODULE_NOT_FOUND') {
+        /* istanbul ignore next */
+        throw error;
       }
     }
   }
@@ -107,33 +120,49 @@ export default class PluginContainer {
     dirname = dirname[dirname.length - 1];
     const entriesFolder = path.resolve(pluginPathDir, './entries');
     let entries: Readonly<Item[]> = [];
-    
-    if (fs.existsSync(entriesFolder)) entries = klawSync(entriesFolder, { nodir: true });
+
+    if (fs.existsSync(entriesFolder))
+      entries = klawSync(entriesFolder, { nodir: true });
 
     const entryNames = {
-      app: new RegExp(`app\\.(${this.config.webpack.additionalExtensions?.join('|')})`, 'i'),
-      client: new RegExp(`entry-client\\.(${this.config.webpack.additionalExtensions?.join('|')})`, 'i'),
-      server: new RegExp(`entry-server\\.(${this.config.webpack.additionalExtensions?.join('|')})`, 'i')
+      app: new RegExp(
+        `app\\.(${this.config.webpack?.additionalExtensions?.join('|') || ''})`,
+        'i'
+      ),
+      client: new RegExp(
+        `entry-client\\.(${this.config.webpack?.additionalExtensions?.join(
+          '|'
+        ) || ''})`,
+        'i'
+      ),
+      server: new RegExp(
+        `entry-server\\.(${this.config.webpack?.additionalExtensions?.join(
+          '|'
+        ) || ''})`,
+        'i'
+      )
     };
 
     for (const entry of entries) {
-      const dst = path.relative(dirname, entry.path).replace('entries', dirname);
-      this.config.templates?.push({ src: entry.path, dst, pluginPath: pluginPathDir, dirname });
-      const foundEntry = Object.entries(entryNames).find(([ _, name ]) => entry.path.match(name));
-      if (foundEntry && foundEntry[0]) this.config.entries?.[foundEntry[0]]?.push('./' + dst);
+      const [, entryFile] = entry.path.split('/entries/');
+      const dst = path.join(dirname, entryFile);
+      this.config.templates?.push({
+        src: entry.path,
+        dst,
+        pluginPath: pluginPathDir,
+        dirname
+      });
+      const foundEntry = Object.entries(entryNames).find(([, name]) =>
+        new RegExp(name, 'g').exec(entry.path)
+      );
+      if (foundEntry && foundEntry[0])
+        this.config.entries?.[foundEntry[0]]?.push('./' + dst);
     }
   }
 
   private normalizePluginPath(pluginPath: string) {
     if (fs.lstatSync(pluginPath).isDirectory()) return pluginPath;
     else return path.dirname(pluginPath);
-  }
-
-  private relativeCacheDirPath(filePath: string) {
-    return path.relative(
-      path.resolve(process.cwd(), this.cacheDir),
-      filePath
-    );
   }
 
   private resolvePath(plugin: string) {
@@ -143,4 +172,6 @@ export default class PluginContainer {
   }
 }
 
-export type PluginContainerInterface<T = PluginContainer> = {[K in keyof T]: T[K]}
+export type PluginContainerInterface<T = PluginContainer> = {
+  [K in keyof T]: T[K];
+};

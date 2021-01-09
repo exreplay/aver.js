@@ -10,31 +10,46 @@ import { openBrowser } from '@averjs/shared-utils';
 import { StaticBuilder } from '@averjs/builder';
 import vueApp, { Templates } from '@averjs/vue-app';
 import chokidar from 'chokidar';
-import { AverConfig } from '@averjs/config';
+import { InternalAverConfig } from '@averjs/config';
 import Core from '@averjs/core';
 import { ParsedArgs } from 'minimist';
+import WebpackDevMiddleware from 'webpack-dev-middleware';
+import WebpackHotMiddleware from 'webpack-hot-middleware';
+import { BundleRendererOptions } from 'vue-server-renderer';
 
 export interface RendererOptions extends Partial<ParsedArgs> {
   static?: boolean;
 }
 
-type RendererCallback = (bundle: string, options: any) => void;
+type RendererCallback = (
+  bundle: string,
+  options: BundleRendererOptions
+) => void;
 
 export default class Renderer {
   aver: Core;
-  config: AverConfig;
+  config: InternalAverConfig;
   options: RendererOptions;
-  isProd = process.env.NODE_ENV === 'production';
+  isProd: boolean;
   cacheDir: string;
   distPath: string;
   mfs = new MFS();
   isBrowserOpen = false;
   bundle: string | null = null;
-  clientManifest: any['clientManifest'] | null = null;
-  resolve: ((value?: void | PromiseLike<void> | undefined) => void) | null = null;
-  readyPromise: Promise<void> = new Promise(resolve => { this.resolve = resolve; });
-  cb: RendererCallback | null = null;
+  clientManifest: BundleRendererOptions['clientManifest'] | null = null;
+  resolve:
+    | ((value?: void | PromiseLike<void> | undefined) => void)
+    | null = null;
 
+  readyPromise: Promise<void> = new Promise(resolve => {
+    this.resolve = resolve;
+  });
+
+  cb: RendererCallback | null = null;
+  templates: Templates[];
+
+  webpackClientConfig: WebpackClientConfiguration;
+  webpackServerConfig: WebpackServerConfiguration;
   clientConfig: Configuration = {};
   serverConfig: Configuration = {};
 
@@ -44,67 +59,99 @@ export default class Renderer {
     this.options = options;
     this.cacheDir = aver.config.cacheDir;
     this.distPath = aver.config.distPath;
+    this.isProd = aver.config.isProd;
+    this.templates = aver.config.templates || [];
+    this.webpackClientConfig = new WebpackClientConfiguration(this.aver);
+    this.webpackServerConfig = new WebpackServerConfiguration(this.aver);
   }
 
   async setup() {
     this.prepareTemplates();
 
-    this.clientConfig = await new WebpackClientConfiguration(this.aver).config(this.options.static || false);
-    this.serverConfig = await new WebpackServerConfiguration(this.aver).config(this.options.static || false);
+    this.clientConfig = await this.webpackClientConfig.config(
+      this.options.static || false
+    );
+    this.serverConfig = await this.webpackServerConfig.config(
+      this.options.static || false
+    );
   }
 
   prepareTemplates() {
-    if(!this.config.templates) return;
-
-    const templates = [
-      ...this.config.templates,
-      ...vueApp()
-    ];
+    const templates = [...this.templates, ...vueApp()];
 
     for (const templateFile of templates) this.writeTemplateFile(templateFile);
 
-    if (!this.isProd) {
-      const watcher = chokidar.watch(
-        // generate a new set of unique paths
-        [ ...new Set(this.config.templates?.map(temp => path.resolve(temp.pluginPath || '', './entries'))) ]
-      );
-            
-      watcher.on('ready', () => {
-        watcher.on('all', (event, id) => {
-          if (event !== 'addDir' && event !== 'unlinkDir') {
-            if(!this.config.templates) return;
+    if (!this.isProd) this.initTemplatesWatcher();
+  }
 
-            let template = this.config.templates.find(temp => temp.src === id);
+  initTemplatesWatcher() {
+    const watcher = chokidar.watch(this.templatePathsToWatch());
+    this.aver.watchers.push(async () => {
+      await watcher.close();
+    });
 
-            if (!template) {
-              // Try to find any entry file from same plugin to get the plugin path
-              const foundTemplate = this.config.templates.find(temp => !path.relative(path.resolve(temp.pluginPath || '', './entries'), id).startsWith('..'));
-              if(foundTemplate) {
-                const { dirname = '' } = foundTemplate;
-                const dst = path.relative(dirname, id).replace('entries', dirname);
-      
-                template = { src: id, dst };
-      
-                // Push the newly created entry template into the config templates array so we dont have to construct the path again later
-                this.config.templates?.push(template);
-              }
-            }
-    
-            if (event === 'unlink' && template?.dst) fs.unlinkSync(path.resolve(this.cacheDir, template.dst));
-            else if (event !== 'unlink' && template) this.writeTemplateFile(template);
-          }
-        });
+    watcher.on('ready', () => {
+      watcher.on('all', (event, id) => {
+        if (event !== 'addDir' && event !== 'unlinkDir') {
+          this.updateTemplateFile(this.templates, event, id);
+        }
       });
+    });
+
+    return watcher;
+  }
+
+  templatePathsToWatch() {
+    return [
+      ...new Set(
+        this.templates.map(temp =>
+          path.resolve(temp.pluginPath || '', './entries')
+        )
+      )
+    ];
+  }
+
+  updateTemplateFile(
+    templates: Templates[],
+    event: 'add' | 'change' | 'unlink',
+    id: string
+  ) {
+    let template = templates.find(temp => temp.src === id);
+
+    if (!template) {
+      // Try to find any entry file from same plugin to get the plugin path
+      const foundTemplate = templates.find(
+        temp =>
+          !path
+            .relative(path.resolve(temp.pluginPath || '', './entries'), id)
+            .startsWith('..')
+      );
+      if (foundTemplate) {
+        const { dirname = '' } = foundTemplate;
+        const [, entryFile] = id.split('/entries/');
+        const dst = path.join(dirname, entryFile);
+
+        template = { src: id, dst };
+
+        // Push the newly created entry template into the config templates array so we dont have to construct the path again later
+        templates.push(template);
+      }
     }
+
+    if (event === 'unlink' && template?.dst)
+      fs.unlinkSync(path.resolve(this.cacheDir, template.dst));
+    else if (event !== 'unlink' && template) this.writeTemplateFile(template);
   }
 
   writeTemplateFile(templateFile: Templates) {
     const finalResolvedPath = path.resolve(this.cacheDir, templateFile.dst);
     const fileToCompile = fs.readFileSync(templateFile.src, 'utf8');
-    const compiled = template(fileToCompile, { interpolate: /<%=([\s\S]+?)%>/g });
+    const compiled = template(fileToCompile, {
+      interpolate: /<%=([\S\s]+?)%>/g
+    });
     const compiledApp = compiled({
       config: {
-        additionalExtensions: this.config.webpack.additionalExtensions,
+        additionalExtensions: this.config.webpack?.additionalExtensions,
         progressbar: this.config.progressbar,
         i18n: this.config.i18n,
         csrf: this.config.csrf,
@@ -114,7 +161,7 @@ export default class Renderer {
 
     fs.outputFileSync(finalResolvedPath, compiledApp);
   }
-    
+
   async compile(cb?: RendererCallback): Promise<void> {
     const promises = [];
     const compilers = [];
@@ -124,30 +171,45 @@ export default class Renderer {
 
       const clientCompiler = this.setupClientCompiler();
       const serverCompiler = this.setupServerCompiler();
-      
+
       // Compile Client
-      if(clientCompiler) {
-        clientCompiler.hooks.done.tap('averjs', stats => {
-          const jsonStats = stats.toJson();
-          jsonStats.errors.forEach((err: unknown) => console.error(err));
-          jsonStats.warnings.forEach((err: unknown) => console.warn(err));
-          if (jsonStats.errors.length) return;
-          
-          this.clientManifest = JSON.parse(this.readFile(clientCompiler.outputFileSystem, 'vue-ssr-client-manifest.json'));
-          this.update();
-        });
-      }
+      clientCompiler.hooks.done.tap('averjs', stats => {
+        const jsonStats = stats.toJson();
+        /* istanbul ignore next */
+        jsonStats.errors.forEach(err => console.error(err));
+        /* istanbul ignore next */
+        jsonStats.warnings.forEach(err => console.warn(err));
+        /* istanbul ignore next */
+        if (jsonStats.errors.length) return;
+
+        this.clientManifest = JSON.parse(
+          this.readFile('vue-ssr-client-manifest.json')
+        );
+        this.update();
+      });
 
       // Compile server
-      serverCompiler.watch({}, (err, stats) => {
+      const serverWatcher = serverCompiler.watch({}, (err, stats) => {
+        /* istanbul ignore next */
         if (err) throw err;
-        const jsonStats = stats?.toJson();
-        jsonStats.errors.forEach((err: unknown) => console.error(err));
-        jsonStats.warnings.forEach((err: unknown) => console.warn(err));
+        const jsonStats = stats.toJson();
+        /* istanbul ignore next */
+        jsonStats.errors.forEach(err => console.error(err));
+        /* istanbul ignore next */
+        jsonStats.warnings.forEach(err => console.warn(err));
+        /* istanbul ignore next */
         if (jsonStats.errors.length) return;
-              
-        this.bundle = JSON.parse(this.readFile(this.mfs, 'vue-ssr-server-bundle.json'));
+
+        this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
         this.update();
+      });
+
+      this.aver.watchers.push(async () => {
+        await new Promise(resolve =>
+          serverWatcher.close(() => {
+            resolve(true);
+          })
+        );
       });
 
       return this.readyPromise;
@@ -157,46 +219,42 @@ export default class Renderer {
 
     compilers.push(this.clientConfig);
     compilers.push(this.serverConfig);
-    
-    for (const compiler of compilers) {
-      if(!compiler) continue;
 
-      promises.push(new Promise((resolve, reject) => {
-        const compile = webpack(compiler);
-                
-        compile.run(() => null);
-        compile.hooks.done.tap('load-resource', stats => {
-          const info = stats.toJson();
-    
-          if (stats.hasErrors()) {
-            console.error(info.errors);
-            return reject(info.errors);
-          }
-    
-          resolve(info);
-        });
-      }));
+    for (const compiler of compilers) {
+      if (!compiler) continue;
+
+      promises.push(
+        new Promise((resolve, reject) => {
+          const compile = webpack(compiler);
+
+          compile.run((err, stats) => {
+            /* istanbul ignore next */
+            if (err) return reject(err);
+
+            if (stats.hasErrors()) {
+              const error = new Error('Build error');
+              error.stack = stats.toString('errors-only');
+              return reject(error);
+            }
+
+            resolve(stats.toJson());
+          });
+        })
+      );
     }
 
     await Promise.all(promises);
-    
+
     if (this.options.static) {
       const staticBuilder = new StaticBuilder(this.aver);
-      staticBuilder.build();
+      await staticBuilder.build();
     }
   }
 
   update() {
     if (this.bundle && this.clientManifest) {
-      if (!this.isBrowserOpen) {
-        this.isBrowserOpen = true;
-        
-        let port = process.env.PORT || '3000';
-        port = parseInt(port) !== 80 ? `:${port}` : '';
-        
-        openBrowser(`http://localhost${port}`);
-      }
-      
+      this.openBrowser();
+
       this.resolve?.();
       this.cb?.(this.bundle, {
         clientManifest: this.clientManifest
@@ -204,31 +262,62 @@ export default class Renderer {
     }
   }
 
-  setupClientCompiler() {
-    if(!this.clientConfig) return;
+  openBrowser() {
+    if (!this.isBrowserOpen && this.config.openBrowser) {
+      this.isBrowserOpen = true;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if(this.clientConfig.entry) (this.clientConfig.entry as any).app = [ 'webpack-hot-middleware/client?name=client&reload=true&timeout=30000/__webpack_hmr', (this.clientConfig.entry as any).app as string ];
-    if(this.clientConfig.output) this.clientConfig.output.filename = '[name].js';
+      let port = process.env.PORT || '3000';
+      port = parseInt(port) !== 80 ? `:${port}` : '';
+
+      openBrowser(`http://localhost${port}`);
+    }
+  }
+
+  setupClientCompiler() {
+    const searchparams = new URLSearchParams();
+
+    searchparams.append('reload', 'true');
+    searchparams.append('name', 'client');
+    searchparams.append('timeout', '30000');
+    searchparams.append('path', '/__webpack_hmr/client');
+
+    (this.clientConfig.entry as webpack.Entry).app = [
+      `webpack-hot-middleware/client?${searchparams.toString()}`,
+      (this.clientConfig.entry as webpack.Entry).app as string
+    ];
+
+    if (this.clientConfig.output)
+      this.clientConfig.output.filename = '[name].js';
     this.clientConfig.plugins?.push(
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin()
     );
-    
+
     const clientCompiler = webpack(this.clientConfig);
-    clientCompiler.outputFileSystem = this.mfs as never;
-    const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
+    clientCompiler.outputFileSystem = this.mfs;
+    const devMiddleware = WebpackDevMiddleware(clientCompiler as never, {
       publicPath: this.clientConfig.output?.publicPath,
+      stats: 'none',
+      logLevel: 'error',
       index: false
+    });
+    const hotMiddleware = WebpackHotMiddleware(clientCompiler as never, {
+      log: false,
+      heartbeat: 10_000,
+      path: '/__webpack_hmr/client'
+    });
+
+    this.aver.watchers.push(async () => {
+      await new Promise(resolve => {
+        devMiddleware.close(() => {
+          resolve(true);
+        });
+      });
     });
 
     this.aver.tap('server:before-register-middlewares', ({ middlewares }) => {
       middlewares.push(devMiddleware);
-    
-      middlewares.push(require('webpack-hot-middleware')(clientCompiler, {
-        log: false,
-        heartbeat: 10000
-      }));
+      middlewares.push(hotMiddleware);
     });
 
     return clientCompiler;
@@ -240,12 +329,14 @@ export default class Renderer {
     return serverCompiler;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readFile(fs: any, file: string) {
-    if(!this.clientConfig?.output?.path) return;
-
+  readFile(file: string) {
     try {
-      return fs.readFileSync(path.join(this.clientConfig.output.path, file), 'utf-8');
-    } catch (e) { console.log(e); }
+      return this.mfs.readFileSync(
+        path.join(this.clientConfig.output?.path || '', file),
+        'utf-8'
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

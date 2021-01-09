@@ -7,16 +7,17 @@ import * as bundleRunner from 'bundle-runner';
 export type BundleRendererOptions = Parameters<typeof createBundleRenderer>[1];
 
 export interface BuilderContext {
+  [index: string]: any;
   title: string | undefined;
   url: string;
   req: Partial<Request>;
-  csrfToken?: string;
   meta?: VueMetaPlugin;
+  csrfToken?: string;
   state?: Record<string, unknown>;
 }
 
 export default class BaseBuilder {
-  createRenderer(bundle: string, options: BundleRendererOptions) {  
+  createRenderer(bundle: string, options: BundleRendererOptions) {
     return createBundleRenderer(bundle, {
       ...options,
       runInNewContext: false,

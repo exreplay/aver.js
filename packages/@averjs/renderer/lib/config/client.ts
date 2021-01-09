@@ -11,7 +11,12 @@ import cloneDeep from 'lodash/cloneDeep';
 import FriendlyErrorsPlugin from '@averjs/friendly-errors-webpack-plugin';
 import Core from '@averjs/core';
 import TerserPlugin, { ExtractCommentOptions } from 'terser-webpack-plugin';
-import { GenerateSW, GenerateSWOptions, InjectManifest, InjectManifestOptions } from 'workbox-webpack-plugin';
+import {
+  GenerateSW,
+  GenerateSWOptions,
+  InjectManifest,
+  InjectManifestOptions
+} from 'workbox-webpack-plugin';
 import { SplitChunksOptions } from 'webpack-chain';
 
 export default class WebpackClientConfiguration extends WebpackBaseConfiguration {
@@ -32,79 +37,75 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     if (this.isProd) this.serviceWorker();
 
-    if (fs.existsSync(path.join(this.projectRoot, 'resources/images'))) {
-      this.chainConfig
-        .plugin('copy')
-          .use(CopyWebpackPlugin, [
+    if (fs.existsSync(path.resolve(this.projectRoot, './resources/images'))) {
+      this.chainConfig.plugin('copy').use(CopyWebpackPlugin, [
+        {
+          patterns: [
             {
-              patterns: [
-                {
-                  from: path.join(this.projectRoot, 'resources/images'),
-                  to: path.join(this.projectRoot, '../public/images'),
-                  force: true
-                }
-              ]
+              from: path.resolve(this.projectRoot, './resources/images'),
+              to: path.resolve(this.projectRoot, '../public/images'),
+              force: true
             }
-          ]);
+          ]
+        }
+      ]);
     }
 
     this.chainConfig
       .plugin('html')
-        .use(HTMLPlugin, [ htmlPluginOptions ])
-        .end()
+      .use(HTMLPlugin, [htmlPluginOptions])
+      .end()
       .plugin('define')
-        .use(webpack.DefinePlugin, [ {
-          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      .use(webpack.DefinePlugin, [
+        {
+          'process.env.NODE_ENV': JSON.stringify(
+            process.env.NODE_ENV || 'development'
+          ),
           'process.env.VUE_ENV': JSON.stringify('client'),
           __VUE_OPTIONS_API__: JSON.stringify(true),
           __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
           PRODUCTION: this.isProd,
-          ...this.webpackConfig.process?.env
-        } ])
-        .end()
+          ...this.webpackConfig?.process?.env
+        }
+      ])
+      .end()
       .plugin('vue-ssr-client')
-        .use(VueSSRClientPlugin);
-      
-    this.chainConfig
-      .plugin('friendly-errors')
-        .use(FriendlyErrorsPlugin, [ {
-          showSuccessInfo: false,
-          showCompilingInfo: false,
-          clearConsole: false,
-          logLevel: 'WARNING'
-        } ]);
+      .use(VueSSRClientPlugin);
+
+    this.chainConfig.plugin('friendly-errors').use(FriendlyErrorsPlugin, [
+      {
+        showSuccessInfo: false,
+        showCompilingInfo: false,
+        clearConsole: false,
+        logLevel: 'WARNING'
+      }
+    ]);
   }
 
   serviceWorker() {
-    if(!this.webpackConfig.sw) return;
+    if (!this.webpackConfig?.sw) return;
 
     let plugin: GenerateSW | InjectManifest = GenerateSW;
     const swConfig = this.webpackConfig.sw;
     const mode = swConfig.mode || 'GenerateSW';
     const conf = {
-      exclude: [
-        /\.map$/,
-        /img\/icons\//,
-        /favicon\.ico$/,
-        /manifest\.json$/
-      ],
+      exclude: [/\.map$/, /img\/icons\//, /favicon\.ico$/, /manifest\.json$/],
       ...swConfig
     } as GenerateSWOptions | InjectManifestOptions;
 
     delete swConfig.mode;
 
+    if (mode === 'GenerateSW' && !(conf as GenerateSWOptions).cacheId)
+      (conf as GenerateSWOptions).cacheId = 'averjs';
+
     if (mode === 'GenerateSW' && 'cacheId' in conf) {
-      if(!conf.cacheId) conf.cacheId = 'averjs';
       conf.inlineWorkboxRuntime = true;
-    }
-    else if (mode === 'InjectManifest' && 'swSrc' in conf) {
+    } else if (mode === 'InjectManifest' && 'swSrc' in conf) {
       plugin = InjectManifest;
       conf.swSrc = path.resolve(process.env.PROJECT_PATH, conf.swSrc);
     }
 
-    this.chainConfig
-      .plugin('workbox')
-      .use(plugin, [ conf ]);
+    this.chainConfig.plugin('workbox').use(plugin, [conf]);
   }
 
   optimization() {
@@ -121,8 +122,8 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
         }
       }
     };
-    
-    if (process.env.NODE_ENV === 'production' && this.webpackConfig.css?.extract) {
+
+    if (this.isProd && this.webpackConfig.css?.extract) {
       splitChunks.cacheGroups.styles = {
         idHint: 'styles',
         test: /\.(s?css|vue)$/,
@@ -132,62 +133,67 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       };
     }
 
-    if (this.webpackConfig.runtimeChunk) this.chainConfig.optimization.runtimeChunk(this.webpackConfig.runtimeChunk);
-    
-    this.chainConfig.optimization
-      .splitChunks(splitChunks);
+    if (this.webpackConfig?.runtimeChunk)
+      this.chainConfig.optimization.runtimeChunk(
+        this.webpackConfig.runtimeChunk
+      );
+
+    this.chainConfig.optimization.splitChunks(splitChunks);
+
+    this.chainConfig.optimization.minimizer('terser').use(TerserPlugin, [
+      {
+        sourceMap: true,
+        cache: true,
+        parallel: false,
+        extractComments: {
+          filename: 'LICENSES'
+        } as ExtractCommentOptions,
+        terserOptions: {
+          compress: {
+            // turn off flags with small gains to speed up minification
+            arrows: false,
+            collapse_vars: false, // 0.3kb
+            comparisons: false,
+            computed_props: false,
+            hoist_funs: false,
+            hoist_props: false,
+            hoist_vars: false,
+            inline: false,
+            loops: false,
+            negate_iife: false,
+            properties: false,
+            reduce_funcs: false,
+            reduce_vars: false,
+            switches: false,
+            toplevel: false,
+            typeofs: false,
+
+            // a few flags with noticable gains/speed ratio
+            // numbers based on out of the box vendor bundle
+            booleans: true, // 0.7kb
+            if_return: true, // 0.4kb
+            sequences: true, // 0.7kb
+            unused: true, // 2.3kb
+
+            // required features to drop conditional branches
+            conditionals: true,
+            dead_code: true,
+            evaluate: true
+          },
+          mangle: {
+            safari10: true
+          },
+          output: {
+            comments: /^\**!|@preserve|@license|@cc_on/
+          }
+        }
+      }
+    ]);
 
     this.chainConfig.optimization
-      .minimizer('terser')
-        .use(TerserPlugin, [ {
-          parallel: false,
-          extractComments: {
-            filename: 'LICENSES'
-          } as ExtractCommentOptions,
-          terserOptions: {
-            compress: {
-              // turn off flags with small gains to speed up minification
-              arrows: false,
-              collapse_vars: false, // 0.3kb
-              comparisons: false,
-              computed_props: false,
-              hoist_funs: false,
-              hoist_props: false,
-              hoist_vars: false,
-              inline: false,
-              loops: false,
-              negate_iife: false,
-              properties: false,
-              reduce_funcs: false,
-              reduce_vars: false,
-              switches: false,
-              toplevel: false,
-              typeofs: false,
-            
-              // a few flags with noticable gains/speed ratio
-              // numbers based on out of the box vendor bundle
-              booleans: true, // 0.7kb
-              if_return: true, // 0.4kb
-              sequences: true, // 0.7kb
-              unused: true, // 2.3kb
-            
-              // required features to drop conditional branches
-              conditionals: true,
-              dead_code: true,
-              evaluate: true
-            },
-            mangle: {
-              safari10: true
-            },
-            output: {
-              comments: /^\**!|@preserve|@license|@cc_on/
-            }
-          }
-        } ]);
-        
-    this.chainConfig.optimization
       .minimizer('optimize-css')
-        .use(OptimizeCssAssetsPlugin, [ {
+      .use(OptimizeCssAssetsPlugin, [
+        {
           cssProcessorPluginOptions: {
             preset: [
               'default',
@@ -199,24 +205,22 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
               }
             ]
           }
-        } ]);
+        }
+      ]);
   }
 
-  async config(isStatic: boolean): Promise<Configuration> {
+  async config(isStatic: boolean) {
     await super.config(isStatic);
-        
-    this.chainConfig
-      // .entry('app')
-      //     .add(path.join(this.libRoot, 'vue/entry-client.js'))
-      //     .end()
-      .output
-        .filename(`_averjs/js/${this.isProd ? '[contenthash].' : '[name].'}js`);
-        
-    if (typeof this.webpackConfig.client === 'function') this.webpackConfig.client(this.chainConfig);
-    
+
+    this.chainConfig.output //     .end() //     .add(path.join(this.libRoot, 'vue/entry-client.js')) // .entry('app')
+      .filename(`_averjs/js/${this.isProd ? '[contenthash].' : '[name].'}js`);
+
+    if (typeof this.webpackConfig?.client === 'function')
+      this.webpackConfig.client(this.chainConfig);
+
     await this.aver.callHook('renderer:client-config', this.chainConfig);
 
-    const config = Object.assign(this.chainConfig.toConfig(), {
+    const config: Configuration = Object.assign(this.chainConfig.toConfig(), {
       entry: {
         app: path.join(this.cacheDir, 'entry-client.js')
       },

@@ -1,3 +1,4 @@
+<% /* eslint-disable no-undef */ %>
 import { createApp } from './app';
 import App from '@/App.vue';
 import { composeComponentOptions } from './utils';
@@ -6,19 +7,15 @@ import { composeComponentOptions } from './utils';
 
 export default async context => {
   try {
-    <%
-      const extensions = config.additionalExtensions.join('|');
-      print(`
-    const entries = require.context('./', true, /.\\/[^/]+\\/entry-server\\.(${extensions})$/i);
-    const mixinContext = require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i);
-      `);
-    %>
-    const entryMixins = [ entries, mixinContext ];
+    <% const extensions = config.additionalExtensions.join('|'); %>
+    const entries = <%= `require.context('./', true, /.\\/[^/]+\\/entry-server\\.(${extensions})$/i)` %>;
+    const mixinContext = <%= `require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i)` %>;
+    const entryMixins = [entries, mixinContext];
 
     const renderedFns = [];
     const contextRendered = fn => {
-      if(typeof fn === 'function') renderedFns.push(fn);
-    }
+      if (typeof fn === 'function') renderedFns.push(fn);
+    };
     const { app, router, store, userReturns } = await createApp({ isServer: true, context });
     // const meta = app.$meta();
 
@@ -34,10 +31,10 @@ export default async context => {
       throw error;
     }
 
-    for(const entryMixin of entryMixins) {
-      for(const entry of entryMixin.keys()) {
+    for (const entryMixin of entryMixins) {
+      for (const entry of entryMixin.keys()) {
         const mixin = entryMixin(entry).default;
-        if(typeof mixin === 'function') await mixin({...context, userReturns, contextRendered});
+        if (typeof mixin === 'function') await mixin({ ...context, userReturns, contextRendered });
       }
     }
         
@@ -74,13 +71,13 @@ export default async context => {
       });
     }
 
-    context.rendered = async () => {
-      for(const fn of renderedFns) await fn(context);
+    context.rendered = async() => {
+      for (const fn of renderedFns) await fn(context);
       context.state = store.state;
     };
         
     return app;
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    throw error;
   }
 };

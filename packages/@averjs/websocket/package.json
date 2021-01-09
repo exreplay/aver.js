@@ -1,12 +1,12 @@
 {
   "name": "@averjs/websocket",
-  "version": "2.3.4",
+  "version": "2.4.6",
   "description": "websocket support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
   "license": "MIT",
   "main": "dist/websocket.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/websocket.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -25,12 +25,12 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "socket.io": "^2.3.0",
-    "socket.io-client": "^2.3.1",
+    "socket.io": "^2.4.1",
+    "socket.io-client": "^2.4.0",
     "socket.io-redis": "^5.4.0"
   },
   "devDependencies": {
-    "@types/socket.io": "^2.1.11",
+    "@types/socket.io": "^2.1.12",
     "@types/socket.io-redis": "^1.0.26"
   }
 }

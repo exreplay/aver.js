@@ -12,7 +12,7 @@ export default class FilesChanged {
       for (const file of compiler?.modifiedFiles?.values() || []) {
         if(fs.lstatSync(file).isFile()) changedFiles += ` ${chalk.bold.blue(path.basename(file))},`;
       }
-        
+
       console.log(
         logSymbols.info,
         `Files changed:${changedFiles.slice(0, -1)}`

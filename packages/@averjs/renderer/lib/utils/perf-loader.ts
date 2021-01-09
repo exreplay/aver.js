@@ -1,27 +1,30 @@
 import path from 'path';
 import { warmup } from 'thread-loader';
-import { AverConfig } from '@averjs/config';
 import { Module, Rule } from 'webpack-chain';
+import { AverWebpackConfig, InternalAverConfig } from '@averjs/config';
 
+interface Pool {
+  poolConfig: {
+    name: string;
+    poolTimeout: number;
+  };
+  loaders?: string[];
+  useThread: boolean;
+}
 interface PoolConfig {
-  [index: string]: {
-    poolConfig: {
-      name: string;
-      poolTimeout: number;
-    },
-    loaders?: string[];
-    useThread: boolean;
-  }
+  [index: string]: Pool;
 }
 
+// TODO: add test for thread loader
 export default class PerformanceLoader {
   isServer: boolean;
-  config: AverConfig['webpack'];
+  config: AverWebpackConfig;
   isProd = process.env.NODE_ENV === 'production';
 
-  constructor(isServer: boolean, config: AverConfig['webpack']) {
+  constructor(isServer: boolean, config: InternalAverConfig) {
     this.isServer = isServer;
-    this.config = config;
+    this.config = config.webpack || {};
+    this.isProd = config.isProd;
   }
 
   get pools(): PoolConfig {
@@ -34,40 +37,54 @@ export default class PerformanceLoader {
       },
       js: {
         poolConfig: { name: 'js', poolTimeout },
-        loaders: [ 'babel-loader' ],
+        loaders: ['babel-loader'],
         useThread: true
       },
       css: {
         poolConfig: { name: 'css', poolTimeout },
-        loaders: [ 'css-loader' ],
-        useThread: !this.config.css?.extract
+        loaders: ['css-loader'],
+        useThread: !this.config?.css?.extract
       }
     };
   }
 
+  /* istanbul ignore next */
   warmupLoaders() {
-    if (!this.isProd) {
+    if (!this.isProd && process.env.NODE_ENV !== 'test') {
       for (const key of Object.keys(this.pools)) {
         const pool = this.pools[key];
-        if (pool.loaders) warmup(pool.poolConfig, pool.loaders);
+        if (pool.loaders) this.warmup(pool.poolConfig, pool.loaders);
       }
     }
+  }
+
+  /* istanbul ignore next */
+  warmup(config: Pool['poolConfig'], loaders: Pool['loaders']) {
+    warmup(config, loaders);
   }
 
   apply(rule: Rule<Rule | Module>, name: string) {
     const pool = this.pools[name];
 
     if (pool) {
-      rule.use('cache-loader')
+      rule
+        .use('cache-loader')
         .loader('cache-loader')
         .options({
-          cacheDirectory: path.resolve(process.env.PROJECT_PATH, `../node_modules/.cache/cache-loader/${this.isServer ? 'server' : 'client'}/${name}`),
+          cacheDirectory: path.resolve(
+            process.env.PROJECT_PATH,
+            `../node_modules/.cache/cache-loader/${
+              this.isServer ? 'server' : 'client'
+            }/${name}`
+          ),
           cacheIdentifier: name
         })
         .end();
-      
-      if (pool.useThread) {
-        rule.use('thread-loader')
+
+      /* istanbul ignore if */
+      if (pool.useThread && process.env.NODE_ENV !== 'test') {
+        rule
+          .use('thread-loader')
           .loader('thread-loader')
           .options(pool.poolConfig)
           .end();

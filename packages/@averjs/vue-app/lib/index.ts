@@ -1,12 +1,12 @@
 import klawSync from 'klaw-sync';
 import path from 'path';
-import './definitions';
+export * from './global';
 
 export interface Templates {
   src: string;
   dst: string;
   pluginPath?: string;
-  dirname?: string
+  dirname?: string;
 }
 
 export default () => {
