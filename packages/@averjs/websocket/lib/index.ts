@@ -41,7 +41,7 @@ export function setupRedisAdapter(
   return redisAdapter({ pubClient: pub, subClient: sub, ...socketIoRedis });
 }
 
-const plugin: PluginFunction = function(options?: WebsocketPluginOptions) {
+const plugin: PluginFunction = function (options?: WebsocketPluginOptions) {
   if (process.argv.includes('build')) return;
 
   const { socketIoRedis, serverOptions, middleware } = options || {};

@@ -51,14 +51,14 @@ describe('typescript plugin', () => {
 
     ({ forkTsCheckerOptions, tsLoaderOptions } = await mergeOptions({
       tsLoader: () => {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           resolve({
             colors: true
           });
         });
       },
       forkTsChecker: () => {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           resolve({
             async: true
           });
@@ -107,7 +107,7 @@ describe('typescript plugin', () => {
       const config = chain.toConfig();
       const ruleSet = config.module?.rules[0].use;
       const loaders = Array.isArray(ruleSet)
-        ? ruleSet?.map(loader => (loader as RuleSetLoader).loader)
+        ? ruleSet?.map((loader) => (loader as RuleSetLoader).loader)
         : undefined;
 
       expect(loaders).toEqual([

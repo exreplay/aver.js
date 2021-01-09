@@ -93,7 +93,10 @@ export default class WebpackBaseConfiguration {
       );
     }
 
-    this.chainConfig.resolve.alias.set('vue$', 'vue/dist/vue.runtime.esm-bundler.js')
+    this.chainConfig.resolve.alias.set(
+      'vue$',
+      'vue/dist/vue.runtime.esm-bundler.js'
+    );
   }
 
   rules() {
@@ -117,17 +120,17 @@ export default class WebpackBaseConfiguration {
           embed: 'src'
         }
       });
-        
-    // this.chainConfig.module
-    //   .rule('i18n')
-    //     .resourceQuery(/blockType=i18n/)
-    //     .type('javascript/auto')
-    //     .use('i18n')
-    //       .loader('@intlify/vue-i18n-loader')
-    //       .options({
-    //         preCompile: true
-    //       });
-        
+
+    this.chainConfig.module
+      .rule('i18n')
+      .resourceQuery(/blockType=i18n/)
+      .type('javascript/auto')
+      .use('i18n')
+      .loader('@intlify/vue-i18n-loader')
+      .options({
+        preCompile: true
+      });
+
     this.chainConfig.module
       .rule('eslint')
       .test(/\.(js|vue)$/)
@@ -258,14 +261,11 @@ export default class WebpackBaseConfiguration {
       )
       .module.noParse(/es6-promise\.js$/)
       .end()
-      .resolve
-        .extensions
-          .merge(['.js', '.json', '.vue', '.yaml'])
-          .end()
-        .mainFields
-          .add('main')
-          .add('module')
-          .end()
+      .resolve.extensions.merge(['.js', '.json', '.vue', '.yaml'])
+      .end()
+      .mainFields.add('main')
+      .add('module')
+      .end()
       .modules.add('node_modules')
       .end()
       .end()

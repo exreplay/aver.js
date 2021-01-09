@@ -7,7 +7,7 @@ import WebpackClientConfiguration from './config/client';
 import WebpackServerConfiguration from './config/server';
 import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
-import { StaticBuilder } from '@averjs/builder';
+import { StaticBuilder, BundleRendererOptions } from '@averjs/builder';
 import vueApp, { Templates } from '@averjs/vue-app';
 import chokidar from 'chokidar';
 import { InternalAverConfig } from '@averjs/config';
@@ -15,7 +15,6 @@ import Core from '@averjs/core';
 import { ParsedArgs } from 'minimist';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
-import { BundleRendererOptions } from 'vue-server-renderer';
 
 export interface RendererOptions extends Partial<ParsedArgs> {
   static?: boolean;
@@ -23,7 +22,7 @@ export interface RendererOptions extends Partial<ParsedArgs> {
 
 type RendererCallback = (
   bundle: string,
-  options: BundleRendererOptions
+  options: Partial<BundleRendererOptions>
 ) => void;
 
 export default class Renderer {
@@ -41,7 +40,7 @@ export default class Renderer {
     | ((value?: void | PromiseLike<void> | undefined) => void)
     | null = null;
 
-  readyPromise: Promise<void> = new Promise(resolve => {
+  readyPromise: Promise<void> = new Promise((resolve) => {
     this.resolve = resolve;
   });
 
@@ -104,7 +103,7 @@ export default class Renderer {
   templatePathsToWatch() {
     return [
       ...new Set(
-        this.templates.map(temp =>
+        this.templates.map((temp) =>
           path.resolve(temp.pluginPath || '', './entries')
         )
       )
@@ -116,12 +115,12 @@ export default class Renderer {
     event: 'add' | 'change' | 'unlink',
     id: string
   ) {
-    let template = templates.find(temp => temp.src === id);
+    let template = templates.find((temp) => temp.src === id);
 
     if (!template) {
       // Try to find any entry file from same plugin to get the plugin path
       const foundTemplate = templates.find(
-        temp =>
+        (temp) =>
           !path
             .relative(path.resolve(temp.pluginPath || '', './entries'), id)
             .startsWith('..')
@@ -173,12 +172,12 @@ export default class Renderer {
       const serverCompiler = this.setupServerCompiler();
 
       // Compile Client
-      clientCompiler.hooks.done.tap('averjs', stats => {
+      clientCompiler.hooks.done.tap('averjs', (stats) => {
         const jsonStats = stats.toJson();
         /* istanbul ignore next */
-        jsonStats.errors.forEach(err => console.error(err));
+        jsonStats.errors.forEach((err: unknown) => console.error(err));
         /* istanbul ignore next */
-        jsonStats.warnings.forEach(err => console.warn(err));
+        jsonStats.warnings.forEach((err: unknown) => console.warn(err));
         /* istanbul ignore next */
         if (jsonStats.errors.length) return;
 
@@ -192,11 +191,11 @@ export default class Renderer {
       const serverWatcher = serverCompiler.watch({}, (err, stats) => {
         /* istanbul ignore next */
         if (err) throw err;
-        const jsonStats = stats.toJson();
+        const jsonStats = stats?.toJson();
         /* istanbul ignore next */
-        jsonStats.errors.forEach(err => console.error(err));
+        jsonStats.errors.forEach((err: unknown) => console.error(err));
         /* istanbul ignore next */
-        jsonStats.warnings.forEach(err => console.warn(err));
+        jsonStats.warnings.forEach((err: unknown) => console.warn(err));
         /* istanbul ignore next */
         if (jsonStats.errors.length) return;
 
@@ -205,7 +204,7 @@ export default class Renderer {
       });
 
       this.aver.watchers.push(async () => {
-        await new Promise(resolve =>
+        await new Promise((resolve) =>
           serverWatcher.close(() => {
             resolve(true);
           })
@@ -231,13 +230,13 @@ export default class Renderer {
             /* istanbul ignore next */
             if (err) return reject(err);
 
-            if (stats.hasErrors()) {
+            if (stats?.hasErrors()) {
               const error = new Error('Build error');
               error.stack = stats.toString('errors-only');
               return reject(error);
             }
 
-            resolve(stats.toJson());
+            resolve(stats?.toJson());
           });
         })
       );
@@ -281,9 +280,13 @@ export default class Renderer {
     searchparams.append('timeout', '30000');
     searchparams.append('path', '/__webpack_hmr/client');
 
-    (this.clientConfig.entry as webpack.Entry).app = [
+    (this.clientConfig.entry as {
+      [index: string]: string[];
+    }).app = [
       `webpack-hot-middleware/client?${searchparams.toString()}`,
-      (this.clientConfig.entry as webpack.Entry).app as string
+      (this.clientConfig.entry as {
+        [index: string]: string;
+      }).app
     ];
 
     if (this.clientConfig.output)
@@ -294,9 +297,9 @@ export default class Renderer {
     );
 
     const clientCompiler = webpack(this.clientConfig);
-    clientCompiler.outputFileSystem = this.mfs;
+    clientCompiler.outputFileSystem = this.mfs as never;
     const devMiddleware = WebpackDevMiddleware(clientCompiler as never, {
-      publicPath: this.clientConfig.output?.publicPath,
+      publicPath: this.clientConfig.output?.publicPath as string,
       stats: 'none',
       logLevel: 'error',
       index: false
@@ -308,7 +311,7 @@ export default class Renderer {
     });
 
     this.aver.watchers.push(async () => {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         devMiddleware.close(() => {
           resolve(true);
         });

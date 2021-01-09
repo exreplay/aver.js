@@ -1,10 +1,10 @@
 import helmet from 'helmet';
-import { BundleRendererOptions } from 'vue-server-renderer';
+import { BundleRendererOptions } from '@averjs/builder';
 
 export interface AverServerConfig {
   csrfExclude?: string[];
   csrf?: boolean;
-  createRenderer?: BundleRendererOptions;
+  createRenderer?: Partial<BundleRendererOptions>;
   helmet?: Parameters<typeof helmet>[0];
 }
 

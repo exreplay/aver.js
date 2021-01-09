@@ -1,5 +1,5 @@
 import StaticBuilder from './builders/static';
 import SsrBuilder from './builders/ssr';
-import { BuilderContext } from './builders/base';
+import { BuilderContext, BundleRendererOptions } from './builders/base';
 
-export { StaticBuilder, SsrBuilder, BuilderContext };
+export { StaticBuilder, SsrBuilder, BuilderContext, BundleRendererOptions };

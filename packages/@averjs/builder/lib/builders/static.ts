@@ -71,7 +71,9 @@ export default class StaticBuilder extends BaseBuilder {
 
       if (this.config.csrf) Object.assign(context, { csrfToken: '' });
 
-      const rendererContext = await this.renderer?.renderToString(context);
+      const rendererContext = await this.renderer?.renderToString(
+        context as never
+      );
 
       const {
         title,

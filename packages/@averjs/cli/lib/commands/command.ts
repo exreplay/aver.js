@@ -33,7 +33,7 @@ export default class Command {
    */
   parseArgs(argv: ParsedArgs) {
     return this.args
-      .filter(arg => {
+      .filter((arg) => {
         return argv[arg.name];
       })
       .reduce((prev, cur) => {

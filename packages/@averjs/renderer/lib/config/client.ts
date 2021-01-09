@@ -116,7 +116,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     const splitChunks: SplitChunksOptions = {
       cacheGroups: {
         commons: {
-          test: /[\\/]node_modules[\\/]/,
+          test: /[/\\]node_modules[/\\]/,
           chunks: 'all',
           priority: 10
         }
@@ -142,8 +142,6 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig.optimization.minimizer('terser').use(TerserPlugin, [
       {
-        sourceMap: true,
-        cache: true,
         parallel: false,
         extractComments: {
           filename: 'LICENSES'

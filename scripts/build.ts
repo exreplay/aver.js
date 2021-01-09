@@ -32,12 +32,12 @@ export default class Build {
 
   async determinePackages() {
     const { stdout } = await exec('lerna', ['list', '--json']);
-    const packages = (JSON.parse(stdout) as LernaPackage[]).filter(p =>
+    const packages = (JSON.parse(stdout) as LernaPackage[]).filter((p) =>
       this.onlyBuild.length > 0
         ? this.onlyBuild.includes(p.name.replace('@averjs/', ''))
         : true
     );
-    const averPackages = packages.map(p => p.name);
+    const averPackages = packages.map((p) => p.name);
 
     for (const pkg of packages) {
       const pkgJSON = JSON.parse(
@@ -72,7 +72,7 @@ export default class Build {
         const config = await pkg.config();
 
         const bundle = watch(config);
-        bundle.on('event', event => {
+        bundle.on('event', (event) => {
           switch (event.code) {
             case 'START':
               watchSpinner.start();

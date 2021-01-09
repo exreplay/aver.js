@@ -22,7 +22,7 @@ afterAll(() => {
 
 testFeature(
   'dev',
-  currentDir => {
+  (currentDir) => {
     test('should hot reload routes file', () => {
       const cache = {
         '/api/test': {} as never,
@@ -57,7 +57,7 @@ export default {};
       );
       fs.writeFileSync(homePath, homeContent, 'utf-8');
 
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       expect(outputData).toContain(
         `${logSymbols.info}Files changed: ${chalk.bold.blue('Home.vue')}`

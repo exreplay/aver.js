@@ -57,14 +57,8 @@ export default class StyleLoader {
     this.applyStyle(plainRule);
 
     for (const loader of loaders) {
-      moduleRule
-        .use(loader.name)
-        .loader(loader.name)
-        .options(loader.options);
-      plainRule
-        .use(loader.name)
-        .loader(loader.name)
-        .options(loader.options);
+      moduleRule.use(loader.name).loader(loader.name).options(loader.options);
+      plainRule.use(loader.name).loader(loader.name).options(loader.options);
     }
 
     this.styleResources(moduleRule);
@@ -108,7 +102,7 @@ export default class StyleLoader {
     const finalOptions: StyleResourcesLoaderOptions = { patterns: [] };
     if (this.name === 'css') return;
 
-    const patterns = map(resources, resource =>
+    const patterns = map(resources, (resource) =>
       path.resolve(process.cwd(), resource)
     );
     finalOptions.patterns = [...(options.patterns as string[]), ...patterns];
@@ -120,14 +114,11 @@ export default class StyleLoader {
   }
 
   css(rule: Rule<Rule>) {
-    rule
-      .use('css-loader')
-      .loader('css-loader')
-      .options({
-        esModule: false,
-        importLoaders: this.importLoaders,
-        sourceMap: !this.isProd
-      });
+    rule.use('css-loader').loader('css-loader').options({
+      esModule: false,
+      importLoaders: this.importLoaders,
+      sourceMap: !this.isProd
+    });
   }
 
   cssModules(rule: Rule<Rule>) {

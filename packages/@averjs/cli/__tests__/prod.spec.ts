@@ -6,10 +6,10 @@ const OLD_ARGV = [...process.argv];
 const OLD_ENV = { ...process.env };
 let outputData = '';
 
-beforeEach(function() {
+beforeEach(function () {
   outputData = '';
-  console.log = jest.fn(inputs => (outputData = inputs));
-  console.error = jest.fn(inputs => (outputData = inputs));
+  console.log = jest.fn((inputs) => (outputData = inputs));
+  console.error = jest.fn((inputs) => (outputData = inputs));
 
   process.argv = [...OLD_ARGV];
   process.env = { ...OLD_ENV };

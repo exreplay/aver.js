@@ -1,4 +1,4 @@
-export default defaultConfig => {
+export default (defaultConfig) => {
   return {
     modules: {
       ...defaultConfig.modules,

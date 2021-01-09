@@ -72,7 +72,7 @@ export default class SsrBuilder extends BaseBuilder {
       Object.assign(context, { csrfToken: req.csrfToken() });
 
     try {
-      const html = await this.renderer?.renderToString(context);
+      const html = await this.renderer?.renderToString(context as never);
 
       // const {
       //   title,

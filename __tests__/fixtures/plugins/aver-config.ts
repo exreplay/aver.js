@@ -5,7 +5,7 @@ const config: AverConfig = {
   plugins: [
     'plugins/plugin/index.js',
     'aver-test-plugin',
-    function() {
+    function () {
       if (process.argv.includes('build')) return;
 
       this.aver.tap('builder:before-compile-ssr', ({ BODY }) => {
@@ -13,7 +13,7 @@ const config: AverConfig = {
       });
     },
     plugin,
-    function() {
+    function () {
       this.aver.tap('after-close', () => {
         expect(plugin.mock.calls.length).toBe(2);
         // Build plugins should only be executed once

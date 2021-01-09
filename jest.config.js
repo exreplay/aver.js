@@ -5,8 +5,8 @@ const corePackages = fs
   .readdirSync(path.resolve(__dirname, './packages/@averjs'), {
     withFileTypes: true
   })
-  .filter(p => p.isDirectory())
-  .map(p => p.name);
+  .filter((p) => p.isDirectory())
+  .map((p) => p.name);
 
 module.exports = {
   preset: 'jest-puppeteer',

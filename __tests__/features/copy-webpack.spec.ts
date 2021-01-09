@@ -2,7 +2,7 @@ import { testFeature } from '../utils/feature';
 import fs from 'fs-extra';
 import path from 'path';
 
-testFeature('copy-webpack', currentDir => {
+testFeature('copy-webpack', (currentDir) => {
   const logoPath = path.resolve(currentDir, './public/images/logo.png');
 
   afterAll(() => {

@@ -1,7 +1,8 @@
 import Command, { CommandInterface } from './command';
 import Core from '@averjs/core';
 
-export default class ProductionCommand extends Command
+export default class ProductionCommand
+  extends Command
   implements CommandInterface {
   name = 'prod';
   description = 'Start aver in production mode.';
