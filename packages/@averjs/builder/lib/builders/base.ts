@@ -17,11 +17,11 @@ export interface BuilderContext {
 }
 
 export default class BaseBuilder {
-  createRenderer(bundle: string, options: BundleRendererOptions) {
+  createRenderer(bundle: string, options: Partial<BundleRendererOptions>) {
     return createBundleRenderer(bundle, {
       ...options,
       runInNewContext: false,
       bundleRunner
-    });
+    } as BundleRendererOptions);
   }
 }
