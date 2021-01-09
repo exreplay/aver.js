@@ -1,6 +1,6 @@
 import { ComponentOptions } from 'vue';
-import VueI18n, { I18nOptions } from 'vue-i18n';
-import VueRouter, { RouterOptions, RouteLocationNormalized } from 'vue-router';
+import { I18nOptions } from 'vue-i18n';
+import { RouterOptions, RouteLocationNormalized } from 'vue-router';
 import { Store, StoreOptions } from 'vuex';
 import { BuilderContext } from '@averjs/builder';
 
@@ -15,8 +15,8 @@ export interface AppEntryContext<T extends any> extends SSRContext {
   test: string;
   appOptions: {
     [index: string]: any;
-    i18n: VueI18n;
-    router: VueRouter;
+    i18n: I18nOptions;
+    router: RouterOptions;
     store: Store<T>;
     ssrContext: SSRContext;
     context: Record<string, unknown>;
@@ -34,7 +34,7 @@ export interface ClientEntryContext {
 }
 
 export interface RouterEntryContext<T extends any> {
-  i18n: typeof VueI18n;
+  i18n: I18nOptions;
   store: Store<T>;
   ssrContext: SSRContext;
   config: RouterOptions;
