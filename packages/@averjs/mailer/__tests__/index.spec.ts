@@ -33,9 +33,9 @@ describe('mailer plugin', () => {
   beforeEach(() => {
     process.env.API_PATH = __dirname;
     outputData = '';
-    console.warn = jest.fn(inputs => (warnOutputData = inputs));
-    console.error = jest.fn(inputs => (errorOutputData = inputs));
-    console.log = jest.fn(inputs => (outputData = inputs));
+    console.warn = jest.fn((inputs) => (warnOutputData = inputs));
+    console.error = jest.fn((inputs) => (errorOutputData = inputs));
+    console.log = jest.fn((inputs) => (outputData = inputs));
   });
 
   afterEach(() => {
@@ -52,7 +52,7 @@ describe('mailer plugin', () => {
     process.argv.push('build');
     const result = mailer.call(averThis);
     expect(result).toBeUndefined();
-    process.argv = process.argv.filter(a => a !== 'build');
+    process.argv = process.argv.filter((a) => a !== 'build');
   });
 
   it('should log warning when env variables are not defined', () => {

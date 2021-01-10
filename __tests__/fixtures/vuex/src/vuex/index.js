@@ -4,7 +4,7 @@ const state = () => ({
 
 // getters
 const getters = {
-  getGlobalTest: state => {
+  getGlobalTest: (state) => {
     return state.globalTest;
   }
 };

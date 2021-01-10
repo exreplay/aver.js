@@ -93,7 +93,7 @@ testFeature(
     });
   },
   {},
-  currentDir => {
+  (currentDir) => {
     beforeAll(() => {
       fs.copySync(
         path.resolve(currentDir, './package-to-transpile'),

@@ -4,7 +4,7 @@ import path from 'path';
 
 testFeature(
   'static',
-  currentDir => {
+  (currentDir) => {
     test('should generate static files for every route', () => {
       expect(
         fs.existsSync(path.resolve(currentDir, './dist/index.html'))

@@ -41,7 +41,7 @@ export default class Polyfills {
     const builtInsList = require(this.defaultPolyfills[corejs].builtIns);
     const builtInTargets = getTargets(targets, options);
 
-    return includes.filter(item =>
+    return includes.filter((item) =>
       isRequired('aver-polyfills', builtInTargets, {
         compatData: {
           'aver-polyfills': builtInsList[item]

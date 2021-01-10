@@ -3,7 +3,7 @@ import Aver from '@averjs/core/lib';
 import fs from 'fs';
 import path from 'path';
 
-testFeature('dotenv', currentDir => {
+testFeature('dotenv', (currentDir) => {
   const dotenvPath = path.resolve(currentDir, './.env');
 
   afterAll(() => {

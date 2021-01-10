@@ -77,7 +77,7 @@ export default class RollupConfig {
     if (this.pkg.aver?.copy) {
       plugins.push(
         copy({
-          targets: this.pkg.aver.copy.map(file => ({
+          targets: this.pkg.aver.copy.map((file) => ({
             src: path.join(this.path, file),
             dest: path.join(this.path, 'dist')
           }))
@@ -142,7 +142,7 @@ export default class RollupConfig {
       watch: {
         clearScreen: false
       },
-      onwarn: message => {
+      onwarn: (message) => {
         if (/external dependency/.test(message.message)) return;
         console.error(message);
       }

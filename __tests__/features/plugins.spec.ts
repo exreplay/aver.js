@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import PluginContainer from '@averjs/core/lib/plugins';
 
-testFeature('plugins', currentDir => {
+testFeature('plugins', (currentDir) => {
   beforeAll(() => {
     fs.copySync(
       path.resolve(currentDir, './plugins/aver-test-plugin'),

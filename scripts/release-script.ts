@@ -42,7 +42,7 @@ class ReleaseScript {
       { shell: true }
     );
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       let verdaccioRunning = false;
 
       const interval = setInterval(() => {

@@ -24,7 +24,7 @@ beforeEach(() => {
   setupTestProjectDirectory();
 
   outputData = '';
-  console.log = jest.fn(inputs => (outputData = inputs));
+  console.log = jest.fn((inputs) => (outputData = inputs));
 });
 
 afterEach(() => {

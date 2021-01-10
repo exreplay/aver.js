@@ -73,7 +73,7 @@ export async function mergeOptions(
   };
 }
 
-const plugin: PluginFunction = async function(
+const plugin: PluginFunction = async function (
   options?: TypescriptPluginOptions
 ) {
   const { tsLoaderOptions, forkTsCheckerOptions } = await mergeOptions(options);
@@ -123,21 +123,21 @@ const plugin: PluginFunction = async function(
     this.aver.config.webpack.additionalExtensions.push('tsx');
   }
 
-  this.aver.tap('renderer:client-config', chain => {
+  this.aver.tap('renderer:client-config', (chain) => {
     setLoader(chain, false);
   });
 
-  this.aver.tap('renderer:server-config', chain => {
+  this.aver.tap('renderer:server-config', (chain) => {
     setLoader(chain, true);
   });
 
-  this.aver.tap('renderer:base-config', chain => {
+  this.aver.tap('renderer:base-config', (chain) => {
     chain.plugin('IgnoreNotFoundExportPlugin').use(IgnoreNotFoundExportPlugin);
 
     chain.resolve.extensions.merge(['.ts']);
   });
 
-  this.aver.tap('renderer:client-config', chain => {
+  this.aver.tap('renderer:client-config', (chain) => {
     chain
       .plugin('fork-ts-checker-webpack-plugin')
       .use(ForkTsChecker, [forkTsCheckerOptions]);

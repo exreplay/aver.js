@@ -2,7 +2,6 @@ import { connect, connection, set, ConnectionOptions } from 'mongoose';
 import path from 'path';
 import fs from 'fs';
 import { PluginFunction } from '@averjs/core';
-import './global';
 
 export interface MongodbPluginOptions {
   mongooseOptions: ConnectionOptions;
@@ -31,7 +30,7 @@ export function constructConnectionString() {
   }`;
 }
 
-const plugin: PluginFunction = function(options?: MongodbPluginOptions) {
+const plugin: PluginFunction = function (options?: MongodbPluginOptions) {
   if (process.argv.includes('build')) return;
 
   const { mongooseOptions = {}, requireModels = true } = options || {};
@@ -61,13 +60,13 @@ const plugin: PluginFunction = function(options?: MongodbPluginOptions) {
     }
   }
 
-  connect(connectionString, mergeOptions(mongooseOptions)).catch(error =>
+  connect(connectionString, mergeOptions(mongooseOptions)).catch((error) =>
     console.log(error)
   );
   set('useCreateIndex', true);
 
   connection.on('error', console.error.bind(console, 'connection error:'));
-  connection.once('open', function() {
+  connection.once('open', function () {
     console.log('Connection to MongoDB successfull!');
   });
 };

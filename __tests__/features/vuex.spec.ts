@@ -4,7 +4,7 @@ testFeature('vuex', () => {
   test('should find all vuex folders and register stores', async () => {
     const warnings: string[] = [];
 
-    page.on('console', message => {
+    page.on('console', (message) => {
       warnings.push(message.text().trim());
     });
 

@@ -24,7 +24,7 @@ class Queue {
       console.info('Queue is ready!');
     });
 
-    this.queue.on('error', err => {
+    this.queue.on('error', (err) => {
       console.error('There was an error in the main queue!');
       console.error(err);
       console.error(err.stack);

@@ -2,7 +2,7 @@ import { rebuild, testFeature } from '../utils/feature';
 import fs from 'fs';
 import path from 'path';
 
-testFeature('vue-meta', currentDir => {
+testFeature('vue-meta', (currentDir) => {
   test('should render vue-meta stuff correctly', async () => {
     await page.goto('http://localhost:3000');
     const content = await page.content();

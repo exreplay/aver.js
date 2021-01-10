@@ -4,7 +4,7 @@ import path from 'path';
 
 testFeature(
   'core',
-  currentDir => {
+  (currentDir) => {
     const robotsPath = path.resolve(currentDir, './robots.txt');
 
     afterAll(() => {

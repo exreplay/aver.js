@@ -2,7 +2,7 @@ import { PluginObj } from '@babel/core';
 import { BabelOptions } from '.';
 
 // add polyfill imports to the first file encountered.
-export default function(): PluginObj {
+export default function (): PluginObj {
   let entryFile: string | undefined;
 
   return {
@@ -22,7 +22,7 @@ export default function(): PluginObj {
         polyfills
           ?.slice()
           .reverse()
-          .forEach(p => {
+          .forEach((p) => {
             createImport(path, p);
           });
       }

@@ -12,8 +12,8 @@ describe('mongodb plugin', () => {
     process.env.API_PATH = __dirname;
     errorOutputData = '';
     outputData = '';
-    console.error = jest.fn(inputs => (errorOutputData = inputs));
-    console.log = jest.fn(inputs => (outputData = inputs));
+    console.error = jest.fn((inputs) => (errorOutputData = inputs));
+    console.log = jest.fn((inputs) => (outputData = inputs));
   });
 
   afterEach(() => {
@@ -31,7 +31,7 @@ describe('mongodb plugin', () => {
     process.argv.push('build');
     const result = mongodb.call({} as never);
     expect(result).toBeUndefined();
-    process.argv = process.argv.filter(a => a !== 'build');
+    process.argv = process.argv.filter((a) => a !== 'build');
   });
 
   it('should not run and log error when one of the necessary options is not set', () => {
@@ -156,7 +156,7 @@ describe('mongodb plugin', () => {
 
     expect(
       Object.keys(require.cache).filter(
-        f =>
+        (f) =>
           f.includes('__fixtures__/models/model.ts') ||
           f.includes('__fixtures__/models/model2.ts')
       ).length
@@ -166,7 +166,7 @@ describe('mongodb plugin', () => {
 
     expect(
       Object.keys(require.cache).filter(
-        f =>
+        (f) =>
           f.includes('__fixtures__/models/model.ts') ||
           f.includes('__fixtures__/models/model2.ts')
       ).length

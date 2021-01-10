@@ -11,7 +11,7 @@ testFeature('csrf', () => {
     const cookies = await page.cookies();
     const token = await page.$eval(
       'meta[name="csrf-token"]',
-      element => (element as HTMLMetaElement).content
+      (element) => (element as HTMLMetaElement).content
     );
     expect(content).toContain('<meta name="csrf-token"');
     expect(content).toContain(

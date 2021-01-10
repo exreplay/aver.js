@@ -28,7 +28,7 @@ export default class BabelLoader {
     if (!this.config.transpileDependencies) return [];
 
     return this.config.transpileDependencies
-      .map(dep => {
+      .map((dep) => {
         if (typeof dep === 'string') {
           return new RegExp(dep);
         } else if (dep instanceof RegExp) {
@@ -58,7 +58,7 @@ export default class BabelLoader {
     const jsRule = chain.module
       .rule('js')
       .test(/\.js$/)
-      .exclude.add(filepath => {
+      .exclude.add((filepath) => {
         // always transpile javascript in vue files
         if (/\.vue\.js$/.test(filepath)) return false;
 
@@ -69,7 +69,7 @@ export default class BabelLoader {
         if (filepath.includes(this.cacheDir)) return false;
 
         // check if user wants to transpile it
-        if (this.transpileDeps.some(dep => dep && dep.test(filepath)))
+        if (this.transpileDeps.some((dep) => dep && dep.test(filepath)))
           return false;
 
         // Ignore node_modules
