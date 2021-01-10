@@ -1,3 +1,19 @@
+## 2.4.7 (2021-01-10)
+
+#### :bug: Bug Fix
+* `@averjs/babel-preset-app`, `@averjs/cli`, `@averjs/core`, `@averjs/init`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/typescript`, `@averjs/vue-app`, `@averjs/websocket`
+  * [#319](https://github.com/exreplay/aver.js/pull/319) fix: fixed typings ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/renderer`, `@averjs/session`, `@averjs/typescript`
+  * [#318](https://github.com/exreplay/aver.js/pull/318) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* Other
+  * [#320](https://github.com/exreplay/aver.js/pull/320) chore: use ts-node instead of building scripts ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.4.6 (2021-01-07)
 
 #### :bug: Bug Fix
