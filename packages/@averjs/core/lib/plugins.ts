@@ -130,15 +130,15 @@ export default class PluginContainer {
         'i'
       ),
       client: new RegExp(
-        `entry-client\\.(${this.config.webpack?.additionalExtensions?.join(
-          '|'
-        ) || ''})`,
+        `entry-client\\.(${
+          this.config.webpack?.additionalExtensions?.join('|') || ''
+        })`,
         'i'
       ),
       server: new RegExp(
-        `entry-server\\.(${this.config.webpack?.additionalExtensions?.join(
-          '|'
-        ) || ''})`,
+        `entry-server\\.(${
+          this.config.webpack?.additionalExtensions?.join('|') || ''
+        })`,
         'i'
       )
     };

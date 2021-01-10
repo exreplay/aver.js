@@ -41,7 +41,7 @@ export default class Renderer {
     | ((value?: void | PromiseLike<void> | undefined) => void)
     | null = null;
 
-  readyPromise: Promise<void> = new Promise(resolve => {
+  readyPromise: Promise<void> = new Promise((resolve) => {
     this.resolve = resolve;
   });
 
@@ -104,7 +104,7 @@ export default class Renderer {
   templatePathsToWatch() {
     return [
       ...new Set(
-        this.templates.map(temp =>
+        this.templates.map((temp) =>
           path.resolve(temp.pluginPath || '', './entries')
         )
       )
@@ -116,12 +116,12 @@ export default class Renderer {
     event: 'add' | 'change' | 'unlink',
     id: string
   ) {
-    let template = templates.find(temp => temp.src === id);
+    let template = templates.find((temp) => temp.src === id);
 
     if (!template) {
       // Try to find any entry file from same plugin to get the plugin path
       const foundTemplate = templates.find(
-        temp =>
+        (temp) =>
           !path
             .relative(path.resolve(temp.pluginPath || '', './entries'), id)
             .startsWith('..')
@@ -173,12 +173,12 @@ export default class Renderer {
       const serverCompiler = this.setupServerCompiler();
 
       // Compile Client
-      clientCompiler.hooks.done.tap('averjs', stats => {
+      clientCompiler.hooks.done.tap('averjs', (stats) => {
         const jsonStats = stats.toJson();
         /* istanbul ignore next */
-        jsonStats.errors.forEach(err => console.error(err));
+        jsonStats.errors.forEach((err) => console.error(err));
         /* istanbul ignore next */
-        jsonStats.warnings.forEach(err => console.warn(err));
+        jsonStats.warnings.forEach((err) => console.warn(err));
         /* istanbul ignore next */
         if (jsonStats.errors.length) return;
 
@@ -194,9 +194,9 @@ export default class Renderer {
         if (err) throw err;
         const jsonStats = stats.toJson();
         /* istanbul ignore next */
-        jsonStats.errors.forEach(err => console.error(err));
+        jsonStats.errors.forEach((err) => console.error(err));
         /* istanbul ignore next */
-        jsonStats.warnings.forEach(err => console.warn(err));
+        jsonStats.warnings.forEach((err) => console.warn(err));
         /* istanbul ignore next */
         if (jsonStats.errors.length) return;
 
@@ -205,7 +205,7 @@ export default class Renderer {
       });
 
       this.aver.watchers.push(async () => {
-        await new Promise(resolve =>
+        await new Promise((resolve) =>
           serverWatcher.close(() => {
             resolve(true);
           })
@@ -308,7 +308,7 @@ export default class Renderer {
     });
 
     this.aver.watchers.push(async () => {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         devMiddleware.close(() => {
           resolve(true);
         });

@@ -2,7 +2,7 @@ import { testFeature } from '../utils/feature';
 import fs from 'fs';
 import path from 'path';
 
-testFeature('additional-extensions', currentDir => {
+testFeature('additional-extensions', (currentDir) => {
   test('should add the additional extensions to entries regex', async () => {
     const response = await page.goto('http://localhost:3000');
     const content = await page.content();

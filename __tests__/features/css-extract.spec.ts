@@ -2,7 +2,7 @@ import { rebuild, testFeature } from '../utils/feature';
 import fs from 'fs';
 import path from 'path';
 
-testFeature('css-extract', currentDir => {
+testFeature('css-extract', (currentDir) => {
   test('should have compiled css inlined', async () => {
     await page.goto('http://localhost:3000');
     const content = await page.content();

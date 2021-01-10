@@ -8,7 +8,7 @@ const blacklist = ['sys'];
 
 export default builtinModules
   .filter(
-    x =>
+    (x) =>
       !/^_|^(internal|v8|node-inspect)\/|\//.test(x) && !blacklist.includes(x)
   )
   .sort();

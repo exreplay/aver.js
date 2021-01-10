@@ -34,7 +34,7 @@ describe('mailer plugin', () => {
   beforeEach(() => {
     process.env.API_PATH = __dirname;
     errorOutputData = '';
-    console.error = jest.fn(inputs => (errorOutputData = inputs));
+    console.error = jest.fn((inputs) => (errorOutputData = inputs));
   });
 
   afterEach(() => {
@@ -50,7 +50,7 @@ describe('mailer plugin', () => {
     process.argv.push('build');
     const result = websocket.call(averThis);
     expect(result).toBeUndefined();
-    process.argv = process.argv.filter(a => a !== 'build');
+    process.argv = process.argv.filter((a) => a !== 'build');
   });
 
   it('should log error when one of the env variables is not set', () => {

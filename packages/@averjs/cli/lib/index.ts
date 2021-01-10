@@ -9,7 +9,6 @@ import {
   CommandInterface,
   CommandInterfaceDictionary
 } from './commands/command';
-import './global';
 
 export { CommandInterface };
 
@@ -28,7 +27,7 @@ export default class Usage {
 
   get globalCommand(): Args | undefined {
     return this.availableCommands.help.args?.find(
-      option => this.argv[option.name]
+      (option) => this.argv[option.name]
     );
   }
 

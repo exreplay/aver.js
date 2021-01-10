@@ -65,7 +65,7 @@ export default class HelpCommand extends Command implements CommandInterface {
     if (!command) {
       cmd.push({
         header: 'Available Commands',
-        content: Object.keys(this.commands).map(key => ({
+        content: Object.keys(this.commands).map((key) => ({
           name: this.commands[key].name,
           summary: this.commands[key].description
         }))

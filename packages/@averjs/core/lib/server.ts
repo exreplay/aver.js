@@ -180,7 +180,7 @@ export default class Server extends WWW {
       logger(
         ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"\\n:error',
         {
-          skip: function(_req, res) {
+          skip: function (_req, res) {
             return res.statusCode < 400;
           },
           stream: errorLogStream
@@ -192,7 +192,7 @@ export default class Server extends WWW {
       logger(
         ':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"',
         {
-          skip: function(_req, res) {
+          skip: function (_req, res) {
             return res.statusCode > 400;
           },
           stream: accessLogStream
@@ -219,7 +219,7 @@ export default class Server extends WWW {
       server: this.server
     });
 
-    this.app.get('/favicon.ico', function(_req, res) {
+    this.app.get('/favicon.ico', function (_req, res) {
       res.sendStatus(204);
     });
 
@@ -256,7 +256,7 @@ export default class Server extends WWW {
               ?.then(async () => {
                 await this.render(req, res);
               })
-              .catch(error => console.log(error));
+              .catch((error) => console.log(error));
           }
     );
 

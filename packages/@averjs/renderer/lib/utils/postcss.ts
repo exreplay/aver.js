@@ -42,10 +42,10 @@ export default class PostCSS {
 
     // ensure postcss-preset-env and cssnano comes last
     const sortedPluginsKeys = Object.keys(config.plugins || {})
-      .sort(a => (a === 'postcss-preset-env' ? 1 : -1))
-      .sort(a => (a === 'cssnano' ? 1 : -1));
+      .sort((a) => (a === 'postcss-preset-env' ? 1 : -1))
+      .sort((a) => (a === 'cssnano' ? 1 : -1));
     config.postcssOptions.plugins = [
-      ...sortedPluginsKeys.map(p => require(p)(config.plugins?.[p])),
+      ...sortedPluginsKeys.map((p) => require(p)(config.plugins?.[p])),
       ...config.postcssOptions.plugins
     ];
     delete config.plugins;
@@ -67,9 +67,6 @@ export default class PostCSS {
     const config = merge({}, this.defaultConfig, this.config.postcss);
     this.loadPlugins(config);
 
-    rule
-      .use('postcss')
-      .loader('postcss-loader')
-      .options(config);
+    rule.use('postcss').loader('postcss-loader').options(config);
   }
 }

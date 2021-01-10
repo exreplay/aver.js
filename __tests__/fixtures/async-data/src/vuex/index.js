@@ -6,7 +6,7 @@ const state = () => ({
 
 // getters
 const getters = {
-  getData: state => {
+  getData: (state) => {
     return state.data;
   }
 };

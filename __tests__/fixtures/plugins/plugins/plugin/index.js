@@ -1,4 +1,4 @@
-export default function() {
+export default function () {
   if (process.argv.includes('build')) return;
 
   this.aver.tap('builder:before-compile-ssr', ({ BODY }) => {

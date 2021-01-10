@@ -18,22 +18,22 @@ export default class WWW {
   }
 
   async startServer() {
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve) => {
       this.server.listen(this.port, resolve);
     });
 
     this.server.on('error', this.onError.bind(this));
-    this.server.on('connection', socket => {
+    this.server.on('connection', (socket) => {
       this.sockets.push(socket);
 
       socket.on('close', () => {
-        this.sockets = this.sockets.filter(s => s !== socket);
+        this.sockets = this.sockets.filter((s) => s !== socket);
       });
     });
 
     this.aver.watchers.push(async () => {
       await new Promise((resolve, reject) => {
-        this.server.close(err => {
+        this.server.close((err) => {
           if (err) reject(err);
 
           for (const socket of this.sockets) socket.destroy();

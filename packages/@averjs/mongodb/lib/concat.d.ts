@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-namespace */
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-namespace NodeJS {
+declare namespace NodeJS {
   export interface ProcessEnv {
     MONGODB_HOST: string;
     MONGODB_USERNAME: string;

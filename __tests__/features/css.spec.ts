@@ -5,12 +5,15 @@ testFeature('css', () => {
     await page.goto('http://localhost:3000/');
     const content = await page.content();
     const scope =
-      (await page.$$eval('#home', el =>
-        el.map(e => e.getAttributeNames())?.[0].find(a => a.includes('data'))
+      (await page.$$eval('#home', (el) =>
+        el
+          .map((e) => e.getAttributeNames())?.[0]
+          .find((a) => a.includes('data'))
       )) || '';
     const cssModule =
-      (await page.$$eval('#module', el => el.map(m => m.textContent)))?.[0] ||
-      '';
+      (
+        await page.$$eval('#module', (el) => el.map((m) => m.textContent))
+      )?.[0] || '';
     expect(content).toContain('<style type="text/css">h1{color:red}</style>');
     expect(content).toContain(`.${cssModule}{color:green}`);
     expect(content).toContain(

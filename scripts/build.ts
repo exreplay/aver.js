@@ -32,12 +32,12 @@ export default class Build {
 
   async determinePackages() {
     const { stdout } = await exec('lerna', ['list', '--json']);
-    const packages = (JSON.parse(stdout) as LernaPackage[]).filter(p =>
+    const packages = (JSON.parse(stdout) as LernaPackage[]).filter((p) =>
       this.onlyBuild.length > 0
         ? this.onlyBuild.includes(p.name.replace('@averjs/', ''))
         : true
     );
-    const averPackages = packages.map(p => p.name);
+    const averPackages = packages.map((p) => p.name);
 
     for (const pkg of packages) {
       const pkgJSON = JSON.parse(
@@ -72,7 +72,7 @@ export default class Build {
         const config = await pkg.config();
 
         const bundle = watch(config);
-        bundle.on('event', event => {
+        bundle.on('event', (event) => {
           switch (event.code) {
             case 'START':
               watchSpinner.start();
@@ -125,7 +125,7 @@ export default class Build {
               recursive: true
             });
 
-            this.appendGlobalTypes(pkg.path, pkg.pkg.types);
+            this.concatDeclaredTypes(pkg.path, pkg.pkg.types);
           }
 
           buildSpinner.succeed(`Built package ${pkg.pkg.name} successfully`);
@@ -137,15 +137,16 @@ export default class Build {
     }
   }
 
-  appendGlobalTypes(pkgPath: string, dtsFile = '') {
-    const globalPath = path.resolve(pkgPath, './lib/global.ts');
+  concatDeclaredTypes(pkgPath: string, dtsFile = '') {
+    const concatPath = path.resolve(pkgPath, './lib/concat.d.ts');
     const dtsPath = path.resolve(pkgPath, dtsFile);
 
-    if (fs.existsSync(globalPath)) {
-      const globalTypes = fs.readFileSync(globalPath, 'utf-8');
-      const content = /\/\* concat start \*\/(?<content>(.|\n)*?)\/\* concat end \*\//.exec(
-        globalTypes
-      )?.groups?.content;
+    if (fs.existsSync(concatPath)) {
+      const globalTypes = fs.readFileSync(concatPath, 'utf-8');
+      const content =
+        /\/\* concat start \*\/(?<content>(.|\n)*?)\/\* concat end \*\//.exec(
+          globalTypes
+        )?.groups?.content || globalTypes;
       const dtsContent = fs.readFileSync(dtsPath, 'utf-8');
       fs.writeFileSync(dtsPath, `${dtsContent}${content || ''}`, 'utf-8');
     }

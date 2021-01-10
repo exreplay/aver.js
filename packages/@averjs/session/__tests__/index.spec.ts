@@ -89,7 +89,7 @@ describe('session plugin', () => {
     process.argv.push('build');
     const result = session.call(averThis);
     expect(result).toBeUndefined();
-    process.argv = process.argv.filter(a => a !== 'build');
+    process.argv = process.argv.filter((a) => a !== 'build');
   });
 
   it('should add session as middleware and updated aver config', async () => {

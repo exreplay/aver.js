@@ -4,7 +4,6 @@ import ConnectRedis, { RedisStoreOptions, RedisStore } from 'connect-redis';
 import { v4 as uuidv4 } from 'uuid';
 import merge from 'lodash/merge';
 import { PluginFunction } from '@averjs/core';
-import './global';
 
 export interface SessionPluginOptions {
   redisStoreConfig?: RedisStoreOptions;
@@ -20,8 +19,9 @@ export function mergeRedisStoreConfig(
   const date = new Date();
   const defaultConfig: RedisStoreOptions = {
     client: client as never,
-    prefix: `sess-${date.getDate()}-${date.getMonth() +
-      1}-${date.getFullYear()}:`,
+    prefix: `sess-${date.getDate()}-${
+      date.getMonth() + 1
+    }-${date.getFullYear()}:`,
     ttl
   };
   return merge(defaultConfig, redisStoreConfig);
@@ -68,7 +68,7 @@ export function createRedisStore(ttl: number, config?: RedisStoreOptions) {
   }
 }
 
-const plugin: PluginFunction = function(options?: SessionPluginOptions) {
+const plugin: PluginFunction = function (options?: SessionPluginOptions) {
   if (process.argv.includes('build')) return;
 
   const { redisStoreConfig, expressSessionConfig, ttl = 60 * 60 } =

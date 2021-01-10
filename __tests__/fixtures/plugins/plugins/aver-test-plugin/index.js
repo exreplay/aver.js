@@ -1,4 +1,4 @@
-export default function() {
+export default function () {
   if (process.argv.includes('build')) return;
 
   // the following should not fail

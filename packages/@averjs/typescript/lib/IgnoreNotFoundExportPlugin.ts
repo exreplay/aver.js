@@ -36,14 +36,14 @@ export default class IgnoreNotFoundExportPlugin implements webpack.Plugin {
   }
 
   isResourcePathAllowed(resourcePath: string) {
-    return this.include.some(regExp => regExp.test(resourcePath));
+    return this.include.some((regExp) => regExp.test(resourcePath));
   }
 
   apply(compiler: webpack.Compiler) {
-    compiler.hooks.done.tap('IgnoreNotFoundExportPlugin', stats => {
+    compiler.hooks.done.tap('IgnoreNotFoundExportPlugin', (stats) => {
       // mutates `compilation.warnings` to remove ignored warnings
       stats.compilation.warnings = stats.compilation.warnings.filter(
-        warning =>
+        (warning) =>
           !(
             this.isModuleDependencyWarning(warning) &&
             EXPORT_NOT_FOUND_REG_EXP.test(warning.message) &&

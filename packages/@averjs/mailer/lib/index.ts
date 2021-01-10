@@ -13,7 +13,7 @@ export interface MailerOptions {
 function establishConnection(nodemailerConfig: SMTPTransport.Options) {
   const transporter = nodemailer.createTransport(nodemailerConfig);
 
-  transporter.verify(err => {
+  transporter.verify((err) => {
     if (err) console.error(err);
     else console.log('Successfully established connection with nodemailer!');
   });
@@ -60,7 +60,7 @@ export function mergeOptions(options?: MailerOptions) {
   };
 }
 
-const plugin: PluginFunction = function(options: MailerOptions) {
+const plugin: PluginFunction = function (options: MailerOptions) {
   if (process.argv.includes('build')) return;
 
   if (

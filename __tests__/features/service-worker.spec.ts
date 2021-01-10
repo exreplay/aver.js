@@ -2,7 +2,7 @@ import { aver, testFeature } from '../utils/feature';
 import fs from 'fs';
 import path from 'path';
 
-testFeature('service-worker', currentDir => {
+testFeature('service-worker', (currentDir) => {
   const serviceWorkerPath = path.resolve(
     currentDir,
     './dist/service-worker.js'

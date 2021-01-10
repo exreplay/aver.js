@@ -4,7 +4,7 @@ import path from 'path';
 
 testFeature(
   'plugins-entries-hmr',
-  currentDir => {
+  (currentDir) => {
     const newContent =
       "import Vue from 'vue';\nVue.prototype.$test = 'hmr works';\n";
     const entryPath = path.resolve(currentDir, './plugin/entries');
