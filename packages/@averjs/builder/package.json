@@ -27,7 +27,7 @@
   "dependencies": {
     "@averjs/config": "2.4.6",
     "@vue/server-renderer": "^3.0.5",
-    "vue-bundle-renderer": "^0.2.2",
+    "vue-bundle-renderer": "0.2.2",
     "html-minifier": "^4.0.0",
     "lru-cache": "^6.0.0"
   },

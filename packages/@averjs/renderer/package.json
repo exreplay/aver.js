@@ -24,7 +24,7 @@
   "aver": {
     "build": true,
     "copy": [
-      "lib/registerComponent.js"
+      "./registerComponent.js"
     ]
   },
   "dependencies": {
@@ -57,7 +57,7 @@
     "nodemon": "^2.0.7",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "ora": "^5.2.0",
-    "postcss": "^8.2.3",
+    "postcss": "^8.2.4",
     "postcss-import": "^14.0.0",
     "postcss-loader": "^4.1.0",
     "postcss-preset-env": "^6.7.0",
@@ -68,18 +68,18 @@
     "sass-loader": "^10.1.0",
     "socket.io-client": "^2.4.0",
     "style-resources-loader": "^1.4.1",
-    "terser-webpack-plugin": "^5.1.0",
+    "terser-webpack-plugin": "^5.1.1",
     "thread-loader": "^3.0.1",
     "url-loader": "^4.1.1",
     "vue-loader": "^16.0.0-rc.2",
     "vue-style-loader": "^4.1.2",
-    "webpack": "^5.12.1",
+    "webpack": "^5.12.2",
     "webpack-chain": "^6.5.1",
     "webpack-dev-middleware": "^4.0.2",
     "webpack-hot-middleware": "^2.25.0",
     "webpack-node-externals": "^2.5.2",
     "webpackbar": "5.0.0-3",
-    "workbox-webpack-plugin": "6.0.0-alpha.3",
+    "workbox-webpack-plugin": "6.0.2",
     "yaml-loader": "^0.6.0"
   },
   "devDependencies": {

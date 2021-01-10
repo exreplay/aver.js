@@ -94,7 +94,7 @@ export default class WebpackBaseConfiguration {
     }
 
     this.chainConfig.resolve.alias.set(
-      'vue$',
+      'vue',
       'vue/dist/vue.runtime.esm-bundler.js'
     );
   }
@@ -242,14 +242,16 @@ export default class WebpackBaseConfiguration {
       .path(this.distPath)
       .publicPath(isStatic ? '/' : '/dist/')
       .end()
-      .node.set('setImmediate', false)
-      .set('dgram', 'empty')
-      .set('fs', 'empty')
-      .set('net', 'empty')
-      .set('tls', 'empty')
-      .set('child_process', 'empty')
-      .end()
-      .devtool(this.isProd ? false : 'cheap-module-eval-source-map')
+      // .node.set('setImmediate', false)
+      // .set('dgram', 'empty')
+      // .set('fs', 'empty')
+      // .set('net', 'empty')
+      // .set('tls', 'empty')
+      // .set('child_process', 'empty')
+      // .end()
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .devtool(this.isProd ? false : 'eval-cheap-module-source-map')
       .mode(
         process.env.NODE_ENV === 'development'
           ? 'development'

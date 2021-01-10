@@ -67,9 +67,7 @@ export async function createApp(ssrContext) {
     }
   }
 
-  app.use(store).use(router);
-  
-  if (!ssrContext.isServer) app.use(i18n);
+  app.use(store).use(router).use(i18n);
 
   return { app, router, store, userReturns };
 }

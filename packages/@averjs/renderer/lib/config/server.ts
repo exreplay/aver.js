@@ -2,7 +2,7 @@ import webpack, { Configuration } from 'webpack';
 import WebpackBaseConfiguration from './base';
 import path from 'path';
 import nodeExternals, { Options } from 'webpack-node-externals';
-import VueSSRServerPlugin from '../utils/vue/server-plugin';
+import VueSSRServerPlugin from '../plugins/vue/server-plugin';
 import cloneDeep from 'lodash/cloneDeep';
 import Core from '@averjs/core';
 
@@ -27,6 +27,16 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
 
   constructor(aver: Core) {
     super(true, aver);
+  }
+
+  rules() {
+    super.rules();
+
+    this.chainConfig.module
+      .rule('js-server')
+      .test(/\.js$/)
+      .resourceQuery(/^\?vue/)
+      .use(require.resolve('./registerComponent'));
   }
 
   plugins() {

@@ -48,8 +48,8 @@ export default class VueSSRClientPlugin {
             Object.keys(stats.entrypoints)
               .map((name) => stats.entrypoints[name].assets)
               .reduce((assets, all) => all.concat(assets), [])
-              .map((file: { name: string }) => file.name)
               .filter((file: string) => isJS(file) || isCSS(file))
+              .map((file: { name: string }) => file.name)
           );
 
           const asyncFiles = allFiles
@@ -74,12 +74,12 @@ export default class VueSSRClientPlugin {
             // ignore modules duplicated in multiple chunks
             if (m.chunks.length === 1) {
               const cid = m.chunks[0];
-              const chunk = stats.chunks.find(function (c: { id: string }) {
-                return c.id === cid;
-              });
-              if (!chunk || !chunk.files) {
-                return;
-              }
+              const chunk = stats.chunks.find(
+                (c: { id: string }) => c.id === cid
+              );
+
+              if (!chunk || !chunk.files) return;
+
               const id = m.identifier
                 .replace(/\|.*/, '')
                 .split('!')

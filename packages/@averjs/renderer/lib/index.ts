@@ -182,7 +182,7 @@ export default class Renderer {
         if (jsonStats.errors.length) return;
 
         this.clientManifest = JSON.parse(
-          this.readFile('vue-ssr-client-manifest.json')
+          this.readFile('vue-ssr-client-manifest.json') || ''
         );
         this.update();
       });
@@ -199,7 +199,9 @@ export default class Renderer {
         /* istanbul ignore next */
         if (jsonStats.errors.length) return;
 
-        this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
+        this.bundle = JSON.parse(
+          this.readFile('vue-ssr-server-bundle.json') || ''
+        );
         this.update();
       });
 
@@ -300,8 +302,6 @@ export default class Renderer {
     clientCompiler.outputFileSystem = this.mfs as never;
     const devMiddleware = WebpackDevMiddleware(clientCompiler as never, {
       publicPath: this.clientConfig.output?.publicPath as string,
-      stats: 'none',
-      logLevel: 'error',
       index: false
     });
     const hotMiddleware = WebpackHotMiddleware(clientCompiler as never, {

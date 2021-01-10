@@ -2,7 +2,7 @@ import webpack, { Configuration } from 'webpack';
 import WebpackBaseConfiguration from './base';
 import fs from 'fs';
 import path from 'path';
-import VueSSRClientPlugin from '../utils/vue/client-plugin';
+import VueSSRClientPlugin from '../plugins/vue/client-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HTMLPlugin from 'html-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
