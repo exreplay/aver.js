@@ -28,7 +28,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
-      - run: yarn build-scripts
       - run: yarn build
   
   lint: 
