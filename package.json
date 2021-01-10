@@ -6,14 +6,13 @@
     "packages/test"
   ],
   "scripts": {
-    "build-scripts": "rm -Rf scripts-build && tsc --project tsconfig.scripts.json && mv scripts/dist/scripts scripts-build && rm -Rf scripts/dist",
     "rm-dist": "find ./packages/@averjs -name 'dist' -maxdepth 2 -exec rm -Rf {} \\;",
-    "dev": "node ./scripts-build/dev --watch",
-    "build": "node ./scripts-build/dev",
-    "release": "node ./scripts-build/release-script",
+    "dev": "ts-node --project tsconfig.scripts.json ./scripts/dev --watch",
+    "build": "ts-node --project tsconfig.scripts.json ./scripts/dev",
+    "release": "ts-node --project tsconfig.scripts.json ./scripts/release-script",
     "lint": "eslint --ext .js,.ts,.vue .",
     "test": "jest --runInBand && codecov",
-    "version": "node ./scripts-build/generateChangelog.js && git add CHANGELOG.md"
+    "version": "ts-node --project tsconfig.scripts.json ./scripts/generateChangelog && git add CHANGELOG.md"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.12.1",
