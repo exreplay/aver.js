@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
-/* concat start */
 import { Server as SocketIoServer } from 'socket.io';
 
 declare global {
@@ -9,6 +7,3 @@ declare global {
     }
   }
 }
-/* concat end */
-
-export {};

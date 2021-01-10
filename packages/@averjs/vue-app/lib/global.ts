@@ -61,21 +61,3 @@ export type RouterEntry<T extends any> = (
 export type StoreEntry<T extends any> = (
   options: StoreOptions<T>
 ) => StoreOptions<T>;
-
-/* concat start */
-declare module 'vue/types/vue' {
-  interface Vue {
-    $locale: {
-      change<T>(lang: string | T): void;
-      current(): string;
-    };
-  }
-}
-
-declare module 'vue/types/options' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ComponentOptions<V extends Vue> {
-    asyncData?: <T extends any>(context: AsyncDataContext<T>) => Promise<void>;
-  }
-}
-/* concat end */
