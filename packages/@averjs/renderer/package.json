@@ -44,7 +44,7 @@
     "fibers": "^5.0.0",
     "file-loader": "^6.2.0",
     "glob-all": "^3.2.1",
-    "html-webpack-plugin": "^4.5.1",
+    "html-webpack-plugin": "^5.1.0",
     "json-loader": "^0.5.7",
     "kill-port": "^1.6.1",
     "memory-fs": "^0.4.1",
