@@ -70,7 +70,8 @@ export default class SsrBuilder extends BaseBuilder {
     const context: BuilderContext = {
       title: process.env.APP_NAME,
       url: req.url,
-      req
+      req,
+      ssrState: {}
     };
 
     if (this.config.csrf)
@@ -112,6 +113,10 @@ export default class SsrBuilder extends BaseBuilder {
         script?.text({ pbody: true }),
         noscript?.text({ pbody: true }),
         html,
+        context.ssrState &&
+          `<script>window.__AVER_STATE__=${serialize(context.ssrState, {
+            isJSON: true
+          })}</script>`,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, {
           isJSON: true
         })}</script>`,
@@ -119,7 +124,7 @@ export default class SsrBuilder extends BaseBuilder {
         style?.text({ body: true }),
         script?.text({ body: true }),
         noscript?.text({ body: true })
-      ];
+      ].filter((_) => _);
 
       const HEAD_ATTRS = headAttrs?.text();
       const HTML_ATTRS = htmlAttrs?.text(true);

@@ -15,6 +15,7 @@ export interface BuilderContext {
   meta?: VueMetaPlugin;
   csrfToken?: string;
   state?: Record<string, unknown>;
+  ssrState?: Record<string, unknown>;
   renderStyles?: () => string;
   renderResourceHints?: () => string;
   renderScripts?: () => string;

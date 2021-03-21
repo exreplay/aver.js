@@ -2,7 +2,7 @@
 import { createApp } from './app';
 import Vue from 'vue';
 import axios from 'axios';
-import { composeComponentOptions } from './utils';
+import { applyAsyncData, composeComponentOptions } from './utils';
 
 (async() => {
   const { app, router, store, userReturns } = await createApp({ isServer: false });
@@ -13,7 +13,20 @@ import { composeComponentOptions } from './utils';
       this.setRouterMixins();
       await this.initMixin();
   
-      router.onReady(() => {
+      router.onReady(async() => {
+        const route = router.match(this.getLocation(router.options.base));
+        for (const matched of route.matched) {
+          for (const key of Object.keys(matched.components)) {
+            let Component = matched.components[key];
+
+            if (typeof Component === 'function' && !Component.options) {
+              Component = await Component();
+            }
+
+            applyAsyncData(Component, window.__AVER_STATE__.asyncData[Component.cid]);
+          }
+        }
+
         router.beforeResolve(async(to, from, next) => {
           const matched = router.getMatchedComponents(to);
           const prevMatched = router.getMatchedComponents(from);
@@ -21,14 +34,17 @@ import { composeComponentOptions } from './utils';
           const activated = matched.filter((c, i) => diffed || (diffed = (prevMatched[i] !== c)));
           const asyncDataHooks = activated.map(c => {
             const { asyncData } = composeComponentOptions(c);
-            if (typeof asyncData === 'function' && asyncData) return asyncData;
+            if (typeof asyncData === 'function' && asyncData) return { c, asyncData };
             else return false;
           }).filter(_ => _);
   
           if (!asyncDataHooks.length) return next();
   
           try {
-            await Promise.all(asyncDataHooks.map(hook => hook({ store, route: { to, from }, isServer: false })));
+            await Promise.all(asyncDataHooks.map(async({ c, asyncData }) => {
+              const data = await asyncData({ store, route: { to, from }, isServer: false });
+              applyAsyncData(c, data);
+            }));
             next();
           } catch (error) {
             next(error);
@@ -37,6 +53,14 @@ import { composeComponentOptions } from './utils';
         
         app.$mount('#app');
       });
+    }
+
+    getLocation(base) {
+      let path = window.location.pathname;
+      if (base && path.toLowerCase().indexOf(base.toLowerCase()) === 0) {
+        path = path.slice(base.length);
+      }
+      return (path || '/') + window.location.search + window.location.hash;
     }
   
     async initMixin() {
@@ -72,11 +96,12 @@ import { composeComponentOptions } from './utils';
           const { asyncData } = this.$options;
           if (asyncData) {
             try {
-              await asyncData({
+              const data = await asyncData({
                 store: this.$store,
                 route: { to, from },
                 isServer: false
               });
+              applyAsyncData(this, data);
               next();
             } catch (error) {
               next(error);

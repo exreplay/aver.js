@@ -2,7 +2,7 @@
 import { createApp } from './app';
 import Vue from 'vue';
 import App from '@/App.vue';
-import { composeComponentOptions } from './utils';
+import { applyAsyncData, composeComponentOptions } from './utils';
 
 <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
 
@@ -60,7 +60,7 @@ export default async context => {
       const { asyncData } = composeComponentOptions(component);
 
       if (typeof asyncData === 'function' && asyncData) {
-        await asyncData({
+        const data = await asyncData({
           store,
           route: {
             to: router.currentRoute,
@@ -68,12 +68,20 @@ export default async context => {
           },
           isServer: true
         });
+
+        applyAsyncData(component, data);
+
+        if (data) {
+          applyAsyncData(component, data);
+          if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
+          context.ssrState.asyncData[component.cid] = data;
+        }
       }
     }
 
     const { asyncData } = composeComponentOptions(App);
     if (typeof asyncData === 'function' && asyncData) {
-      await asyncData({
+      const data = await asyncData({
         store,
         route: {
           to: router.currentRoute,
@@ -81,6 +89,14 @@ export default async context => {
         },
         isServer: true
       });
+
+      applyAsyncData(App, data);
+
+      if (data) {
+        applyAsyncData(App, data);
+        if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
+        context.ssrState.asyncData[App.cid] = data;
+      }
     }
 
     context.rendered = async() => {
