@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export const composeComponentOptions = component => {
   let asyncData;
 
@@ -11,6 +13,11 @@ export const composeComponentOptions = component => {
 
 export const applyAsyncData = (Component, asyncData) => {
   if (!asyncData && Component.options.__hasAsyncData) return;
+
+  if (!Component.options) {
+    Component = Vue.extend(Component);
+    Component._Ctor = Component;
+  }
 
   const ComponentData = Component.options.data || function() { return {}; };
 
