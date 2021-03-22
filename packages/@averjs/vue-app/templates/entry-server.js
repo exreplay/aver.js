@@ -69,8 +69,6 @@ export default async context => {
           isServer: true
         });
 
-        applyAsyncData(component, data);
-
         if (data) {
           applyAsyncData(component, data);
           if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
@@ -89,8 +87,6 @@ export default async context => {
         },
         isServer: true
       });
-
-      applyAsyncData(App, data);
 
       if (data) {
         applyAsyncData(App, data);
