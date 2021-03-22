@@ -11,8 +11,8 @@ export default class TestClass extends Vue {
     return this.$store.getters.getData;
   }
 
-  asyncData({ store }) {
-    return store.dispatch('fetchData');
+  async asyncData({ store }) {
+    await store.dispatch('fetchData');
   }
 }
 </script>

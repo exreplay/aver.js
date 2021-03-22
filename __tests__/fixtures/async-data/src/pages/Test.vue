@@ -4,8 +4,8 @@
 
 <script>
 export default {
-  asyncData({ store }) {
-    return store.dispatch('fetchData');
+  async asyncData({ store }) {
+    await store.dispatch('fetchData');
   },
   computed: {
     data() {

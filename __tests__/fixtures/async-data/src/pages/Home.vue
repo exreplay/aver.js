@@ -1,9 +1,20 @@
 <template>
   <div>
-    <router-link :to="{ name: 'test' }">go to test</router-link>
+    <router-link :to="{ name: 'test' }">{{ test }}</router-link>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      test: ''
+    };
+  },
+  asyncData() {
+    return {
+      test: 'ssr'
+    };
+  }
+};
 </script>
