@@ -12,12 +12,12 @@ export const composeComponentOptions = component => {
 };
 
 export const applyAsyncData = (Component, asyncData) => {
-  if (!asyncData && Component.options.__hasAsyncData) return;
-
   if (!Component.options) {
     Component = Vue.extend(Component);
     Component._Ctor = Component;
   }
+  
+  if (!asyncData && Component.options.__hasAsyncData) return;
 
   const ComponentData = Component.options.data || function() { return {}; };
 
