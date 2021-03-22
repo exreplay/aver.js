@@ -14,16 +14,20 @@ import { applyAsyncData, composeComponentOptions } from './utils';
       await this.initMixin();
   
       router.onReady(async() => {
-        const route = router.match(this.getLocation(router.options.base));
-        for (const matched of route.matched) {
-          for (const key of Object.keys(matched.components)) {
-            let Component = matched.components[key];
+        const averState = window.__AVER_STATE__;
 
-            if (typeof Component === 'function' && !Component.options) {
-              Component = await Component();
+        if (averState.asyncData) {
+          const route = router.match(this.getLocation(router.options.base));
+          for (const matched of route.matched) {
+            for (const key of Object.keys(matched.components)) {
+              let Component = matched.components[key];
+  
+              if (typeof Component === 'function' && !Component.options) {
+                Component = await Component();
+              }
+  
+              applyAsyncData(Component, averState.asyncData[Component.cid]);
             }
-
-            applyAsyncData(Component, window.__AVER_STATE__.asyncData[Component.cid]);
           }
         }
 
