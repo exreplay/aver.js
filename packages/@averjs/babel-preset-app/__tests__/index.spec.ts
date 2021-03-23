@@ -59,7 +59,7 @@ test('regenerator runtime should be included on client', async () => {
   );
 
   await expect(code).toMatch('es6.promise');
-  await expect(code).toMatch('regenerator-runtime/runtime');
+  await expect(code).toMatch('@babel/runtime/regenerator');
 });
 
 test('decorators should create a _class var', async () => {
