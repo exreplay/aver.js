@@ -2,7 +2,7 @@
 import { createApp } from './app';
 import Vue from 'vue';
 import axios from 'axios';
-import { applyAsyncData, composeComponentOptions } from './utils';
+import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './utils';
 
 (async() => {
   const { app, router, store, userReturns } = await createApp({ isServer: false });
@@ -26,7 +26,8 @@ import { applyAsyncData, composeComponentOptions } from './utils';
                 Component = await Component();
               }
   
-              applyAsyncData(Component, averState.asyncData[Component.cid]);
+              const SanitizedComponent = sanitizeComponent(Component);
+              applyAsyncData(SanitizedComponent, averState.asyncData[SanitizedComponent.options.name]);
             }
           }
         }
@@ -47,7 +48,8 @@ import { applyAsyncData, composeComponentOptions } from './utils';
           try {
             await Promise.all(asyncDataHooks.map(async({ c, asyncData }) => {
               const data = await asyncData({ store, route: { to, from }, isServer: false });
-              applyAsyncData(c, data);
+              const SanitizedComponent = sanitizeComponent(c);
+              applyAsyncData(SanitizedComponent, data);
             }));
             next();
           } catch (error) {

@@ -2,7 +2,7 @@
 import { createApp } from './app';
 import Vue from 'vue';
 import App from '@/App.vue';
-import { applyAsyncData, composeComponentOptions } from './utils';
+import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './utils';
 
 <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
 
@@ -70,9 +70,10 @@ export default async context => {
         });
 
         if (data) {
-          applyAsyncData(component, data);
+          const SanitizedComponent = sanitizeComponent(component);
+          applyAsyncData(SanitizedComponent, data);
           if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
-          context.ssrState.asyncData[component.cid] = data;
+          context.ssrState.asyncData[SanitizedComponent.options.name] = data;
         }
       }
     }
@@ -89,9 +90,10 @@ export default async context => {
       });
 
       if (data) {
-        applyAsyncData(App, data);
+        const SanitizedApp = sanitizeComponent(App);
+        applyAsyncData(SanitizedApp, data);
         if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
-        context.ssrState.asyncData[App.cid] = data;
+        context.ssrState.asyncData[SanitizedApp.options.name] = data;
       }
     }
 

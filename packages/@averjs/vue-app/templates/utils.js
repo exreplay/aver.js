@@ -12,11 +12,6 @@ export const composeComponentOptions = component => {
 };
 
 export const applyAsyncData = (Component, asyncData) => {
-  if (!Component.options) {
-    Component = Vue.extend(Component);
-    Component._Ctor = Component;
-  }
-  
   if (!asyncData && Component.options.__hasAsyncData) return;
 
   const ComponentData = Component.options.data || function() { return {}; };
@@ -32,4 +27,22 @@ export const applyAsyncData = (Component, asyncData) => {
   if (Component._Ctor && Component._Ctor.options) {
     Component._Ctor.options.data = Component.options.data;
   }
+};
+
+export const sanitizeComponent = (Component) => {
+  if (Component.options && Component.__Ctor === Component) return Component;
+
+  if (!Component.options) {
+    Component = Vue.extend(Component);
+    Component._Ctor = Component;
+  } else {
+    Component._Ctor = Component;
+    Component.extendOptions = Component.options;
+  }
+
+  if (!Component.options.name && Component.options.__file) {
+    Component.options.name = Component.options.__file;
+  }
+
+  return Component;
 };
