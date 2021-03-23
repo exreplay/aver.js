@@ -28,7 +28,7 @@ import { composeComponentOptions } from './utils';
           if (!asyncDataHooks.length) return next();
   
           try {
-            await Promise.all(asyncDataHooks.map(hook => hook({ store, route: { to, from }, isServer: false })));
+            await Promise.all(asyncDataHooks.map(hook => hook({ app, store, route: { to, from }, isServer: false })));
             next();
           } catch (error) {
             next(error);
@@ -73,6 +73,7 @@ import { composeComponentOptions } from './utils';
           if (asyncData) {
             try {
               await asyncData({
+                app,
                 store: this.$store,
                 route: { to, from },
                 isServer: false

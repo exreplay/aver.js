@@ -41,6 +41,7 @@ export interface RouterEntryContext<T extends any> {
 }
 
 export interface AsyncDataContext<T extends any> {
+  app: Vue;
   store: Store<T>;
   route: {
     to: Route;
