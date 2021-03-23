@@ -1,3 +1,22 @@
+## 2.5.0 (2021-03-23)
+
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#338](https://github.com/exreplay/aver.js/pull/338) feat: pass app to asyncData hook ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#321](https://github.com/exreplay/aver.js/pull/321) chore(deps): lock file maintenance ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#335](https://github.com/exreplay/aver.js/pull/335) chore(deps): update dependency lerna to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#332](https://github.com/exreplay/aver.js/pull/332) chore(deps): update dependency puppeteer to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#331](https://github.com/exreplay/aver.js/pull/331) chore(deps): update dependency inquirer to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/config`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/typescript`, `@averjs/websocket`
+  * [#322](https://github.com/exreplay/aver.js/pull/322) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.4.7 (2021-01-10)
 
 #### :bug: Bug Fix
