@@ -29,7 +29,7 @@
     "codecov": "3.8.1",
     "cross-spawn": "7.0.3",
     "eslint": "7.22.0",
-    "eslint-config-prettier": "7.2.0",
+    "eslint-config-prettier": "8.2.0",
     "eslint-config-standard": "16.0.2",
     "eslint-import-resolver-typescript": "2.4.0",
     "eslint-plugin-import": "2.22.1",
