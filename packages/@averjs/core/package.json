@@ -57,7 +57,7 @@
     "vue": "^2.6.12",
     "vue-class-component": "^7.2.6",
     "vue-client-only": "^2.0.0",
-    "vue-i18n": "^8.24.2",
+    "vue-i18n": "^8.24.3",
     "vue-meta": "^2.4.0",
     "vue-progressbar": "^0.7.5",
     "vue-property-decorator": "^9.1.2",
@@ -71,7 +71,7 @@
   "devDependencies": {
     "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",
-    "@types/csurf": "^1.11.0",
+    "@types/csurf": "^1.11.1",
     "@types/esm": "^3.2.0",
     "@types/helmet": "^0.0.48",
     "@types/klaw-sync": "^6.0.0",
