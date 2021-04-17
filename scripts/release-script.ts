@@ -6,7 +6,8 @@ import execa from 'execa';
 import Release from './release';
 import inquirer from 'inquirer';
 
-const OUT_FILE = './verdaccio';
+const OUT_FILE = './verdaccio.out';
+const VERDACCIO_FOLDER = './verdaccio';
 
 class ReleaseScript {
   test: boolean;
@@ -27,7 +28,7 @@ class ReleaseScript {
     } catch (error) {
       console.log(error);
     } finally {
-      if (this.test) this.removeNoHupOut();
+      if (this.test) this.cleanUpVerdaccio();
     }
   }
 
@@ -36,9 +37,9 @@ class ReleaseScript {
     console.log(logSymbols.info, 'You are running release script in test mode');
     waitingSpinner.start();
 
-    this.removeNoHupOut();
+    this.cleanUpVerdaccio();
     execa.sync(
-      'nohup yarn verdaccio -c ./scripts/verdaccio.yaml &> verdaccio &',
+      'nohup yarn verdaccio -c ./scripts/verdaccio.yaml &> verdaccio.out &',
       { shell: true }
     );
 
@@ -69,7 +70,7 @@ class ReleaseScript {
   }
 
   exitHandler() {
-    this.removeNoHupOut();
+    this.cleanUpVerdaccio();
     // Grep all verdaccio processes and kill them. Exclude the grep process
     console.log(logSymbols.info, 'Cleanup verdaccio processes before exit');
     execa.sync(
@@ -80,8 +81,9 @@ class ReleaseScript {
     process.exit();
   }
 
-  removeNoHupOut() {
+  cleanUpVerdaccio() {
     if (fs.existsSync(OUT_FILE)) fs.removeSync(OUT_FILE);
+    if (fs.existsSync(VERDACCIO_FOLDER)) fs.removeSync(VERDACCIO_FOLDER);
   }
 }
 
