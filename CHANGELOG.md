@@ -1,3 +1,12 @@
+## 2.5.2 (2021-04-17)
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#302](https://github.com/exreplay/aver.js/pull/302) chore(deps): update dependency webpack-dev-middleware to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 0
+
+
 ## 2.5.1 (2021-04-17)
 
 #### :bug: Bug Fix
