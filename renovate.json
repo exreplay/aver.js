@@ -14,6 +14,13 @@
   "ignoreDeps": [
     "core-js",
     "memory-fs",
-    "postcss"
+    "postcss",
+    "postcss-loader",
+    "postcss-import",
+    "sass-loader",
+    "html-webpack-plugin",
+    "copy-webpack-plugin",
+    "terser-webpack-plugin",
+    "@types/terser-webpack-plugin"
   ]
 }
