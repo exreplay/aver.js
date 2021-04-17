@@ -1,5 +1,20 @@
-import { PluginObj } from '@babel/core';
+import { NodePath, PluginObj } from '@babel/core';
+import { Program } from '@babel/types';
 import { BabelOptions } from '.';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { addSideEffect } = require('@babel/helper-module-imports');
+
+function getModulePath(mod: string) {
+  const modPath =
+    mod === 'regenerator-runtime'
+      ? 'regenerator-runtime/runtime'
+      : `core-js/modules/${mod}`;
+  return modPath;
+}
+
+function createImport(path: NodePath<Program>, mod: string) {
+  return addSideEffect(path, getModulePath(mod));
+}
 
 // add polyfill imports to the first file encountered.
 export default function (): PluginObj {
@@ -16,8 +31,6 @@ export default function (): PluginObj {
         }
 
         const { polyfills } = state.opts as BabelOptions;
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { createImport } = require('@babel/preset-env/lib/utils');
         // imports are injected in reverse order
         polyfills
           ?.slice()
