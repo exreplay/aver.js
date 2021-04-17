@@ -60,7 +60,7 @@ class BabelPresetApp extends Polyfills {
   }
 
   get decoratorsLegacy() {
-    return this.options.decoratorsLegacy || true;
+    return this.options.decoratorsLegacy;
   }
 
   constructor(options: BabelOptions) {

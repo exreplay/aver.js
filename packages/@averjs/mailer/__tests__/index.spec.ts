@@ -79,7 +79,7 @@ describe('mailer plugin', () => {
       }
     }));
 
-    expect(emailTemplatesConfig.message.text).toBe('test');
+    expect(emailTemplatesConfig.message?.text).toBe('test');
     expect(nodemailerConfig.html).toBe('test');
   });
 

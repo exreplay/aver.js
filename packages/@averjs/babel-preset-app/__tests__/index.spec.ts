@@ -42,7 +42,7 @@ test('dynamic import', () => {
 
 test('rest spread should use assign polyfill', async () => {
   const { code } = transformFactory('const a = { ...b };');
-  await expect(code).toMatch('core-js/modules/es6.object.assign.js');
+  await expect(code).toMatch('core-js/modules/es6.object.assign');
 });
 
 test('regenerator runtime should be included on client', async () => {
@@ -59,7 +59,7 @@ test('regenerator runtime should be included on client', async () => {
   );
 
   await expect(code).toMatch('es6.promise');
-  await expect(code).toMatch('regenerator-runtime/runtime');
+  await expect(code).toMatch('@babel/runtime/regenerator');
 });
 
 test('decorators should create a _class var', async () => {

@@ -20,7 +20,7 @@ export type InternalAverConfig = Config;
 
 export type AverConfig = Partial<Config>;
 
-export function getAverjsConfig() {
+export function getAverjsConfig(): InternalAverConfig {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const requireModule = require('esm')(module);
   const globalConfPath = path.resolve(

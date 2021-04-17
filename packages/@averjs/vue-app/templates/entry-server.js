@@ -61,6 +61,7 @@ export default async context => {
 
       if (typeof asyncData === 'function' && asyncData) {
         const data = await asyncData({
+          app,
           store,
           route: {
             to: router.currentRoute,
@@ -81,6 +82,7 @@ export default async context => {
     const { asyncData } = composeComponentOptions(App);
     if (typeof asyncData === 'function' && asyncData) {
       const data = await asyncData({
+        app,
         store,
         route: {
           to: router.currentRoute,

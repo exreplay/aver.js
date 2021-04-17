@@ -297,8 +297,8 @@ export default class Renderer {
     clientCompiler.outputFileSystem = this.mfs;
     const devMiddleware = WebpackDevMiddleware(clientCompiler as never, {
       publicPath: this.clientConfig.output?.publicPath,
+      outputFileSystem: this.mfs,
       stats: 'none',
-      logLevel: 'error',
       index: false
     });
     const hotMiddleware = WebpackHotMiddleware(clientCompiler as never, {

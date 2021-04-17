@@ -1,3 +1,51 @@
+## 2.5.2 (2021-04-17)
+
+#### :house: Internal
+* `@averjs/renderer`
+  * [#302](https://github.com/exreplay/aver.js/pull/302) chore(deps): update dependency webpack-dev-middleware to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 0
+
+
+## 2.5.1 (2021-04-17)
+
+#### :bug: Bug Fix
+* `@averjs/babel-preset-app`
+  * [#345](https://github.com/exreplay/aver.js/pull/345) fix: replace babel preset-env utils with helper module imports ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#340](https://github.com/exreplay/aver.js/pull/340) chore(deps): lock file maintenance ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#342](https://github.com/exreplay/aver.js/pull/342) chore(deps): update dependency verdaccio to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#344](https://github.com/exreplay/aver.js/pull/344) chore(deps): update dependency jest-puppeteer to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#343](https://github.com/exreplay/aver.js/pull/343) chore(deps): update dependency eslint-plugin-promise to v5 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#330](https://github.com/exreplay/aver.js/pull/330) chore(deps): update dependency eslint-config-prettier to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/typescript`
+  * [#339](https://github.com/exreplay/aver.js/pull/339) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
+## 2.5.0 (2021-03-23)
+
+#### :rocket: New Features
+* `@averjs/vue-app`
+  * [#338](https://github.com/exreplay/aver.js/pull/338) feat: pass app to asyncData hook ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#321](https://github.com/exreplay/aver.js/pull/321) chore(deps): lock file maintenance ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#335](https://github.com/exreplay/aver.js/pull/335) chore(deps): update dependency lerna to v4 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#332](https://github.com/exreplay/aver.js/pull/332) chore(deps): update dependency puppeteer to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#331](https://github.com/exreplay/aver.js/pull/331) chore(deps): update dependency inquirer to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/config`, `@averjs/core`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/typescript`, `@averjs/websocket`
+  * [#322](https://github.com/exreplay/aver.js/pull/322) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.4.7 (2021-01-10)
 
 #### :bug: Bug Fix

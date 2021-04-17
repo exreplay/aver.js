@@ -47,7 +47,7 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
   
           try {
             await Promise.all(asyncDataHooks.map(async({ c, asyncData }) => {
-              const data = await asyncData({ store, route: { to, from }, isServer: false });
+              const data = await asyncData({ app, store, route: { to, from }, isServer: false });
               const SanitizedComponent = sanitizeComponent(c);
               applyAsyncData(SanitizedComponent, data);
             }));
@@ -103,6 +103,7 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
           if (asyncData) {
             try {
               const data = await asyncData({
+                app,
                 store: this.$store,
                 route: { to, from },
                 isServer: false
