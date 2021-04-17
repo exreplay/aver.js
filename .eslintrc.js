@@ -68,7 +68,7 @@ module.exports = {
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:prettier/recommended',
-        'prettier/@typescript-eslint'
+        'prettier'
       ],
       rules: {
         'no-use-before-define': 'off',
