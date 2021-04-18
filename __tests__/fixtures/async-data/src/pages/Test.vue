@@ -1,5 +1,8 @@
 <template>
-  <div>{{ data }}</div>
+  <div>
+    <div>{{ data }}</div>
+    <router-view />
+  </div>
 </template>
 
 <script>
