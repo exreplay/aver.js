@@ -45,7 +45,7 @@ export async function createApp(ssrContext) {
   
   if (!ssrContext.isServer) {
     const averState = window.__AVER_STATE__;
-    if (averState.asyncData.app) applyAsyncData(sanitizeComponent(App), averState.asyncData.app);
+    if (averState.asyncData && averState.asyncData.app) applyAsyncData(sanitizeComponent(App), averState.asyncData.app);
   }
 
   const appOptions = {

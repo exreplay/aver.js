@@ -110,7 +110,7 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
                 route: { to, from },
                 isServer: false
               });
-              for (const key of Object.keys(data)) {
+              for (const key of Object.keys(data || {})) {
                 this[key] = data[key];
               }
               next();
