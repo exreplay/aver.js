@@ -97,7 +97,11 @@ export default async context => {
           applyAsyncData(SanitizedComponent, data);
           if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
           asyncDatas.push(data);
+        } else {
+          asyncDatas.push(null);
         }
+      } else {
+        asyncDatas.push(null);
       }
     }
 
