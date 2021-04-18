@@ -56,6 +56,28 @@ export default async context => {
       }
     }
 
+    const asyncDatas = [];
+
+    const { asyncData } = composeComponentOptions(App);
+    if (typeof asyncData === 'function' && asyncData) {
+      const data = await asyncData({
+        app,
+        store,
+        route: {
+          to: router.currentRoute,
+          from: undefined
+        },
+        isServer: true
+      });
+
+      if (data) {
+        const SanitizedApp = sanitizeComponent(App);
+        applyAsyncData(SanitizedApp, data);
+        if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
+        context.ssrState.asyncData.app = data;
+      }
+    }
+
     for (const component of matchedComponents) {
       const { asyncData } = composeComponentOptions(component);
 
@@ -74,30 +96,12 @@ export default async context => {
           const SanitizedComponent = sanitizeComponent(component);
           applyAsyncData(SanitizedComponent, data);
           if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
-          context.ssrState.asyncData[SanitizedComponent.options.name] = data;
+          asyncDatas.push(data);
         }
       }
     }
 
-    const { asyncData } = composeComponentOptions(App);
-    if (typeof asyncData === 'function' && asyncData) {
-      const data = await asyncData({
-        app,
-        store,
-        route: {
-          to: router.currentRoute,
-          from: undefined
-        },
-        isServer: true
-      });
-
-      if (data) {
-        const SanitizedApp = sanitizeComponent(App);
-        applyAsyncData(SanitizedApp, data);
-        if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
-        context.ssrState.asyncData[SanitizedApp.options.name] = data;
-      }
-    }
+    context.ssrState.data = asyncDatas;
 
     context.rendered = async() => {
       for (const fn of renderedFns) await fn(context);

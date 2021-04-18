@@ -16,8 +16,9 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
       router.onReady(async() => {
         const averState = window.__AVER_STATE__;
 
-        if (averState.asyncData) {
+        if (averState.data) {
           const route = router.match(this.getLocation(router.options.base));
+          let index = 0;
           for (const matched of route.matched) {
             for (const key of Object.keys(matched.components)) {
               let Component = matched.components[key];
@@ -27,8 +28,9 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
               }
   
               const SanitizedComponent = sanitizeComponent(Component);
-              applyAsyncData(SanitizedComponent, averState.asyncData[SanitizedComponent.options.name]);
+              applyAsyncData(SanitizedComponent, averState.data[index]);
             }
+            index++;
           }
         }
 
@@ -108,11 +110,14 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
                 route: { to, from },
                 isServer: false
               });
-              applyAsyncData(this, data);
+              for (const key of Object.keys(data)) {
+                this[key] = data[key];
+              }
               next();
             } catch (error) {
               next(error);
             }
+            next();
           } else {
             next();
           }
