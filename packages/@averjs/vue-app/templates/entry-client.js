@@ -82,7 +82,7 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
 
     deepMapChildren(children, components) {
       for (const child of children) {
-        if (child.$options.__hasAsyncData) components.push(child);
+        if (child.$options.asyncData) components.push(child);
         if (child.$children && child.$children.length) this.deepMapChildren(child.$children, components);
       }
 
