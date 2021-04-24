@@ -93,26 +93,31 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
       const _forceUpdate = component.$forceUpdate.bind(component.$parent);
 
       component.$vnode.context.$forceUpdate = async() => {
-        const matched = router.currentRoute.matched[index - 1];
-        for (const key of Object.keys(matched.components)) {
-          let Component = matched.components[key];
-
-          if (typeof Component === 'object' && !Component.options) {
-            Component = Vue.extend(Component);
-            Component._Ctor = Component;
+        if (index - 1 >= 0) {
+          const matched = router.currentRoute.matched[index - 1];
+          for (const key of Object.keys(matched.components)) {
+            let Component = matched.components[key];
+  
+            if (typeof Component === 'object' && !Component.options) {
+              Component = Vue.extend(Component);
+              Component._Ctor = Component;
+            }
+  
+            const { asyncData } = Component.options;
+            const data = await asyncData({
+              app,
+              store,
+              route: { to: router.currentRoute },
+              isServer: false
+            });
+            applyAsyncData(Component, data);
           }
-
-          const { asyncData } = Component.options;
-          const data = await asyncData({
-            app,
-            store: component.$store,
-            route: { to: router.currentRoute },
-            isServer: false
-          });
-          applyAsyncData(Component, data);
+          _forceUpdate();
+          setTimeout(() => this.hotReload(), 100);
+        } else {
+          _forceUpdate();
+          setTimeout(() => this.hotReload(), 100);
         }
-        _forceUpdate();
-        setTimeout(() => this.hotReload(), 100);
       };
     }
 
