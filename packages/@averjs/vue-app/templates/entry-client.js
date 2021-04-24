@@ -60,7 +60,60 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
         });
         
         app.$mount('#app');
+
+        router.afterEach(() => {
+          Vue.nextTick(() => {
+            setTimeout(() => this.hotReload(), 100);
+          });
+        });
+        
+        Vue.nextTick(() => {
+          this.hotReload();
+        });
       });
+    }
+
+    hotReload() {
+      if (module.hot) {
+        const components = this.deepMapChildren(app.$root.$children, []);
+        components.forEach(this.applyHmrUpdate.bind(this));
+      }
+    }
+
+    deepMapChildren(children, components) {
+      for (const child of children) {
+        if (child.$options.__hasAsyncData) components.push(child);
+        if (child.$children && child.$children.length) this.deepMapChildren(child.$children, components);
+      }
+
+      return components;
+    }
+
+    applyHmrUpdate(component, index) {
+      const _forceUpdate = component.$forceUpdate.bind(component.$parent);
+
+      component.$vnode.context.$forceUpdate = async() => {
+        const matched = router.currentRoute.matched[index - 1];
+        for (const key of Object.keys(matched.components)) {
+          let Component = matched.components[key];
+
+          if (typeof Component === 'object' && !Component.options) {
+            Component = Vue.extend(Component);
+            Component._Ctor = Component;
+          }
+
+          const { asyncData } = Component.options;
+          const data = await asyncData({
+            app,
+            store: component.$store,
+            route: { to: router.currentRoute },
+            isServer: false
+          });
+          applyAsyncData(Component, data);
+        }
+        _forceUpdate();
+        setTimeout(() => this.hotReload(), 100);
+      };
     }
 
     getLocation(base) {
