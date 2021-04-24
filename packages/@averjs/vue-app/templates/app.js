@@ -8,6 +8,7 @@ import { createRouter } from './router/';
 import { createStore } from './store/';
 import { createI18n } from './i18n';
 import { sync } from 'vuex-router-sync';
+import { applyAsyncData, sanitizeComponent } from './utils';
 <% if (config.progressbar) { %>
 import VueProgressBar from 'vue-progressbar';
 
@@ -41,6 +42,11 @@ export async function createApp(ssrContext) {
   sync(store, router);
 
   Vue.router = router;
+  
+  if (!ssrContext.isServer) {
+    const averState = window.__AVER_STATE__;
+    if (averState.asyncData && averState.asyncData.app) applyAsyncData(sanitizeComponent(App), averState.asyncData.app);
+  }
 
   const appOptions = {
     i18n,

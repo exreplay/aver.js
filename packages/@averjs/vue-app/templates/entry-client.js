@@ -2,7 +2,7 @@
 import { createApp } from './app';
 import Vue from 'vue';
 import axios from 'axios';
-import { composeComponentOptions } from './utils';
+import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './utils';
 
 (async() => {
   const { app, router, store, userReturns } = await createApp({ isServer: false });
@@ -13,7 +13,27 @@ import { composeComponentOptions } from './utils';
       this.setRouterMixins();
       await this.initMixin();
   
-      router.onReady(() => {
+      router.onReady(async() => {
+        const averState = window.__AVER_STATE__;
+
+        if (averState.data) {
+          const route = router.match(this.getLocation(router.options.base));
+          let index = 0;
+          for (const matched of route.matched) {
+            for (const key of Object.keys(matched.components)) {
+              let Component = matched.components[key];
+  
+              if (typeof Component === 'function' && !Component.options) {
+                Component = await Component();
+              }
+  
+              const SanitizedComponent = sanitizeComponent(Component);
+              applyAsyncData(SanitizedComponent, averState.data[index]);
+            }
+            index++;
+          }
+        }
+
         router.beforeResolve(async(to, from, next) => {
           const matched = router.getMatchedComponents(to);
           const prevMatched = router.getMatchedComponents(from);
@@ -21,14 +41,18 @@ import { composeComponentOptions } from './utils';
           const activated = matched.filter((c, i) => diffed || (diffed = (prevMatched[i] !== c)));
           const asyncDataHooks = activated.map(c => {
             const { asyncData } = composeComponentOptions(c);
-            if (typeof asyncData === 'function' && asyncData) return asyncData;
+            if (typeof asyncData === 'function' && asyncData) return { c, asyncData };
             else return false;
           }).filter(_ => _);
   
           if (!asyncDataHooks.length) return next();
   
           try {
-            await Promise.all(asyncDataHooks.map(hook => hook({ app, store, route: { to, from }, isServer: false })));
+            await Promise.all(asyncDataHooks.map(async({ c, asyncData }) => {
+              const data = await asyncData({ app, store, route: { to, from }, isServer: false });
+              const SanitizedComponent = sanitizeComponent(c);
+              applyAsyncData(SanitizedComponent, data);
+            }));
             next();
           } catch (error) {
             next(error);
@@ -36,7 +60,92 @@ import { composeComponentOptions } from './utils';
         });
         
         app.$mount('#app');
+
+        router.afterEach(() => {
+          Vue.nextTick(() => {
+            setTimeout(() => this.hotReload(), 100);
+          });
+        });
+        
+        Vue.nextTick(() => {
+          this.hotReload();
+        });
       });
+    }
+
+    hotReload() {
+      if (module.hot) {
+        const components = this.deepMapChildren(app.$root.$children, []);
+        components.forEach(this.applyHmrUpdate.bind(this));
+      }
+    }
+
+    deepMapChildren(children, components) {
+      for (const child of children) {
+        if (child.$options.asyncData) components.push(child);
+        if (child.$children && child.$children.length) this.deepMapChildren(child.$children, components);
+      }
+
+      return components;
+    }
+
+    applyHmrUpdate(component, index) {
+      if (component.$vnode.data._hasHotReload) return;
+      component.$vnode.data._hasHotReload = true;
+      
+      const _forceUpdate = component.$forceUpdate.bind(component.$parent);
+      const hotReload = this.hotReload.bind(this);
+
+      component.$vnode.context.$forceUpdate = async function() {
+        if (index - 1 >= 0) {
+          const matched = router.currentRoute.matched[index - 1];
+          for (const key of Object.keys(matched.components)) {
+            let Component = matched.components[key];
+  
+            if (typeof Component === 'object' && !Component.options) {
+              Component = Vue.extend(Component);
+              Component._Ctor = Component;
+            }
+  
+            const { asyncData } = Component.options;
+            const data = await asyncData({
+              app,
+              store,
+              route: { to: router.currentRoute },
+              isServer: false
+            });
+            applyAsyncData(Component, data);
+          }
+          _forceUpdate();
+          setTimeout(() => hotReload(), 100);
+        } else {
+          await _forceUpdate();
+
+          const Component = this.$children[0];
+
+          const { asyncData } = Component.$options;
+          const data = await asyncData({
+            app,
+            store,
+            route: { to: router.currentRoute },
+            isServer: false
+          });
+
+          for (const key of Object.keys(data || {})) {
+            Component[key] = data[key];
+          }
+
+          setTimeout(() => hotReload(), 100);
+        }
+      };
+    }
+
+    getLocation(base) {
+      let path = window.location.pathname;
+      if (base && path.toLowerCase().indexOf(base.toLowerCase()) === 0) {
+        path = path.slice(base.length);
+      }
+      return (path || '/') + window.location.search + window.location.hash;
     }
   
     async initMixin() {
@@ -72,16 +181,20 @@ import { composeComponentOptions } from './utils';
           const { asyncData } = this.$options;
           if (asyncData) {
             try {
-              await asyncData({
+              const data = await asyncData({
                 app,
                 store: this.$store,
                 route: { to, from },
                 isServer: false
               });
+              for (const key of Object.keys(data || {})) {
+                this[key] = data[key];
+              }
               next();
             } catch (error) {
               next(error);
             }
+            next();
           } else {
             next();
           }

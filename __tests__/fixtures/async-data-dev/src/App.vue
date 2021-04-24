@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <router-link :to="{ name: 'test' }">{{ test }}</router-link>
+  <div id="app">
+    <div>{{ data }}</div>
+    <router-view />
   </div>
 </template>
 
@@ -8,13 +9,16 @@
 export default {
   data() {
     return {
-      test: ''
+      data: ''
     };
   },
   asyncData() {
     return {
-      test: 'ssr'
+      data: 'app.vue'
     };
+  },
+  metaInfo() {
+    return {};
   }
 };
 </script>

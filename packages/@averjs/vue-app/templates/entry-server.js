@@ -2,7 +2,7 @@
 import { createApp } from './app';
 import Vue from 'vue';
 import App from '@/App.vue';
-import { composeComponentOptions } from './utils';
+import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './utils';
 
 <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
 
@@ -56,25 +56,11 @@ export default async context => {
       }
     }
 
-    for (const component of matchedComponents) {
-      const { asyncData } = composeComponentOptions(component);
-
-      if (typeof asyncData === 'function' && asyncData) {
-        await asyncData({
-          app,
-          store,
-          route: {
-            to: router.currentRoute,
-            from: undefined
-          },
-          isServer: true
-        });
-      }
-    }
+    const asyncDatas = [];
 
     const { asyncData } = composeComponentOptions(App);
     if (typeof asyncData === 'function' && asyncData) {
-      await asyncData({
+      const data = await asyncData({
         app,
         store,
         route: {
@@ -83,7 +69,43 @@ export default async context => {
         },
         isServer: true
       });
+
+      if (data) {
+        const SanitizedApp = sanitizeComponent(App);
+        applyAsyncData(SanitizedApp, data);
+        if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
+        context.ssrState.asyncData.app = data;
+      }
     }
+
+    for (const component of matchedComponents) {
+      const { asyncData } = composeComponentOptions(component);
+
+      if (typeof asyncData === 'function' && asyncData) {
+        const data = await asyncData({
+          app,
+          store,
+          route: {
+            to: router.currentRoute,
+            from: undefined
+          },
+          isServer: true
+        });
+
+        if (data) {
+          const SanitizedComponent = sanitizeComponent(component);
+          applyAsyncData(SanitizedComponent, data);
+          if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
+          asyncDatas.push(data);
+        } else {
+          asyncDatas.push(null);
+        }
+      } else {
+        asyncDatas.push(null);
+      }
+    }
+
+    context.ssrState.data = asyncDatas;
 
     context.rendered = async() => {
       for (const fn of renderedFns) await fn(context);

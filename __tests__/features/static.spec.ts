@@ -9,10 +9,15 @@ testFeature(
       expect(
         fs.existsSync(path.resolve(currentDir, './dist/index.html'))
       ).toBeTruthy();
-      expect(
-        fs.readFileSync(path.resolve(currentDir, './dist/index.html'), 'utf-8')
-      ).toContain(
-        '<div id="app" data-server-rendered="true"><div><span>home route</span></div></div>'
+      const home = fs.readFileSync(
+        path.resolve(currentDir, './dist/index.html'),
+        'utf-8'
+      );
+      expect(home).toContain(
+        '<div id="app" data-server-rendered="true"><div><span>home route</span><span>some async data</span></div></div>'
+      );
+      expect(home).toContain(
+        '<script>window.__AVER_STATE__={asyncData:{},data:[{asyncData:"some async data"}]}</script>'
       );
 
       expect(

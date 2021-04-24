@@ -7,7 +7,14 @@ export default [
   {
     path: '/test',
     name: 'test',
-    component: () => import('./Test.vue')
+    component: () => import('./Test.vue'),
+    children: [
+      {
+        path: 'testchild',
+        name: 'testchild',
+        component: () => import('./TestChild.vue')
+      }
+    ]
   },
   {
     path: '/test-class',
