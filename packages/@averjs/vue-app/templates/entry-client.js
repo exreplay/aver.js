@@ -90,9 +90,13 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
     }
 
     applyHmrUpdate(component, index) {
+      if (component.$vnode.data._hasHotReload) return;
+      component.$vnode.data._hasHotReload = true;
+      
       const _forceUpdate = component.$forceUpdate.bind(component.$parent);
+      const hotReload = this.hotReload.bind(this);
 
-      component.$vnode.context.$forceUpdate = async() => {
+      component.$vnode.context.$forceUpdate = async function() {
         if (index - 1 >= 0) {
           const matched = router.currentRoute.matched[index - 1];
           for (const key of Object.keys(matched.components)) {
@@ -113,10 +117,25 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
             applyAsyncData(Component, data);
           }
           _forceUpdate();
-          setTimeout(() => this.hotReload(), 100);
+          setTimeout(() => hotReload(), 100);
         } else {
-          _forceUpdate();
-          setTimeout(() => this.hotReload(), 100);
+          await _forceUpdate();
+
+          const Component = this.$children[0];
+
+          const { asyncData } = Component.$options;
+          const data = await asyncData({
+            app,
+            store,
+            route: { to: router.currentRoute },
+            isServer: false
+          });
+
+          for (const key of Object.keys(data || {})) {
+            Component[key] = data[key];
+          }
+
+          setTimeout(() => hotReload(), 100);
         }
       };
     }
