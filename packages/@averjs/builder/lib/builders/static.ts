@@ -66,7 +66,8 @@ export default class StaticBuilder extends BaseBuilder {
         url: route.path,
         req: {
           cookies: []
-        }
+        },
+        ssrState: {}
       };
 
       if (this.config.csrf) Object.assign(context, { csrfToken: '' });
@@ -101,6 +102,11 @@ export default class StaticBuilder extends BaseBuilder {
         script?.text({ pbody: true }),
         noscript?.text({ pbody: true }),
         html,
+        context.ssrState
+          ? `<script>window.__AVER_STATE__=${serialize(context.ssrState, {
+              isJSON: true
+            })}</script>`
+          : undefined,
         `<script>window.__INITIAL_STATE__=${serialize(context.state, {
           isJSON: true
         })}</script>`,

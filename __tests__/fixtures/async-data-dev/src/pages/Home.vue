@@ -1,6 +1,7 @@
 <template>
   <div>
-    <router-link :to="{ name: 'test' }">{{ test }}</router-link>
+    <router-link :to="{ name: 'homechild' }">{{ test }}</router-link>
+    <router-view />
   </div>
 </template>
 
