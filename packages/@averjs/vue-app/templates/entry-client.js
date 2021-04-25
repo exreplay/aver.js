@@ -90,7 +90,15 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
     deepMapChildren(children, components, routes) {
       for (const child of children) {
         // Compare the components ctor to find only router components
-        const isRoute = routes.find(r => r === child.$options._Ctor[0]);
+        const isRoute = routes.find(r => {
+          let found = false;
+          for (const ctor of Object.keys(child.$options._Ctor || {})) {
+            if (r === child.$options._Ctor[ctor]) {
+              found = true;
+            }
+          }
+          return found;
+        });
         if (isRoute) components.push(child);
         // If App.vue component has no asyncData, push it anyway so that hmr works if it gets added later.
         // Because the App.vue component always is the entry point we check if the parent is the root instance.
