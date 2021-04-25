@@ -9,7 +9,7 @@ import merge from 'lodash/merge';
 
 export type TSLoaderOptions = Partial<LoaderOptions>;
 
-interface TypescriptPluginOptions {
+export interface TypescriptPluginOptions {
   tsLoader:
     | TSLoaderOptions
     | ((
