@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import RouterPrefetch from 'vue-router-prefetch';
 import Meta from 'vue-meta';
 
 Vue.use(VueRouter);
+Vue.use(RouterPrefetch);
 Vue.use(Meta, {
   ssrAppId: 1
 });
