@@ -75,15 +75,28 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
 
     hotReload() {
       if (module.hot) {
-        const components = this.deepMapChildren(app.$root.$children, []);
+        const route = router.match(this.getLocation(router.options.base));
+        // Map the matched routes and return their ctor
+        const routes = route.matched.map(m => {
+          const component = m.components.default;
+          if (typeof component === 'object' && !component.options) return component._Ctor[0];
+          else return component;
+        });
+        const components = this.deepMapChildren(app.$root.$children, [], routes);
         components.forEach(this.applyHmrUpdate.bind(this));
       }
     }
 
-    deepMapChildren(children, components) {
+    deepMapChildren(children, components, routes) {
       for (const child of children) {
-        if (child.$options.asyncData) components.push(child);
-        if (child.$children && child.$children.length) this.deepMapChildren(child.$children, components);
+        // Compare the components ctor to find only router components
+        const isRoute = routes.find(r => r === child.$options._Ctor[0]);
+        if (isRoute) components.push(child);
+        // If App.vue component has no asyncData, push it anyway so that hmr works if it gets added later.
+        // Because the App.vue component always is the entry point we check if the parent is the root instance.
+        else if (!isRoute && child.$options.parent === app.$root) components.push(child);
+
+        if (child.$children && child.$children.length) this.deepMapChildren(child.$children, components, routes);
       }
 
       return components;
@@ -99,6 +112,7 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
       component.$vnode.context.$forceUpdate = async function() {
         if (index - 1 >= 0) {
           const matched = router.currentRoute.matched[index - 1];
+          if (!matched) return;
           for (const key of Object.keys(matched.components)) {
             let Component = matched.components[key];
   
@@ -108,13 +122,15 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
             }
   
             const { asyncData } = Component.options;
-            const data = await asyncData({
-              app,
-              store,
-              route: { to: router.currentRoute },
-              isServer: false
-            });
-            applyAsyncData(Component, data);
+            if (asyncData) {
+              const data = await asyncData({
+                app,
+                store,
+                route: { to: router.currentRoute },
+                isServer: false
+              });
+              applyAsyncData(Component, data);
+            }
           }
           _forceUpdate();
           setTimeout(() => hotReload(), 100);
@@ -124,15 +140,17 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
           const Component = this.$children[0];
 
           const { asyncData } = Component.$options;
-          const data = await asyncData({
-            app,
-            store,
-            route: { to: router.currentRoute },
-            isServer: false
-          });
+          if (asyncData) {
+            const data = await asyncData({
+              app,
+              store,
+              route: { to: router.currentRoute },
+              isServer: false
+            });
 
-          for (const key of Object.keys(data || {})) {
-            Component[key] = data[key];
+            for (const key of Object.keys(data || {})) {
+              Component[key] = data[key];
+            }
           }
 
           setTimeout(() => hotReload(), 100);
