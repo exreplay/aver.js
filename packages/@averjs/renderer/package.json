@@ -78,7 +78,7 @@
     "yaml-loader": "^0.6.0"
   },
   "devDependencies": {
-    "@types/copy-webpack-plugin": "^6.4.2",
+    "@types/copy-webpack-plugin": "^8.0.0",
     "@types/cross-spawn": "^6.0.2",
     "@types/memory-fs": "^0.3.3",
     "@types/optimize-css-assets-webpack-plugin": "^5.0.3",
