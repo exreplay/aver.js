@@ -1,3 +1,13 @@
+## 2.6.1 (2021-04-25)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#353](https://github.com/exreplay/aver.js/pull/353) fix: fix asyncData hmr ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.6.0 (2021-04-25)
 
 #### :rocket: New Features
