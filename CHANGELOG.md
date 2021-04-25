@@ -1,3 +1,31 @@
+## 2.6.0 (2021-04-25)
+
+#### :rocket: New Features
+* `@averjs/core`, `@averjs/vue-app`
+  * [#351](https://github.com/exreplay/aver.js/pull/351) feat: added support for vue-router-prefetch ([@exreplay](https://github.com/exreplay))
+* `@averjs/builder`, `@averjs/vue-app`
+  * [#337](https://github.com/exreplay/aver.js/pull/337) feat: added return to asyncData hooks ([@exreplay](https://github.com/exreplay))
+
+#### :bug: Bug Fix
+* `@averjs/typescript`
+  * [#352](https://github.com/exreplay/aver.js/pull/352) fix: export typescript plugin options interface ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#348](https://github.com/exreplay/aver.js/pull/348) chore(deps): lock file maintenance ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#334](https://github.com/exreplay/aver.js/pull/334) chore(deps): update dependency open to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+  * [#350](https://github.com/exreplay/aver.js/pull/350) chore(deps): update dependency puppeteer to v9 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/babel-preset-app`, `@averjs/core`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/typescript`
+  * [#346](https://github.com/exreplay/aver.js/pull/346) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/shared-utils`
+  * [#334](https://github.com/exreplay/aver.js/pull/334) chore(deps): update dependency open to v8 ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/renderer`
+  * [#349](https://github.com/exreplay/aver.js/pull/349) chore(deps): update dependency webpack-node-externals to v3 ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.5.2 (2021-04-17)
 
 #### :house: Internal
