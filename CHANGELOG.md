@@ -1,3 +1,13 @@
+## 2.6.2 (2021-04-25)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#354](https://github.com/exreplay/aver.js/pull/354) fix: check for if _Ctor is object ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.6.1 (2021-04-25)
 
 #### :bug: Bug Fix
