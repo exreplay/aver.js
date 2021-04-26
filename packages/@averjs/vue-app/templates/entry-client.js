@@ -82,27 +82,17 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
           if (typeof component === 'object' && !component.options) return component._Ctor[0];
           else return component;
         });
-        const components = this.deepMapChildren(app.$root.$children, [], routes);
-        components.forEach(this.applyHmrUpdate.bind(this));
+        this.components = this.deepMapChildren(app.$root.$children, [], routes);
+        this.components.forEach(this.applyHmrUpdate.bind(this));
       }
     }
 
     deepMapChildren(children, components, routes) {
       for (const child of children) {
-        // Compare the components ctor to find only router components
-        const isRoute = routes.find(r => {
-          let found = false;
-          for (const ctor of Object.keys(child.$options._Ctor || {})) {
-            if (r === child.$options._Ctor[ctor]) {
-              found = true;
-            }
-          }
-          return found;
-        });
-        if (isRoute) components.push(child);
+        if (child.$vnode.data.routerView) components.push(child);
         // If App.vue component has no asyncData, push it anyway so that hmr works if it gets added later.
         // Because the App.vue component always is the entry point we check if the parent is the root instance.
-        else if (!isRoute && child.$options.parent === app.$root) components.push(child);
+        else if (!child.$vnode.data.routerView && child.$options.parent === app.$root) components.push(child);
 
         if (child.$children && child.$children.length) this.deepMapChildren(child.$children, components, routes);
       }
@@ -114,13 +104,16 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
       if (component.$vnode.data._hasHotReload) return;
       component.$vnode.data._hasHotReload = true;
       
-      const _forceUpdate = component.$forceUpdate.bind(component.$parent);
+      const _forceUpdate = component.$forceUpdate.bind(this.components[index - 1] || app.$root);
       const hotReload = this.hotReload.bind(this);
 
       component.$vnode.context.$forceUpdate = async function() {
         if (index - 1 >= 0) {
           const matched = router.currentRoute.matched[index - 1];
-          if (!matched) return;
+          if (!matched) {
+            _forceUpdate();
+            return;
+          }
           for (const key of Object.keys(matched.components)) {
             let Component = matched.components[key];
   
