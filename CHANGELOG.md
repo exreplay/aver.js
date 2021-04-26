@@ -1,3 +1,19 @@
+## 2.6.3 (2021-04-26)
+
+#### :bug: Bug Fix
+* `@averjs/vue-app`
+  * [#357](https://github.com/exreplay/aver.js/pull/357) fix: check routerView instead of ctor and fixed parent components ([@exreplay](https://github.com/exreplay))
+
+#### :house: Internal
+* Other
+  * [#356](https://github.com/exreplay/aver.js/pull/356) chore(deps): lock file maintenance ([@renovate[bot]](https://github.com/apps/renovate))
+* `@averjs/typescript`
+  * [#355](https://github.com/exreplay/aver.js/pull/355) chore(deps): update all non-major dependencies ([@renovate[bot]](https://github.com/apps/renovate))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 2.6.2 (2021-04-25)
 
 #### :bug: Bug Fix
