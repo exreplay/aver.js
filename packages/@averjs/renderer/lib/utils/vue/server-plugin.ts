@@ -37,7 +37,7 @@ export default class VueSSRServerPlugin {
 
     compiler.hooks.emit.tapAsync('vue-server-plugin', (compilation, cb) => {
       const stats = compilation.getStats().toJson();
-      const entryName = Object.keys(stats.entrypoint || {})[0];
+      const entryName = Object.keys(stats.entrypoints || {})[0];
       const entryInfo = stats.entrypoints?.[entryName];
 
       if (!entryInfo) {

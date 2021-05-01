@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/await-thenable */
 import typescript, { mergeOptions } from '../lib';
 import Chain from 'webpack-chain';
-import { RuleSetLoader, RuleSetUse } from 'webpack';
+import { RuleSetUse, RuleSetRule } from 'webpack';
 import IgnoreNotFoundExportPlugin from '../lib/IgnoreNotFoundExportPlugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
@@ -105,9 +105,9 @@ describe('typescript plugin', () => {
 
     for (const chain of [clientChain, serverChain]) {
       const config = chain.toConfig();
-      const ruleSet = config.module?.rules[0].use;
+      const ruleSet = (config.module?.rules[0] as RuleSetRule).use;
       const loaders = Array.isArray(ruleSet)
-        ? ruleSet?.map((loader) => (loader as RuleSetLoader).loader)
+        ? ruleSet?.map((loader) => (loader as RuleSetRule).loader)
         : undefined;
 
       expect(loaders).toEqual([
@@ -119,12 +119,12 @@ describe('typescript plugin', () => {
 
       if (config.name === 'client') {
         expect(
-          (((ruleSet as RuleSetUse[])[0] as RuleSetLoader).options as {
+          (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
             [k: string]: unknown;
           })?.cacheDirectory
         ).toContain('client');
         expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetLoader).options as {
+          (((ruleSet as RuleSetUse[])[1] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
           })?.poolConfig.poolTimeout
@@ -132,12 +132,12 @@ describe('typescript plugin', () => {
         expect(config.plugins?.[0]).toBeInstanceOf(ForkTsCheckerWebpackPlugin);
       } else if (config.name === 'server') {
         expect(
-          (((ruleSet as RuleSetUse[])[0] as RuleSetLoader).options as {
+          (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
             [k: string]: unknown;
           })?.cacheDirectory
         ).toContain('server');
         expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetLoader).options as {
+          (((ruleSet as RuleSetUse[])[1] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
           })?.poolConfig.poolTimeout
@@ -161,11 +161,11 @@ describe('typescript plugin', () => {
 
     for (const chain of [clientChain, serverChain]) {
       const config = chain.toConfig();
-      const ruleSet = config.module?.rules[0].use;
+      const ruleSet = (config.module?.rules[0] as RuleSetRule).use;
 
       if (config.name === 'client') {
         expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetLoader).options as {
+          (((ruleSet as RuleSetUse[])[1] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
           })?.poolConfig.poolTimeout
@@ -173,7 +173,7 @@ describe('typescript plugin', () => {
         expect(config.plugins?.[0]).toBeInstanceOf(ForkTsCheckerWebpackPlugin);
       } else if (config.name === 'server') {
         expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetLoader).options as {
+          (((ruleSet as RuleSetUse[])[1] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
           })?.poolConfig.poolTimeout
