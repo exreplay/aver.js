@@ -1,25 +1,23 @@
 <template>
-    <div>
-        <div :class="$style.test">Hallo</div>
-        <logo></logo>
-    </div>
+  <div>
+    <div :class="$style.test">Hallo</div>
+    <logo></logo>
+  </div>
 </template>
 
 <script>
-    import Vue              from 'vue';
-    import { Component }    from 'vue-property-decorator';
-    import Logo             from '@/components/Logo';
+  import { Vue, Component } from 'vue-property-decorator';
 	
-	@Component({
-        components: {
-            Logo
-        }
-    })
-    export default class Home extends Vue {
-        mounted() {
-            console.log('test');
-        }
+  @Component({
+    components: {
+      Logo: () => import('@/components/Logo')
     }
+  })
+  export default class Home extends Vue {
+    mounted() {
+      console.log('test');
+    }
+  }
 </script>
 
 <style lang="scss" module>

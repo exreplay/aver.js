@@ -1,16 +1,20 @@
 import { resolve } from 'path';
 import { existsSync } from 'fs';
 import { copy } from 'fs-extra';
-import { CommandInterface } from '@averjs/cli/dist/commands/command';
+import { CommandInterface } from '@averjs/cli';
 import ora from 'ora';
 
 export default class TypescriptInitCommand implements CommandInterface {
   name = 'ts-init';
   description = 'Initialize typescript project with necessary files.';
 
-  get tsConfigPath() { return resolve(process.env.PROJECT_PATH, '../tsconfig.json'); }
-  get tsConfigServerPath() { return resolve(process.env.PROJECT_PATH, '../tsconfig.server.json'); }
-  get eslintrcPath() { return resolve(process.env.PROJECT_PATH, '../.eslintrc.js'); }
+  get tsConfigPath() {
+    return resolve(process.env.PROJECT_PATH, '../tsconfig.json');
+  }
+
+  get tsConfigServerPath() {
+    return resolve(process.env.PROJECT_PATH, '../tsconfig.server.json');
+  }
 
   async run() {
     const tsConfigSpinner = ora('Copying tsconfig.json').start();
@@ -32,7 +36,9 @@ export default class TypescriptInitCommand implements CommandInterface {
       );
       tsConfigServerSpinner.succeed();
     } else {
-      tsConfigServerSpinner.info('Skipping because tsconfig.server.json already exists.');
+      tsConfigServerSpinner.info(
+        'Skipping because tsconfig.server.json already exists.'
+      );
     }
   }
 }

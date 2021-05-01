@@ -1,32 +1,29 @@
+<% /* eslint-disable no-undef */ %>
 import { createApp } from './app';
 import Vue from 'vue';
 import App from '@/App.vue';
-import { composeComponentOptions } from './utils';
+import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './utils';
 
 <% if (config.csrf) { %> Vue.prototype.$csrf = ''; <% } %>
 
 export default async context => {
   try {
-    <%
-      const extensions = config.additionalExtensions.join('|');
-      print(`
-    const entries = require.context('./', true, /.\\/[^/]+\\/entry-server\\.(${extensions})$/i);
-    const mixinContext = require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i);
-      `);
-    %>
-    const entryMixins = [ entries, mixinContext ];
+    <% const extensions = config.additionalExtensions.join('|'); %>
+    const entries = <%= `require.context('./', true, /.\\/[^/]+\\/entry-server\\.(${extensions})$/i)` %>;
+    const mixinContext = <%= `require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i)` %>;
+    const entryMixins = [entries, mixinContext];
 
     const renderedFns = [];
     const contextRendered = fn => {
-      if(typeof fn === 'function') renderedFns.push(fn);
-    }
+      if (typeof fn === 'function') renderedFns.push(fn);
+    };
     const { app, router, store, userReturns } = await createApp({ isServer: true, context });
     const meta = app.$meta();
 
-    await new Promise((resolve, reject) => {
+    await new Promise(resolve => {
       router.push(context.url, resolve, () => {
         // if a navigation guard redirects to a new url, wait for it to be resolved, before continue
-        const unregister = router.afterEach((to, from, next) => {
+        const unregister = router.afterEach(to => {
           context.url = to.fullPath;
           context.params = to.params;
           context.query = to.query;
@@ -46,10 +43,10 @@ export default async context => {
       throw error;
     }
 
-    for(const entryMixin of entryMixins) {
-      for(const entry of entryMixin.keys()) {
+    for (const entryMixin of entryMixins) {
+      for (const entry of entryMixin.keys()) {
         const mixin = entryMixin(entry).default;
-        if(typeof mixin === 'function') await mixin({...context, userReturns, contextRendered});
+        if (typeof mixin === 'function') await mixin({ ...context, userReturns, contextRendered });
       }
     }
         
@@ -59,24 +56,12 @@ export default async context => {
       }
     }
 
-    for (const component of matchedComponents) {
-      const { asyncData } = composeComponentOptions(component);
-
-      if (typeof asyncData === 'function' && asyncData) {
-        await asyncData({
-          store,
-          route: {
-            to: router.currentRoute,
-            from: undefined
-          },
-          isServer: true
-        });
-      }
-    }
+    const asyncDatas = [];
 
     const { asyncData } = composeComponentOptions(App);
     if (typeof asyncData === 'function' && asyncData) {
-      await asyncData({
+      const data = await asyncData({
+        app,
         store,
         route: {
           to: router.currentRoute,
@@ -84,15 +69,51 @@ export default async context => {
         },
         isServer: true
       });
+
+      if (data) {
+        const SanitizedApp = sanitizeComponent(App);
+        applyAsyncData(SanitizedApp, data);
+        if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
+        context.ssrState.asyncData.app = data;
+      }
     }
 
-    context.rendered = async () => {
-      for(const fn of renderedFns) await fn(context);
+    for (const component of matchedComponents) {
+      const { asyncData } = composeComponentOptions(component);
+
+      if (typeof asyncData === 'function' && asyncData) {
+        const data = await asyncData({
+          app,
+          store,
+          route: {
+            to: router.currentRoute,
+            from: undefined
+          },
+          isServer: true
+        });
+
+        if (data) {
+          const SanitizedComponent = sanitizeComponent(component);
+          applyAsyncData(SanitizedComponent, data);
+          if (!context.ssrState.asyncData) context.ssrState.asyncData = {};
+          asyncDatas.push(data);
+        } else {
+          asyncDatas.push(null);
+        }
+      } else {
+        asyncDatas.push(null);
+      }
+    }
+
+    context.ssrState.data = asyncDatas;
+
+    context.rendered = async() => {
+      for (const fn of renderedFns) await fn(context);
       context.state = store.state;
     };
         
     return app;
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    throw error;
   }
 };

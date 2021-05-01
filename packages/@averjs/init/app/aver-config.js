@@ -1,3 +1,3 @@
 export default {
-    progressbar: true
+  progressbar: true
 };

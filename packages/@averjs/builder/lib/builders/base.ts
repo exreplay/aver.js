@@ -1,22 +1,31 @@
 import LRU from 'lru-cache';
-import { createBundleRenderer, BundleRendererOptions } from 'vue-server-renderer';
+import {
+  createBundleRenderer,
+  BundleRendererOptions,
+  BundleRenderer
+} from 'vue-server-renderer';
 import { VueMetaPlugin } from 'vue-meta';
 import { Request } from 'express';
 
 export interface BuilderContext {
+  [index: string]: any;
   title: string | undefined;
   url: string;
   req: Partial<Request>;
-  csrfToken?: string;
   meta?: VueMetaPlugin;
+  csrfToken?: string;
   state?: Record<string, unknown>;
+  ssrState?: Record<string, unknown>;
   renderStyles?: () => string;
   renderResourceHints?: () => string;
   renderScripts?: () => string;
 }
 
 export default class BaseBuilder {
-  createRenderer(bundle: string, options: BundleRendererOptions) {
+  createRenderer(
+    bundle: string,
+    options: BundleRendererOptions
+  ): BundleRenderer {
     const bundleOptions = {
       cache: new LRU({
         max: 1000,
@@ -24,7 +33,7 @@ export default class BaseBuilder {
       }),
       runInNewContext: false
     };
-  
+
     return createBundleRenderer(bundle, Object.assign(options, bundleOptions));
   }
 }

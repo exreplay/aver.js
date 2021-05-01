@@ -9,7 +9,7 @@ export interface CommandInterface {
   alias?: string;
   aliases?: string[];
   run(...args: unknown[]): Promise<void> | void;
-  generateCommandLineUsage?(...args: unknown[]): void
+  generateCommandLineUsage?(...args: unknown[]): void;
 }
 
 export interface Args extends OptionDefinition {
@@ -32,11 +32,13 @@ export default class Command {
    * @param {*} argv
    */
   parseArgs(argv: ParsedArgs) {
-    return this.args.filter(arg => {
-      return argv[arg.name];
-    }).reduce((prev, cur) => {
-      prev[cur.name] = true;
-      return prev;
-    }, {} as ParsedArgs);
+    return this.args
+      .filter((arg) => {
+        return argv[arg.name];
+      })
+      .reduce((prev, cur) => {
+        prev[cur.name] = true;
+        return prev;
+      }, {} as ParsedArgs);
   }
 }

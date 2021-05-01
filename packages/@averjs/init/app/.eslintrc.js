@@ -1,5 +1,5 @@
 module.exports = {
-    extends: [
-        '@averjs'
-    ]
+  extends: [
+    '@averjs'
+  ]
 };

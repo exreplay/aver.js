@@ -1,6 +1,8 @@
 import Command, { CommandInterface } from '../lib/commands/command';
 
-export default class FailingCommand extends Command implements CommandInterface {
+export default class FailingCommand
+  extends Command
+  implements CommandInterface {
   name = 'fail';
   description = 'fail';
 

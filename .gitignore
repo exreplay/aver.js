@@ -10,3 +10,6 @@ tmp
 verdaccio
 packages/test
 .changelog
+temp
+scripts-build
+__tests__/**/storage

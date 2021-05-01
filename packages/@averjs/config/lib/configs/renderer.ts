@@ -1,60 +1,74 @@
 import path from 'path';
 import Config from 'webpack-chain';
-import { GenerateSWOptions, InjectManifestOptions } from 'workbox-webpack-plugin';
+import {
+  GenerateSWOptions,
+  InjectManifestOptions
+} from 'workbox-webpack-plugin';
 import { StyleResourcesLoaderOptions } from 'style-resources-loader';
 import { ProcessOptions, AcceptedPlugin } from 'postcss';
 import PostCSSPresetEnv from 'postcss-preset-env';
+import { Options as NodeExternalsOptions } from 'webpack-node-externals';
+import { BabelOptions } from '@averjs/babel-preset-app';
 
 export interface AverWebpackConfig {
-  babel?: any;
+  babel?:
+    | BabelOptions
+    | ((payload: { isServer: boolean }, config: BabelOptions) => void);
   additionalExtensions?: string[];
   transpileDependencies?: (string | RegExp)[];
+  nodeExternals?: NodeExternalsOptions;
   postcss?: {
     preset?: PostCSSPresetEnv.pluginOptions;
     sourceMap?: boolean;
     execute?: boolean;
-    postcssOptions?: { 
+    postcssOptions?: {
       plugins?: AcceptedPlugin[];
     } & ProcessOptions;
     plugins?: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [index: string]: any;
-    }
+    };
   };
-  runtimeChunk?: boolean | 'single' | 'multiple' | Config.RuntimeChunk,
+  runtimeChunk?: boolean | 'single' | 'multiple' | Config.RuntimeChunk;
   css?: {
-    extract?: boolean,
+    extract?: boolean;
     styleResources?: {
-      resources?: string[],
-      options?: StyleResourcesLoaderOptions
-    }
-  },
-  alias?: {
-    [index: string]: string;
-    '@': string;
-    '@@': string;
-    '@components': string;
-    '@resources': string;
-    '@mixins': string;
-    '@pages': string;
-    '@vuex': string;
-  },
+      resources?: string[];
+      options?: StyleResourcesLoaderOptions;
+    };
+  };
+  alias?:
+    | {
+        [index: string]: string;
+      }
+    | {
+        [index: string]: string;
+        '@': string;
+        '@@': string;
+        '@components': string;
+        '@resources': string;
+        '@mixins': string;
+        '@pages': string;
+        '@vuex': string;
+      };
   base?: false | ((chain: Config) => void);
   client?: false | ((chain: Config) => void);
   server?: false | ((chain: Config) => void);
   sw?: false | GenerateSWOptions | InjectManifestOptions;
   process?: {
-    env?: Record<string, any>
-  }
+    env?: Record<string, any>;
+  };
 }
 
-export default (): AverWebpackConfig => ({
+export default (isProd: boolean): AverWebpackConfig => ({
   babel: {},
-  additionalExtensions: [ 'js' ],
+  additionalExtensions: ['js'],
   transpileDependencies: [],
+  nodeExternals: {},
   postcss: {},
   runtimeChunk: 'single',
   css: {
-    extract: process.env.NODE_ENV === 'production',
+    extract: isProd,
     styleResources: {
       resources: [],
       options: {
