@@ -80,9 +80,6 @@ export default class WebpackBaseConfiguration {
 
     if (this.isProd) {
       this.chainConfig
-        .plugin('hashed-module-ids')
-        .use(webpack.HashedModuleIdsPlugin)
-        .end()
         .plugin('module-concatenation')
         .use(webpack.optimize.ModuleConcatenationPlugin);
     }
@@ -237,14 +234,9 @@ export default class WebpackBaseConfiguration {
       .path(this.distPath)
       .publicPath(isStatic ? '/' : '/dist/')
       .end()
-      .node.set('setImmediate', false)
-      .set('dgram', 'empty')
-      .set('fs', 'empty')
-      .set('net', 'empty')
-      .set('tls', 'empty')
-      .set('child_process', 'empty')
-      .end()
-      .devtool(this.isProd ? false : 'cheap-module-eval-source-map')
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .devtool(this.isProd ? false : 'eval-cheap-module-source-map')
       .mode(
         process.env.NODE_ENV === 'development'
           ? 'development'

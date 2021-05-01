@@ -58,7 +58,7 @@ export default class BabelLoader {
     const jsRule = chain.module
       .rule('js')
       .test(/\.js$/)
-      .exclude.add((filepath) => {
+      .exclude.add((filepath: string) => {
         // always transpile javascript in vue files
         if (/\.vue\.js$/.test(filepath)) return false;
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import fs from 'fs-extra';
 import path from 'path';
-import webpack, { Configuration } from 'webpack';
+import webpack, { Configuration, EntryObject } from 'webpack';
 import template from 'lodash/template';
 import WebpackClientConfiguration from './config/client';
 import WebpackServerConfiguration from './config/server';
@@ -176,11 +176,11 @@ export default class Renderer {
       clientCompiler.hooks.done.tap('averjs', (stats) => {
         const jsonStats = stats.toJson();
         /* istanbul ignore next */
-        jsonStats.errors.forEach((err) => console.error(err));
+        jsonStats.errors?.forEach((err) => console.error(err));
         /* istanbul ignore next */
-        jsonStats.warnings.forEach((err) => console.warn(err));
+        jsonStats.warnings?.forEach((err) => console.warn(err));
         /* istanbul ignore next */
-        if (jsonStats.errors.length) return;
+        if (jsonStats.errors?.length) return;
 
         this.clientManifest = JSON.parse(
           this.readFile('vue-ssr-client-manifest.json')
@@ -192,13 +192,13 @@ export default class Renderer {
       const serverWatcher = serverCompiler.watch({}, (err, stats) => {
         /* istanbul ignore next */
         if (err) throw err;
-        const jsonStats = stats.toJson();
+        const jsonStats = stats?.toJson();
         /* istanbul ignore next */
-        jsonStats.errors.forEach((err) => console.error(err));
+        jsonStats?.errors?.forEach((err) => console.error(err));
         /* istanbul ignore next */
-        jsonStats.warnings.forEach((err) => console.warn(err));
+        jsonStats?.warnings?.forEach((err) => console.warn(err));
         /* istanbul ignore next */
-        if (jsonStats.errors.length) return;
+        if (jsonStats?.errors?.length) return;
 
         this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
         this.update();
@@ -231,13 +231,13 @@ export default class Renderer {
             /* istanbul ignore next */
             if (err) return reject(err);
 
-            if (stats.hasErrors()) {
+            if (stats?.hasErrors()) {
               const error = new Error('Build error');
-              error.stack = stats.toString('errors-only');
+              error.stack = stats?.toString('errors-only');
               return reject(error);
             }
 
-            resolve(stats.toJson());
+            resolve(stats?.toJson());
           });
         })
       );
@@ -281,9 +281,9 @@ export default class Renderer {
     searchparams.append('timeout', '30000');
     searchparams.append('path', '/__webpack_hmr/client');
 
-    (this.clientConfig.entry as webpack.Entry).app = [
+    (this.clientConfig.entry as EntryObject).app = [
       `webpack-hot-middleware/client?${searchparams.toString()}`,
-      (this.clientConfig.entry as webpack.Entry).app as string
+      (this.clientConfig.entry as EntryObject).app as string
     ];
 
     if (this.clientConfig.output)
@@ -294,10 +294,10 @@ export default class Renderer {
     );
 
     const clientCompiler = webpack(this.clientConfig);
-    clientCompiler.outputFileSystem = this.mfs;
+    clientCompiler.outputFileSystem = this.mfs as never;
     const devMiddleware = WebpackDevMiddleware(clientCompiler as never, {
-      publicPath: this.clientConfig.output?.publicPath,
-      outputFileSystem: this.mfs,
+      publicPath: this.clientConfig.output?.publicPath as string,
+      outputFileSystem: this.mfs as never,
       stats: 'none',
       index: false
     });

@@ -140,8 +140,6 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig.optimization.minimizer('terser').use(TerserPlugin, [
       {
-        sourceMap: true,
-        cache: true,
         parallel: false,
         extractComments: {
           filename: 'LICENSES'
@@ -218,9 +216,21 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     await this.aver.callHook('renderer:client-config', this.chainConfig);
 
-    const config: Configuration = Object.assign(this.chainConfig.toConfig(), {
+    const configObj = this.chainConfig.toConfig();
+    const config: Configuration = Object.assign(configObj, {
       entry: {
         app: path.join(this.cacheDir, 'entry-client.js')
+      },
+      resolve: {
+        ...configObj.resolve,
+        fallback: {
+          setImmediate: false,
+          dgram: 'empty',
+          fs: 'empty',
+          net: 'empty',
+          tls: 'empty',
+          child_process: 'empty'
+        }
       },
       optimization: {
         moduleIds: 'deterministic'

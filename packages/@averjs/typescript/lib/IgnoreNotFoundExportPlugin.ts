@@ -47,7 +47,7 @@ export default class IgnoreNotFoundExportPlugin {
           !(
             this.isModuleDependencyWarning(warning) &&
             EXPORT_NOT_FOUND_REG_EXP.test(warning.message) &&
-            this.isResourcePathAllowed(warning.module.context)
+            this.isResourcePathAllowed(warning.module.context || '')
           )
       );
     });

@@ -68,9 +68,21 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
 
     await this.aver.callHook('renderer:server-config', this.chainConfig);
 
-    const config: Configuration = Object.assign(this.chainConfig.toConfig(), {
+    const configObj = this.chainConfig.toConfig();
+    const config: Configuration = Object.assign(configObj, {
       entry: {
         app: path.join(this.cacheDir, 'entry-server.js')
+      },
+      resolve: {
+        ...configObj.resolve,
+        fallback: {
+          setImmediate: false,
+          dgram: 'empty',
+          fs: 'empty',
+          net: 'empty',
+          tls: 'empty',
+          child_process: 'empty'
+        }
       }
     } as Configuration);
 
