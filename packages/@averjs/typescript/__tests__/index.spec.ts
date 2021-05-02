@@ -105,7 +105,7 @@ describe('typescript plugin', () => {
 
     for (const chain of [clientChain, serverChain]) {
       const config = chain.toConfig();
-      const ruleSet = (config.module?.rules[0] as RuleSetRule).use;
+      const ruleSet = (config.module?.rules?.[0] as RuleSetRule).use;
       const loaders = Array.isArray(ruleSet)
         ? ruleSet?.map((loader) => (loader as RuleSetRule).loader)
         : undefined;
@@ -161,7 +161,7 @@ describe('typescript plugin', () => {
 
     for (const chain of [clientChain, serverChain]) {
       const config = chain.toConfig();
-      const ruleSet = (config.module?.rules[0] as RuleSetRule).use;
+      const ruleSet = (config.module?.rules?.[0] as RuleSetRule).use;
 
       if (config.name === 'client') {
         expect(

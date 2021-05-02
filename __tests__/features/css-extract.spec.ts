@@ -33,9 +33,7 @@ testFeature('css-extract', (currentDir) => {
         `http://localhost:3000/dist/_averjs/css/${css}`
       );
       expect(response?.status()).toBe(200);
-      expect(content).toContain(
-        `<link rel="preload" href="/dist/_averjs/css/${css}" as="style">`
-      );
+      expect(content).toContain(`href="/dist/_averjs/css/${css}"`);
     }
   });
 });
