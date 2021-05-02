@@ -1,6 +1,6 @@
 {
   "name": "@averjs/builder",
-  "version": "2.6.3",
+  "version": "3.0.0-0",
   "description": "The builder package for averjs.",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -25,7 +25,7 @@
     "build": true
   },
   "dependencies": {
-    "@averjs/config": "2.6.3",
+    "@averjs/config": "3.0.0-0",
     "html-minifier": "^4.0.0",
     "lru-cache": "^6.0.0",
     "vue-server-renderer": "^2.6.12"
