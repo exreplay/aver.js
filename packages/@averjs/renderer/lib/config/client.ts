@@ -5,7 +5,7 @@ import path from 'path';
 import VueSSRClientPlugin from '../utils/vue/client-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HTMLPlugin from 'html-webpack-plugin';
-import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import MiniCssExtractPlugin from 'css-minimizer-webpack-plugin';
 import SafeParser from 'postcss-safe-parser';
 import cloneDeep from 'lodash/cloneDeep';
 import FriendlyErrorsPlugin from '@averjs/friendly-errors-webpack-plugin';
@@ -187,10 +187,10 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     ]);
 
     this.chainConfig.optimization
-      .minimizer('optimize-css')
-      .use(OptimizeCssAssetsPlugin, [
+      .minimizer('minimize-css')
+      .use(MiniCssExtractPlugin, [
         {
-          cssProcessorPluginOptions: {
+          minimizerOptions: {
             preset: [
               'default',
               {
