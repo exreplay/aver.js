@@ -53,15 +53,13 @@ export default class Release {
     ]);
 
     if (release) {
-      if ((await this.gitBranch()) !== 'development' && !this.test) {
-        console.log(
-          logSymbols.warning,
-          chalk.bold.red(
-            "You are not in the 'development' branch! Please switch."
-          )
-        );
-        process.exit(0);
-      } else {
+      const branch = await this.gitBranch();
+
+      if (
+        (type.startsWith('pre') && branch === 'next') ||
+        branch === 'development' ||
+        this.test
+      ) {
         try {
           const build = new Build(false, type);
           await build.run();
@@ -79,6 +77,14 @@ export default class Release {
         } catch (error) {
           console.error(error);
         }
+      } else {
+        console.log(
+          logSymbols.warning,
+          chalk.bold.red(
+            "You are not in the 'development' or 'next' branch! Use 'development' for normal and 'next' for pre releases. Please switch."
+          )
+        );
+        process.exit(0);
       }
     }
   }
