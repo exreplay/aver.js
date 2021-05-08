@@ -9,6 +9,7 @@ import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
 import Core from '@averjs/core';
 import { AverWebpackConfig } from '@averjs/config';
+import ESLintPlugin from 'eslint-webpack-plugin';
 
 export default class WebpackBaseConfiguration {
   aver: Core;
@@ -52,6 +53,13 @@ export default class WebpackBaseConfiguration {
   }
 
   plugins() {
+    this.chainConfig.plugin('eslint-webpack-plugin').use(ESLintPlugin, [
+      {
+        extensions: [...(this.webpackConfig.additionalExtensions || []), 'vue'],
+        cache: true
+      }
+    ]);
+
     if (!this.isServer && this.webpackConfig?.css?.extract) {
       this.chainConfig.plugin('extract-css').use(ExtractCssPlugin, [
         {
@@ -122,18 +130,6 @@ export default class WebpackBaseConfiguration {
       .type('javascript/auto')
       .use('i18n')
       .loader('@kazupon/vue-i18n-loader');
-
-    this.chainConfig.module
-      .rule('eslint')
-      .test(/\.(js|vue)$/)
-      .pre()
-      .exclude.add(/node_modules/)
-      .end()
-      .use('eslint')
-      .loader('eslint-loader')
-      .options({
-        cache: true
-      });
 
     this.babelLoader.apply(this.chainConfig);
 
