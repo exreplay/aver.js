@@ -1,6 +1,6 @@
 {
   "name": "@averjs/session",
-  "version": "3.0.0-0",
+  "version": "3.0.0-1",
   "description": "session support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
