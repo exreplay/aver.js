@@ -14,7 +14,7 @@ import Core from '@averjs/core';
 import { BundleRendererOptions } from 'vue-server-renderer';
 import { ParsedArgs } from 'minimist';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
-import WebpackHotMiddleware from 'webpack-hot-middleware';
+import WebpackHotMiddleware from '@averjs/webpack-hot-middleware';
 import { createFsFromVolume, IFs, Volume } from 'memfs';
 import { TDataOut } from 'memfs/lib/encoding';
 import joinPath from 'memory-fs/lib/join';
@@ -286,16 +286,13 @@ export default class Renderer {
     searchparams.append('path', '/__webpack_hmr/client');
 
     (this.clientConfig.entry as EntryObject).app = [
-      `webpack-hot-middleware/client?${searchparams.toString()}`,
+      `@averjs/webpack-hot-middleware/client?${searchparams.toString()}`,
       (this.clientConfig.entry as EntryObject).app as string
     ];
 
     if (this.clientConfig.output)
       this.clientConfig.output.filename = '[name].js';
-    this.clientConfig.plugins?.push(
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoEmitOnErrorsPlugin()
-    );
+    this.clientConfig.plugins?.push(new webpack.HotModuleReplacementPlugin());
 
     const clientCompiler = webpack(this.clientConfig);
     clientCompiler.outputFileSystem = this.mfs as never;
