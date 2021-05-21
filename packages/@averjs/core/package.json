@@ -38,7 +38,7 @@
     "core-js": "^2.6.5",
     "csurf": "^1.11.0",
     "debug": "^4.2.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-validator": "^6.10.1",
