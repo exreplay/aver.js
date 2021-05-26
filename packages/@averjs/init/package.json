@@ -1,6 +1,6 @@
 {
   "name": "@averjs/init",
-  "version": "3.0.0-1",
+  "version": "3.0.0-2",
   "description": "The init package for averjs to quickly bootstrap a new projekt.",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
