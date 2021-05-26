@@ -1,3 +1,4 @@
+import path from 'path';
 import webpack, { Configuration } from 'webpack';
 import WebpackChain from 'webpack-chain';
 import { VueLoaderPlugin } from 'vue-loader';
@@ -260,6 +261,14 @@ export default class WebpackBaseConfiguration {
     this.alias();
     this.optimization();
     this.plugins();
+
+    this.chainConfig.cache({
+      type: 'filesystem',
+      cacheLocation: path.resolve(
+        this.cacheDir,
+        this.isServer ? '../webpack/server' : '../webpack/client'
+      )
+    });
 
     if (typeof this.webpackConfig?.base === 'function')
       this.webpackConfig.base(this.chainConfig);

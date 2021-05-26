@@ -78,24 +78,10 @@ const plugin: PluginFunction = async function (
 ) {
   const { tsLoaderOptions, forkTsCheckerOptions } = await mergeOptions(options);
 
-  const setLoader = (chain: Config, isServer: boolean): void => {
-    const name = 'ts';
-
+  const setLoader = (chain: Config): void => {
     chain.module
       .rule('ts-loader')
       .test(/\.tsx?$/)
-      .use('cache-loader')
-      .loader('cache-loader')
-      .options({
-        cacheDirectory: path.resolve(
-          process.env.PROJECT_PATH,
-          `../node_modules/.cache/cache-loader/${
-            isServer ? 'server' : 'client'
-          }/${name}`
-        ),
-        cacheIdentifier: name
-      })
-      .end()
       .use('thread-loader')
       .loader('thread-loader')
       .options({
@@ -124,11 +110,11 @@ const plugin: PluginFunction = async function (
   }
 
   this.aver.tap('renderer:client-config', (chain) => {
-    setLoader(chain, false);
+    setLoader(chain);
   });
 
   this.aver.tap('renderer:server-config', (chain) => {
-    setLoader(chain, true);
+    setLoader(chain);
   });
 
   this.aver.tap('renderer:base-config', (chain) => {

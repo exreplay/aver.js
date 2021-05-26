@@ -1,4 +1,4 @@
-import path from 'path';
+// import path from 'path';
 import { warmup } from 'thread-loader';
 import { Module, Rule } from 'webpack-chain';
 import { AverWebpackConfig, InternalAverConfig } from '@averjs/config';
@@ -65,19 +65,19 @@ export default class PerformanceLoader {
   apply(rule: Rule<Rule | Module>, name: string) {
     const pool = this.pools[name];
     if (pool) {
-      rule
-        .use('cache-loader')
-        .loader('cache-loader')
-        .options({
-          cacheDirectory: path.resolve(
-            process.env.PROJECT_PATH,
-            `../node_modules/.cache/cache-loader/${
-              this.isServer ? 'server' : 'client'
-            }/${name}`
-          ),
-          cacheIdentifier: name
-        })
-        .end();
+      // rule
+      //   .use('cache-loader')
+      //   .loader('cache-loader')
+      //   .options({
+      //     cacheDirectory: path.resolve(
+      //       process.env.PROJECT_PATH,
+      //       `../node_modules/.cache/cache-loader/${
+      //         this.isServer ? 'server' : 'client'
+      //       }/${name}`
+      //     ),
+      //     cacheIdentifier: name
+      //   })
+      //   .end();
 
       /* istanbul ignore if */
       if (pool.useThread && process.env.NODE_ENV !== 'test') {
