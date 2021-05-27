@@ -266,7 +266,9 @@ export default class WebpackBaseConfiguration {
       type: 'filesystem',
       cacheLocation: path.resolve(
         this.cacheDir,
-        this.isServer ? '../webpack/server' : '../webpack/client'
+        this.isServer
+          ? `../webpack/${this.isProd ? 'prod/' : 'dev/'}server`
+          : `../webpack/${this.isProd ? 'prod/' : 'dev/'}client`
       )
     });
 
