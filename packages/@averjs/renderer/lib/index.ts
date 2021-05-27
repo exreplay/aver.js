@@ -19,6 +19,8 @@ import { createFsFromVolume, IFs, Volume } from 'memfs';
 import { TDataOut } from 'memfs/lib/encoding';
 import joinPath from 'memory-fs/lib/join';
 
+export { PoolConfig, Pool } from './utils/perf-loader';
+
 export interface RendererOptions extends Partial<ParsedArgs> {
   static?: boolean;
 }

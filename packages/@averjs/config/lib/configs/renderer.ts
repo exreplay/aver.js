@@ -11,6 +11,7 @@ import { Options as NodeExternalsOptions } from 'webpack-node-externals';
 import { BabelOptions } from '@averjs/babel-preset-app';
 import { Configuration } from 'webpack';
 import { AverConfig } from '..';
+import { PoolConfig } from '@averjs/renderer';
 
 interface ConfigParams {
   chain: Config;
@@ -63,6 +64,9 @@ export interface AverWebpackConfig {
   client?: false | ((context: ConfigParams) => void);
   server?: false | ((context: ConfigParams) => void);
   sw?: false | GenerateSWOptions | InjectManifestOptions;
+  threadLoader?: {
+    pools?: PoolConfig;
+  };
   process?: {
     env?: Record<string, any>;
   };

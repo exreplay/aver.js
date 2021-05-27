@@ -70,11 +70,14 @@ describe('typescript plugin', () => {
     expect(forkTsCheckerOptions.async).toBeTruthy();
   });
 
-  it('should set additional extensions correctly', async () => {
+  it('should set thread-loader config correctly', async () => {
     await typescript.call(averThis);
-    expect(averThis.aver.config.webpack).toBeUndefined();
+    expect(
+      averThis.aver.config.webpack.threadLoader.pools.ts.loaders
+    ).toContain('ts-loader');
+  });
 
-    averThis.aver.config = { webpack: {} };
+  it('should set additional extensions correctly', async () => {
     await typescript.call(averThis);
     expect(averThis.aver.config.webpack.additionalExtensions).toEqual([
       'ts',
@@ -94,38 +97,29 @@ describe('typescript plugin', () => {
     await typescript.call(averThis);
 
     let clientChain = new Chain().name('client');
-    let serverChain = new Chain().name('server');
-    const baseChain = new Chain().name('base');
+    let baseChain = new Chain().name('base');
 
     for (const [name, hook] of hooks) {
       if (name.includes('client')) hook(clientChain);
-      else if (name.includes('server')) hook(serverChain);
       else if (name.includes('base')) hook(baseChain);
     }
 
-    for (const chain of [clientChain, serverChain]) {
+    for (const chain of [baseChain, clientChain]) {
       const config = chain.toConfig();
-      const ruleSet = (config.module?.rules?.[0] as RuleSetRule).use;
+      const ruleSet = (config.module?.rules?.[0] as RuleSetRule)?.use;
       const loaders = Array.isArray(ruleSet)
         ? ruleSet?.map((loader) => (loader as RuleSetRule).loader)
         : undefined;
 
-      expect(loaders).toEqual(['thread-loader', 'babel-loader', 'ts-loader']);
-
       if (config.name === 'client') {
-        expect(
-          (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            [k: string]: any;
-          })?.poolConfig.poolTimeout
-        ).toBe(2000);
         expect(config.plugins?.[0]).toBeInstanceOf(ForkTsCheckerWebpackPlugin);
-      } else if (config.name === 'server') {
+      } else if (config.name === 'base') {
+        expect(loaders).toEqual(['thread-loader', 'babel-loader', 'ts-loader']);
         expect(
           (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
-          })?.poolConfig.poolTimeout
+          })?.poolTimeout
         ).toBe(2000);
       }
     }
@@ -137,31 +131,25 @@ describe('typescript plugin', () => {
     averThis.config.isProd = false;
     await typescript.call(averThis);
     clientChain = new Chain().name('client');
-    serverChain = new Chain().name('server');
+    baseChain = new Chain().name('base');
 
     for (const [name, hook] of hooks) {
       if (name.includes('client')) hook(clientChain);
-      else if (name.includes('server')) hook(serverChain);
+      else if (name.includes('base')) hook(baseChain);
     }
 
-    for (const chain of [clientChain, serverChain]) {
+    for (const chain of [clientChain, baseChain]) {
       const config = chain.toConfig();
-      const ruleSet = (config.module?.rules?.[0] as RuleSetRule).use;
+      const ruleSet = (config.module?.rules?.[0] as RuleSetRule)?.use;
 
       if (config.name === 'client') {
-        expect(
-          (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            [k: string]: any;
-          })?.poolConfig.poolTimeout
-        ).toBe(Infinity);
         expect(config.plugins?.[0]).toBeInstanceOf(ForkTsCheckerWebpackPlugin);
-      } else if (config.name === 'server') {
+      } else if (config.name === 'base') {
         expect(
           (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
-          })?.poolConfig.poolTimeout
+          })?.poolTimeout
         ).toBe(Infinity);
       }
     }
