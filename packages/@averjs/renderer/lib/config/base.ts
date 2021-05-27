@@ -262,18 +262,34 @@ export default class WebpackBaseConfiguration {
     this.optimization();
     this.plugins();
 
-    this.chainConfig.cache({
-      type: 'filesystem',
-      cacheLocation: path.resolve(
-        this.cacheDir,
-        this.isServer
-          ? `../webpack/${this.isProd ? 'prod/' : 'dev/'}server`
-          : `../webpack/${this.isProd ? 'prod/' : 'dev/'}client`
-      )
-    });
+    const userCache =
+      typeof this.webpackConfig.cache === 'function'
+        ? await this.webpackConfig.cache({
+            chain: this.chainConfig,
+            isServer: this.isServer,
+            config: this.aver.config
+          })
+        : this.webpackConfig.cache;
+
+    this.chainConfig.cache(
+      userCache ||
+        ({
+          type: 'filesystem',
+          cacheLocation: path.resolve(
+            this.cacheDir,
+            this.isServer
+              ? `../webpack/${this.isProd ? 'prod/' : 'dev/'}server`
+              : `../webpack/${this.isProd ? 'prod/' : 'dev/'}client`
+          )
+        } as Configuration['cache'])
+    );
 
     if (typeof this.webpackConfig?.base === 'function')
-      this.webpackConfig.base(this.chainConfig, this.isServer);
+      this.webpackConfig.base({
+        chain: this.chainConfig,
+        isServer: this.isServer,
+        config: this.aver.config
+      });
 
     await this.aver.callHook(
       'renderer:base-config',

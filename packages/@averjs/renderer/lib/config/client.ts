@@ -212,7 +212,11 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       .filename(`_averjs/js/${this.isProd ? '[contenthash].' : '[name].'}js`);
 
     if (typeof this.webpackConfig?.client === 'function')
-      this.webpackConfig.client(this.chainConfig);
+      this.webpackConfig.client({
+        chain: this.chainConfig,
+        isServer: false,
+        config: this.aver.config
+      });
 
     await this.aver.callHook('renderer:client-config', this.chainConfig);
 

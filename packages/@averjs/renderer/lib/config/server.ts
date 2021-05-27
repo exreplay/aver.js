@@ -64,7 +64,11 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
       .externals(nodeExternals(this.nodeExternalsOptions));
 
     if (typeof this.webpackConfig?.server === 'function')
-      this.webpackConfig.server(this.chainConfig);
+      this.webpackConfig.server({
+        chain: this.chainConfig,
+        isServer: true,
+        config: this.aver.config
+      });
 
     await this.aver.callHook('renderer:server-config', this.chainConfig);
 
