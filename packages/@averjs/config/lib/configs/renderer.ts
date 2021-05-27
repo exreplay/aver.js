@@ -51,7 +51,7 @@ export interface AverWebpackConfig {
         '@pages': string;
         '@vuex': string;
       };
-  base?: false | ((chain: Config) => void);
+  base?: false | ((chain: Config, isServer: boolean) => void);
   client?: false | ((chain: Config) => void);
   server?: false | ((chain: Config) => void);
   sw?: false | GenerateSWOptions | InjectManifestOptions;

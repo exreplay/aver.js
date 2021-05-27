@@ -41,7 +41,10 @@ interface TappableHooks {
   'builder:before-compile-ssr': (
     context: BeforeCompileSsrContext
   ) => Promise<void> | void;
-  'renderer:base-config': (chain: Config) => Promise<void> | void;
+  'renderer:base-config': (
+    chain: Config,
+    isServer: boolean
+  ) => Promise<void> | void;
   'renderer:client-config': (chain: Config) => Promise<void> | void;
   'renderer:server-config': (chain: Config) => Promise<void> | void;
   'before-close': (watchers: Watcher[]) => Promise<void> | void;

@@ -273,8 +273,12 @@ export default class WebpackBaseConfiguration {
     });
 
     if (typeof this.webpackConfig?.base === 'function')
-      this.webpackConfig.base(this.chainConfig);
+      this.webpackConfig.base(this.chainConfig, this.isServer);
 
-    await this.aver.callHook('renderer:base-config', this.chainConfig);
+    await this.aver.callHook(
+      'renderer:base-config',
+      this.chainConfig,
+      this.isServer
+    );
   }
 }
