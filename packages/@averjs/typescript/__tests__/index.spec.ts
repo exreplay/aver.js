@@ -110,21 +110,11 @@ describe('typescript plugin', () => {
         ? ruleSet?.map((loader) => (loader as RuleSetRule).loader)
         : undefined;
 
-      expect(loaders).toEqual([
-        'cache-loader',
-        'thread-loader',
-        'babel-loader',
-        'ts-loader'
-      ]);
+      expect(loaders).toEqual(['thread-loader', 'babel-loader', 'ts-loader']);
 
       if (config.name === 'client') {
         expect(
           (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
-            [k: string]: unknown;
-          })?.cacheDirectory
-        ).toContain('client');
-        expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
           })?.poolConfig.poolTimeout
@@ -133,11 +123,6 @@ describe('typescript plugin', () => {
       } else if (config.name === 'server') {
         expect(
           (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
-            [k: string]: unknown;
-          })?.cacheDirectory
-        ).toContain('server');
-        expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
           })?.poolConfig.poolTimeout
@@ -165,7 +150,7 @@ describe('typescript plugin', () => {
 
       if (config.name === 'client') {
         expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetRule).options as {
+          (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
           })?.poolConfig.poolTimeout
@@ -173,7 +158,7 @@ describe('typescript plugin', () => {
         expect(config.plugins?.[0]).toBeInstanceOf(ForkTsCheckerWebpackPlugin);
       } else if (config.name === 'server') {
         expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetRule).options as {
+          (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [k: string]: any;
           })?.poolConfig.poolTimeout

@@ -25,7 +25,7 @@ testFeature('css', () => {
     await page.goto('http://localhost:3000/postcss');
     const content = await page.content();
     expect(content).toContain(
-      '<style type="text/css">h1,h2,h3,h4,h5,h6{margin-bottom:0;margin-top:0}:root{--mainColor:rgba(18,52,86,0.47059)}body{word-wrap:break-word;color:rgba(18,52,86,.47059);color:var(--mainColor);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}.menu_link{background:#056ef0;width:200px}h1:before{margin:10px 20px}</style>'
+      'h1,h2,h3,h4,h5,h6{margin-bottom:0;margin-top:0}:root{--mainColor:rgba(18,52,86,0.47)}body{word-wrap:break-word;color:rgba(18,52,86,.47);color:var(--mainColor);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}.menu_link{background:#056ef0;width:200px}h1:before{margin:10px 20px}'
     );
   });
 
