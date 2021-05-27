@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ref from 'chalk';
 import { Compiler } from 'webpack';
-import { isJS } from './utils';
+import { isJS, onEmit } from './utils';
 
 const red = ref.red;
 const yellow = ref.yellow;
@@ -35,68 +35,73 @@ export default class VueSSRServerPlugin {
   apply(compiler: Compiler) {
     this.validate(compiler);
 
-    compiler.hooks.emit.tapAsync('vue-server-plugin', (compilation, cb) => {
-      const stats = compilation.getStats().toJson();
-      const entryName = Object.keys(stats.entrypoints || {})[0];
-      const entryInfo = stats.entrypoints?.[entryName];
+    onEmit(
+      compiler,
+      'vue-server-plugin',
+      'PROCESS_ASSETS_STAGE_OPTIMIZE_TRANSFER',
+      (compilation, cb) => {
+        const stats = compilation.getStats().toJson();
+        const entryName = Object.keys(stats.entrypoints || {})[0];
+        const entryInfo = stats.entrypoints?.[entryName];
 
-      if (!entryInfo) {
-        // #5553
-        return cb();
-      }
+        if (!entryInfo) {
+          // #5553
+          return cb();
+        }
 
-      const entryAssets = entryInfo.assets?.filter((a: { name: string }) =>
-        isJS(a.name)
-      );
-
-      if ((entryAssets?.length || 0) > 1) {
-        throw new Error(
-          'Server-side bundle should have one single entry file. ' +
-            'Avoid using CommonsChunkPlugin in the server config.'
+        const entryAssets = entryInfo.assets?.filter((a: { name: string }) =>
+          isJS(a.name)
         );
-      }
 
-      const entry = entryAssets?.[0].name;
-      if (!entry || typeof entry !== 'string') {
-        throw new Error(
-          'Entry "' +
-            entryName +
-            '" not found. Did you specify the correct entry option?'
-        );
-      }
-
-      const bundle: ServerManifest = {
-        entry: entry,
-        files: {},
-        maps: {}
-      };
-
-      stats.assets?.forEach((asset: { name: string }) => {
-        if (isJS(asset.name)) {
-          bundle.files[asset.name] = compilation.assets[asset.name].source();
-        } else if (/\.js\.map$/.exec(asset.name)) {
-          bundle.maps[asset.name.replace(/\.map$/, '')] = JSON.parse(
-            compilation.assets[asset.name].source() as string
+        if ((entryAssets?.length || 0) > 1) {
+          throw new Error(
+            'Server-side bundle should have one single entry file. ' +
+              'Avoid using CommonsChunkPlugin in the server config.'
           );
         }
-        // do not emit anything else for server
-        delete compilation.assets[asset.name];
-      });
 
-      const json = JSON.stringify(bundle, null, 2);
-      const filename = this.options.filename;
-
-      compilation.assets[filename] = {
-        source: function () {
-          return json;
-        },
-        size: function () {
-          return json.length;
+        const entry = entryAssets?.[0].name;
+        if (!entry || typeof entry !== 'string') {
+          throw new Error(
+            'Entry "' +
+              entryName +
+              '" not found. Did you specify the correct entry option?'
+          );
         }
-      } as any;
 
-      cb();
-    });
+        const bundle: ServerManifest = {
+          entry: entry,
+          files: {},
+          maps: {}
+        };
+
+        stats.assets?.forEach((asset: { name: string }) => {
+          if (isJS(asset.name)) {
+            bundle.files[asset.name] = compilation.assets[asset.name].source();
+          } else if (/\.js\.map$/.exec(asset.name)) {
+            bundle.maps[asset.name.replace(/\.map$/, '')] = JSON.parse(
+              compilation.assets[asset.name].source() as string
+            );
+          }
+          // do not emit anything else for server
+          delete compilation.assets[asset.name];
+        });
+
+        const json = JSON.stringify(bundle, null, 2);
+        const filename = this.options.filename;
+
+        compilation.assets[filename] = {
+          source: function () {
+            return json;
+          },
+          size: function () {
+            return json.length;
+          }
+        } as any;
+
+        cb();
+      }
+    );
   }
 
   validate(compiler: Compiler) {
