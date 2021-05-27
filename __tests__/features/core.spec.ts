@@ -13,6 +13,8 @@ testFeature(
 
     test('favicon should always respond with a 204', async () => {
       await page.goto('http://localhost:3000');
+      const watchDog = page.waitForFunction('window.appStatus === "ready"');
+      await watchDog;
       expect(await page.content()).toContain('<div id="app">204</div>');
     });
 
