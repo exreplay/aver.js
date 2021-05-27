@@ -180,6 +180,8 @@ export default class WebpackBaseConfiguration {
       }
     ]);
 
+    // TODO: use new asset modules https://webpack.js.org/guides/asset-modules/
+
     this.chainConfig.module
       .rule('fonts')
       .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/)
