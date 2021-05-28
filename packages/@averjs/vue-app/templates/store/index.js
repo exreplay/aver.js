@@ -8,9 +8,9 @@ import merge from 'lodash/merge';
 
 Vue.use(Vuex);
 
-export function createStore(ssrContext) {
+export async function createStore(ssrContext) {
   <% const extensions = config.additionalExtensions.join('|'); %>
-  const files = <%= `require.context('@/', true, /vuex\\/([^/]+)\\.(${extensions})$/i);` %>;
+  const files = <%= `require.context('@/', true, /vuex\\/([^/]+)\\.(${extensions})$/i, 'lazy');` %>;
   const modules = {};
   const persistent = [];
   const plugins = [];
@@ -19,7 +19,7 @@ export function createStore(ssrContext) {
   const ignoredGlobalStores = [];
 
   for (const r of files.keys()) {
-    const store = files(r).default;
+    const { default: store } = await files(r);
 
     if (typeof store === 'function') {
       const storeFile = ExportVuexStore(store);
@@ -63,14 +63,14 @@ The following files have been ignored:${ignoreGlobalStoresList}.
   defaultConfig = { ...defaultConfig, modules, plugins };
   <% if (typeof config.store === 'object') print('defaultConfig = merge(defaultConfig, JSON.parse(\'' + JSON.stringify(config.store) + '\'))'); %>
   
-  <% print(`const mixinContext = require.context('@/', false, /^\\.\\/store\\.(${extensions})$/i);`); %>
+  <% print(`const mixinContext = require.context('@/', false, /^\\.\\/store\\.(${extensions})$/i, 'lazy');`); %>
 
   // eslint-disable-next-line no-undef
   for (const r of mixinContext.keys()) {
     // eslint-disable-next-line no-undef
-    const mixin = mixinContext(r).default;
+    const { default: mixin } = await mixinContext(r);
     if (typeof mixin !== 'undefined') {
-      const mixinConfig = mixin(defaultConfig);
+      const mixinConfig = await mixin(defaultConfig);
       defaultConfig = merge(defaultConfig, mixinConfig);
     }
   }
@@ -82,13 +82,13 @@ The following files have been ignored:${ignoreGlobalStoresList}.
 
   if (module.hot) {
     files.keys().map(path => files(path));
-    module.hot.accept(files.id, () => {
-      const newFiles = <%= `require.context('@/', true, /vuex\\/([^/]+)\\.(${extensions})$/i);` %>;
+    module.hot.accept(files.id, async() => {
+      const newFiles = <%= `require.context('@/', true, /vuex\\/([^/]+)\\.(${extensions})$/i, 'lazy');` %>;
       const newModules = {};
       let newConfig = {};
 
       for (const r of newFiles.keys()) {
-        const store = newFiles(r).default;
+        const { default: store } = await newFiles(r);
     
         if (typeof store === 'function') {
           const storeFile = ExportVuexStore(store);

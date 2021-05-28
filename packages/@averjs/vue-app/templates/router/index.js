@@ -10,11 +10,11 @@ Vue.use(Meta, {
   ssrAppId: 1
 });
 
-export function createRouter({ i18n, store, ssrContext }) {
+export async function createRouter({ i18n, store, ssrContext }) {
   let routes = [{ path: '/', component: {} }];
 
   try {
-    ({ default: routes } = require('@/pages'));
+    ({ default: routes } = await import('@/pages'));
   } catch (error) {
     if (error.code !== 'MODULE_NOT_FOUND') console.error(error);
   }
@@ -26,7 +26,7 @@ export function createRouter({ i18n, store, ssrContext }) {
 
   if (Array.isArray(routes)) config = { ...config, routes };
   else if (typeof routes === 'function') {
-    config = routes({ i18n, store, ssrContext, config });
+    config = await routes({ i18n, store, ssrContext, config });
   }
 
   return new VueRouter(config);

@@ -169,13 +169,13 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
   
     async initMixin() {
       <% const extensions = config.additionalExtensions.join('|'); %>
-      const entries = <%= `require.context('./', true, /.\\/[^/]+\\/entry-client\\.(${extensions})$/i)` %>;
-      const mixinContext = <%= `require.context('@/', false, /^\\.\\/entry-client\\.(${extensions})$/i)` %>;
+      const entries = <%= `require.context('./', true, /.\\/[^/]+\\/entry-client\\.(${extensions})$/i, 'lazy')` %>;
+      const mixinContext = <%= `require.context('@/', false, /^\\.\\/entry-client\\.(${extensions})$/i, 'lazy')` %>;
       const entryMixins = [entries, mixinContext];
   
       for (const entryMixin of entryMixins) {
         for (const entry of entryMixin.keys()) {
-          const mixin = entryMixin(entry).default;
+          const { default: mixin } = await entryMixin(entry);
           if (typeof mixin === 'function') await mixin({ userReturns });
         }
       }

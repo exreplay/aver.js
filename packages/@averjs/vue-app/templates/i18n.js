@@ -7,7 +7,7 @@ import merge from 'lodash/merge';
 
 Vue.use(VueI18n);
 
-export function createI18n({ isServer, context }) {
+export async function createI18n({ isServer, context }) {
   let i18nConfig = {
     locale: 'de',
     fallbackLocale: 'de'
@@ -16,12 +16,12 @@ export function createI18n({ isServer, context }) {
   <% if (typeof config.i18n !== 'undefined') print('i18nConfig = Object.assign(i18nConfig, JSON.parse(\'' + JSON.stringify(config.i18n) + '\'));') %>
 
   <% const extensions = config.additionalExtensions.join('|'); %>
-  const mixinContext = <%= `require.context('@/', false, /^\\.\\/i18n\\.(${extensions})$/i)` %>;
+  const mixinContext = <%= `require.context('@/', false, /^\\.\\/i18n\\.(${extensions})$/i, 'lazy')` %>;
   
   for (const r of mixinContext.keys()) {
-    const mixin = mixinContext(r).default;
+    const { default: mixin } = await mixinContext(r);
     if (typeof mixin !== 'undefined') {
-      const mixinConfig = mixin(i18nConfig);
+      const mixinConfig = await mixin(i18nConfig);
       i18nConfig = merge(i18nConfig, mixinConfig);
     }
   }

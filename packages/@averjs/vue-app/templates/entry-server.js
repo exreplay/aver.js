@@ -9,8 +9,8 @@ import { applyAsyncData, composeComponentOptions, sanitizeComponent } from './ut
 export default async context => {
   try {
     <% const extensions = config.additionalExtensions.join('|'); %>
-    const entries = <%= `require.context('./', true, /.\\/[^/]+\\/entry-server\\.(${extensions})$/i)` %>;
-    const mixinContext = <%= `require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i)` %>;
+    const entries = <%= `require.context('./', true, /.\\/[^/]+\\/entry-server\\.(${extensions})$/i, 'lazy')` %>;
+    const mixinContext = <%= `require.context('@/', false, /^\\.\\/entry-server\\.(${extensions})$/i, 'lazy')` %>;
     const entryMixins = [entries, mixinContext];
 
     const renderedFns = [];
@@ -45,7 +45,7 @@ export default async context => {
 
     for (const entryMixin of entryMixins) {
       for (const entry of entryMixin.keys()) {
-        const mixin = entryMixin(entry).default;
+        const { default: mixin } = await entryMixin(entry);
         if (typeof mixin === 'function') await mixin({ ...context, userReturns, contextRendered });
       }
     }
