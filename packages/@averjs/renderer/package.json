@@ -1,6 +1,6 @@
 {
   "name": "@averjs/renderer",
-  "version": "3.0.0-3",
+  "version": "3.0.0-4",
   "description": "webpack configuration for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -25,11 +25,11 @@
     "build": true
   },
   "dependencies": {
-    "@averjs/babel-preset-app": "3.0.0-3",
+    "@averjs/babel-preset-app": "3.0.0-4",
     "@averjs/eslint-config": "^2.0.0",
     "@averjs/friendly-errors-webpack-plugin": "^2.0.0",
-    "@averjs/shared-utils": "3.0.0-3",
-    "@averjs/vue-app": "3.0.0-3",
+    "@averjs/shared-utils": "3.0.0-4",
+    "@averjs/vue-app": "3.0.0-4",
     "@averjs/webpack-hot-middleware": "^3.0.1",
     "@kazupon/vue-i18n-loader": "^0.5.0",
     "babel-loader": "^8.2.2",
