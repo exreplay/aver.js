@@ -2,8 +2,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { ExportVuexStore, config } from '@averjs/vuex-decorators';
-import createPersistedState from 'vuex-persistedstate';
-import * as Cookies from 'js-cookie';
 import merge from 'lodash/merge';
 
 Vue.use(Vuex);
@@ -119,6 +117,8 @@ The following files have been ignored:${ignoreGlobalStoresList}.
   }
 
   if (persistent.length > 0) {
+    const { default: createPersistedState } = await import('vuex-persistedstate');
+    const { default: Cookies } = await import('js-cookie');
     createPersistedState({
       paths: persistent,
       storage: {

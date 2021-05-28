@@ -2,12 +2,13 @@
 
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
-import * as Cookies from 'js-cookie';
 import merge from 'lodash/merge';
 
 Vue.use(VueI18n);
 
 export async function createI18n({ isServer, context }) {
+  const { default: Cookies } = await import('js-cookie');
+
   let i18nConfig = {
     locale: 'de',
     fallbackLocale: 'de'
