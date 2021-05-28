@@ -7,6 +7,7 @@ import PolyfillsPlugin from './polyfillsPlugin';
 import PluginSyntaxDynamicImport from '@babel/plugin-syntax-dynamic-import';
 import PluginProposalDecorators from '@babel/plugin-proposal-decorators';
 import PluginProposalClassProperties from '@babel/plugin-proposal-class-properties';
+import PluginProposalPrivateMethods from '@babel/plugin-proposal-private-methods';
 import PluginTransformClasses from '@babel/plugin-transform-classes';
 import PluginTransformRuntime from '@babel/plugin-transform-runtime';
 
@@ -112,6 +113,7 @@ class BabelPresetApp extends Polyfills {
     ]);
 
     plugins.push([PluginProposalClassProperties, { loose: this.loose }]);
+    plugins.push([PluginProposalPrivateMethods, { loose: this.loose }]);
     plugins.push([PluginTransformClasses, { loose: this.loose }]);
 
     plugins.push([
