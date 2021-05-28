@@ -3,7 +3,6 @@ import './register-component-hooks';
 import Vue from 'vue';
 import axios from 'axios';
 import merge from 'lodash/merge';
-import { createRouter } from './router/';
 import { createStore } from './store/';
 import App from '@/App.vue';
 import { sync } from 'vuex-router-sync';
