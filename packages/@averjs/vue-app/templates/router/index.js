@@ -13,10 +13,10 @@ Vue.use(Meta, {
 export async function createRouter({ i18n, store, ssrContext }) {
   let routes = [{ path: '/', component: {} }];
 
-  try {
-    ({ default: routes } = await import('@/pages'));
-  } catch (error) {
-    if (error.code !== 'MODULE_NOT_FOUND') console.error(error);
+  <% const extensions = config.additionalExtensions.join('|'); %>
+  const mixinContext = <%= `require.context('@', true, /^\\.\\/pages\\/index\\.(${extensions})$/i, 'lazy')` %>;
+  for (const r of mixinContext.keys()) {
+    ({ default: routes } = await mixinContext(r));
   }
 
   let config = {
