@@ -59,6 +59,8 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
       .output.libraryTarget('commonjs2')
       .filename('bundle.server.js')
       .end()
+      .optimization.sideEffects(false)
+      .end()
       .optimization.splitChunks({})
       .end()
       .externals(nodeExternals(this.nodeExternalsOptions));
