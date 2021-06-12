@@ -125,13 +125,6 @@ export default class WebpackBaseConfiguration {
         }
       });
 
-    this.chainConfig.module
-      .rule('i18n')
-      .resourceQuery(/blockType=i18n/)
-      .type('javascript/auto')
-      .use('i18n')
-      .loader('@kazupon/vue-i18n-loader');
-
     this.babelLoader.apply(this.chainConfig);
 
     this.chainConfig.module

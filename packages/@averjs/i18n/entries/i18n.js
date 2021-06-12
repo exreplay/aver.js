@@ -6,6 +6,8 @@ import merge from 'lodash/merge';
 
 Vue.use(VueI18n);
 
+export let i18nInstance;
+
 export async function createI18n({ isServer, context }) {
   const { default: Cookies } = await import('js-cookie');
 
@@ -27,20 +29,22 @@ export async function createI18n({ isServer, context }) {
     }
   }
 
-  const i18n = new VueI18n(i18nConfig);
+  console.log(i18nConfig);
 
-  if (!isServer) i18n.locale = Cookies.get('language') || i18nConfig.locale;
-  else i18n.locale = context.req.cookies.language || i18nConfig.locale;
+  i18nInstance = new VueI18n(i18nConfig);
+
+  if (!isServer) i18nInstance.locale = Cookies.get('language') || i18nConfig.locale;
+  else i18nInstance.locale = context.req.cookies.language || i18nConfig.locale;
 
   Vue.prototype.$locale = {
     change: (lang) => {
-      i18n.locale = lang;
-      Cookies.set('language', i18n.locale, { secure: process.env.NODE_ENV === 'production' });
+      i18nInstance.locale = lang;
+      Cookies.set('language', i18nInstance.locale, { secure: process.env.NODE_ENV === 'production' });
     },
     current: () => {
-      return i18n.locale;
+      return i18nInstance.locale;
     }
   };
 
-  return i18n;
+  return i18nInstance;
 }

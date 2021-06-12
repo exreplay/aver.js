@@ -1,0 +1,35 @@
+{
+  "name": "@averjs/i18n",
+  "version": "3.0.0-4",
+  "description": "The official i18n package for averjs.",
+  "author": "Florian Weber",
+  "homepage": "https://github.com/exreplay/aver.js#readme",
+  "license": "MIT",
+  "main": "dist/i18n.js",
+  "types": "dist/i18n.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "/dist",
+    "/entries"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exreplay/aver.js.git",
+    "directory": "packages/i18n"
+  },
+  "bugs": {
+    "url": "https://github.com/exreplay/aver.js/issues"
+  },
+  "aver": {
+    "build": true,
+    "copy": [
+      "lib/types.d.ts"
+    ]
+  },
+  "dependencies": {
+    "@kazupon/vue-i18n-loader": "^0.5.0",
+    "vue-i18n": "^8.24.4"
+  }
+}

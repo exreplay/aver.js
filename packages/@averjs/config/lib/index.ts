@@ -2,7 +2,11 @@
 import path from 'path';
 import mergeWith from 'lodash/mergeWith';
 import { defaultAverjsConfig, defaultFileName } from './configs';
+export { AverAppConfig } from './configs/app';
+export { AverCoreConfig } from './configs/core';
 export { AverWebpackConfig } from './configs/renderer';
+export { AverServerConfig } from './configs/server';
+export { AverVueAppConfig } from './configs/vue-app';
 
 interface InternalConfig {
   rootDir: string;

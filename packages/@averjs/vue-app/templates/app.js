@@ -33,32 +33,11 @@ axios.interceptors.response.use((response) => {
 });
 
 export async function createApp(ssrContext) {
-  const { createI18n } = await import('./i18n');
+  let appOptions = {};
+  let userReturns = {};
+
   const { createRouter } = await import('./router/');
 
-  const i18n = await createI18n(ssrContext);
-  const store = await createStore(ssrContext);
-  const router = await createRouter({ i18n, store, ssrContext });
-
-  sync(store, router);
-
-  Vue.router = router;
-  
-  if (!ssrContext.isServer) {
-    const averState = window.__AVER_STATE__;
-    if (averState.asyncData && averState.asyncData.app) applyAsyncData(sanitizeComponent(App), averState.asyncData.app);
-  }
-
-  const appOptions = {
-    i18n,
-    router,
-    store,
-    ssrContext,
-    context: {},
-    render: h => h(App)
-  };
-  
-  let userReturns = {};
   <% const extensions = config.additionalExtensions.join('|'); %>
   const entries = <%= `require.context('./', true, /.\\/[^/]+\\/app\\.(${extensions})$/i, 'lazy')` %>;
   const mixinContext = <%= `require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i, 'lazy')` %>;
@@ -73,6 +52,27 @@ export async function createApp(ssrContext) {
       }
     }
   }
+
+  const store = await createStore(ssrContext);
+  const router = await createRouter({ store, ssrContext });
+
+  sync(store, router);
+
+  Vue.router = router;
+  
+  if (!ssrContext.isServer) {
+    const averState = window.__AVER_STATE__;
+    if (averState.asyncData && averState.asyncData.app) applyAsyncData(sanitizeComponent(App), averState.asyncData.app);
+  }
+
+  appOptions = {
+    ...appOptions,
+    router,
+    store,
+    ssrContext,
+    context: {},
+    render: h => h(App)
+  };
     
   const app = new Vue(appOptions);
 
