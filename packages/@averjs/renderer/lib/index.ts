@@ -157,9 +157,9 @@ export default class Renderer {
       config: {
         additionalExtensions: this.config.webpack?.additionalExtensions,
         progressbar: this.config.progressbar,
-        i18n: this.config.i18n,
         csrf: this.config.csrf,
-        store: this.config.store
+        store: this.config.store,
+        ...this.config.additionalTemplatesConfig
       }
     });
 
