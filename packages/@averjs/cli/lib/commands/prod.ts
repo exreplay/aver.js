@@ -3,7 +3,8 @@ import Core from '@averjs/core';
 
 export default class ProductionCommand
   extends Command
-  implements CommandInterface {
+  implements CommandInterface
+{
   name = 'prod';
   description = 'Start aver in production mode.';
 

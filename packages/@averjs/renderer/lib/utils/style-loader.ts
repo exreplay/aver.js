@@ -95,10 +95,8 @@ export default class StyleLoader {
   styleResources(rule: Rule<Rule>) {
     if (!this.config.css?.styleResources) return;
 
-    const {
-      resources = [],
-      options = { patterns: [] }
-    } = this.config.css.styleResources;
+    const { resources = [], options = { patterns: [] } } =
+      this.config.css.styleResources;
     const finalOptions: StyleResourcesLoaderOptions = { patterns: [] };
     if (this.name === 'css') return;
 

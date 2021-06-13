@@ -116,10 +116,12 @@ describe('typescript plugin', () => {
       } else if (config.name === 'base') {
         expect(loaders).toEqual(['thread-loader', 'babel-loader', 'ts-loader']);
         expect(
-          (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            [k: string]: any;
-          })?.poolTimeout
+          (
+            ((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              [k: string]: any;
+            }
+          )?.poolTimeout
         ).toBe(2000);
       }
     }
@@ -146,10 +148,12 @@ describe('typescript plugin', () => {
         expect(config.plugins?.[0]).toBeInstanceOf(ForkTsCheckerWebpackPlugin);
       } else if (config.name === 'base') {
         expect(
-          (((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            [k: string]: any;
-          })?.poolTimeout
+          (
+            ((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              [k: string]: any;
+            }
+          )?.poolTimeout
         ).toBe(Infinity);
       }
     }

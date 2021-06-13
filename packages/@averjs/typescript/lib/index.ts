@@ -24,9 +24,7 @@ export interface TypescriptPluginOptions {
         | ForkTsCheckerWebpackPluginOptions);
 }
 
-export async function mergeOptions(
-  options?: TypescriptPluginOptions
-): Promise<{
+export async function mergeOptions(options?: TypescriptPluginOptions): Promise<{
   tsLoaderOptions: TSLoaderOptions;
   forkTsCheckerOptions: ForkTsCheckerWebpackPluginOptions;
 }> {

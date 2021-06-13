@@ -40,8 +40,7 @@ module.exports = {
   transformIgnorePatterns: ['node_modules/(?!(@averjs|averjs))'],
 
   moduleNameMapper: {
-    [`@averjs/(${corePackages.join(
-      '|'
-    )})$`]: '<rootDir>/packages/@averjs/$1/lib/index'
+    [`@averjs/(${corePackages.join('|')})$`]:
+      '<rootDir>/packages/@averjs/$1/lib/index'
   }
 };

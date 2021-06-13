@@ -20,7 +20,6 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          // eslint-disable-next-line prettier/prettier
           href: 'https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,900'
         }
       ],

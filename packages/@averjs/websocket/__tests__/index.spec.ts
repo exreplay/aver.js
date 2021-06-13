@@ -74,7 +74,7 @@ describe('mailer plugin', () => {
     const redis = require('redis');
     redis.createClient = jest.fn((...args) => args);
 
-    const result = (setupRedisAdapter({ port: 1234 }) as unknown) as unknown[];
+    const result = setupRedisAdapter({ port: 1234 }) as unknown as unknown[];
 
     expect(redis.createClient.mock.calls.length).toBe(2);
     for (const call of redis.createClient.mock.calls) {

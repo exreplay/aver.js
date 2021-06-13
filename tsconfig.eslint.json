@@ -4,7 +4,7 @@
     ".eslintrc.js",
     "jest.config.js",
     "packages/@averjs/*/lib",
-    "packages/@averjs/*.d.ts",
+    "packages/@averjs/**/*.d.ts",
     "scripts/**/*.ts",
     "**/__tests__/**/*.ts",
     "**/__fixtures__/**/*.ts",

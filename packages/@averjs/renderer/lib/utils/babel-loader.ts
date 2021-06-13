@@ -37,7 +37,7 @@ export default class BabelLoader {
           return false;
         }
       })
-      .filter((Boolean as unknown) as ExcludesFalse);
+      .filter(Boolean as unknown as ExcludesFalse);
   }
 
   presetConfig(): BabelOptions {

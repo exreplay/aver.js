@@ -74,9 +74,8 @@ export default class VueSSRClientPlugin {
               return;
             }
             const id = m.identifier?.replace(/\s\w+$/, ''); // remove appended hash
-            const files = (manifest.modules[hash(id)] = chunk.files.map(
-              fileToIndex
-            ));
+            const files = (manifest.modules[hash(id)] =
+              chunk.files.map(fileToIndex));
             // find all asset modules associated with the same chunk
             assetModules?.forEach((m) => {
               if (
