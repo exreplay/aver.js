@@ -29,8 +29,6 @@ export async function createI18n({ isServer, context }) {
     }
   }
 
-  console.log(i18nConfig);
-
   i18nInstance = new VueI18n(i18nConfig);
 
   if (!isServer) i18nInstance.locale = Cookies.get('language') || i18nConfig.locale;
