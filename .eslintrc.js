@@ -94,7 +94,7 @@ module.exports = {
       env: {
         jest: true
       },
-      extends: ['@averjs'],
+      extends: ['@averjs', 'prettier'],
       rules: {
         indent: 'off',
         'space-before-function-paren': 'off',

@@ -6,7 +6,7 @@ testFeature('css-extract', (currentDir) => {
   test('should have compiled css inlined', async () => {
     await page.goto('http://localhost:3000');
     const content = await page.content();
-    expect(content).toContain('<style type="text/css">h1{color:#00f}</style>');
+    expect(content).toContain('<style type="text/css">h1{color:blue}</style>');
     expect(content).toContain(
       '<style type="text/css">.test{color:red}</style>'
     );

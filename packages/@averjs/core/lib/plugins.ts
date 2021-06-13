@@ -97,7 +97,10 @@ export default class PluginContainer {
 
     this.resolveEntryFiles(pluginPath);
 
-    const requiredModule = requireModule(pluginPath);
+    const requiredModule =
+      process.env.NODE_ENV === 'test'
+        ? require(pluginPath)
+        : requireModule(pluginPath);
 
     if (requiredModule.default) return requiredModule.default;
     else return requiredModule;

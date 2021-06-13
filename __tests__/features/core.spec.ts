@@ -126,9 +126,7 @@ testFeature(
         await rebuild();
       } catch (error) {
         expect(error.message).toBe('Build error');
-        expect(error.stack).toContain(
-          'Newline required at end of file but not found'
-        );
+        expect(error.stack).toContain('The template requires child element');
       } finally {
         fs.writeFileSync(appPath, app, 'utf-8');
       }

@@ -1,2 +1,2 @@
 import Vue from 'vue';
-Vue.prototype.$test = 'client entry works';
+Vue.prototype.$test = 'hmr works';

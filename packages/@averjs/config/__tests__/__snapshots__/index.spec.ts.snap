@@ -2,6 +2,7 @@
 
 exports[`should match default snapshot config when no config file is present 1`] = `
 Object {
+  "additionalTemplatesConfig": Object {},
   "aliases": Object {},
   "buildPlugins": Array [],
   "cacheDir": "/node_modules/.cache/averjs",
@@ -16,9 +17,6 @@ Object {
     "server": Array [],
   },
   "helmet": Object {},
-  "i18n": Object {
-    "silentTranslationWarn": true,
-  },
   "isProd": true,
   "openBrowser": true,
   "plugins": Array [],

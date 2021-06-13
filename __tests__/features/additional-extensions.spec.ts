@@ -7,10 +7,10 @@ testFeature('additional-extensions', (currentDir) => {
     const response = await page.goto('http://localhost:3000');
     const content = await page.content();
     expect(await response?.text()).toContain(
-      '<span>server entry works</span><span>i18n entry works</span><span>app entry works</span>'
+      '<span>server entry works</span><span>app entry works</span>'
     );
     expect(content).toContain(
-      '<span>client entry works</span><span>i18n entry works</span><span>app entry works</span>'
+      '<span>client entry works</span><span>app entry works</span>'
     );
 
     const appContent = fs.readFileSync(
