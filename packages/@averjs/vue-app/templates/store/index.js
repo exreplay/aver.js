@@ -21,6 +21,7 @@ export async function createStore(ssrContext) {
 
     if (typeof store === 'function') {
       const storeFile = ExportVuexStore(store);
+      
       if (typeof storeFile.moduleName !== 'undefined') {
         modules[storeFile.moduleName] = storeFile;
           

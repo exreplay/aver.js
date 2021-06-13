@@ -1,3 +1,4 @@
+<% /* eslint-disable no-undef */ %>
 /* eslint-disable @typescript-eslint/no-var-requires */
 import Vue from 'vue';
 import VueRouter from 'vue-router';

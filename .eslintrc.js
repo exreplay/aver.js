@@ -102,13 +102,16 @@ module.exports = {
       }
     },
     {
-      files: ['packages/@averjs/vue-app/templates/**/*.js'],
+      files: [
+        'packages/@averjs/vue-app/templates/**/*.js',
+        'packages/@averjs/i18n/entries/*.js'
+      ],
       parserOptions: {
         parser: 'babel-eslint',
         ecmaVersion: 2015
       },
+      extends: ['plugin:lodash-template/base', '@averjs', 'prettier'],
       processor: 'lodash-template/script',
-      extends: ['@averjs', 'plugin:lodash-template/recommended-with-script'],
       rules: {
         'prettier/prettier': 'off'
       }
