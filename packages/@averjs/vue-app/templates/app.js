@@ -33,10 +33,22 @@ axios.interceptors.response.use((response) => {
 });
 
 export async function createApp(ssrContext) {
-  let appOptions = {};
+  let appOptions = {
+    ssrContext,
+    context: {},
+    render: h => h(App)
+  };
   let userReturns = {};
 
   const { createRouter } = await import('./router/');
+  const store = await createStore(ssrContext);
+  const router = await createRouter({ store, ssrContext });
+
+  appOptions = {
+    ...appOptions,
+    router,
+    store
+  };
 
   <% const extensions = config.additionalExtensions.join('|'); %>
   const entries = <%= `require.context('./', true, /.\\/[^/]+\\/app\\.(${extensions})$/i, 'lazy')` %>;
@@ -53,9 +65,6 @@ export async function createApp(ssrContext) {
     }
   }
 
-  const store = await createStore(ssrContext);
-  const router = await createRouter({ store, ssrContext });
-
   sync(store, router);
 
   Vue.router = router;
@@ -64,15 +73,6 @@ export async function createApp(ssrContext) {
     const averState = window.__AVER_STATE__;
     if (averState.asyncData && averState.asyncData.app) applyAsyncData(sanitizeComponent(App), averState.asyncData.app);
   }
-
-  appOptions = {
-    ...appOptions,
-    router,
-    store,
-    ssrContext,
-    context: {},
-    render: h => h(App)
-  };
     
   const app = new Vue(appOptions);
 
