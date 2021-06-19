@@ -22,10 +22,10 @@
     "build": true
   },
   "dependencies": {
-    "mongoose": "^5.12.11",
+    "mongoose": "^5.12.14",
     "mongoose-data-seed": "^2.1.6"
   },
   "devDependencies": {
-    "@types/mongoose": "^5.10.5"
+    "@types/mongoose": "^5.11.97"
   }
 }

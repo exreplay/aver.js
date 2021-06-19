@@ -91,6 +91,6 @@
     "@types/webpack-dev-middleware": "^5.0.0",
     "@types/webpack-node-externals": "^2.5.1",
     "@types/webpackbar": "^4.0.1",
-    "@types/workbox-webpack-plugin": "^5.1.6"
+    "@types/workbox-webpack-plugin": "^5.1.7"
   }
 }
