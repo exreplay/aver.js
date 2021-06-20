@@ -8,6 +8,7 @@ const corePackages = fs
   .filter((p) => p.isDirectory())
   .map((p) => p.name);
 
+/** @&#8203;typedef {import('ts-jest/dist/types')} */
 module.exports = {
   preset: 'jest-puppeteer',
 
