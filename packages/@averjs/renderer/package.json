@@ -42,7 +42,6 @@
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-webpack-plugin": "^2.5.4",
     "extract-css-chunks-webpack-plugin": "^4.9.0",
-    "fibers": "^5.0.0",
     "file-loader": "^6.2.0",
     "glob-all": "^3.2.1",
     "html-webpack-plugin": "^5.3.1",

@@ -165,10 +165,7 @@ export default class WebpackBaseConfiguration {
         name: 'sass-loader',
         options: {
           sourceMap: !this.isProd,
-          implementation: require('sass'),
-          sassOptions: {
-            fiber: require('fibers')
-          }
+          implementation: require('sass')
         }
       }
     ]);
