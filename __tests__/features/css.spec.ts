@@ -37,13 +37,12 @@ testFeature('css', () => {
     );
   });
 
-  // TODO: add scss tests
-  // test('should compiled scss/sass correctly', async () => {
-  //   await page.goto('http://localhost:3000/scss');
-  //   const content = await page.content();
-  //   console.log(content);
-  //   expect(content).toContain(
-  //     `<style type="text/css">.scss{color:blue}</style>`
-  //   );
-  // });
+  test('should compiled scss/sass correctly', async () => {
+    await page.goto('http://localhost:3000/scss');
+    const content = await page.content();
+    console.log(content);
+    expect(content).toContain(
+      `<style type="text/css">.scss{color:blue}</style>`
+    );
+  });
 });

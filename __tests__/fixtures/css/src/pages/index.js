@@ -13,10 +13,10 @@ export default [
     path: '/cssinjs',
     name: 'cssinjs',
     component: () => import('./cssinjs.vue')
+  },
+  {
+    path: '/scss',
+    name: 'scss',
+    component: () => import('./scss.vue')
   }
-  // {
-  //   path: '/scss',
-  //   name: 'scss',
-  //   component: () => import('./scss.vue')
-  // }
 ];
