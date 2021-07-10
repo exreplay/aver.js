@@ -27,7 +27,7 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
-    "@types/email-templates": "^8.0.3",
-    "@types/nodemailer": "^6.4.2"
+    "@types/email-templates": "^8.0.4",
+    "@types/nodemailer": "^6.4.4"
   }
 }

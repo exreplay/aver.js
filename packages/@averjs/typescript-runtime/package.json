@@ -30,6 +30,6 @@
     "build": true
   },
   "dependencies": {
-    "ts-node": "^10.0.0"
+    "ts-node": "^10.1.0"
   }
 }
