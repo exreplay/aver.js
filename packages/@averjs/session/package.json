@@ -30,6 +30,6 @@
   "devDependencies": {
     "@types/connect-redis": "^0.0.17",
     "@types/express-session": "^1.17.4",
-    "@types/ioredis": "^4.26.5"
+    "@types/ioredis": "^4.26.6"
   }
 }
