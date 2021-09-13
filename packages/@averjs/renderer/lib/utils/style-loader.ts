@@ -1,5 +1,5 @@
 import path from 'path';
-import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
+import ExtractCssPlugin from 'mini-css-extract-plugin';
 import map from 'lodash/map';
 import PostCSS from './postcss';
 import PerformanceLoader from './perf-loader';
@@ -80,10 +80,7 @@ export default class StyleLoader {
 
   extract(rule: Rule<Rule>) {
     if (this.config.css?.extract && !this.isServer) {
-      rule
-        .use('extract-css')
-        .loader(ExtractCssPlugin.loader)
-        .options({ reloadAll: true });
+      rule.use('extract-css').loader(ExtractCssPlugin.loader);
     } else if (!this.config.css?.extract) {
       rule
         .use('vue-style-loader')

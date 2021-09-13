@@ -131,10 +131,11 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     if (this.isProd && this.webpackConfig.css?.extract) {
       splitChunks.cacheGroups.styles = {
-        idHint: 'styles',
+        name: 'styles',
+        type: 'css/mini-extract',
         test: /\.(s?css|vue)$/,
+        chunks: 'initial',
         minChunks: 1,
-        chunks: 'all',
         enforce: true
       };
     }

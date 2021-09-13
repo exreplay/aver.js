@@ -2,7 +2,7 @@ import path from 'path';
 import webpack, { Configuration } from 'webpack';
 import WebpackChain from 'webpack-chain';
 import { VueLoaderPlugin } from 'vue-loader';
-import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
+import ExtractCssPlugin from 'mini-css-extract-plugin';
 import StyleLoader from '../utils/style-loader';
 import PerformanceLoader from '../utils/perf-loader';
 import BabelLoader from '../utils/babel-loader';
@@ -126,6 +126,14 @@ export default class WebpackBaseConfiguration {
       });
 
     this.babelLoader.apply(this.chainConfig);
+
+    this.chainConfig.module
+      .rule('vue-style')
+      .test(/\.vue$/)
+      .resourceQuery(/type=style/)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .sideEffects(true);
 
     this.chainConfig.module
       .rule('pug')

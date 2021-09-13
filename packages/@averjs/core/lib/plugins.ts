@@ -109,7 +109,8 @@ export default class PluginContainer {
   private resolveModule(plugin: string) {
     try {
       return require.resolve(plugin);
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       if (error.code !== 'MODULE_NOT_FOUND') {
         /* istanbul ignore next */
         throw error;

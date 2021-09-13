@@ -277,7 +277,8 @@ export default class Server extends WWW {
       res.send(html);
 
       if (!this.isProd) console.log(`whole request: ${Date.now() - s}ms`);
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       res.status(error.code || 500).send(error.message);
     }
   }
