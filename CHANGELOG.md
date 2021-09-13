@@ -1,3 +1,15 @@
+## 3.1.0 (2021-09-13)
+
+#### :rocket: New Features
+* `@averjs/i18n`
+  * [#376](https://github.com/exreplay/aver.js/pull/376) feat: use before mixin ([@exreplay](https://github.com/exreplay))
+* `@averjs/vue-app`
+  * [#375](https://github.com/exreplay/aver.js/pull/375) feat: added before mixin to app.js ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 ## 3.0.0 (2021-09-13)
 
 #### :rocket: New Features
