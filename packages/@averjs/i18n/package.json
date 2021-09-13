@@ -1,6 +1,6 @@
 {
   "name": "@averjs/i18n",
-  "version": "3.0.0-7",
+  "version": "3.0.0",
   "description": "The official i18n package for averjs.",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",

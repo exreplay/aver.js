@@ -1,3 +1,17 @@
+## 3.0.0 (2021-09-13)
+
+#### :rocket: New Features
+* `@averjs`, `@averjs/babel-preset-app`, `@averjs/builder`, `@averjs/cli`, `@averjs/config`, `@averjs/core`, `@averjs/i18n`, `@averjs/init`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/typescript-runtime`, `@averjs/typescript`, `@averjs/vue-app`, `@averjs/websocket`
+  * [#373](https://github.com/exreplay/aver.js/pull/373) Version 3.0 ([@exreplay](https://github.com/exreplay))
+
+#### :boom: Breaking Changes
+* `@averjs`, `@averjs/babel-preset-app`, `@averjs/builder`, `@averjs/cli`, `@averjs/config`, `@averjs/core`, `@averjs/i18n`, `@averjs/init`, `@averjs/mailer`, `@averjs/mongodb`, `@averjs/queue`, `@averjs/renderer`, `@averjs/session`, `@averjs/shared-utils`, `@averjs/typescript-runtime`, `@averjs/typescript`, `@averjs/vue-app`, `@averjs/websocket`
+  * [#373](https://github.com/exreplay/aver.js/pull/373) Version 3.0 ([@exreplay](https://github.com/exreplay))
+
+#### Committers: 1
+- Florian Weber ([@exreplay](https://github.com/exreplay))
+
+
 
 
 
