@@ -3,7 +3,6 @@ import './register-component-hooks';
 import Vue from 'vue';
 import axios from 'axios';
 import merge from 'lodash/merge';
-import { createStore } from './store/';
 import App from '@/App.vue';
 import { sync } from 'vuex-router-sync';
 import { applyAsyncData, sanitizeComponent } from './utils';
@@ -40,6 +39,28 @@ export async function createApp(ssrContext) {
   };
   let userReturns = {};
 
+
+  <% const extensions = config.additionalExtensions.join('|'); %>
+  const entries = <%= `require.context('./', true, /.\\/[^/]+\\/app\\.(${extensions})$/i, 'lazy')` %>;
+  const mixinContext = <%= `require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i, 'lazy')` %>;
+  const entryMixins = [entries, mixinContext];
+  const mixins = [];
+  const beforeMixins = [];
+
+  for (const entryMixin of entryMixins) {
+    for (const entry of entryMixin.keys()) {
+      const { default: mixin, before } = await entryMixin(entry);
+      if (typeof mixin === 'function') mixins.push(mixin);
+      if (typeof before === 'function') beforeMixins.push(before);
+    }
+  }
+
+  for(const mixin of beforeMixins) {
+    const returns = await mixin({ ...ssrContext, appOptions });
+    userReturns = merge(userReturns, returns);
+  }
+
+  const { createStore } = await import('./store/');
   const { createRouter } = await import('./router/');
   const store = await createStore(ssrContext);
   const router = await createRouter({ store, ssrContext });
@@ -50,19 +71,9 @@ export async function createApp(ssrContext) {
     store
   };
 
-  <% const extensions = config.additionalExtensions.join('|'); %>
-  const entries = <%= `require.context('./', true, /.\\/[^/]+\\/app\\.(${extensions})$/i, 'lazy')` %>;
-  const mixinContext = <%= `require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i, 'lazy')` %>;
-  const entryMixins = [entries, mixinContext];
-
-  for (const entryMixin of entryMixins) {
-    for (const entry of entryMixin.keys()) {
-      const { default: mixin } = await entryMixin(entry);
-      if (typeof mixin === 'function') {
-        const returns = await mixin({ ...ssrContext, appOptions });
-        userReturns = merge(userReturns, returns);
-      }
-    }
+  for(const mixin of mixins) {
+    const returns = await mixin({ ...ssrContext, appOptions });
+    userReturns = merge(userReturns, returns);
   }
 
   sync(store, router);
