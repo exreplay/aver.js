@@ -10,7 +10,8 @@ import SafeParser from 'postcss-safe-parser';
 import cloneDeep from 'lodash/cloneDeep';
 import FriendlyErrorsPlugin from '@averjs/friendly-errors-webpack-plugin';
 import Core from '@averjs/core';
-import TerserPlugin, { ExtractCommentOptions } from 'terser-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import { TerserOptions } from 'terser-webpack-plugin/types/utils';
 import {
   GenerateSW,
   GenerateSWOptions,
@@ -154,7 +155,7 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
           parallel: false,
           extractComments: {
             filename: 'LICENSES'
-          } as ExtractCommentOptions,
+          },
           terserOptions: {
             compress: {
               // turn off flags with small gains to speed up minification
@@ -194,8 +195,8 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
               comments: /^\**!|@preserve|@license|@cc_on/
             }
           }
-        }
-      ]);
+        } as TerserOptions
+      ] as never);
     }
 
     this.chainConfig.optimization
