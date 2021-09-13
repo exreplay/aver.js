@@ -105,7 +105,8 @@ export default class Release {
         branch
       ]);
       spinner.succeed();
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       spinner.fail(error.stderr);
       throw new Error('Script failed');
     }
@@ -148,7 +149,8 @@ export default class Release {
     try {
       await exec('yarn', ['lerna', ...lernaArgs]);
       spinner.succeed();
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       spinner.fail(error.stderr);
       throw new Error('Script failed');
     }
