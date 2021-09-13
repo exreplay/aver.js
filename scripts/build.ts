@@ -114,9 +114,8 @@ export default class Build {
           );
           if (fs.existsSync(extractorConfigPath)) {
             buildSpinner.text = `Rollup types for ${pkg.pkg.name}`;
-            const extractorConfig = ExtractorConfig.loadFileAndPrepare(
-              extractorConfigPath
-            );
+            const extractorConfig =
+              ExtractorConfig.loadFileAndPrepare(extractorConfigPath);
             Extractor.invoke(extractorConfig, {
               localBuild: true,
               showVerboseMessages: true

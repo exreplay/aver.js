@@ -36,6 +36,8 @@ export default function (): PluginObj {
           ?.slice()
           .reverse()
           .forEach((p) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             createImport(path, p);
           });
       }

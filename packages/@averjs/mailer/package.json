@@ -1,6 +1,6 @@
 {
   "name": "@averjs/mailer",
-  "version": "2.6.3",
+  "version": "3.0.0-7",
   "description": "mailing support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -22,12 +22,11 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "email-templates": "^8.0.4",
-    "nodemailer": "^6.5.0",
-    "pug": "^3.0.2"
+    "email-templates": "^8.0.8",
+    "nodemailer": "^6.6.3"
   },
   "devDependencies": {
-    "@types/email-templates": "^8.0.3",
-    "@types/nodemailer": "^6.4.1"
+    "@types/email-templates": "^8.0.4",
+    "@types/nodemailer": "^6.4.4"
   }
 }

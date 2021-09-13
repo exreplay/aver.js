@@ -2,15 +2,16 @@ import webpack, { Configuration } from 'webpack';
 import WebpackBaseConfiguration from './base';
 import fs from 'fs';
 import path from 'path';
-import VueSSRClientPlugin from 'vue-server-renderer/client-plugin';
+import VueSSRClientPlugin from '../utils/vue/client-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HTMLPlugin from 'html-webpack-plugin';
-import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import MiniCssExtractPlugin from 'css-minimizer-webpack-plugin';
 import SafeParser from 'postcss-safe-parser';
 import cloneDeep from 'lodash/cloneDeep';
 import FriendlyErrorsPlugin from '@averjs/friendly-errors-webpack-plugin';
 import Core from '@averjs/core';
-import TerserPlugin, { ExtractCommentOptions } from 'terser-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import { TerserOptions } from 'terser-webpack-plugin/types/utils';
 import {
   GenerateSW,
   GenerateSWOptions,
@@ -113,11 +114,18 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     const splitChunks: SplitChunksOptions = {
       cacheGroups: {
-        commons: {
-          test: /node_modules[/\\](vue|vue-loader|vue-router|vuex|vue-meta|core-js|babel-runtime|es6-promise|axios|webpack|setimmediate|timers-browserify|process|regenerator-runtime|cookie|js-cookie|is-buffer|dotprop)[/\\].*\.js$/,
-          chunks: 'all',
-          priority: 10,
-          name: true
+        defaultVendors: {
+          name: 'vendors',
+          test: /[/\\]node_modules[/\\]/,
+          priority: -10,
+          chunks: 'initial'
+        },
+        common: {
+          name: 'common',
+          minChunks: 2,
+          priority: -20,
+          chunks: 'initial',
+          reuseExistingChunk: true
         }
       }
     };
@@ -125,9 +133,10 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
     if (this.isProd && this.webpackConfig.css?.extract) {
       splitChunks.cacheGroups.styles = {
         name: 'styles',
+        type: 'css/mini-extract',
         test: /\.(s?css|vue)$/,
+        chunks: 'initial',
         minChunks: 1,
-        chunks: 'all',
         enforce: true
       };
     }
@@ -139,61 +148,62 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
 
     this.chainConfig.optimization.splitChunks(splitChunks);
 
-    this.chainConfig.optimization.minimizer('terser').use(TerserPlugin, [
-      {
-        sourceMap: true,
-        cache: true,
-        parallel: false,
-        extractComments: {
-          filename: 'LICENSES'
-        } as ExtractCommentOptions,
-        terserOptions: {
-          compress: {
-            // turn off flags with small gains to speed up minification
-            arrows: false,
-            collapse_vars: false, // 0.3kb
-            comparisons: false,
-            computed_props: false,
-            hoist_funs: false,
-            hoist_props: false,
-            hoist_vars: false,
-            inline: false,
-            loops: false,
-            negate_iife: false,
-            properties: false,
-            reduce_funcs: false,
-            reduce_vars: false,
-            switches: false,
-            toplevel: false,
-            typeofs: false,
-
-            // a few flags with noticable gains/speed ratio
-            // numbers based on out of the box vendor bundle
-            booleans: true, // 0.7kb
-            if_return: true, // 0.4kb
-            sequences: true, // 0.7kb
-            unused: true, // 2.3kb
-
-            // required features to drop conditional branches
-            conditionals: true,
-            dead_code: true,
-            evaluate: true
+    // Speed up tests by disabling minification
+    if (process.env.NODE_ENV !== 'test') {
+      this.chainConfig.optimization.minimizer('terser').use(TerserPlugin, [
+        {
+          parallel: false,
+          extractComments: {
+            filename: 'LICENSES'
           },
-          mangle: {
-            safari10: true
-          },
-          output: {
-            comments: /^\**!|@preserve|@license|@cc_on/
+          terserOptions: {
+            compress: {
+              // turn off flags with small gains to speed up minification
+              arrows: false,
+              collapse_vars: false, // 0.3kb
+              comparisons: false,
+              computed_props: false,
+              hoist_funs: false,
+              hoist_props: false,
+              hoist_vars: false,
+              inline: false,
+              loops: false,
+              negate_iife: false,
+              properties: false,
+              reduce_funcs: false,
+              reduce_vars: false,
+              switches: false,
+              toplevel: false,
+              typeofs: false,
+
+              // a few flags with noticable gains/speed ratio
+              // numbers based on out of the box vendor bundle
+              booleans: true, // 0.7kb
+              if_return: true, // 0.4kb
+              sequences: true, // 0.7kb
+              unused: true, // 2.3kb
+
+              // required features to drop conditional branches
+              conditionals: true,
+              dead_code: true,
+              evaluate: true
+            },
+            mangle: {
+              safari10: true
+            },
+            output: {
+              comments: /^\**!|@preserve|@license|@cc_on/
+            }
           }
-        }
-      }
-    ]);
+        } as TerserOptions
+      ] as never);
+    }
 
     this.chainConfig.optimization
-      .minimizer('optimize-css')
-      .use(OptimizeCssAssetsPlugin, [
+      .minimizer('minimize-css')
+      .use(MiniCssExtractPlugin, [
         {
-          cssProcessorPluginOptions: {
+          minimizerOptions: {
             preset: [
               'default',
               {
@@ -215,13 +225,32 @@ export default class WebpackClientConfiguration extends WebpackBaseConfiguration
       .filename(`_averjs/js/${this.isProd ? '[contenthash].' : '[name].'}js`);
 
     if (typeof this.webpackConfig?.client === 'function')
-      this.webpackConfig.client(this.chainConfig);
+      this.webpackConfig.client({
+        chain: this.chainConfig,
+        isServer: false,
+        config: this.aver.config
+      });
 
     await this.aver.callHook('renderer:client-config', this.chainConfig);
 
-    const config: Configuration = Object.assign(this.chainConfig.toConfig(), {
+    const configObj = this.chainConfig.toConfig();
+    const config: Configuration = Object.assign(configObj, {
       entry: {
         app: path.join(this.cacheDir, 'entry-client.js')
+      },
+      resolve: {
+        ...configObj.resolve,
+        fallback: {
+          setImmediate: false,
+          dgram: 'empty',
+          fs: 'empty',
+          net: 'empty',
+          tls: 'empty',
+          child_process: 'empty'
+        }
+      },
+      optimization: {
+        moduleIds: 'deterministic'
       }
     } as Configuration);
 

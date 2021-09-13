@@ -55,10 +55,12 @@ export type AppEntry<T = any> = (
 ) => UserReturns | void | Promise<void> | Promise<UserReturns>;
 export type ServerEntry = (context: ServerEntryContext) => void | Promise<void>;
 export type ClientEntry = (context: ClientEntryContext) => void | Promise<void>;
-export type I18nEntry = (options: I18nOptions) => I18nOptions;
+export type I18nEntry = (
+  options: I18nOptions
+) => I18nOptions | Promise<I18nOptions>;
 export type RouterEntry<T extends any> = (
   context: RouterEntryContext<T>
-) => RouterOptions;
+) => RouterOptions | Promise<RouterOptions>;
 export type StoreEntry<T extends any> = (
   options: StoreOptions<T>
-) => StoreOptions<T>;
+) => StoreOptions<T> | Promise<StoreOptions<T>>;

@@ -1,6 +1,6 @@
 {
   "name": "@averjs/queue",
-  "version": "2.6.3",
+  "version": "3.0.0-7",
   "description": "queue support for averjs",
   "author": "Florian Weber",
   "homepage": "https://github.com/exreplay/aver.js#readme",
@@ -18,7 +18,7 @@
     "url": "https://github.com/exreplay/aver.js/issues"
   },
   "dependencies": {
-    "ioredis": "^4.27.1",
+    "ioredis": "^4.27.9",
     "kue": "^0.11.6"
   }
 }

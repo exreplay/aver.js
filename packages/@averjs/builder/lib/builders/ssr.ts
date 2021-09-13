@@ -9,7 +9,7 @@ import { InternalAverConfig } from '@averjs/config';
 import { BundleRenderer } from 'vue-server-renderer';
 import { Request } from 'express';
 import Core from '@averjs/core';
-import Renderer from '@averjs/renderer/lib';
+import Renderer from '@averjs/renderer';
 
 export default class SsrBuilder extends BaseBuilder {
   aver: Core;
@@ -170,7 +170,8 @@ export default class SsrBuilder extends BaseBuilder {
       } else {
         return compiledTemplate;
       }
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       if (error) {
         if (error.code === 404) {
           throw new HTMLCodeError(404, '404 | Page Not Found');

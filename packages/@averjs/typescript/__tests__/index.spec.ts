@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/await-thenable */
 import typescript, { mergeOptions } from '../lib';
 import Chain from 'webpack-chain';
-import { RuleSetLoader, RuleSetUse } from 'webpack';
+import { RuleSetUse, RuleSetRule } from 'webpack';
 import IgnoreNotFoundExportPlugin from '../lib/IgnoreNotFoundExportPlugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
@@ -70,11 +70,14 @@ describe('typescript plugin', () => {
     expect(forkTsCheckerOptions.async).toBeTruthy();
   });
 
-  it('should set additional extensions correctly', async () => {
+  it('should set thread-loader config correctly', async () => {
     await typescript.call(averThis);
-    expect(averThis.aver.config.webpack).toBeUndefined();
+    expect(
+      averThis.aver.config.webpack.threadLoader.pools.ts.loaders
+    ).toContain('ts-loader');
+  });
 
-    averThis.aver.config = { webpack: {} };
+  it('should set additional extensions correctly', async () => {
     await typescript.call(averThis);
     expect(averThis.aver.config.webpack.additionalExtensions).toEqual([
       'ts',
@@ -94,53 +97,31 @@ describe('typescript plugin', () => {
     await typescript.call(averThis);
 
     let clientChain = new Chain().name('client');
-    let serverChain = new Chain().name('server');
-    const baseChain = new Chain().name('base');
+    let baseChain = new Chain().name('base');
 
     for (const [name, hook] of hooks) {
       if (name.includes('client')) hook(clientChain);
-      else if (name.includes('server')) hook(serverChain);
       else if (name.includes('base')) hook(baseChain);
     }
 
-    for (const chain of [clientChain, serverChain]) {
+    for (const chain of [baseChain, clientChain]) {
       const config = chain.toConfig();
-      const ruleSet = config.module?.rules[0].use;
+      const ruleSet = (config.module?.rules?.[0] as RuleSetRule)?.use;
       const loaders = Array.isArray(ruleSet)
-        ? ruleSet?.map((loader) => (loader as RuleSetLoader).loader)
+        ? ruleSet?.map((loader) => (loader as RuleSetRule).loader)
         : undefined;
 
-      expect(loaders).toEqual([
-        'cache-loader',
-        'thread-loader',
-        'babel-loader',
-        'ts-loader'
-      ]);
-
       if (config.name === 'client') {
-        expect(
-          (((ruleSet as RuleSetUse[])[0] as RuleSetLoader).options as {
-            [k: string]: unknown;
-          })?.cacheDirectory
-        ).toContain('client');
-        expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetLoader).options as {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            [k: string]: any;
-          })?.poolConfig.poolTimeout
-        ).toBe(2000);
         expect(config.plugins?.[0]).toBeInstanceOf(ForkTsCheckerWebpackPlugin);
-      } else if (config.name === 'server') {
+      } else if (config.name === 'base') {
+        expect(loaders).toEqual(['thread-loader', 'babel-loader', 'ts-loader']);
         expect(
-          (((ruleSet as RuleSetUse[])[0] as RuleSetLoader).options as {
-            [k: string]: unknown;
-          })?.cacheDirectory
-        ).toContain('server');
-        expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetLoader).options as {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            [k: string]: any;
-          })?.poolConfig.poolTimeout
+          (
+            ((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              [k: string]: any;
+            }
+          )?.poolTimeout
         ).toBe(2000);
       }
     }
@@ -152,31 +133,27 @@ describe('typescript plugin', () => {
     averThis.config.isProd = false;
     await typescript.call(averThis);
     clientChain = new Chain().name('client');
-    serverChain = new Chain().name('server');
+    baseChain = new Chain().name('base');
 
     for (const [name, hook] of hooks) {
       if (name.includes('client')) hook(clientChain);
-      else if (name.includes('server')) hook(serverChain);
+      else if (name.includes('base')) hook(baseChain);
     }
 
-    for (const chain of [clientChain, serverChain]) {
+    for (const chain of [clientChain, baseChain]) {
       const config = chain.toConfig();
-      const ruleSet = config.module?.rules[0].use;
+      const ruleSet = (config.module?.rules?.[0] as RuleSetRule)?.use;
 
       if (config.name === 'client') {
-        expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetLoader).options as {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            [k: string]: any;
-          })?.poolConfig.poolTimeout
-        ).toBe(Infinity);
         expect(config.plugins?.[0]).toBeInstanceOf(ForkTsCheckerWebpackPlugin);
-      } else if (config.name === 'server') {
+      } else if (config.name === 'base') {
         expect(
-          (((ruleSet as RuleSetUse[])[1] as RuleSetLoader).options as {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            [k: string]: any;
-          })?.poolConfig.poolTimeout
+          (
+            ((ruleSet as RuleSetUse[])[0] as RuleSetRule).options as {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              [k: string]: any;
+            }
+          )?.poolTimeout
         ).toBe(Infinity);
       }
     }

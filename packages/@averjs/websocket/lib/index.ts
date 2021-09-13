@@ -1,21 +1,21 @@
-import redisAdapter from 'socket.io-redis';
+import { createAdapter, RedisAdapterOptions } from 'socket.io-redis';
 import redis from 'redis';
-import Server from 'socket.io';
+import { Server, ServerOptions } from 'socket.io';
 import { PluginContainerInterface, PluginFunction } from '@averjs/core';
 
 export interface WebsocketPluginOptions {
-  socketIoRedis?: redisAdapter.SocketIORedisOptions;
-  serverOptions?: Server.ServerOptions;
+  socketIoRedis?: Partial<RedisAdapterOptions>;
+  serverOptions?: Partial<ServerOptions>;
   middleware?: (
     this: PluginContainerInterface,
-    io: Server.Server
+    io: Server
   ) => void | Promise<void>;
 }
 
 export function mergeOptions(
-  serverOptions?: Server.ServerOptions
-): Server.ServerOptions {
-  const defaultServerOptions = {
+  serverOptions?: Partial<ServerOptions>
+): Partial<ServerOptions> {
+  const defaultServerOptions: Partial<ServerOptions> = {
     pingTimeout: 60_000
   };
 
@@ -26,7 +26,7 @@ export function mergeOptions(
 }
 
 export function setupRedisAdapter(
-  socketIoRedis?: redisAdapter.SocketIORedisOptions
+  socketIoRedis?: Partial<RedisAdapterOptions>
 ) {
   const pub = redis.createClient(
     parseInt(process.env.REDIS_PORT),
@@ -38,7 +38,12 @@ export function setupRedisAdapter(
     process.env.REDIS_HOST,
     { auth_pass: process.env.REDIS_PASSWORD }
   );
-  return redisAdapter({ pubClient: pub, subClient: sub, ...socketIoRedis });
+
+  return createAdapter({
+    pubClient: pub,
+    subClient: sub,
+    ...socketIoRedis
+  });
 }
 
 const plugin: PluginFunction = function (options?: WebsocketPluginOptions) {

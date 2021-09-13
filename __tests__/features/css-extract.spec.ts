@@ -6,7 +6,7 @@ testFeature('css-extract', (currentDir) => {
   test('should have compiled css inlined', async () => {
     await page.goto('http://localhost:3000');
     const content = await page.content();
-    expect(content).toContain('<style type="text/css">h1{color:#00f}</style>');
+    expect(content).toContain('<style type="text/css">h1{color:blue}</style>');
     expect(content).toContain(
       '<style type="text/css">.test{color:red}</style>'
     );
@@ -33,9 +33,7 @@ testFeature('css-extract', (currentDir) => {
         `http://localhost:3000/dist/_averjs/css/${css}`
       );
       expect(response?.status()).toBe(200);
-      expect(content).toContain(
-        `<link rel="preload" href="/dist/_averjs/css/${css}" as="style">`
-      );
+      expect(content).toContain(`href="/dist/_averjs/css/${css}"`);
     }
   });
 });

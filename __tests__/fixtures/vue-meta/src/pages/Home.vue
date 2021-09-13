@@ -20,8 +20,7 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          href:
-            'https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,900'
+          href: 'https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,900'
         }
       ],
       style: [

@@ -7,7 +7,8 @@ testFeature(
   (currentDir) => {
     const newContent =
       "import Vue from 'vue';\nVue.prototype.$test = 'hmr works';\n";
-    const entryPath = path.resolve(currentDir, './plugin/entries');
+    const pluginPath = path.resolve(currentDir, './plugin');
+    const entryPath = path.resolve(pluginPath, './entries');
     const clientEntryPath = path.resolve(entryPath, './entry-client.js');
     const clientEntry = fs.readFileSync(clientEntryPath, 'utf-8');
     const appEntry = path.resolve(entryPath, './app.js');
@@ -76,7 +77,6 @@ testFeature(
           )
         )
       ).toBeFalsy();
-
       /**
        * should add the new entry inside cache and update templates array
        */

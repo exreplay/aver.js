@@ -8,6 +8,10 @@ export interface AverCoreConfig {
     [key: string]: string;
   };
   templates?: Templates[];
+  additionalTemplatesConfig?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  };
   entries?: {
     [key: string]: string[] | undefined;
     app?: string[];
@@ -21,6 +25,7 @@ export default (): AverCoreConfig => ({
   plugins: [],
   aliases: {},
   templates: [],
+  additionalTemplatesConfig: {},
   entries: {
     app: [],
     client: [],

@@ -24,9 +24,7 @@ export interface TypescriptPluginOptions {
         | ForkTsCheckerWebpackPluginOptions);
 }
 
-export async function mergeOptions(
-  options?: TypescriptPluginOptions
-): Promise<{
+export async function mergeOptions(options?: TypescriptPluginOptions): Promise<{
   tsLoaderOptions: TSLoaderOptions;
   forkTsCheckerOptions: ForkTsCheckerWebpackPluginOptions;
 }> {
@@ -78,34 +76,39 @@ const plugin: PluginFunction = async function (
 ) {
   const { tsLoaderOptions, forkTsCheckerOptions } = await mergeOptions(options);
 
-  const setLoader = (chain: Config, isServer: boolean): void => {
-    const name = 'ts';
+  if (!this.aver.config.webpack) this.aver.config.webpack = {};
+  if (!this.aver.config.webpack.threadLoader)
+    this.aver.config.webpack.threadLoader = {};
+  if (!this.aver.config.webpack.threadLoader.pools)
+    this.aver.config.webpack.threadLoader.pools = {};
 
+  this.aver.config.webpack.threadLoader.pools = {
+    ...this.aver.config.webpack.threadLoader.pools,
+    ts: {
+      poolConfig: {
+        name: 'ts',
+        poolTimeout: !this.config.isProd ? Infinity : 2000
+      },
+      useThread: true,
+      loaders: ['ts-loader']
+    }
+  };
+
+  if (!this.aver.config.webpack.additionalExtensions)
+    this.aver.config.webpack.additionalExtensions = [];
+
+  this.aver.config.webpack.additionalExtensions.push('ts');
+  this.aver.config.webpack.additionalExtensions.push('tsx');
+
+  const setLoader = (chain: Config): void => {
     chain.module
       .rule('ts-loader')
       .test(/\.tsx?$/)
-      .use('cache-loader')
-      .loader('cache-loader')
-      .options({
-        cacheDirectory: path.resolve(
-          process.env.PROJECT_PATH,
-          `../node_modules/.cache/cache-loader/${
-            isServer ? 'server' : 'client'
-          }/${name}`
-        ),
-        cacheIdentifier: name
-      })
-      .end()
       .use('thread-loader')
       .loader('thread-loader')
-      .options({
-        poolConfig: {
-          name: 'ts',
-          poolTimeout: !this.config.isProd ? Infinity : 2000
-        },
-        loaders: ['ts-loader'],
-        useThread: true
-      })
+      .options(
+        this.aver.config.webpack?.threadLoader?.pools?.ts.poolConfig || {}
+      )
       .end()
       .use('babel-loader')
       .loader('babel-loader')
@@ -115,26 +118,10 @@ const plugin: PluginFunction = async function (
       .options(tsLoaderOptions);
   };
 
-  if (this.aver.config.webpack) {
-    if (!this.aver.config.webpack.additionalExtensions)
-      this.aver.config.webpack.additionalExtensions = [];
-
-    this.aver.config.webpack.additionalExtensions.push('ts');
-    this.aver.config.webpack.additionalExtensions.push('tsx');
-  }
-
-  this.aver.tap('renderer:client-config', (chain) => {
-    setLoader(chain, false);
-  });
-
-  this.aver.tap('renderer:server-config', (chain) => {
-    setLoader(chain, true);
-  });
-
   this.aver.tap('renderer:base-config', (chain) => {
     chain.plugin('IgnoreNotFoundExportPlugin').use(IgnoreNotFoundExportPlugin);
-
     chain.resolve.extensions.merge(['.ts']);
+    setLoader(chain);
   });
 
   this.aver.tap('renderer:client-config', (chain) => {

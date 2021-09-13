@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import fs from 'fs-extra';
 import path from 'path';
-import webpack, { Configuration } from 'webpack';
+import webpack, { Configuration, EntryObject } from 'webpack';
 import template from 'lodash/template';
 import WebpackClientConfiguration from './config/client';
 import WebpackServerConfiguration from './config/server';
-import MFS from 'memory-fs';
 import { openBrowser } from '@averjs/shared-utils';
 import { StaticBuilder } from '@averjs/builder';
 import vueApp, { Templates } from '@averjs/vue-app';
@@ -15,7 +14,12 @@ import Core from '@averjs/core';
 import { BundleRendererOptions } from 'vue-server-renderer';
 import { ParsedArgs } from 'minimist';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
-import WebpackHotMiddleware from 'webpack-hot-middleware';
+import WebpackHotMiddleware from '@averjs/webpack-hot-middleware';
+import { createFsFromVolume, IFs, Volume } from 'memfs';
+import { TDataOut } from 'memfs/lib/encoding';
+import joinPath from 'memory-fs/lib/join';
+
+export { PoolConfig, Pool } from './utils/perf-loader';
 
 export interface RendererOptions extends Partial<ParsedArgs> {
   static?: boolean;
@@ -33,13 +37,12 @@ export default class Renderer {
   isProd: boolean;
   cacheDir: string;
   distPath: string;
-  mfs = new MFS();
+  mfs: IFs = createFsFromVolume(new Volume());
   isBrowserOpen = false;
   bundle: string | null = null;
   clientManifest: BundleRendererOptions['clientManifest'] | null = null;
-  resolve:
-    | ((value?: void | PromiseLike<void> | undefined) => void)
-    | null = null;
+  resolve: ((value?: void | PromiseLike<void> | undefined) => void) | null =
+    null;
 
   readyPromise: Promise<void> = new Promise((resolve) => {
     this.resolve = resolve;
@@ -153,9 +156,9 @@ export default class Renderer {
       config: {
         additionalExtensions: this.config.webpack?.additionalExtensions,
         progressbar: this.config.progressbar,
-        i18n: this.config.i18n,
         csrf: this.config.csrf,
-        store: this.config.store
+        store: this.config.store,
+        ...this.config.additionalTemplatesConfig
       }
     });
 
@@ -176,14 +179,14 @@ export default class Renderer {
       clientCompiler.hooks.done.tap('averjs', (stats) => {
         const jsonStats = stats.toJson();
         /* istanbul ignore next */
-        jsonStats.errors.forEach((err) => console.error(err));
+        jsonStats.errors?.forEach((err) => console.error(err));
         /* istanbul ignore next */
-        jsonStats.warnings.forEach((err) => console.warn(err));
+        jsonStats.warnings?.forEach((err) => console.warn(err));
         /* istanbul ignore next */
-        if (jsonStats.errors.length) return;
+        if (jsonStats.errors?.length) return;
 
         this.clientManifest = JSON.parse(
-          this.readFile('vue-ssr-client-manifest.json')
+          this.readFile('vue-ssr-client-manifest.json') as string
         );
         this.update();
       });
@@ -192,15 +195,17 @@ export default class Renderer {
       const serverWatcher = serverCompiler.watch({}, (err, stats) => {
         /* istanbul ignore next */
         if (err) throw err;
-        const jsonStats = stats.toJson();
+        const jsonStats = stats?.toJson();
         /* istanbul ignore next */
-        jsonStats.errors.forEach((err) => console.error(err));
+        jsonStats?.errors?.forEach((err) => console.error(err));
         /* istanbul ignore next */
-        jsonStats.warnings.forEach((err) => console.warn(err));
+        jsonStats?.warnings?.forEach((err) => console.warn(err));
         /* istanbul ignore next */
-        if (jsonStats.errors.length) return;
+        if (jsonStats?.errors?.length) return;
 
-        this.bundle = JSON.parse(this.readFile('vue-ssr-server-bundle.json'));
+        this.bundle = JSON.parse(
+          this.readFile('vue-ssr-server-bundle.json') as string
+        );
         this.update();
       });
 
@@ -231,13 +236,13 @@ export default class Renderer {
             /* istanbul ignore next */
             if (err) return reject(err);
 
-            if (stats.hasErrors()) {
+            if (stats?.hasErrors()) {
               const error = new Error('Build error');
-              error.stack = stats.toString('errors-only');
+              error.stack = stats?.toString('errors-only');
               return reject(error);
             }
 
-            resolve(stats.toJson());
+            resolve(stats?.toJson());
           });
         })
       );
@@ -281,23 +286,21 @@ export default class Renderer {
     searchparams.append('timeout', '30000');
     searchparams.append('path', '/__webpack_hmr/client');
 
-    (this.clientConfig.entry as webpack.Entry).app = [
-      `webpack-hot-middleware/client?${searchparams.toString()}`,
-      (this.clientConfig.entry as webpack.Entry).app as string
+    (this.clientConfig.entry as EntryObject).app = [
+      `@averjs/webpack-hot-middleware/client?${searchparams.toString()}`,
+      (this.clientConfig.entry as EntryObject).app as string
     ];
 
     if (this.clientConfig.output)
       this.clientConfig.output.filename = '[name].js';
-    this.clientConfig.plugins?.push(
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoEmitOnErrorsPlugin()
-    );
+    this.clientConfig.plugins?.push(new webpack.HotModuleReplacementPlugin());
 
     const clientCompiler = webpack(this.clientConfig);
-    clientCompiler.outputFileSystem = this.mfs;
+    clientCompiler.outputFileSystem = this.mfs as never;
+    clientCompiler.outputFileSystem = fs;
     const devMiddleware = WebpackDevMiddleware(clientCompiler as never, {
-      publicPath: this.clientConfig.output?.publicPath,
-      outputFileSystem: this.mfs,
+      publicPath: this.clientConfig.output?.publicPath as string,
+      outputFileSystem: this.ensureWebpackMemoryFs(this.mfs) as never,
       stats: 'none',
       index: false
     });
@@ -325,11 +328,11 @@ export default class Renderer {
 
   setupServerCompiler() {
     const serverCompiler = webpack(this.serverConfig);
-    serverCompiler.outputFileSystem = this.mfs;
+    serverCompiler.outputFileSystem = this.mfs as never;
     return serverCompiler;
   }
 
-  readFile(file: string) {
+  readFile(file: string): TDataOut | void {
     try {
       return this.mfs.readFileSync(
         path.join(this.clientConfig.output?.path || '', file),
@@ -338,5 +341,19 @@ export default class Renderer {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ensureWebpackMemoryFs(fs: any) {
+    // Return it back, when it has Webpack 'join' method
+    if (fs.join) {
+      return fs;
+    }
+
+    // Create FS proxy, adding `join` method to memfs, but not modifying original object
+    const nextFs = Object.create(fs);
+    nextFs.join = joinPath;
+
+    return nextFs;
   }
 }

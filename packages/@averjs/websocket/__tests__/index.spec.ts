@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Request, Response, NextFunction } from 'express';
 import websocket, { mergeOptions, setupRedisAdapter } from '../lib';
-import Server from 'socket.io';
+import { Server } from 'socket.io';
 
-jest.mock('socket.io-redis', () => jest.fn((...args: unknown[]) => args));
+jest.mock('socket.io-redis', () => ({
+  createAdapter: jest.fn((...args: unknown[]) => args)
+}));
 jest.mock('socket.io');
 
 type PartialRequest = Partial<Request & { io: typeof Server }>;
@@ -62,8 +64,8 @@ describe('mailer plugin', () => {
   });
 
   it('should merge options correctly', () => {
-    const result = mergeOptions({ pingTimeout: 10, cookiePath: 'test' });
-    expect(result).toEqual({ pingTimeout: 10, cookiePath: 'test' });
+    const result = mergeOptions({ pingTimeout: 10, cookie: { path: 'test' } });
+    expect(result).toEqual({ pingTimeout: 10, cookie: { path: 'test' } });
   });
 
   it('should set up redis adapter correctly', () => {
@@ -74,7 +76,9 @@ describe('mailer plugin', () => {
     const redis = require('redis');
     redis.createClient = jest.fn((...args) => args);
 
-    const result = (setupRedisAdapter({ port: 1234 }) as unknown) as unknown[];
+    const result = setupRedisAdapter({
+      requestsTimeout: 123
+    });
 
     expect(redis.createClient.mock.calls.length).toBe(2);
     for (const call of redis.createClient.mock.calls) {
@@ -86,7 +90,7 @@ describe('mailer plugin', () => {
     expect(result[0]).toEqual({
       pubClient: [1234, 'host', { auth_pass: 'password' }],
       subClient: [1234, 'host', { auth_pass: 'password' }],
-      port: 1234
+      requestsTimeout: 123
     });
   });
 

@@ -66,7 +66,7 @@ testFeature('plugins', (currentDir) => {
       await container.addModule(pluginPath);
     } catch (error) {
       expect(error.message).toBe(
-        `Plugin '${pluginPath}' should export a function. Got 'object'.`
+        `Plugin '${pluginPath}' should export a function. Got 'string'.`
       );
     }
   });

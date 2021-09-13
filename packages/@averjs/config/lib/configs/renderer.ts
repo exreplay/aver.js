@@ -9,6 +9,15 @@ import { ProcessOptions, AcceptedPlugin } from 'postcss';
 import PostCSSPresetEnv from 'postcss-preset-env';
 import { Options as NodeExternalsOptions } from 'webpack-node-externals';
 import { BabelOptions } from '@averjs/babel-preset-app';
+import { Configuration } from 'webpack';
+import { AverConfig } from '..';
+import { PoolConfig } from '@averjs/renderer';
+
+interface ConfigParams {
+  chain: Config;
+  isServer: boolean;
+  config: AverConfig;
+}
 
 export interface AverWebpackConfig {
   babel?:
@@ -51,13 +60,21 @@ export interface AverWebpackConfig {
         '@pages': string;
         '@vuex': string;
       };
-  base?: false | ((chain: Config) => void);
-  client?: false | ((chain: Config) => void);
-  server?: false | ((chain: Config) => void);
+  base?: false | ((context: ConfigParams) => void);
+  client?: false | ((context: ConfigParams) => void);
+  server?: false | ((context: ConfigParams) => void);
   sw?: false | GenerateSWOptions | InjectManifestOptions;
+  threadLoader?: {
+    pools?: PoolConfig;
+  };
   process?: {
     env?: Record<string, any>;
   };
+  cache?:
+    | Configuration['cache']
+    | ((
+        context: ConfigParams
+      ) => Configuration['cache'] | Promise<Configuration['cache']>);
 }
 
 export default (isProd: boolean): AverWebpackConfig => ({

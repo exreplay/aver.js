@@ -1,3 +1,4 @@
+<% /* eslint-disable no-undef */ %>
 /* eslint-disable @typescript-eslint/no-var-requires */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -10,13 +11,13 @@ Vue.use(Meta, {
   ssrAppId: 1
 });
 
-export function createRouter({ i18n, store, ssrContext }) {
+export async function createRouter({ store, ssrContext }) {
   let routes = [{ path: '/', component: {} }];
 
-  try {
-    ({ default: routes } = require('@/pages'));
-  } catch (error) {
-    if (error.code !== 'MODULE_NOT_FOUND') console.error(error);
+  <% const extensions = config.additionalExtensions.join('|'); %>
+  const mixinContext = <%= `require.context('@', true, /^\\.\\/pages\\/index\\.(${extensions})$/i, 'lazy')` %>;
+  for (const r of mixinContext.keys()) {
+    ({ default: routes } = await mixinContext(r));
   }
 
   let config = {
@@ -26,7 +27,7 @@ export function createRouter({ i18n, store, ssrContext }) {
 
   if (Array.isArray(routes)) config = { ...config, routes };
   else if (typeof routes === 'function') {
-    config = routes({ i18n, store, ssrContext, config });
+    config = await routes({ store, ssrContext, config });
   }
 
   return new VueRouter(config);

@@ -3,10 +3,8 @@ import './register-component-hooks';
 import Vue from 'vue';
 import axios from 'axios';
 import merge from 'lodash/merge';
-import App from '@/App.vue';
-import { createRouter } from './router/';
 import { createStore } from './store/';
-import { createI18n } from './i18n';
+import App from '@/App.vue';
 import { sync } from 'vuex-router-sync';
 import { applyAsyncData, sanitizeComponent } from './utils';
 <% if (config.progressbar) { %>
@@ -35,9 +33,37 @@ axios.interceptors.response.use((response) => {
 });
 
 export async function createApp(ssrContext) {
-  const i18n = createI18n(ssrContext);
-  const store = createStore(ssrContext);
-  const router = createRouter({ i18n, store, ssrContext });
+  let appOptions = {
+    ssrContext,
+    context: {},
+    render: h => h(App)
+  };
+  let userReturns = {};
+
+  const { createRouter } = await import('./router/');
+  const store = await createStore(ssrContext);
+  const router = await createRouter({ store, ssrContext });
+
+  appOptions = {
+    ...appOptions,
+    router,
+    store
+  };
+
+  <% const extensions = config.additionalExtensions.join('|'); %>
+  const entries = <%= `require.context('./', true, /.\\/[^/]+\\/app\\.(${extensions})$/i, 'lazy')` %>;
+  const mixinContext = <%= `require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i, 'lazy')` %>;
+  const entryMixins = [entries, mixinContext];
+
+  for (const entryMixin of entryMixins) {
+    for (const entry of entryMixin.keys()) {
+      const { default: mixin } = await entryMixin(entry);
+      if (typeof mixin === 'function') {
+        const returns = await mixin({ ...ssrContext, appOptions });
+        userReturns = merge(userReturns, returns);
+      }
+    }
+  }
 
   sync(store, router);
 
@@ -46,31 +72,6 @@ export async function createApp(ssrContext) {
   if (!ssrContext.isServer) {
     const averState = window.__AVER_STATE__;
     if (averState.asyncData && averState.asyncData.app) applyAsyncData(sanitizeComponent(App), averState.asyncData.app);
-  }
-
-  const appOptions = {
-    i18n,
-    router,
-    store,
-    ssrContext,
-    context: {},
-    render: h => h(App)
-  };
-  
-  let userReturns = {};
-  <% const extensions = config.additionalExtensions.join('|'); %>
-  const entries = <%= `require.context('./', true, /.\\/[^/]+\\/app\\.(${extensions})$/i);` %>;
-  const mixinContext = <%= `require.context('@/', false, /^\\.\\/app\\.(${extensions})$/i);` %>;
-  const entryMixins = [entries, mixinContext];
-
-  for (const entryMixin of entryMixins) {
-    for (const entry of entryMixin.keys()) {
-      const mixin = entryMixin(entry).default;
-      if (typeof mixin === 'function') {
-        const returns = await mixin({ ...ssrContext, appOptions });
-        userReturns = merge(userReturns, returns);
-      }
-    }
   }
     
   const app = new Vue(appOptions);

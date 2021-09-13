@@ -2,7 +2,7 @@ import webpack, { Configuration } from 'webpack';
 import WebpackBaseConfiguration from './base';
 import path from 'path';
 import nodeExternals, { Options } from 'webpack-node-externals';
-import VueSSRServerPlugin from 'vue-server-renderer/server-plugin';
+import VueSSRServerPlugin from '../utils/vue/server-plugin';
 import cloneDeep from 'lodash/cloneDeep';
 import Core from '@averjs/core';
 
@@ -59,18 +59,36 @@ export default class WebpackServerConfiguration extends WebpackBaseConfiguration
       .output.libraryTarget('commonjs2')
       .filename('bundle.server.js')
       .end()
+      .optimization.sideEffects(false)
+      .end()
       .optimization.splitChunks({})
       .end()
       .externals(nodeExternals(this.nodeExternalsOptions));
 
     if (typeof this.webpackConfig?.server === 'function')
-      this.webpackConfig.server(this.chainConfig);
+      this.webpackConfig.server({
+        chain: this.chainConfig,
+        isServer: true,
+        config: this.aver.config
+      });
 
     await this.aver.callHook('renderer:server-config', this.chainConfig);
 
-    const config: Configuration = Object.assign(this.chainConfig.toConfig(), {
+    const configObj = this.chainConfig.toConfig();
+    const config: Configuration = Object.assign(configObj, {
       entry: {
         app: path.join(this.cacheDir, 'entry-server.js')
+      },
+      resolve: {
+        ...configObj.resolve,
+        fallback: {
+          setImmediate: false,
+          dgram: 'empty',
+          fs: 'empty',
+          net: 'empty',
+          tls: 'empty',
+          child_process: 'empty'
+        }
       }
     } as Configuration);
 

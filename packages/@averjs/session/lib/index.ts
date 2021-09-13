@@ -71,8 +71,11 @@ export function createRedisStore(ttl: number, config?: RedisStoreOptions) {
 const plugin: PluginFunction = function (options?: SessionPluginOptions) {
   if (process.argv.includes('build')) return;
 
-  const { redisStoreConfig, expressSessionConfig, ttl = 60 * 60 } =
-    options || {};
+  const {
+    redisStoreConfig,
+    expressSessionConfig,
+    ttl = 60 * 60
+  } = options || {};
   const store: RedisStore | undefined = createRedisStore(ttl, redisStoreConfig);
 
   const config = mergeExpressSessionConfig(

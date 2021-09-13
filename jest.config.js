@@ -8,6 +8,7 @@ const corePackages = fs
   .filter((p) => p.isDirectory())
   .map((p) => p.name);
 
+/** @&#8203;typedef {import('ts-jest/dist/types')} */
 module.exports = {
   preset: 'jest-puppeteer',
 
@@ -40,8 +41,7 @@ module.exports = {
   transformIgnorePatterns: ['node_modules/(?!(@averjs|averjs))'],
 
   moduleNameMapper: {
-    [`@averjs/(${corePackages.join(
-      '|'
-    )})$`]: '<rootDir>/packages/@averjs/$1/lib/index'
+    [`@averjs/(${corePackages.join('|')})$`]:
+      '<rootDir>/packages/@averjs/$1/lib/index'
   }
 };

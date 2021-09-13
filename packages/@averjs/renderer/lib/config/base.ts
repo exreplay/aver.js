@@ -1,7 +1,8 @@
+import path from 'path';
 import webpack, { Configuration } from 'webpack';
 import WebpackChain from 'webpack-chain';
 import { VueLoaderPlugin } from 'vue-loader';
-import ExtractCssPlugin from 'extract-css-chunks-webpack-plugin';
+import ExtractCssPlugin from 'mini-css-extract-plugin';
 import StyleLoader from '../utils/style-loader';
 import PerformanceLoader from '../utils/perf-loader';
 import BabelLoader from '../utils/babel-loader';
@@ -9,6 +10,7 @@ import Webpackbar from 'webpackbar';
 import FilesChanged from '../plugins/FilesChanged';
 import Core from '@averjs/core';
 import { AverWebpackConfig } from '@averjs/config';
+import ESLintPlugin from 'eslint-webpack-plugin';
 
 export default class WebpackBaseConfiguration {
   aver: Core;
@@ -52,6 +54,13 @@ export default class WebpackBaseConfiguration {
   }
 
   plugins() {
+    this.chainConfig.plugin('eslint-webpack-plugin').use(ESLintPlugin, [
+      {
+        extensions: [...(this.webpackConfig.additionalExtensions || []), 'vue'],
+        cache: true
+      }
+    ]);
+
     if (!this.isServer && this.webpackConfig?.css?.extract) {
       this.chainConfig.plugin('extract-css').use(ExtractCssPlugin, [
         {
@@ -80,9 +89,6 @@ export default class WebpackBaseConfiguration {
 
     if (this.isProd) {
       this.chainConfig
-        .plugin('hashed-module-ids')
-        .use(webpack.HashedModuleIdsPlugin)
-        .end()
         .plugin('module-concatenation')
         .use(webpack.optimize.ModuleConcatenationPlugin);
     }
@@ -119,26 +125,15 @@ export default class WebpackBaseConfiguration {
         }
       });
 
-    this.chainConfig.module
-      .rule('i18n')
-      .resourceQuery(/blockType=i18n/)
-      .type('javascript/auto')
-      .use('i18n')
-      .loader('@kazupon/vue-i18n-loader');
-
-    this.chainConfig.module
-      .rule('eslint')
-      .test(/\.(js|vue)$/)
-      .pre()
-      .exclude.add(/node_modules/)
-      .end()
-      .use('eslint')
-      .loader('eslint-loader')
-      .options({
-        cache: true
-      });
-
     this.babelLoader.apply(this.chainConfig);
+
+    this.chainConfig.module
+      .rule('vue-style')
+      .test(/\.vue$/)
+      .resourceQuery(/type=style/)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .sideEffects(true);
 
     this.chainConfig.module
       .rule('pug')
@@ -178,13 +173,12 @@ export default class WebpackBaseConfiguration {
         name: 'sass-loader',
         options: {
           sourceMap: !this.isProd,
-          implementation: require('sass'),
-          sassOptions: {
-            fiber: require('fibers')
-          }
+          implementation: require('sass')
         }
       }
     ]);
+
+    // TODO: use new asset modules https://webpack.js.org/guides/asset-modules/
 
     this.chainConfig.module
       .rule('fonts')
@@ -237,14 +231,9 @@ export default class WebpackBaseConfiguration {
       .path(this.distPath)
       .publicPath(isStatic ? '/' : '/dist/')
       .end()
-      .node.set('setImmediate', false)
-      .set('dgram', 'empty')
-      .set('fs', 'empty')
-      .set('net', 'empty')
-      .set('tls', 'empty')
-      .set('child_process', 'empty')
-      .end()
-      .devtool(this.isProd ? false : 'cheap-module-eval-source-map')
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .devtool(this.isProd ? false : 'eval-cheap-module-source-map')
       .mode(
         process.env.NODE_ENV === 'development'
           ? 'development'
@@ -273,9 +262,39 @@ export default class WebpackBaseConfiguration {
     this.optimization();
     this.plugins();
 
-    if (typeof this.webpackConfig?.base === 'function')
-      this.webpackConfig.base(this.chainConfig);
+    const userCache =
+      typeof this.webpackConfig.cache === 'function'
+        ? await this.webpackConfig.cache({
+            chain: this.chainConfig,
+            isServer: this.isServer,
+            config: this.aver.config
+          })
+        : this.webpackConfig.cache;
 
-    await this.aver.callHook('renderer:base-config', this.chainConfig);
+    this.chainConfig.cache(
+      userCache ||
+        ({
+          type: 'filesystem',
+          cacheLocation: path.resolve(
+            this.cacheDir,
+            this.isServer
+              ? `../webpack/${this.isProd ? 'prod/' : 'dev/'}server`
+              : `../webpack/${this.isProd ? 'prod/' : 'dev/'}client`
+          )
+        } as Configuration['cache'])
+    );
+
+    if (typeof this.webpackConfig?.base === 'function')
+      this.webpackConfig.base({
+        chain: this.chainConfig,
+        isServer: this.isServer,
+        config: this.aver.config
+      });
+
+    await this.aver.callHook(
+      'renderer:base-config',
+      this.chainConfig,
+      this.isServer
+    );
   }
 }
