@@ -4237,11 +4237,6 @@
     tapable "^2.1.1"
     webpack "^5.38.1"
 
-"@types/webpack-env@^1.16.0":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.16.2.tgz#8db514b059c1b2ae14ce9d7bb325296de6a9a0fa"
-  integrity sha512-vKx7WNQNZDyJveYcHAm9ZxhqSGLYwoyLhrHjLBOkw3a7cT76sTdjgtwyijhk1MaHyRIuSztcVwrUOO/NEu68Dw==
-
 "@types/webpack-node-externals@^2.5.2":
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/@types/webpack-node-externals/-/webpack-node-externals-2.5.2.tgz#d6e0c90147472304b6b5cfcd1bbd7138e6b9eb65"
@@ -15623,10 +15618,10 @@ rollup@^2.43.1:
   optionalDependencies:
     fsevents "~2.3.1"
 
-rotating-file-stream@^2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/rotating-file-stream/-/rotating-file-stream-2.1.5.tgz#6490d0a09e11dd4d441aa5d4d3676debed4a44e4"
-  integrity sha512-wnYazkT8oD5HXTj44WhB030aKo74OyICrPz/QKCUah59QD7Np4OhdoTC0WNZfhMx1ClsZp4lYMlAdof+DIkZ1Q==
+rotating-file-stream@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/rotating-file-stream/-/rotating-file-stream-3.0.3.tgz#c2966a5eb6f2caf25cae18ec4fc50c5b1167a0f3"
+  integrity sha512-lN4tljs2Pv8OkVCw34Fa+jYn9vn98ZxWgBoavKjlT7az25F+oEZT6kKXmzpqovBVz+fW7Mb862tc34rpxKVZFw==
 
 route-cache@^0.4.5:
   version "0.4.5"
