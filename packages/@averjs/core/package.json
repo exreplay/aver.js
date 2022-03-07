@@ -50,7 +50,7 @@
     "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.3",
-    "ora": "^5.4.1",
+    "ora": "^6.1.0",
     "rotating-file-stream": "^2.1.5",
     "route-cache": "^0.4.5",
     "uuid": "^8.3.2",
