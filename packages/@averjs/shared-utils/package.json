@@ -30,6 +30,6 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "cross-spawn": "^7.0.3",
-    "open": "^8.2.1"
+    "open": "^8.4.0"
   }
 }
